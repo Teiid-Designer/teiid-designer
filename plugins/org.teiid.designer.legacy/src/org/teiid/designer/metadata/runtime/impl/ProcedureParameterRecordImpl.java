@@ -22,7 +22,7 @@ public class ProcedureParameterRecordImpl extends AbstractMetadataRecord impleme
     private static final long serialVersionUID = 1L;
     private String datatypeUUID;
     private String runtimeType;
-    private Object defaultValue;
+    private String defaultValue;
     private int type;
     private int length;
     private int scale;
@@ -48,7 +48,7 @@ public class ProcedureParameterRecordImpl extends AbstractMetadataRecord impleme
      * @see org.teiid.designer.metadata.runtime.ProcedureParameterRecord#getDefaultValue()
      */
     @Override
-	public Object getDefaultValue() {
+	public String getDefaultValue() {
         return defaultValue;
     }
 
@@ -190,7 +190,7 @@ public class ProcedureParameterRecordImpl extends AbstractMetadataRecord impleme
 	/**
 	 * @param object
 	 */
-	public void setDefaultValue(Object object) {
+	public void setDefaultValue(String object) {
 		defaultValue = object;
 	}
 

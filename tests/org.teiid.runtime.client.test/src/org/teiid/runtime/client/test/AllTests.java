@@ -35,6 +35,12 @@ import org.teiid.query.resolver.v811.Test811FunctionResolving;
 import org.teiid.query.resolver.v811.Test811ProcedureResolving;
 import org.teiid.query.resolver.v811.Test811Resolver;
 import org.teiid.query.resolver.v811.Test811XMLResolver;
+import org.teiid.query.resolver.v8124.Test8124AccessPattern;
+import org.teiid.query.resolver.v8124.Test8124AlterResolving;
+import org.teiid.query.resolver.v8124.Test8124FunctionResolving;
+import org.teiid.query.resolver.v8124.Test8124ProcedureResolving;
+import org.teiid.query.resolver.v8124.Test8124Resolver;
+import org.teiid.query.resolver.v8124.Test8124XMLResolver;
 import org.teiid.query.resolver.v85.Test85AccessPattern;
 import org.teiid.query.resolver.v85.Test85AlterResolving;
 import org.teiid.query.resolver.v85.Test85FunctionResolving;
@@ -86,6 +92,11 @@ import org.teiid.query.sql.v811.Test811Create;
 import org.teiid.query.sql.v811.Test811CreateDrop;
 import org.teiid.query.sql.v811.Test811SQLStringVisitor;
 import org.teiid.query.sql.v811.TestQuery811Parser;
+import org.teiid.query.sql.v8124.Test8124Cloning;
+import org.teiid.query.sql.v8124.Test8124Create;
+import org.teiid.query.sql.v8124.Test8124CreateDrop;
+import org.teiid.query.sql.v8124.Test8124SQLStringVisitor;
+import org.teiid.query.sql.v8124.TestQuery8124Parser;
 import org.teiid.query.sql.v84.TestQuery84Parser;
 import org.teiid.query.sql.v85.Test85Cloning;
 import org.teiid.query.sql.v85.Test85Create;
@@ -128,6 +139,10 @@ import org.teiid.query.validator.v811.Test811AlterValidation;
 import org.teiid.query.validator.v811.Test811FunctionMetadataValidator;
 import org.teiid.query.validator.v811.Test811UpdateValidator;
 import org.teiid.query.validator.v811.Test811Validator;
+import org.teiid.query.validator.v8124.Test8124AlterValidation;
+import org.teiid.query.validator.v8124.Test8124FunctionMetadataValidator;
+import org.teiid.query.validator.v8124.Test8124UpdateValidator;
+import org.teiid.query.validator.v8124.Test8124Validator;
 import org.teiid.query.validator.v85.Test85AlterValidation;
 import org.teiid.query.validator.v85.Test85FunctionMetadataValidator;
 import org.teiid.query.validator.v85.Test85UpdateValidator;
@@ -217,6 +232,11 @@ import org.teiid.types.Test8DataTypeManagerService;
                                         Test811CreateDrop.class,
                                         TestQuery811Parser.class,
                                         Test811SQLStringVisitor.class,
+                                        Test8124Cloning.class,
+                                        Test8124Create.class,
+                                        Test8124CreateDrop.class,
+                                        TestQuery8124Parser.class,
+                                        Test8124SQLStringVisitor.class,
 
                                         // query.resolver
                                         Test7Resolver.class,
@@ -273,6 +293,12 @@ import org.teiid.types.Test8DataTypeManagerService;
                                         Test811FunctionResolving.class,
                                         Test811ProcedureResolving.class,
                                         Test811XMLResolver.class,
+                                        Test8124Resolver.class,
+                                        Test8124AccessPattern.class,
+                                        Test8124AlterResolving.class,
+                                        Test8124FunctionResolving.class,
+                                        Test8124ProcedureResolving.class,
+                                        Test8124XMLResolver.class,
 
                                         // query.validator
                                         Test7AlterValidation.class,
@@ -311,6 +337,10 @@ import org.teiid.types.Test8DataTypeManagerService;
                                         Test811FunctionMetadataValidator.class,
                                         Test811Validator.class,
                                         Test811UpdateValidator.class,
+                                        Test8124AlterValidation.class,
+                                        Test8124FunctionMetadataValidator.class,
+                                        Test8124Validator.class,
+                                        Test8124UpdateValidator.class,
 
                                         // types
                                         Test7DataTypeManagerService.class,

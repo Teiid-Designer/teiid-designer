@@ -81,7 +81,7 @@ public class ColumnMaskingDialog  extends AbstractAddOrEditTitleDialog {
         
 		{
 	        Label columnLabel = WidgetFactory.createLabel(innerPanel, Messages.column);
-	        GridDataFactory.swtDefaults().align(GridData.CENTER, GridData.CENTER).applyTo(columnLabel);;
+	        GridDataFactory.swtDefaults().align(GridData.CENTER, GridData.CENTER).applyTo(columnLabel);
 
 	        this.targetNameText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringConstants.EMPTY_STRING);
 	        if( isEdit ) {

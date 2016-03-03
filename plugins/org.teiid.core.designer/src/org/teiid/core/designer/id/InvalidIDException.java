@@ -33,6 +33,10 @@ import org.teiid.core.designer.TeiidDesignerException;
  * @since 8.0
  */
 public class InvalidIDException extends TeiidDesignerException {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private static final String INVALID_ID_MESSAGE = CoreModelerPlugin.Util.getString("InvalidIDException.Invalid_ID_1"); //$NON-NLS-1$
 
     /**

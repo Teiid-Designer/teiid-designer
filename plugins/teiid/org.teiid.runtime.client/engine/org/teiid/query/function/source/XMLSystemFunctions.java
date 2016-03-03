@@ -88,7 +88,9 @@ import org.teiid.core.types.XMLType;
 import org.teiid.core.types.XMLType.Type;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.core.util.ReaderInputStream;
+import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.json.simple.ContentHandler;
 import org.teiid.json.simple.JSONParser;
@@ -96,6 +98,7 @@ import org.teiid.json.simple.ParseException;
 import org.teiid.query.eval.Evaluator;
 import org.teiid.query.eval.Evaluator.NameValuePair;
 import org.teiid.query.function.CharsetUtils;
+import org.teiid.query.function.FunctionMethods;
 import org.teiid.query.function.TeiidFunction;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
 import org.teiid.query.sql.symbol.XMLSerialize;
@@ -223,18 +226,30 @@ public class XMLSystemFunctions {
 
 		private LinkedList<String> nameStack = new LinkedList<String>();
 		private LinkedList<XMLEvent> eventStack = new LinkedList<XMLEvent>();
-		
+
+		@Since(Version.TEIID_8_12_4)
+		private LinkedList<Boolean> parentArray = new LinkedList<Boolean>();
+
+		@Removed(Version.TEIID_8_12_4)
 		private boolean rootArray;
+
 		private boolean end;
 		private boolean declaredNs;
 
-		private JsonToXmlContentHandler(String rootName,
+        private final ITeiidServerVersion teiidVersion;
+
+		private JsonToXmlContentHandler(ITeiidServerVersion teiidVersion, String rootName,
 				Reader reader, JSONParser parser, XMLEventFactory eventFactory) {
-			this.nameStack.push(escapeName(rootName, true));
+			this.teiidVersion = teiidVersion;
+            this.nameStack.push(escapeName(rootName, true));
 			this.reader = reader;
 			this.eventFactory = eventFactory;
 			this.parser = parser;
 		}
+
+		private boolean isGreaterThanOrEqualTo8_12_4() {
+            return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_12_4);
+        }
 
 		@Override
 		public boolean startObjectEntry(String key)
@@ -246,6 +261,9 @@ public class XMLSystemFunctions {
 		@Override
 		public boolean startObject() throws org.teiid.json.simple.ParseException,
 				IOException {
+		    if (isGreaterThanOrEqualTo8_12_4())
+		        parentArray.push(false);
+
 			start();
 			return false;
 		}
@@ -268,10 +286,19 @@ public class XMLSystemFunctions {
 		@Override
 		public boolean startArray() throws org.teiid.json.simple.ParseException,
 				IOException {
-			if (this.nameStack.size() == 1) {
-				this.rootArray = true;
-				start();
-			}
+		    
+		    if(isGreaterThanOrEqualTo8_12_4()) {
+		        if ((nameStack.size() == 1 && parentArray.isEmpty()) || parentArray.peek()) {
+		            start();
+		        }
+		        parentArray.push(true);
+		    } else {
+		        if (this.nameStack.size() == 1) {
+		            this.rootArray = true;
+		            start();
+		        }
+		    }
+
 			return false;
 		}
 
@@ -312,6 +339,9 @@ public class XMLSystemFunctions {
 		@Override
 		public boolean endObject() throws org.teiid.json.simple.ParseException,
 				IOException {
+		    if (isGreaterThanOrEqualTo8_12_4())
+		        parentArray.pop();
+
 			end();
 			return false;
 		}
@@ -326,9 +356,17 @@ public class XMLSystemFunctions {
 		@Override
 		public boolean endArray() throws org.teiid.json.simple.ParseException,
 				IOException {
-			if (this.nameStack.size() == 1 && rootArray) {
-				end();
-			}
+            if (isGreaterThanOrEqualTo8_12_4()) {
+                parentArray.pop();
+                if ((nameStack.size() == 1 && parentArray.isEmpty()) || parentArray.peek()) {
+                    end();
+                }
+            } else {
+                if (this.nameStack.size() == 1 && rootArray) {
+                    end();
+                }
+            }
+
 			return false;
 		}
 
@@ -714,6 +752,23 @@ public class XMLSystemFunctions {
                         return;
                     }
                 }
+                r = clob.getCharacterStream();
+                convertReader(writer, eventWriter, r, Type.TEXT, null);
+            } else if (object instanceof BlobType) {
+                BlobType blob = (BlobType)object;
+                StorageMode storageMode = InputStreamFactory.getStorageMode(blob);
+                ClobType clob = FunctionMethods.toChars(blob, CharsetUtils.BASE64_NAME, true);
+                if ((storageMode == StorageMode.PERSISTENT || storageMode == StorageMode.OTHER) && writer instanceof ExtendedWriter) {
+                    ExtendedWriter ew = (ExtendedWriter)writer;
+                    if (ew.include(clob)) {
+                        return;
+                    }
+                }
+                r = clob.getCharacterStream();
+                convertReader(writer, eventWriter, r, Type.TEXT, null);
+            } else if (object instanceof BinaryType) {
+                BinaryType binary = (BinaryType)object;
+                ClobType clob = FunctionMethods.toChars(new BlobType(binary.getBytesDirect()), CharsetUtils.BASE64_NAME, true);
 				r = clob.getCharacterStream();
 				convertReader(writer, eventWriter, r, Type.TEXT, null);
 			} else {
@@ -994,7 +1049,7 @@ public class XMLSystemFunctions {
     private static SQLXML jsonToXml(CommandContext context,
             final String rootName, final Reader r, boolean stream) throws Exception {
         JSONParser parser = new JSONParser();
-        final JsonToXmlContentHandler reader = new JsonToXmlContentHandler(rootName, r, parser, threadLocalEventtFactory.get());
+        final JsonToXmlContentHandler reader = new JsonToXmlContentHandler(context.getTeiidVersion(), rootName, r, parser, threadLocalEventtFactory.get());
 
         SQLXMLImpl sqlXml = null;
         if (stream) {

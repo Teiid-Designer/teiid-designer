@@ -27,14 +27,13 @@ import static org.junit.Assert.assertNotEquals;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.query.sql.AbstractSqlTest;
 import org.teiid.query.sql.AbstractTestFactory;
-import org.teiid.query.sql.AbstractTestQueryParser;
 import org.teiid.query.sql.lang.Create;
 
 @SuppressWarnings( {"javadoc"} )
-public class Test8Create extends AbstractTestQueryParser {
+public class Test8Create extends AbstractSqlTest {
 
 	// ################################## FRAMEWORK ################################
 	

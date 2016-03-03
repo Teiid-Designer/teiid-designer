@@ -54,7 +54,7 @@ public class ProcedureParameterRecordImpl extends org.teiid.designer.metadata.ru
      * @see org.teiid.designer.metadata.runtime.ProcedureParameterRecord#getDefaultValue()
      */
     @Override
-    public Object getDefaultValue() {
+    public String getDefaultValue() {
 		if(eObject != null && !defaultValueSet) {
 			setDefaultValue(getParameterAspect().getDefaultValue((EObject)eObject));
 		}
@@ -247,7 +247,7 @@ public class ProcedureParameterRecordImpl extends org.teiid.designer.metadata.ru
 	 * @param object
 	 */
 	@Override
-    public void setDefaultValue(Object object) {
+    public void setDefaultValue(String object) {
 		super.setDefaultValue(object);
 		defaultValueSet = true;		
 	}

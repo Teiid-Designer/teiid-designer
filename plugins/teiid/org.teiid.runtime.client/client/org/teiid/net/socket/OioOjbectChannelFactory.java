@@ -39,6 +39,7 @@ import org.teiid.client.util.ResultsFuture;
 import org.teiid.core.util.AccessibleBufferedInputStream;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.net.CommunicationException;
+import org.teiid.net.HostInfo;
 import org.teiid.net.socket.SocketUtil.SSLSocketFactory;
 import org.teiid.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import org.teiid.netty.handler.codec.serialization.ObjectEncoderOutputStream;
@@ -58,7 +59,6 @@ public final class OioOjbectChannelFactory implements ObjectChannelFactory {
 		private final Socket socket;
 		private ObjectOutputStream outputStream;
 		private ObjectInputStream inputStream;
-		private Object readLock = new Object();
 
 		private OioObjectChannel(Socket socket, int maxObjectSize) throws IOException {
 			log.fine("creating new OioObjectChannel"); //$NON-NLS-1$
@@ -112,20 +112,18 @@ public final class OioOjbectChannelFactory implements ObjectChannelFactory {
 		@Override
 		public Object read() throws IOException, ClassNotFoundException {
 			log.finer("reading message from socket"); //$NON-NLS-1$
-			synchronized (readLock) {
-				try {
-					return inputStream.readObject();
-				} catch (SocketTimeoutException e) {
-				    Long timeout = TIMEOUTS.get();
-                    if (timeout != null && timeout < System.currentTimeMillis()) {
-                        TIMEOUTS.set(null);
-                        throw new InterruptedIOException(Messages.gs(Messages.TEIID.TEIID20035));
-                    }
-					throw e;
-		        } catch (IOException e) {
-		            close();
-		            throw e;
-				}
+			try {
+			    return inputStream.readObject();
+			} catch (SocketTimeoutException e) {
+			    Long timeout = TIMEOUTS.get();
+			    if (timeout != null && timeout < System.currentTimeMillis()) {
+			        TIMEOUTS.set(null);
+			        throw new InterruptedIOException(Messages.gs(Messages.TEIID.TEIID20035));
+			    }
+			    throw e;
+			} catch (IOException e) {
+			    close();
+			    throw e;
 			}
 		}
 
@@ -160,10 +158,10 @@ public final class OioOjbectChannelFactory implements ObjectChannelFactory {
 	}
 
 	@Override
-	public ObjectChannel createObjectChannel(SocketAddress address, boolean ssl) throws IOException,
+	public ObjectChannel createObjectChannel(HostInfo info) throws IOException,
 			CommunicationException {
 		final Socket socket;
-		if (ssl) {
+		if (info.isSsl()) {
 			if (this.sslSocketFactory == null) {
 				try {
 					sslSocketFactory = SocketUtil.getSSLSocketFactory(props);
@@ -171,9 +169,9 @@ public final class OioOjbectChannelFactory implements ObjectChannelFactory {
 					 throw new CommunicationException(e, e.getMessage());
 				}
 			}
-			socket = sslSocketFactory.getSocket();
-		} else {
-			socket = new Socket();
+			socket = sslSocketFactory.getSocket(info.getHostName(), info.getPortNumber());
+        } else {
+            socket = new Socket(info.getInetAddress(), info.getPortNumber());
 		}
 		if (receiveBufferSize > 0) {
 			socket.setReceiveBufferSize(receiveBufferSize);
@@ -182,7 +180,6 @@ public final class OioOjbectChannelFactory implements ObjectChannelFactory {
 			socket.setSendBufferSize(sendBufferSize);
 		}
 	    socket.setTcpNoDelay(!conserveBandwidth); // enable Nagle's algorithm to conserve bandwidth
-	    socket.connect(address);
 	    socket.setSoTimeout(soTimeout);
 	    return new OioObjectChannel(socket, maxObjectSize);
 	}

@@ -37,6 +37,7 @@ import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.validator.IValidator.IValidatorFailure;
@@ -84,6 +85,7 @@ import org.teiid.query.validator.Validator;
 import org.teiid.query.validator.ValidatorFailure;
 import org.teiid.query.validator.ValidatorReport;
 import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.query.SyntaxFactory;
 
 public class MetadataValidator {
 
@@ -353,13 +355,22 @@ public class MetadataValidator {
     			symbol.setName(t.getFullName());
     			ResolverUtil.resolveGroup(symbol, metadata);
     			String selectTransformation = t.getSelectTransformation();
-    			if (t.isVirtual() && (t.getColumns() == null || t.getColumns().isEmpty())) {
+
+    			boolean columnsIsEmpty = t.getColumns() == null || t.getColumns().isEmpty();
+
+    			// Consider columns if teid 8.11 or lower
+                boolean considerColumns_811 = isTeiidOrGreater(Version.TEIID_8_12_4) ? true : columnsIsEmpty;
+                // Consider columns if teiid 8.12.4+
+                boolean considerColumns_8124 = isTeiidOrGreater(Version.TEIID_8_12_4) ? columnsIsEmpty : true;
+
+    			if (t.isVirtual() && considerColumns_811) {
     				QueryCommand command = (QueryCommand) queryParser.parseCommand(selectTransformation);
     				QueryResolver resolver = new QueryResolver(queryParser);
     				resolver.resolveCommand(command, metadata);
     				Validator validator = new Validator();
     				resolverReport =  validator.validate(command, metadata);
-    				if(!resolverReport.hasItems()) {
+
+    				if (!resolverReport.hasItems() && considerColumns_8124) {
     					List<Expression> symbols = command.getProjectedSymbols();
     					for (Expression column:symbols) {
     						try {
@@ -369,15 +380,18 @@ public class MetadataValidator {
 							}
     					}
     				}
-    				determineDependencies(t, command);
-                    if (t.getInsertPlan() != null && t.isInsertPlanEnabled()) {
-                        validateUpdatePlan(model, report, metadata, t, t.getInsertPlan());
-                    }
-                    if (t.getUpdatePlan() != null && t.isUpdatePlanEnabled()) {
-                        validateUpdatePlan(model, report, metadata, t, t.getUpdatePlan());
-                    }
-                    if (t.getDeletePlan() != null && t.isDeletePlanEnabled()) {
-                        validateUpdatePlan(model, report, metadata, t, t.getDeletePlan());
+
+    				if (considerColumns_8124) { 
+                        determineDependencies(t, command);
+                        if (t.getInsertPlan() != null && t.isInsertPlanEnabled()) {
+                            validateUpdatePlan(model, report, metadata, t, t.getInsertPlan(), Command.TYPE_INSERT);
+                        }
+                        if (t.getUpdatePlan() != null && t.isUpdatePlanEnabled()) {
+                            validateUpdatePlan(model, report, metadata, t, t.getUpdatePlan(), Command.TYPE_UPDATE);
+                        }
+                        if (t.getDeletePlan() != null && t.isDeletePlanEnabled()) {
+                            validateUpdatePlan(model, report, metadata, t, t.getDeletePlan(), Command.TYPE_DELETE);
+                        }
                     }
     			}
     			
@@ -464,10 +478,20 @@ public class MetadataValidator {
     private void validateUpdatePlan(ModelMetaData model,
             ValidatorReport report,
             IQueryMetadataInterface metadata, 
-            Table t, String plan) throws Exception {
-        QueryCommand command = (QueryCommand) queryParser.parseCommand(plan);
+            Table t, String plan, int type) throws Exception {
+
+        Command command = null;
         QueryResolver queryResolver = new QueryResolver(queryParser);
-        queryResolver.resolveCommand(command, metadata);
+        if (isTeiidOrGreater(Version.TEIID_8_12_4)) {
+            command = queryParser.parseProcedure(plan, true);
+            SyntaxFactory factory = new SyntaxFactory(queryParser.getTeiidParser());
+            IGroupSymbol groupSymbol = factory.createGroupSymbol(t.getFullName());
+            queryResolver.resolveCommand(command, (GroupSymbol) groupSymbol, type, metadata, false);
+        } else {
+            command = queryParser.parseCommand(plan);
+            queryResolver.resolveCommand(command, metadata);
+        }
+
         //determineDependencies(t, command); -- these should be tracked against triggers
         ValidatorReport resolverReport = new Validator().validate(command, metadata);
         processReport(model, t, report, resolverReport);

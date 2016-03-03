@@ -176,7 +176,7 @@ public class InputParameterSqlAspect extends AbstractTransformationSqlAspect imp
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getDefaultValue(org.eclipse.emf.ecore.EObject)
      */
     @Override
-	public Object getDefaultValue(EObject eObject) {
+	public String getDefaultValue(EObject eObject) {
         return null;
     }
 

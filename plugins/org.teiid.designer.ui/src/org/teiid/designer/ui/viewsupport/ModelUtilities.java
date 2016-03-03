@@ -2056,7 +2056,7 @@ public abstract class ModelUtilities implements UiConstants {
 			    for( ModelObjectExtensionAssistant nextAss : assistants ) {
 			        if( nextAss.supportsMyNamespace(eObj)) {
 			        	Properties props = nextAss.getOverriddenValues(eObj);
-			        	if( props != null && !props.isEmpty() ) doWarn = true;;
+			        	if( props != null && !props.isEmpty() ) doWarn = true;
 			        	
 			        	if( doWarn ) break;
 			        }

@@ -189,7 +189,7 @@ public class ExecResolver extends ProcedureContainerResolver {
         // the procedure was parsed with named or unnamed parameters, the keys
         // for this map will either be the String names of the parameters or
         // the Integer indices, as entered in the user query
-        Map<Integer, Expression> positionalExpressions = new HashMap<Integer, Expression>();
+        Map<Integer, Expression> positionalExpressions = new TreeMap<Integer, Expression>();
         Map<String, Expression> namedExpressions = new TreeMap<String, Expression>(String.CASE_INSENSITIVE_ORDER);
         int adjustIndex = 0;
         for (SPParameter param : oldParams) {

@@ -414,10 +414,14 @@ public class FunctionTree {
 
             FunctionDescriptor result = new FunctionDescriptor(teiidVersion, method, types, outputType,
                                                                invocationMethod, requiresContext, source.getClassLoader());
-            if (method.getAggregateAttributes() != null
+
+            boolean validateClassResult =  teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_12_4) ? validateClass : true;
+
+            if (validateClassResult && method.getAggregateAttributes() != null
                 && (method.getPushdown() == PushDown.CAN_PUSHDOWN || method.getPushdown() == PushDown.CANNOT_PUSHDOWN)) {
                 result.newInstance();
             }
+
             result.setHasWrappedArgs(hasWrappedArg);
             return result;
         } catch (Exception ex) {

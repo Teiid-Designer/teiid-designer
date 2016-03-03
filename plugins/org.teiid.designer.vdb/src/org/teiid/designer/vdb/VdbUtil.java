@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -35,7 +34,6 @@ import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -213,20 +211,18 @@ public class VdbUtil implements VdbConstants {
 				}
 	            
 	            if (manifest != null) {
-		            if (manifest != null) {
-		            	for( ModelElement model : manifest.getModels() ) {
-		            		List<MetadataElement> allMetadata =  model.getMetadata();
-		            		if( allMetadata != null) {
-		            			for( MetadataElement metadata :allMetadata ) {
-		            				if( metadata.getType().equalsIgnoreCase("DDL-FILE") ) {
-				            			result = true;
-				            			break;
-		            				}
-		            			}
-		            		}
-		            		if( result ) break;
-		            	}
-		            }
+	                for( ModelElement model : manifest.getModels() ) {
+	                    List<MetadataElement> allMetadata =  model.getMetadata();
+	                    if( allMetadata != null) {
+	                        for( MetadataElement metadata :allMetadata ) {
+	                            if( metadata.getType().equalsIgnoreCase("DDL-FILE") ) {
+	                                result = true;
+	                                break;
+	                            }
+	                        }
+	                    }
+	                    if( result ) break;
+	                }
 	            }
             }
         }

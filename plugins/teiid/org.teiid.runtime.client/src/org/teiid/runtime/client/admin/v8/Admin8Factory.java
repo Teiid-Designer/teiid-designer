@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -111,15 +110,16 @@ public class Admin8Factory {
 	    return instance;
 	}
 
-	private Admin8Factory() {};
+	private Admin8Factory() {}
 
     /**
      * Creates a ServerAdmin with the specified connection properties.
+     * @param teiidVersion
+     * @param host 
+     * @param port 
      * @param userName
      * @param password
-     * @param serverURL
-     * @param applicationName
-     * @return
+     * @return new Admin connection
      * @throws AdminException
      */
     public Admin createAdmin(ITeiidServerVersion teiidVersion, String host, int port, String userName, char[] password) throws AdminException {
@@ -160,7 +160,8 @@ public class Admin8Factory {
         	this.password = password;
         }
 
-        public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+        @Override
+        public void handle(Callback[] callbacks) throws UnsupportedCallbackException {
             // Special case for anonymous authentication to avoid prompting user for their name.
             if (callbacks.length == 1 && callbacks[0] instanceof NameCallback) {
                 ((NameCallback)callbacks[0]).setName("anonymous CLI user"); //$NON-NLS-1$
@@ -194,29 +195,37 @@ public class Admin8Factory {
 	private class ResultCallback {
 		@SuppressWarnings("unused")
 		void onSuccess(ModelNode outcome, ModelNode result) throws AdminException {
+		    // Nothinq required
 		}
 		void onFailure(String msg) throws AdminProcessingException {
 			throw new AdminProcessingException(msg);
 		}
 	}
 
+    /**
+     * Implemetation of Admin interface
+     */
+	@SuppressWarnings( "unused" )
     public class AdminImpl implements Admin{
+	    private static final long CACHE_TIME = 5*1000;
     	private static final String CLASS_NAME = "class-name";
 		private static final String JAVA_CONTEXT = "java:/";
 		private final ITeiidServerVersion teiidVersion;
 		private ModelControllerClient connection;
     	private boolean domainMode = false;
     	private String profileName = "ha";
-    	
+
+        private Expirable<Map<String, String>> connectionFactoryNames = new Expirable<Map<String,String>>();
+        private Expirable<Set<String>> installedResourceAdaptorNames = new Expirable<Set<String>>();
+        private Expirable<Set<String>> deployedResourceAdaptorNames = new Expirable<Set<String>>();
+
     	private Collection<String> dataSourceNames;
     	private Set<String> installedResourceAdapterNames;
-    	private Set<String> deployedResourceAdaptorNames;
     	private HashSet<String> installedJdbcDrivers;
-    	private HashMap<String, String> connectionFactoryNames;
     	private Collection<String> dsNames;
     	private Collection<String> xaDsNames;
     	private HashMap<String, String> rarToModuleNames;
-    	private HashMap<String, String> rarToRAModuleNames;
+        private HashMap<String, String> rarToRAModuleNames;
     	private HashMap<String, Collection<PropertyDefinition>> translatorTempPropDefs;
 
         /**
@@ -241,19 +250,7 @@ public class Admin8Factory {
         
         @Override
 		public void refresh() {
-        	// The expectation is that various getters will look for null then go back to the server
-        	// to retrieve the information and re-cache it, until refresh() is called again.
-        	// This allows making only necessary CLI calls during loading of Teiid server Data Source and Translator info
-        	
-        	dataSourceNames = null;
-        	installedResourceAdapterNames = null;
-        	deployedResourceAdaptorNames = null;
-        	installedJdbcDrivers = null;
-        	connectionFactoryNames = null;
-        	dsNames = null;
-        	xaDsNames = null;
-        	rarToModuleNames = null;
-			
+        	flush();
 		}
 
 		private void requires(String item, Version requiredVersion) throws AdminException {
@@ -261,6 +258,9 @@ public class Admin8Factory {
                 throw new AdminComponentException(Messages.getString(Messages.Misc.TeiidVersionFailure, item, getTeiidVersion()));
         }
 
+		/**
+		 * @param name
+		 */
 		public void setProfileName(String name) {
 			this.profileName = name;
 		}
@@ -452,6 +452,10 @@ public class Admin8Factory {
 			}
 		}
 
+		/**
+		 * @return installed jdbc drivers
+		 * @throws AdminException
+		 */
 		public Set<String> getInstalledJDBCDrivers() throws AdminException {
 			if( this.installedJdbcDrivers == null ) {
 				installedJdbcDrivers = new HashSet<String>();
@@ -491,6 +495,10 @@ public class Admin8Factory {
 	        return installedJdbcDrivers;
 		}
 
+		/**
+		 * @return profile name
+		 * @throws AdminException
+		 */
 		public String getProfileName() throws AdminException {
 			if (!this.domainMode) {
 				return null;
@@ -503,23 +511,26 @@ public class Admin8Factory {
 
 		@Override
 		public void createDataSource(String deploymentName,	String templateName, Properties properties)	throws AdminException {
-			deploymentName = removeJavaContext(deploymentName);
+		    flush();
+		    deploymentName = removeJavaContext(deploymentName);
 
-			Collection<String> dsNames = getDataSourceNames();
-			if (dsNames.contains(deploymentName)) {
-				 throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70003, deploymentName));
-			}
+		    Map<String, String> connectionFactoryNames = getConnectionFactoryNames();
+		    Collection<String> dsNames = getDataSourceNames(connectionFactoryNames);
+		    if (dsNames.contains(deploymentName)) {
+		        throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70003, deploymentName));
+		    }
 
-			Set<String> resourceAdapters = getResourceAdapterNames();
-        	if (resourceAdapters.contains(templateName)) {
-	            createConnectionFactory(deploymentName, templateName, properties);
-	            return;
-        	}
+		    Set<String> resourceAdapters = getResourceAdapterNames(connectionFactoryNames);
+		    if (resourceAdapters.contains(templateName)) {
+		        createConnectionFactory(deploymentName, templateName, properties);
+		        flush();
+		        return;
+		    }
 
-        	Set<String> drivers = getInstalledJDBCDrivers();
-        	if (!drivers.contains(templateName)) {
-        		 throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70004, templateName));
-        	}
+		    Set<String> drivers = getInstalledJDBCDrivers();
+		    if (!drivers.contains(templateName)) {
+		        throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70004, templateName));
+		    }
 
         	// build properties
         	Collection<PropertyDefinition> dsProperties = getTemplatePropertyDefinitions(templateName);
@@ -570,8 +581,8 @@ public class Admin8Factory {
 	        // issue the "enable" operation
 			cliCall("enable", new String[] { "subsystem", "datasources","data-source", deploymentName },
 					null, new ResultCallback());
-			
-			refresh();
+
+			flush();
 		}
 
 		// /subsystem=datasources/data-source=DS/connection-properties=foo:add(value=/home/rareddy/testing)
@@ -620,6 +631,7 @@ public class Admin8Factory {
 			}
 			@Override
 			public void onFailure(String msg) throws AdminProcessingException {
+			    // nothing required
 			}
 		}
 
@@ -679,14 +691,17 @@ public class Admin8Factory {
 
 			@Override
 			public void onFailure(String msg) throws AdminProcessingException {
+			    // nothing required
 			}
 		}
 
 		@Override
 		public void deleteDataSource(String deployedName) throws AdminException {
+		    flush();
 			deployedName = removeJavaContext(deployedName);
 
-			Collection<String> dsNames = getDataSourceNames();
+			Map<String, String> connectionFactoryNames = getConnectionFactoryNames();
+            Collection<String> dsNames = getDataSourceNames(connectionFactoryNames);
 			if (!dsNames.contains(deployedName)) {
 				 throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70008, deployedName));
 			}
@@ -700,9 +715,8 @@ public class Admin8Factory {
 
 			// check connection factories
 			if (!deleted) {
-				Map<String, String> raDSMap = getConnectionFactoryNames();
 				// deployed rar name, may be it is == deployedName or if server restarts it will be rar name or rar->[1..n] name
-				String rarName = raDSMap.get(deployedName);
+				String rarName = connectionFactoryNames.get(deployedName);
 				if (rarName != null) {
 					cliCall("remove", new String[] { "subsystem",
 							"resource-adapters", "resource-adapter", rarName,
@@ -718,12 +732,11 @@ public class Admin8Factory {
 					//AS-4776 HACK - END
 				}
 			}
-			
-			refresh();
 
+			flush();
 			dsNames = getDataSourceNames();
 			if (dsNames.contains(deployedName)) {
-				throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70008, deployedName));
+				throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70056, deployedName));
 			}
 
 		}
@@ -779,6 +792,11 @@ public class Admin8Factory {
 			execute(request);
 		}
 
+		/**
+		 * @param deployedName
+		 * @param force
+		 * @throws AdminException
+		 */
 		public void undeploy(String deployedName, boolean force) throws AdminException {
 			ModelNode request;
 			try {
@@ -789,6 +807,12 @@ public class Admin8Factory {
 			execute(request);
 		}
 
+	    /**
+	     * @param name
+	     * @param force
+	     * @return undeploy request
+	     * @throws OperationFormatException
+	     */
 	    public ModelNode buildUndeployRequest(String name, boolean force) throws OperationFormatException {
 	        ModelNode composite = new ModelNode();
 	        composite.get("operation").set("composite");
@@ -831,6 +855,12 @@ public class Admin8Factory {
 			execute(request);
 		}
 
+		/**
+		 * @param deployName
+		 * @param vdb
+		 * @param persist
+		 * @throws AdminException
+		 */
 		public void deploy(String deployName, InputStream vdb, boolean persist)	throws AdminException {
 			ModelNode request = buildDeployVDBRequest(deployName, vdb, persist);
 			execute(request);
@@ -976,11 +1006,20 @@ public class Admin8Factory {
 		 */
 		@Override
 		public Collection<String> getDataSourceNames() throws AdminException {
+		    flush();
+            Map<String, String> connectionFactoryNames = getConnectionFactoryNames();
+            return getDataSourceNames(connectionFactoryNames);
+        }
+
+        private Collection<String> getDataSourceNames(Map<String, String> connectionFactoryNames) throws AdminException {
 			if( this.dataSourceNames == null ) {
 				Set<String> datasourceNames = new HashSet<String>();
 				datasourceNames.addAll(getDSNames());
 				datasourceNames.addAll(getXaDSNames());
-				datasourceNames.addAll(getConnectionFactoryNames().keySet());
+				if (connectionFactoryNames == null) {
+	                connectionFactoryNames = getConnectionFactoryNames();
+	            }
+	            datasourceNames.addAll(connectionFactoryNames.keySet());
 	
 				dataSourceNames = new HashSet<String>();
 				for (String s:datasourceNames) {
@@ -1016,8 +1055,18 @@ public class Admin8Factory {
 		@Override
 		public Properties getDataSource(String deployedName) throws AdminException {
 			deployedName = removeJavaContext(deployedName);
+			
+			Map<String, String> connectionFactoryNames = getConnectionFactoryNames();
+            Collection<String> dsNames = getDataSourceNames(connectionFactoryNames);
+            if (!dsNames.contains(deployedName)) {
+                flush(); //just in case we were using old info, flush
+                connectionFactoryNames = getConnectionFactoryNames();
+                dsNames = getDataSourceNames(connectionFactoryNames);
+                if (!dsNames.contains(deployedName)) {
+                    throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70008, deployedName));
+                }
+            }
 
-			Collection<String> dsNames = getDataSourceNames();
 			if (!dsNames.contains(deployedName)) {
 				 throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70008, deployedName));
 			}
@@ -1036,9 +1085,8 @@ public class Admin8Factory {
 			 						new DataSourceProperties(dsProperties));
 			// Connection Factory
 			} else if(getConnectionFactoryNames().keySet().contains(deployedName)) {
-				Map<String, String> raDSMap = getConnectionFactoryNames();
 				// deployed rar name, may be it is == deployedName or if server restarts it will be rar name or rar->[1..n] name
-				String rarName = raDSMap.get(deployedName);
+			    String rarName = connectionFactoryNames.get(deployedName);
 				if (rarName != null) {
 					cliCall("read-resource",
 							new String[] { "subsystem", "resource-adapters", "resource-adapter", rarName, "connection-definitions", deployedName},
@@ -1052,7 +1100,7 @@ public class Admin8Factory {
                 		dsProperties.setProperty("driver-name", matchingInstalledRar);
                 	} else {
 	                    String moduleName = getResourceAdapterModuleName(rarName);
-	                    Set<String> installedRars = getResourceAdapterNames();
+	                    Set<String> installedRars = getResourceAdapterNames(connectionFactoryNames);
 	                    for (String installedRar:installedRars) {
 	                    	String resAdaptModuleName = getResourceAdapterModuleName(installedRar);
 	                        if (resAdaptModuleName.equals(moduleName)) {
@@ -1081,17 +1129,19 @@ public class Admin8Factory {
 
 
 		private Map<String, String> getConnectionFactoryNames() throws AdminException {
-			if( this.connectionFactoryNames == null ) {
-				connectionFactoryNames = new HashMap<String, String>();
-				Set<String> resourceAdapters = getInstalledResourceAdaptorNames();
-				for (String resource:resourceAdapters) {
-					getRAConnections(connectionFactoryNames, resource);
-				}
-			}
-			return connectionFactoryNames;
+		    Map<String, String> datasourceNames = this.connectionFactoryNames.get();
+            if (datasourceNames == null) {
+                datasourceNames = new HashMap<String, String>();
+                Set<String> resourceAdapters = getInstalledResourceAdaptorNames();
+                for (String resource:resourceAdapters) {
+                    getRAConnections(datasourceNames, resource);
+                }
+                this.connectionFactoryNames.set(datasourceNames, CACHE_TIME);
+            }
+            return datasourceNames;
 		}
 
-		private void getRAConnections(final HashMap<String, String> datasourceNames, final String rarName) throws AdminException {
+		private void getRAConnections(final Map<String, String> datasourceNames, final String rarName) throws AdminException {
 			cliCall("read-resource", new String[] {"subsystem", "resource-adapters", "resource-adapter", rarName}, null, new ResultCallback() {
 				@Override
 				public void onSuccess(ModelNode outcome, ModelNode result) throws AdminProcessingException {
@@ -1119,41 +1169,50 @@ public class Admin8Factory {
 		 * @throws AdminException
 		 */
 		private Set<String> getInstalledResourceAdaptorNames() throws AdminException {
-			if( this.installedResourceAdapterNames == null ) {
-				installedResourceAdapterNames = new HashSet<String>();
-				this.installedResourceAdapterNames.addAll(getChildNodeNames("resource-adapters", "resource-adapter"));
-			}
-	        return installedResourceAdapterNames;
+		    Set<String> templates = this.installedResourceAdaptorNames.get();
+            if (templates == null) {
+                templates = new HashSet<String>();
+                templates.addAll(getChildNodeNames("resource-adapters", "resource-adapter"));
+                this.installedResourceAdaptorNames.set(templates, CACHE_TIME);
+            }
+            return templates;
 		}
 
 		
 		// :read-children-names(child-type=deployment)
-		private Set<String> getResourceAdapterNames() throws AdminException {
+		private Set<String> getResourceAdapterNames(Map<String, String> connFactoryMap) throws AdminException {
 			Set<String> templates = getDeployedResourceAdaptorNames();
             templates.addAll(getInstalledResourceAdaptorNames());
             
             //AS-4776 HACK - BEGIN
-            Map<String, String> connFactoryMap = getConnectionFactoryNames();
+            if (connFactoryMap == null) {
+                connFactoryMap = getConnectionFactoryNames();
+            }
             for (String key:connFactoryMap.keySet()) {
-            	templates.remove(key);
+                templates.remove(key);
             }
             //AS-4776 HACK - END
 	        return templates;
 		}
 
 		private Set<String> getDeployedResourceAdaptorNames() throws AdminException {
-			if( this.deployedResourceAdaptorNames == null ) {
-				this.deployedResourceAdaptorNames = new HashSet<String>();
-				List<String> deployments = getChildNodeNames(null, "deployment");
-	            for (String deployment:deployments) {
-	            	if (deployment.endsWith(".rar")) {
-	            		this.deployedResourceAdaptorNames.add(deployment);
-	            	}
-	            }
-			}
-			return deployedResourceAdaptorNames;
-		}
+            Set<String> templates = this.deployedResourceAdaptorNames.get();
+            if (templates == null) {
+                templates = new HashSet<String>();
+                List<String> deployments = getChildNodeNames(null, "deployment");
+                for (String deployment:deployments) {
+                    if (deployment.endsWith(".rar")) {
+                        templates.add(deployment);
+                    }
+                }
+                this.deployedResourceAdaptorNames.set(templates, CACHE_TIME);
+            }
+            return templates;
+        }
 
+		/**
+		 * @return deployments
+		 */
 		public List<String> getDeployments(){
 			return Util.getDeployments(this.connection);
 		}
@@ -1162,7 +1221,7 @@ public class Admin8Factory {
 		public Set<String> getDataSourceTemplateNames() throws AdminException {
 			Set<String> templates = new HashSet<String>();
 			templates.addAll(getInstalledJDBCDrivers());
-			templates.addAll(getResourceAdapterNames());
+			templates.addAll(getResourceAdapterNames(null));
 			return templates;
 		}
 
@@ -1279,7 +1338,7 @@ public class Admin8Factory {
 				BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
 				
 				// RAR properties
-				Set<String> resourceAdapters = getResourceAdapterNames();
+	            Set<String> resourceAdapters = getResourceAdapterNames(null);
 	        	if (resourceAdapters.contains(templateName)) {
 	        		cliCall("read-rar-description", new String[] {"subsystem", "teiid"}, new String[] {"rar-name", templateName}, builder);
 	        		buildResourceAdapterProperties(templateName, builder);
@@ -1306,7 +1365,8 @@ public class Admin8Factory {
 	        return props;
 		}
 
-		@Deprecated
+        @SuppressWarnings( "deprecation" )
+        @Deprecated
         @Override
 	    public Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName) throws AdminException{
 			BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
@@ -1335,21 +1395,21 @@ public class Admin8Factory {
 		
 		@Override
         @Since(Version.TEIID_8_7)
-        public Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type) throws AdminException{
-			requires("getTranslatorPropertyDefinitions(String, TranslatorPropertyType)", Version.TEIID_8_7);
-
-		    BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
-
-		    Collection<? extends Translator> translators = getTranslators();
-            for (Translator t:translators) {
-                if (t.getName().equalsIgnoreCase(translatorName)) {
-                    cliCall("read-translator-properties", new String[] {"subsystem", "teiid"}, new String[] {"translator-name", translatorName, "type", type.name()}, builder);
+        public Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type) throws AdminException {
+            BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
+            Translator translator = getTranslator(translatorName);
+            if (translator != null) {
+                if (translator.getName().equalsIgnoreCase(translatorName)) {
+                    cliCall("read-translator-properties",
+                            new String[] {"subsystem", "teiid"},
+                            new String[] {"translator-name", translatorName, "type", type.name()},
+                            builder);
                     return builder.getPropertyDefinitions();
                 }
             }
             throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70055, translatorName));
         }
-
+		
 		private class BuildPropertyDefinitions extends ResultCallback{
 			private ArrayList<PropertyDefinition> propDefinitions = new ArrayList<PropertyDefinition>();
 
@@ -1428,13 +1488,17 @@ public class Admin8Factory {
 	        		}
 
 	        		if (node.hasDefined("advanced")) {
-	        			String access = node.get("advanced").asString();
-	        			def.setAdvanced(Boolean.parseBoolean(access));
+	        		    String advanced = node.get("advanced").asString();
+	        		    def.setAdvanced(Boolean.parseBoolean(advanced));
 	        		}
 
 	        		if (node.hasDefined("masked")) {
-	        			String access = node.get("masked").asString();
-	        			def.setAdvanced(Boolean.parseBoolean(access));
+	        		    String masked = node.get("masked").asString();
+	        		    def.setMasked(Boolean.parseBoolean(masked));
+	        		}
+
+	        		if (node.hasDefined("category")) {
+	        		    def.setCategory(node.get("category").asString());
 	        		}
 
 	        		if (node.hasDefined("restart-required")) {
@@ -1837,7 +1901,9 @@ public class Admin8Factory {
 	        }
 		}
 
-		@Override
+		@SuppressWarnings( "deprecation" )
+        @Deprecated
+        @Override
 		public void assignToModel(String vdbName, int vdbVersion, String modelName, String sourceName, String translatorName,
 				String dsName) throws AdminException {
 	        final ModelNode request = buildRequest("teiid", "assign-datasource",
@@ -2049,5 +2115,41 @@ public class Admin8Factory {
         public void deleteVDB(String vdbName, int version) {
             throw new UnsupportedOperationException();
         }
+
+        /**
+         * Flushes the caches of the admin connection
+         */
+        public void flush() {
+            // The expectation is that various getters will look for null then go back to the server
+            // to retrieve the information and re-cache it, until refresh() is called again.
+            // This allows making only necessary CLI calls during loading of Teiid server Data Source and Translator info
+
+            this.connectionFactoryNames.set(null, 0);
+            this.deployedResourceAdaptorNames.set(null, 0);
+            this.installedResourceAdaptorNames.set(null, 0);            
+            this.dataSourceNames = null;
+            this.installedJdbcDrivers = null;
+            this.dsNames = null;
+            this.xaDsNames = null;
+            this.rarToModuleNames = null;
+        }
+    }
+
+	static class Expirable<T> {
+        private long expires;
+        private T t;
+
+        public T get() {
+            if (this.t == null || System.currentTimeMillis() >= this.expires) {
+                this.t = null;
+            }
+            return this.t;
+        }
+
+        public void set(T t, long cacheTimeInMillis) {
+            this.expires = System.currentTimeMillis()+cacheTimeInMillis;
+            this.t = t;
+        }
+        
     }
 }

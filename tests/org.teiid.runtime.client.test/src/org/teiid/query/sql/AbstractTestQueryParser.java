@@ -28,7 +28,6 @@ import org.teiid.query.parser.ParseInfo;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.ArrayTable;
 import org.teiid.query.sql.lang.BetweenCriteria;
-import org.teiid.query.sql.lang.CacheHint;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
@@ -102,7 +101,7 @@ import org.teiid.query.sql.symbol.XMLSerialize;
  *
  */
 @SuppressWarnings( {"javadoc", "nls"} )
-public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
+public abstract class AbstractTestQueryParser extends AbstractSqlTest {
 
     /**
      * @param teiidVersion 
@@ -111,104 +110,7 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
         super(teiidVersion);
     }
 
-    protected void helpTest(String sql, String expectedString, Command expectedCommand, boolean designerCommand) {
-        helpTest(sql, expectedString, expectedCommand, new ParseInfo(), true);
-    }
-
-    protected void helpTest(String sql, String expectedString, Command expectedCommand) {
-        helpTest(sql, expectedString, expectedCommand, new ParseInfo(), false);
-    }
-
-    protected void helpTest(String sql, String expectedString, Command expectedCommand, ParseInfo info, boolean designerCommand) {
-        Command actualCommand = null;
-        String actualString = null;
-
-        try {
-            if (designerCommand)
-                actualCommand = parser.parseDesignerCommand(sql);
-            else
-                actualCommand = parser.parseCommand(sql, info);
-
-            actualString = actualCommand.toString();
-        } catch (Throwable e) {
-            fail(e.getMessage());
-        }
-
-        if (expectedCommand != null)
-            assertEquals("Command objects do not match: ", expectedCommand, actualCommand);
-
-        if (expectedString != null)
-            assertEquals("SQL strings do not match: ", expectedString, actualString);
-    }
-
-    protected void helpTestLiteral(Boolean expected, Class<?> expectedType, String sql, String expectedSql) {
-        Select select = getFactory().newSelect();
-        select.addSymbol(getFactory().wrapExpression(getFactory().newConstant(expected, expectedType)));
-
-        Query query = getFactory().newQuery();
-        query.setSelect(select);
-
-        helpTest(sql, expectedSql, query);
-    }
-
-    protected void helpCriteriaTest(String crit, String expectedString, Criteria expectedCrit) {
-        Criteria actualCriteria;
-        String actualString;
-
-        try {
-            actualCriteria = parser.parseCriteria(crit);
-            actualString = actualCriteria.toString();
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-
-        assertEquals("Criteria does not match: ", expectedCrit, actualCriteria);
-        assertEquals("SQL strings do not match: ", expectedString, actualString);
-    }
-
-    protected void helpException(String sql) {
-        helpException(sql, null);
-    }
     
-    protected CacheHint helpGetCacheHint(String sql) {
-    	return parser.getTeiidParser(sql).getQueryCacheOption(sql);
-    }
-
-    protected void helpException(String sql, String expected) {
-        try {
-            parser.parseCommand(sql);
-            fail("Expected exception for parsing " + sql);
-        } catch (Exception e) {
-            if (expected != null) {
-                assertEquals(expected, e.getMessage());
-            }
-        } catch (AssertionError e) {
-            throw e;
-        } catch (Error e) {
-            if (expected != null) {
-                assertEquals(expected, e.getMessage());
-            }
-        }
-    }
-
-    protected void helpTestExpression(String sql, String expectedString, Expression expected) throws Exception {
-        Expression actual = parser.parseExpression(sql);
-        String actualString = actual.toString();
-        if (expected != null)
-            assertEquals("Command objects do not match: ", expected, actual);
-
-        assertEquals("SQL strings do not match: ", expectedString, actualString);
-    }
-
-    protected void helpStmtTest(String stmt, String expectedString, Statement expectedStmt) throws Exception {
-        Statement actualStmt = parser.getTeiidParser(stmt).statement(new ParseInfo());
-        String actualString = actualStmt.toString();
-
-        if (expectedStmt != null)
-            assertEquals("Language objects do not match: ", expectedStmt, actualStmt);
-
-        assertEquals("SQL strings do not match: ", expectedString, actualString);
-    }
 
  // ======================== Joins ===============================================
 
@@ -2689,6 +2591,25 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
                                                                                              + "\n" + "ELSE" + "\n" + "BEGIN"
                                                                                              + "\n" + "DECLARE short b;" + "\n"
                                                                                              + "END", stmt);
+    }
+
+    @Test
+    public void testIsDistinctCriteria() throws Exception {
+        if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_12_4))
+            throw new Exception("Test should be overridden by versions later than " + Version.TEIID_8_12_4.get());
+
+        String stmt = "IF(c IS DISTINCT FROM b) BEGIN DECLARE short a; END ELSE BEGIN DECLARE short b; END";
+        try {
+            parser.getTeiidParser(stmt).statement(new ParseInfo());
+            fail("Test should throw an exception due to DISTINCT keyword not supported");
+        } catch (Exception ex) {
+            String expected8 = "The given sql syntax requires Teiid Version 8.12.4 or greater. " +
+                                  "The current Teiid Version is only " + teiidVersion.toString();
+            if (teiidVersion.isGreaterThan(Version.TEIID_7_7))
+                assertEquals(expected8, ex.getMessage());
+            else
+                assertTrue(ex.getMessage().contains("DISTINCT")); // 7.7 parser doesnt produce version-related message
+        }
     }
 
     @Test

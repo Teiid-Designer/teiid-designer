@@ -30,6 +30,10 @@ import org.teiid.core.designer.CoreModelerPlugin;
  * @since 8.0
  */
 public class LongIDFactory implements ObjectIDFactory, Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private long lastID = 0;
     public LongIDFactory() {
     }

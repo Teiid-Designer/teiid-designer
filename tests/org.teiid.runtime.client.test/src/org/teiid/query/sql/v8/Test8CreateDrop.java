@@ -26,17 +26,16 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.BaseColumn.NullType;
+import org.teiid.query.sql.AbstractSqlTest;
 import org.teiid.query.sql.AbstractTestFactory;
-import org.teiid.query.sql.AbstractTestQueryParser;
 import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.lang.Drop;
 import org.teiid.query.sql.symbol.ElementSymbol;
 
 @SuppressWarnings( {"nls", "javadoc"} )
-public class Test8CreateDrop extends AbstractTestQueryParser {
+public class Test8CreateDrop extends AbstractSqlTest {
 
     private Test8Factory factory;
 

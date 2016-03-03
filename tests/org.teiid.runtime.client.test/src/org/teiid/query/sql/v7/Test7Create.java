@@ -28,11 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.sql.AbstractTestQueryParser;
+import org.teiid.query.sql.AbstractTest;
+import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Create;
 
 @SuppressWarnings( {"javadoc"} )
-public class Test7Create extends AbstractTestQueryParser {
+public class Test7Create extends AbstractTest<Command> {
 
     // ################################## FRAMEWORK ################################
 

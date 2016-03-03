@@ -24,6 +24,7 @@ package org.teiid.query.validator;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -42,6 +43,7 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstants;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
@@ -84,6 +86,7 @@ import org.teiid.query.sql.lang.GroupBy;
 import org.teiid.query.sql.lang.HasCriteria;
 import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.Into;
+import org.teiid.query.sql.lang.IsDistinctCriteria;
 import org.teiid.query.sql.lang.IsNullCriteria;
 import org.teiid.query.sql.lang.Labeled;
 import org.teiid.query.sql.lang.LanguageObject;
@@ -1215,6 +1218,22 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         this.validateRowLimitFunctionNotInInvalidCriteria(obj);
     }
 
+    @Override
+    @Since(Version.TEIID_8_12_4)
+    public void visit(IsDistinctCriteria isDistinctCriteria) {
+        try {
+            IQueryMetadataInterface metadata = getMetadata();
+            if (!metadata.isScalarGroup(isDistinctCriteria.getLeftRowValue().getMetadataID())) {
+                handleValidationError(Messages.gs(Messages.TEIID.TEIID31171, isDistinctCriteria.getLeftRowValue()), isDistinctCriteria.getLeftRowValue()); 
+            }
+            if (!metadata.isScalarGroup(isDistinctCriteria.getRightRowValue().getMetadataID())) {
+                handleValidationError(Messages.gs(Messages.TEIID.TEIID31171, isDistinctCriteria.getRightRowValue()), isDistinctCriteria.getRightRowValue()); 
+            }
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
     /** 
      * @see LanguageVisitor#visit(org.teiid.query.sql.lang.MatchCriteria)
      * @since 4.3
@@ -1481,18 +1500,19 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         Expression aggExp = null;
         if (getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
             aggExp = obj.getExpression();
-            validateNoNestedAggs(aggExp);
+            validateNoNestedAggs(aggExp, false);
         } else {
             Expression[] aggExps = obj.getArgs();
             for (Expression expression : aggExps) {
-                validateNoNestedAggs(expression);
+                boolean windowed = isLessThanTeiid8124() ? false : obj.isWindowed();
+                validateNoNestedAggs(expression, windowed);
             }
             if (aggExps.length > 0)
                 aggExp = aggExps[0];
         }
 
-        validateNoNestedAggs(obj.getOrderBy());
-        validateNoNestedAggs(obj.getCondition());
+        validateNoNestedAggs(obj.getOrderBy(), false);
+        validateNoNestedAggs(obj.getCondition(), false);
         
         // Verify data type of aggregate expression
         IAggregateSymbol.Type aggregateFunction = obj.getAggregateFunction();
@@ -1505,7 +1525,9 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         		handleValidationError(Messages.getString(Messages.ValidationVisitor.non_boolean, new Object[] {aggregateFunction, obj}), obj);
         	} else if (aggregateFunction == IAggregateSymbol.Type.JSONARRAY_AGG) {
 				validateJSONValue(obj, aggExp);
-        	}
+        	} else if (obj.getType() == null) {
+                handleValidationError(Messages.getString(Messages.ValidationVisitor.aggregate_type, obj), obj); //$NON-NLS-1$
+            }
         }
         if((obj.isDistinct() ||
             aggregateFunction == IAggregateSymbol.Type.MIN ||
@@ -1521,6 +1543,15 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         		handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_distinct, new Object[] {aggregateFunction, obj}), obj);
         	}
         }
+        if (obj.isDistinct() && obj.getOrderBy() != null && isTeiid8124OrGreater()) {
+            HashSet<Expression> args = new HashSet<Expression>(Arrays.asList(obj.getArgs()));
+            for (OrderByItem item : obj.getOrderBy().getOrderByItems()) {
+                if (!args.contains(item.getSymbol())) {
+                    handleValidationError(Messages.getString(Messages.ValidationVisitor.distinct_orderby_agg, obj), obj); //$NON-NLS-1$
+                    break;
+                }
+            }
+        }
     	if (obj.getAggregateFunction() != IAggregateSymbol.Type.TEXTAGG) {
     		return;
     	}
@@ -1529,7 +1560,19 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     		validateDerivedColumnNames(obj, tl.getExpressions());
     	}
     	for (DerivedColumn dc : tl.getExpressions()) {
-			validateXMLContentTypes(dc.getExpression(), obj);
+    	    if (isLessThanTeiid8124()) {
+    	        validateXMLContentTypes(dc.getExpression(), obj);
+    	        continue;
+    	    }
+
+			Expression expression = dc.getExpression();
+            if (expression.getType() == DefaultDataTypes.OBJECT.getTypeClass()
+                    || expression.getType() == null
+                    || expression.getType().isArray()
+                    || expression.getType() == DefaultDataTypes.VARBINARY.getTypeClass()
+                    || expression.getType() == DefaultDataTypes.BLOB.getTypeClass()) {
+                handleValidationError(Messages.getString(Messages.ValidationVisitor.text_content_type, expression), obj); //$NON-NLS-1$
+            }
 		}
     	validateTextOptions(obj, tl.getDelimiter(), tl.getQuote(), '\n');
     	if (tl.getEncoding() != null) {
@@ -1562,11 +1605,11 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 		}
 	}
     
-	private void validateNoNestedAggs(LanguageObject aggExp) {
+	private void validateNoNestedAggs(LanguageObject aggExp, boolean windowOnly) {
 		// Check for any nested aggregates (which are not allowed)
         if(aggExp != null) {
         	HashSet<Expression> nestedAggs = new LinkedHashSet<Expression>();
-            AggregateSymbolCollectorVisitor.getAggregates(aggExp, nestedAggs, null, null, nestedAggs, null);
+        	AggregateSymbolCollectorVisitor.getAggregates(aggExp, windowOnly?null:nestedAggs, null, null, nestedAggs, null);
             if(!nestedAggs.isEmpty()) {
                 handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0039, nestedAggs), nestedAggs);
             }
@@ -1623,7 +1666,14 @@ public class ValidationVisitor extends AbstractValidationVisitor {
      * @param parent
      */
     public void validateXMLContentTypes(Expression expression, LanguageObject parent) {
-		if (expression.getType() == DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass() || expression.getType() == DataTypeManagerService.DefaultDataTypes.BLOB.getTypeClass()) {
+        if (isTeiid8124OrGreater()) {
+            if (expression.getType() == DefaultDataTypes.OBJECT.getTypeClass() || expression.getType() == null || expression.getType().isArray()) {
+                handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_content_type, expression), parent);
+            }
+            return;
+        }
+
+		if (expression.getType() == DefaultDataTypes.OBJECT.getTypeClass() || expression.getType() == DefaultDataTypes.BLOB.getTypeClass()) {
 			handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_content_type, expression), parent);
 		}
     }

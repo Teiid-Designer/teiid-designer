@@ -31,7 +31,7 @@ import org.teiid.designer.relational.RelationalPlugin;
 public class RelationalProcedure extends RelationalReference {
 	public enum PROCEDURE_TYPE {
 		PROCEDURE, FUNCTION, SOURCE_FUNCTION, NATIVE_QUERY_PROCEDURE
-	};
+	}
 	 
     /**
      * 

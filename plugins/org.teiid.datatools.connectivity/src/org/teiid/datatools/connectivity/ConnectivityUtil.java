@@ -187,7 +187,9 @@ public class ConnectivityUtil {
             if(jarList != driverPath) {
                 mDriver.getPropertySet().getBaseProperties().put(IDriverMgmtConstants.PROP_DEFN_JARLIST, driverPath);
             }
-            mDriver.getPropertySet().getBaseProperties().put(IJDBCDriverDefinitionConstants.URL_PROP_ID, connectionURL);
+            if (connectionURL != null)
+                mDriver.getPropertySet().getBaseProperties().put(IJDBCDriverDefinitionConstants.URL_PROP_ID, connectionURL);
+
             mDriver.getPropertySet().getBaseProperties().put(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, passToken);
         }
 
@@ -207,7 +209,8 @@ public class ConnectivityUtil {
         Properties baseProperties = new Properties();
         baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST, jarList);
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID, TEIID_DRIVER_NAME);
-        baseProperties.setProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID, driverURL);
+        if (driverURL != null)
+            baseProperties.setProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID, driverURL);
         if(null != username) { 
         	baseProperties.setProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID, username);
         }

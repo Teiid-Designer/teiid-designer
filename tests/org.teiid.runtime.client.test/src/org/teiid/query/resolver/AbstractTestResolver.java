@@ -45,6 +45,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -1496,7 +1497,7 @@ public abstract class AbstractTestResolver extends AbstractTest {
             queryResolver.resolveCommand(command, metadata);
             fail("exception expected"); //$NON-NLS-1$
         } catch (QueryResolverException e) {
-
+            // Not required
         }
     }
 
@@ -1523,12 +1524,9 @@ public abstract class AbstractTestResolver extends AbstractTest {
     @Test
     public void testSetCriteriaCastFromExpression_9657() {
         // parse
-        Criteria expected = null;
         Criteria actual = null;
         try {
             actual = getQueryParser().parseCriteria("bqt1.smalla.shortvalue IN (1, 2)"); //$NON-NLS-1$
-            expected = getQueryParser().parseCriteria("convert(bqt1.smalla.shortvalue, integer) IN (1, 2)"); //$NON-NLS-1$
-
         } catch (Exception e) {
             fail("Exception during parsing (" + e.getClass().getName() + "): " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -1536,16 +1534,14 @@ public abstract class AbstractTestResolver extends AbstractTest {
         // resolve
         try {
             QueryResolver queryResolver = new QueryResolver(getQueryParser());
-            queryResolver.resolveCriteria(expected, getMetadataFactory().exampleBQTCached());
             queryResolver.resolveCriteria(actual, getMetadataFactory().exampleBQTCached());
         } catch (Exception e) {
             fail("Exception during resolution (" + e.getClass().getName() + "): " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
-        // Tweak expected to hide convert function - this is expected
-        ((Function)((SetCriteria)expected).getExpression()).makeImplicit();
-
-        assertEquals("Did not match expected criteria", expected, actual); //$NON-NLS-1$
+        assertEquals("Did not match expected criteria", //$NON-NLS-1$
+                     ((SetCriteria)actual).getExpression().getType(),
+                     DefaultDataTypes.SHORT.getTypeClass());
     }
 
     /** select e1 from pm1.g1 where e2 BETWEEN 1000 AND 2000 */

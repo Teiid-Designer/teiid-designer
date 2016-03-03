@@ -390,8 +390,9 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
      */
     @Override
     public String[] getFilePaths() {
+        ZipFile zipFile = null;
         try {
-            ZipFile zipFile = new ZipFile(this.vdbFile);
+            zipFile = new ZipFile(this.vdbFile);
             List filePaths = new ArrayList();
             // Iterate over all entries in the zip file ...
             for (final Enumeration entries = zipFile.entries(); entries.hasMoreElements();) {
@@ -412,6 +413,13 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
             return (String[])filePaths.toArray(new String[filePaths.size()]);
         } catch (IOException e) {
             CoreModelerPlugin.Util.log(e);
+        } finally {
+            if (zipFile != null)
+                try {
+                    zipFile.close();
+                } catch (IOException ex) {
+                    // Nothing required
+                }
         }
         return super.getFilePaths();
     }

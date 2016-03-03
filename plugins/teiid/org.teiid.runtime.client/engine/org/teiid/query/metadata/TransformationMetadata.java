@@ -172,6 +172,9 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
     private Map<String, Collection<Table>> partialNameToFullNameCache = Collections.synchronizedMap(new LRUCache<String, Collection<Table>>(1000));
     private Map<String, Collection<StoredProcedureInfo>> procedureCache = Collections.synchronizedMap(new LRUCache<String, Collection<StoredProcedureInfo>>(200));
 
+    @Since(Version.TEIID_8_12_4)
+    private boolean widenComparisonToString = true;
+
     /**
      * TransformationMetadata constructor
      * @param teiidParser
@@ -487,7 +490,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
         }
     }
 
-    public Object getDefaultValue(final Object elementID) throws Exception {
+    public String getDefaultValue(final Object elementID) throws Exception {
         if(elementID instanceof Column) {
             return ((Column) elementID).getDefaultValue();            
         } else if(elementID instanceof ProcedureParameter){
@@ -618,6 +621,11 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
                     return (columnRecord.getSearchType() == SearchType.Searchable || columnRecord.getSearchType() == SearchType.All_Except_Like);
                 case SupportConstants.Element.SEARCHABLE_LIKE:
                 	return (columnRecord.getSearchType() == SearchType.Searchable || columnRecord.getSearchType() == SearchType.Like_Only);
+                case SupportConstants.Element.SEARCHABLE_EQUALITY:
+                    if (getTeiidVersion().isLessThan(Version.TEIID_8_12_4))
+                        return false;
+
+                    return (columnRecord.getSearchType() == SearchType.Equality_Only || columnRecord.getSearchType() == SearchType.Searchable || columnRecord.getSearchType() == SearchType.All_Except_Like);
                 case SupportConstants.Element.SELECT:
                     return columnRecord.isSelectable();
                 case SupportConstants.Element.UPDATE:
@@ -1125,6 +1133,10 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 		tm.scriptEngineManager = this.scriptEngineManager;
 		tm.importedModels = this.importedModels;
 		tm.allowedLanguages = this.allowedLanguages;
+
+		if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_12_4))
+		    tm.widenComparisonToString = this.widenComparisonToString;
+
 		return tm;
 	}
 	
@@ -1203,5 +1215,16 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 	public void setUseOutputNames(boolean useOutputNames) {
 		this.useOutputNames = useOutputNames;
 	}
-	
+
+	@Override
+    public boolean widenComparisonToString() {
+        return widenComparisonToString;
+    }
+    
+    public void setWidenComparisonToString(boolean widenComparisonToString) {
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_12_4))
+            return;
+
+        this.widenComparisonToString = widenComparisonToString;
+    }
 }

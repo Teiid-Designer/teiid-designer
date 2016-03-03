@@ -31,6 +31,10 @@ import org.teiid.core.designer.util.CoreArgCheck;
  */
 public class IntegerID implements ObjectID, Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public static final String PROTOCOL = "mmint"; //$NON-NLS-1$
     private int id;
 

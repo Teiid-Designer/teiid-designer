@@ -556,7 +556,7 @@ public abstract class ModelObjectUtilities {
             }
         } else {
 	        for (int i = 1; i < nObjects; i++) {
-	            if ( firstParent != null && ((EObject)eObjectList.get(i)).eContainer().equals(firstParent)) {
+	            if ( ((EObject)eObjectList.get(i)).eContainer().equals(firstParent)) {
 	                // allOK
 	            } else {
 	                sameParent = false;

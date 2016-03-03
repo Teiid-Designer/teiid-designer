@@ -139,7 +139,7 @@ public class Teiid8Parser extends AbstractTeiidParser {
         return hint;
     }
 
-    private void setFromClauseOptions(Token groupID, FromClause fromClause){
+    private void setFromClauseOptions811(Token groupID, FromClause fromClause){
         String[] parts = getHintComment(groupID).split("\\s"); //$NON-NLS-1$
 
         for (int i = 0; i < parts.length; i++) {
@@ -157,6 +157,60 @@ public class Teiid8Parser extends AbstractTeiidParser {
                 fromClause.setPreserve(true);
             }
         }
+    }
+
+    private void setFromClauseOptions812(Token groupID, FromClause fromClause){
+        String comment = getHintComment(groupID);
+        if (comment == null || comment.isEmpty()) {
+            return;
+        }
+        Matcher m = FROM_CLAUSE_HINT_PATTERN.matcher(comment);
+        int start = 0;
+        boolean makedep = false;
+        while (m.find(start)) {
+            String hint = m.group(1);
+            start = m.end();
+            if (StringUtil.startsWithIgnoreCase(hint, "make")) { //$NON-NLS-1$
+                if (hint.equalsIgnoreCase(Option.MAKENOTDEP)) {
+                    fromClause.setMakeNotDep(true);
+                } else if (StringUtil.startsWithIgnoreCase(hint, Option.MAKEDEP)) {
+                    Option.MakeDep option = new Option.MakeDep(getVersion());
+                    fromClause.setMakeDep(option);
+                    parseOptions(m, option);
+                } else if (StringUtil.startsWithIgnoreCase(hint, SQLConstants.Reserved.MAKEIND)) {
+                    Option.MakeDep option = new Option.MakeDep(getVersion());
+                    fromClause.setMakeInd(option);
+                    parseOptions(m, option);
+                }
+            } else if (hint.equalsIgnoreCase(SubqueryHint.NOUNNEST)) {
+                fromClause.setNoUnnest(true);
+            } else if (hint.equalsIgnoreCase(FromClause.PRESERVE)) {
+                fromClause.setPreserve(true);
+            } else if (hint.equalsIgnoreCase(Option.OPTIONAL)) {
+                fromClause.setOptional(true);
+            }
+        }
+    }
+
+    //([max:val] [[no] join])
+    private void parseOptions(Matcher m, Option.MakeDep option) {
+        if (m.group(3) != null) {
+            if (StringUtil.startsWithIgnoreCase(m.group(3), "no")) { //$NON-NLS-1$
+                option.setJoin(false);
+            } else {
+                option.setJoin(true);
+            }
+        }
+        if (m.group(2) != null) {
+            option.setMax(Integer.valueOf(m.group(2).trim().substring(4)));
+        }
+    }
+
+    private void setFromClauseOptions(Token groupID, FromClause fromClause) {
+        if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_12_4))
+            setFromClauseOptions812(groupID, fromClause);
+        else
+            setFromClauseOptions811(groupID, fromClause);
     }
 
     @Override
@@ -670,6 +724,7 @@ TOKEN : /* Reserved words */
 |   <LOCAL: "local">
 |   <LOOP: "loop">
 |   <MAKEDEP: "makedep">
+|   <MAKEIND: "makeind">
 |   <MAKENOTDEP: "makenotdep">
 |   <MATCH: "match">
 |   <MERGE: "merge">
@@ -1685,11 +1740,25 @@ IfStatement ifStatement(ParseInfo info) #IfStatement :
     Criteria criteria = null;
     Statement ifStatement = null;
     Statement elseStatement = null;
+    String groupID = null;
+    String groupID2 = null;
+    boolean not = false;
 }
 {
     <IF>
-    <LPAREN>  
-    criteria = criteria(info)
+    <LPAREN>
+     (LOOKAHEAD(4) (groupID = id(null) <IS> [<NOT> {not = true;}] <DISTINCT> <FROM> groupID2 = id(null)
+     {
+         requiresVersionAtLeast(Version.TEIID_8_12_4);
+         IsDistinctCriteria idc = isDistinctCriteria();
+         idc.setLeftRowValue(groupSymbol(groupID));
+         idc.setRightRowValue(groupSymbol(groupID2));
+         idc.setNegated(not);
+         criteria = idc;
+     }
+     )
+     | criteria = criteria(info)
+    )
     <RPAREN>
     ifStatement = statement(info)
     //else blocks will be associated with the closest if block
@@ -2986,6 +3055,7 @@ FromClause tablePrimary(ParseInfo info) :
 {
 	FromClause clause = null;
 	Token lparen = null;
+	Option.MakeDep makedep = null;
 }
 {
 	(	LOOKAHEAD(2) clause = textTable(info)
@@ -3007,13 +3077,23 @@ FromClause tablePrimary(ParseInfo info) :
 		 <RPAREN> 
 		)
 	)
-	[	(<MAKEDEP>  { clause.setMakeDep(true); })
-	 	| (<MAKENOTDEP> {  clause.setMakeNotDep(true); } )
+    [   (<MAKEDEP> makedep = makedepOptions() { clause.setMakeDep(makedep); })
+        | (<MAKENOTDEP> {  clause.setMakeNotDep(true); } )
+    ]
+	[
+	   (<MAKEIND> makedep = makedepOptions()
+	       {
+	           requiresVersionAtLeast(Version.TEIID_8_12_4);
+	           clause.setMakeInd(makedep);
+	       }
+	   )
 	]
 	{
 		return clause;
 	}
 }
+
+Option.MakeDep makedepOptions() :{  Integer max = null;  Boolean join = null;  boolean no = false;}{  [    < LPAREN > [ < MAX > < COLON > max = intVal() ]    [      [        < NO >        {          no = true;        }      ]      < JOIN >      {        join = true;      }    ]    < RPAREN >  ]  {    Option.MakeDep result = new Option.MakeDep(getVersion());    result.setMax(max);    result.setJoin(no ? Boolean.FALSE : join);    return result;  }}
 
 /*
 name=xml serialize
@@ -4352,21 +4432,34 @@ Option option(ParseInfo info) #Option :
 {
 	String id = null;
 	Token nocache = null;
+	Option.MakeDep makedep = null;
 }
 {
 	<OPTION>
 	(
-		<MAKEDEP>		
-		id=id(null)
-		{
-            jjtThis.addDependentGroup(id);
-		}
-		(<COMMA>
-			id=id(null)
-			{
-                jjtThis.addDependentGroup(id);
-	        }
-		)* |
+		<MAKEDEP>     
+        id=id(null) makedep = makedepOptions()
+        {
+            jjtThis.addDependentGroup(id, makedep);
+        }
+        (<COMMA>
+            id=id(null) makedep = makedepOptions()
+            {
+                jjtThis.addDependentGroup(id, makedep);
+            }
+        )* |
+		<MAKEIND>     
+        id=id(null) makedep = makedepOptions()
+        {
+            requiresVersionAtLeast(Version.TEIID_8_12_4);
+            jjtThis.addIndependentGroup(id, makedep);
+        }
+        (<COMMA>
+            id=id(null) makedep = makedepOptions()
+            {
+                jjtThis.addIndependentGroup(id, makedep);
+            }
+        )* |
 		<MAKENOTDEP>		
 		id=id(null)
 		{
@@ -5531,7 +5624,35 @@ Constant nonNumericLiteral() :
 	        		throw new ParseException(e.getMessage());
 	        	}
 	        } <RBRACE> )
-
+        |
+        (
+          (
+            <DATE>
+            {
+                requiresVersionAtLeast(Version.TEIID_8_12_4);
+                escapeType = DataTypeManagerService.DefaultDataTypes.DATE;
+            }
+           |
+           <TIME>
+           {
+                requiresVersionAtLeast(Version.TEIID_8_12_4);
+                escapeType = DataTypeManagerService.DefaultDataTypes.TIME;
+            }
+           |
+           <TIMESTAMP>
+           {
+                requiresVersionAtLeast(Version.TEIID_8_12_4);
+                escapeType = DataTypeManagerService.DefaultDataTypes.TIMESTAMP;
+           }
+          )
+          strVal=stringVal() { 
+                try {
+                    constant = constant(getDataTypeService().transformValue(strVal, escapeType), escapeType);
+                } catch (Exception e) {
+                    throw new ParseException(e.getMessage()); //$NON-NLS-1$
+                }
+            }
+        ) 
 	)
 	{
 		return constant;
@@ -5655,7 +5776,8 @@ CreateProcedureCommand createDDLProcedure(MetadataFactory factory, ParseInfo inf
     CreateProcedureCommand procCmd = createASTNode(ASTNodes.CREATE_PROCEDURE_COMMAND);
     Statement stmt = null; 	
     ParsedDataType returnDataType = null;
-    Token comment = null;    
+    Token comment = null;
+    Column c = new Column(getVersion());
 }
 {
 	<CREATE> [<VIRTUAL> | <FOREIGN> {virtual = false;}] (<PROCEDURE> | <FUNCTION> {function = true;})
@@ -5669,8 +5791,14 @@ CreateProcedureCommand createDDLProcedure(MetadataFactory factory, ParseInfo inf
 		[procedureParameter(factory, proc)
 		(<COMMA> procedureParameter(factory, proc))*]	
 		<RPAREN>
-		
-		[<RETURNS> (([<TABLE>] <LPAREN>
+
+		[<RETURNS>
+		  [
+		      optionsClause(c, factory)
+		      {		          requiresVersionAtLeast(Version.TEIID_8_12_4);
+		      }
+		  ]
+		  (([<TABLE>] <LPAREN>
 	        procedureRsColumn(factory, proc)
 	        (<COMMA> procedureRsColumn(factory, proc))*
 	    <RPAREN>)
@@ -5698,8 +5826,11 @@ CreateProcedureCommand createDDLProcedure(MetadataFactory factory, ParseInfo inf
 				proc.setQueryPlan((comment != null?comment.image+" ":"") + stmt.toString());
 			}
 			
-	        if (returnDataType != null){
-				addProcColumn(factory, proc, "return", returnDataType, false);
+	        if (returnDataType != null) {
+	          BaseColumn result = addProcColumn(factory, proc, "return", returnDataType, false);
+                result.setProperties(c.getProperties());
+            } else if (proc.getResultSet() != null) {
+                proc.getResultSet().setProperties(c.getProperties());
 	        }
 	        if (function) {
 	        	replaceProcedureWithFunction(factory, proc);
@@ -6433,6 +6564,15 @@ Array array() #Array :
 }
 
 XMLCast xmlCast() #XMLCast :
+{
+}
+{
+    {
+        return jjtThis;
+    }
+}
+
+IsDistinctCriteria isDistinctCriteria() #IsDistinctCriteria :
 {
 }
 {

@@ -113,7 +113,7 @@ public class TransformationDiagramFigureFactory extends AbstractDiagramFigureFac
                 }
                 
                 // Need to notify t-objects to update their error/warning status
-                if( newFigure != null && modelObject instanceof DiagramModelNode ) {
+                if( modelObject instanceof DiagramModelNode ) {
                     DiagramModelNode node = (DiagramModelNode)modelObject;
                     ((DiagramFigure)newFigure).setDiagramModelNode(node);
                     if( node.hasErrors())

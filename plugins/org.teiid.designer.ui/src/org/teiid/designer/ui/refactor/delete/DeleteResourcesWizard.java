@@ -308,5 +308,5 @@ public class DeleteResourcesWizard extends RefactoringWizard {
         public void indexVdb(IResource resource, IFile vdbFile, RefactoringStatus status) {
             resources.add(vdbFile);
         }
-    };
+    }
 }

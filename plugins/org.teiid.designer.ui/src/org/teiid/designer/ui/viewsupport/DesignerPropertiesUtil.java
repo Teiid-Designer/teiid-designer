@@ -353,7 +353,7 @@ public class DesignerPropertiesUtil implements StringConstants {
 	        if (project != null) {
 	            // Construct path to target model
 	            IPath targetModelPath = new Path("");  //$NON-NLS-1$
-	            if (viewsFolder != null && targetModelName != null && !viewsFolder.isEmpty() && !targetModelName.isEmpty()) {
+	            if (viewsFolder != null && !viewsFolder.isEmpty() && !targetModelName.isEmpty()) {
 	                targetModelPath = targetModelPath.append(viewsFolder).append(targetModelName);
 	                targetPreviewModel = project.getFile(targetModelPath);
 	            } else {

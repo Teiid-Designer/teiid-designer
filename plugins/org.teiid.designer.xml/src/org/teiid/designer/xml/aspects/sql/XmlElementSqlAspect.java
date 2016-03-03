@@ -35,11 +35,11 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
-import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.util.ModelContents;
+import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.metamodels.transformation.MappingClassColumn;
 import org.teiid.designer.metamodels.transformation.TreeMappingRoot;
 import org.teiid.designer.metamodels.xml.XmlDocument;
@@ -64,7 +64,7 @@ public class XmlElementSqlAspect extends AbstractXmlDocumentEntitySqlAspect impl
     final static boolean FIXED_LENGTH = false;
     final static boolean TRANSFORMATION_INPUT_PARAMETER = false;
     final static int SEARCH_TYPE = MetadataConstants.SEARCH_TYPES.SEARCHABLE; // searcheable
-    final static Object DEFAULT_VALUE = null;
+    final static String DEFAULT_VALUE = null;
     final static Object MIN_VALUE = null;
     final static Object MAX_VALUE = null;
     final static int LENGTH = 0;
@@ -264,7 +264,7 @@ public class XmlElementSqlAspect extends AbstractXmlDocumentEntitySqlAspect impl
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getDefaultValue(org.eclipse.emf.ecore.EObject)
      */
     @Override
-	public Object getDefaultValue( EObject eObject ) {
+	public String getDefaultValue( EObject eObject ) {
         return DEFAULT_VALUE;
     }
 

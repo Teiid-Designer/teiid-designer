@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
@@ -440,7 +439,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		if (existingProfile == null){
 			//If existingProfile == null continue since this is a new CP and we want to update the page.
 		}else if  
-		 (!wasEdited && existingProfile != null && profile != null && existingProfile.getName().equals(profile.getName())) {
+		 (!wasEdited && profile != null && existingProfile.getName().equals(profile.getName())) {
 			return false;
 		}
 		

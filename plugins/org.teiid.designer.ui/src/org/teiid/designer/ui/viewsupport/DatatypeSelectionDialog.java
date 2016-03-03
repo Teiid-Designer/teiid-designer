@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -602,12 +601,13 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
 						try {
 							designTimeType = datatypeManager.getBuiltInDatatype(name);
 						} catch (ModelerCoreException ex) {
-							
+							// Nothing to do
 						}
 						if( designTimeType != null ) {
 							String runtimeTypename = datatypeManager.getRuntimeTypeName(designTimeType);
 							return runtimeTypename;
 						}
+						break;
 					}
 					case 2: {
 						return getBaseTypeName((EObject)element);

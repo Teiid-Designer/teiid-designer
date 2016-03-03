@@ -25,9 +25,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.security.auth.Subject;
-
 import org.teiid.adminapi.Session;
 import org.teiid.client.security.SessionToken;
 
@@ -58,9 +56,10 @@ public class SessionMetadata extends AdminObjectImpl implements Session {
     private transient VDBMetaData vdb;
     private transient SessionToken sessionToken;
     private transient Subject subject;
-    private transient Object securityContext;
+    private volatile transient Object securityContext;
     private transient boolean embedded;
     private transient Map<String, Object> sessionVariables = Collections.synchronizedMap(new HashMap<String, Object>(2));
+    private volatile boolean closed;
 
 	@Override
 	public String getApplicationName() {
@@ -221,5 +220,12 @@ public class SessionMetadata extends AdminObjectImpl implements Session {
 	public Map<String, Object> getSessionVariables() {
 		return sessionVariables;
 	}
-	
+
+	public void setClosed() {
+        this.closed = true;
+    }
+    
+    public boolean isClosed() {
+        return closed;
+    }
 }

@@ -85,7 +85,7 @@ public class PreviewModelObjectLabelProvider implements ILightweightLabelDecorat
                 if (isPreviewable) {
                     decoration.addOverlay(UiPlugin.getDefault().getPreviewableDecoratorImage(), IDecoration.BOTTOM_RIGHT);
                 }
-            };
+            }
         };
 
         UiUtil.runInSwtThread(runnable, true);

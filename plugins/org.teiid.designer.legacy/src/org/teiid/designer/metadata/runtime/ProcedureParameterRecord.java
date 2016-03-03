@@ -31,7 +31,7 @@ public interface ProcedureParameterRecord extends MetadataRecord {
      * Get the default value of the parameter
      * @return parameter's default value
      */
-    Object getDefaultValue();
+    String getDefaultValue();
     
     /**
      * Get the length of the parameter

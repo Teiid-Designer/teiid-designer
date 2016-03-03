@@ -29,7 +29,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
@@ -295,7 +294,7 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
 	}
 
     @Override
-    public Object getDefaultValue(Object elementID)
+    public String getDefaultValue(Object elementID)
         throws Exception {
             
         if(elementID instanceof TempMetadataID) {
@@ -463,6 +462,7 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
             switch(supportConstant) {
                 case SupportConstants.Element.SEARCHABLE_LIKE:   return true;
                 case SupportConstants.Element.SEARCHABLE_COMPARE:return true;
+                case SupportConstants.Element.SEARCHABLE_EQUALITY:return true;
                 case SupportConstants.Element.SELECT:            return true;
                 case SupportConstants.Element.NULL: {
                 	if (id.isNotNull()) {
@@ -898,6 +898,7 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
     @Override
     public String getExtensionProperty(Object metadataID, String key,
     		boolean checkUnqualified) {
+        metadataID = getActualMetadataId(metadataID);
     	if (metadataID instanceof TempMetadataID) {
     		return null;
     	}

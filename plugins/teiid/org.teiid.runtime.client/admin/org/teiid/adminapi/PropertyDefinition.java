@@ -23,6 +23,8 @@
 package org.teiid.adminapi;
 
 import java.util.Collection;
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  * Information about a property of an AdminObject
@@ -130,8 +132,13 @@ public interface PropertyDefinition extends AdminObject {
      */
     boolean isMasked();
 
-    
-    
+    /**
+     * Get the category of the property
+     * @return if null, no category exists
+     */
+    @Since(Version.TEIID_8_12_4)
+    String getCategory();
+
 }
 
 

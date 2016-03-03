@@ -79,16 +79,20 @@ public class GeometryUtils {
 
     public static GeometryType geometryFromClob(ClobType wkt)
             throws Exception {
-        return geometryFromClob(wkt, GeometryType.UNKNOWN_SRID);
+        return geometryFromClob(wkt, GeometryType.UNKNOWN_SRID, false);
     }
 
-    public static GeometryType geometryFromClob(ClobType wkt, int srid) 
+    public static GeometryType geometryFromClob(ClobType wkt, int srid, boolean allowEwkt) 
             throws Exception {
     	Reader r = null;
         try {
             WKTReader reader = new WKTReader();
             r = wkt.getCharacterStream();
             Geometry jtsGeometry = reader.read(r);
+            if (!allowEwkt && (jtsGeometry.getSRID() != GeometryType.UNKNOWN_SRID || (jtsGeometry.getCoordinate() != null && !Double.isNaN(jtsGeometry.getCoordinate().z)))) {
+                //don't allow ewkt that requires a specific function
+                throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31160, "EWKT"));
+            }
             return getGeometryType(jtsGeometry, srid);
         } catch (Exception e) {
             throw new TeiidClientException(e);
@@ -324,10 +328,11 @@ public class GeometryUtils {
         try {
             WKBReader reader = new WKBReader();
             Geometry jtsGeom = reader.read(new InputStreamInStream(is1));
-            if (!allowEwkb && (jtsGeom.getSRID() != GeometryType.UNKNOWN_SRID || jtsGeom.getDimension() > 2)) {
-            	//don't allow ewkb - that needs an explicit function
-            	throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31160));
+            if (!allowEwkb && (jtsGeom.getSRID() != GeometryType.UNKNOWN_SRID || (jtsGeom.getCoordinate() != null && !Double.isNaN(jtsGeom.getCoordinate().z)))) {
+                //don't allow ewkb - that needs an explicit function
+                throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31160, "EWKB"));
             }
+
             if (srid != null) { 
             	jtsGeom.setSRID(srid);
             }

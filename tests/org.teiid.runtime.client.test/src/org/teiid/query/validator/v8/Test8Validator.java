@@ -11,7 +11,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ICommand;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.Table;
 import org.teiid.query.resolver.QueryResolver;

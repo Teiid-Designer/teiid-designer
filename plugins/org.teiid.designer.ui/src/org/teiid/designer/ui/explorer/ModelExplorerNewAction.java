@@ -3,7 +3,6 @@ package org.teiid.designer.ui.explorer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -201,8 +200,6 @@ public class ModelExplorerNewAction extends Action implements IMenuCreator{
         final IWorkbenchWindow iww = UiPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
         boolean successful = false;
         try {
-
-        	;
             NewModelWizard wizard = new NewModelWizard(new NewModelWizardInput(modelClass, type, null), props);
 
             String viewId = ProductCustomizerMgr.getInstance().getProductCharacteristics().getPrimaryNavigationViewId();

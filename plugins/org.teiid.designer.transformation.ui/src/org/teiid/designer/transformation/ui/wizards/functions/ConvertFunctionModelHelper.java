@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -215,7 +214,7 @@ public class ConvertFunctionModelHelper {
             }
         } catch (Exception e) {
         	MessageDialog.openError(Display.getCurrent().getActiveShell(), 
-        			UiConstants.Util.getString("ConvertFunctionModelHelper.buildErrorTitle"), e.getMessage()); ; //$NON-NLS-1$
+        			UiConstants.Util.getString("ConvertFunctionModelHelper.buildErrorTitle"), e.getMessage());  //$NON-NLS-1$
             IStatus errorStatus = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, 
             		UiConstants.Util.getString("ConvertFunctionModelHelper.buildErrorMessage"), e);  //$NON-NLS-1$
             UiConstants.Util.log(errorStatus);

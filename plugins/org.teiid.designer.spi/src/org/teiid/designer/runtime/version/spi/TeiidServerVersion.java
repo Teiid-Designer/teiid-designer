@@ -95,9 +95,14 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         TEIID_8_11(VersionID.TEIID_8_11),
 
         /**
+         * Teiid 8.12
+         */
+        TEIID_8_12_4(VersionID.TEIID_8_12_4),
+
+        /**
          * Default Teiid for this Designer
          */
-        TEIID_DEFAULT(VersionID.TEIID_8_11);
+        TEIID_DEFAULT(VersionID.TEIID_8_12_4);
 
         private final ITeiidServerVersion version;
 
@@ -424,29 +429,6 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     @Override
     public boolean isLessThanOrEqualTo(Version otherVersion) {
         return isLessThan(otherVersion.get());
-    }
-
-    private int isOtherNumberLessThan(String myNumber, String otherNumber) {
-        int myValue = -1;
-        int otherValue = -1;
-
-        try {
-            myValue = Integer.parseInt(myNumber);
-        } catch (NumberFormatException e) {
-            myValue = -1;
-        }
-
-        try {
-            otherValue = Integer.parseInt(otherNumber);
-        } catch (NumberFormatException e) {
-            otherValue = -1;
-        }
-
-        if (myValue < 0 || otherValue < 0) {
-            return myNumber.compareTo(otherNumber);
-        } else {
-            return myValue - otherValue;
-        }
     }
 
     private int isOtherNumberGreaterThan(String myNumber, String otherNumber) {

@@ -19,11 +19,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.validation.Schema;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -302,7 +300,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	        return null;
 
 	    return sourceFile.getName();
-	};
+	}
 
 	/** (non-Javadoc)
 	 * @see org.teiid.designer.vdb.Vdb#getTranslators()

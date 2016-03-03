@@ -684,23 +684,15 @@ public class Binding {
                                     return;
                                 }
                             } else {
-                                String exprTypeStr = service.getDataTypeName(cExpr.getType());
-                                if (exprTypeStr != null && exprTypeStr.equalsIgnoreCase(currentAttrTypeStr)) {
-                                    IExpressionSymbol exprSymbol = factory.createExpressionSymbol("expr", cExpr); //$NON-NLS-1$
-                                    availableSymbolConversion = exprSymbol;
-                                    // optimizer.optimize(availableSymbolConversion);
-                                    if (symbolAlias != null) {
-                                        sqlConversionText = USE_SQL_EXPRESSION_TEXT + CR + availableSymbolConversion.toString()
+                                IExpressionSymbol exprSymbol = factory.createExpressionSymbol("expr", cExpr); //$NON-NLS-1$
+                                availableSymbolConversion = exprSymbol;
+                                if (symbolAlias != null) {
+                                    sqlConversionText = USE_SQL_EXPRESSION_TEXT + CR + availableSymbolConversion.toString()
                                                             + SPACE + AS + SPACE + symbolAlias;
-                                    } else {
-                                        sqlConversionText = USE_SQL_EXPRESSION_TEXT + CR + availableSymbolConversion.toString();
-                                    }
-                                    // optimizer.deoptimize(availableSymbolConversion);
-                                    return;
-                                } else if (exprTypeStr != null) {
-                                    IExpressionSymbol exprSymb = factory.createExpressionSymbol("expr", cExpr); //$NON-NLS-1$
-                                    eSymbol = TransformationSqlHelper.convertExpressionSymbol(exprSymb, currentAttrTypeStr);
+                                } else {
+                                    sqlConversionText = USE_SQL_EXPRESSION_TEXT + CR + availableSymbolConversion.toString();
                                 }
+                                eSymbol = TransformationSqlHelper.convertExpressionSymbol(exprSymbol, currentAttrTypeStr);
                             }
                         } else {
                             eSymbol = TransformationSqlHelper.convertExpressionSymbol((IExpressionSymbol)oSymbol,

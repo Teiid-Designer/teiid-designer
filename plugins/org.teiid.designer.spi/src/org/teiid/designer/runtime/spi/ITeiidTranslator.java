@@ -16,7 +16,7 @@ import java.util.Properties;
  */
 public interface ITeiidTranslator {
 	
-	enum TranslatorPropertyType{IMPORT, OVERRIDE, EXTENSION_METADATA};
+	enum TranslatorPropertyType{IMPORT, OVERRIDE, EXTENSION_METADATA}
 
     /**
      * Obtains all the names of the properties whose values are invalid.

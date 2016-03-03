@@ -30,7 +30,7 @@ public class ColumnRecordImpl extends AbstractMetadataRecord implements ColumnRe
     private boolean fixedLength;
     private boolean tranformationInputParameter;
     private int searchType;
-    private Object defaultValue;
+    private String defaultValue;
     private Object minValue;
     private Object maxValue;
     private int length;
@@ -90,7 +90,7 @@ public class ColumnRecordImpl extends AbstractMetadataRecord implements ColumnRe
      * @see org.teiid.designer.metadata.runtime.ColumnRecord#getDefaultValue()
      */
     @Override
-	public Object getDefaultValue() {
+	public String getDefaultValue() {
         return defaultValue;
     }
 
@@ -315,7 +315,7 @@ public class ColumnRecordImpl extends AbstractMetadataRecord implements ColumnRe
     /**
      * @param object
      */
-    public void setDefaultValue(Object object) {
+    public void setDefaultValue(String object) {
         defaultValue = object;
     }
 

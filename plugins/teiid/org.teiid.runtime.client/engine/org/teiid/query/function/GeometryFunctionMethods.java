@@ -77,7 +77,7 @@ public class GeometryFunctionMethods {
 
     @TeiidFunction( name = SourceSystemFunctions.ST_GEOMFROMTEXT, category = FunctionCategoryConstants.GEOMETRY, nullOnNull = true, pushdown = PushDown.CAN_PUSHDOWN )
     public static GeometryType geomFromText(ClobType wkt, int srid) throws Exception {
-        return GeometryUtils.geometryFromClob(wkt, srid);
+        return GeometryUtils.geometryFromClob(wkt, srid, false);
     }
 
     @TeiidFunction( name = SourceSystemFunctions.ST_GEOMFROMWKB, category = FunctionCategoryConstants.GEOMETRY, nullOnNull = true, alias = "ST_GEOMFROMBINARY" )

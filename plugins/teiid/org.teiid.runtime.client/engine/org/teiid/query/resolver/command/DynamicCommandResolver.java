@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
@@ -68,7 +69,8 @@ public class DynamicCommandResolver extends CommandResolver {
         Iterator columns = dynamicCmd.getAsColumns().iterator();
 
         Set<GroupSymbol> groups = new HashSet<GroupSymbol>();
-        
+        boolean resolvedColumns = false;
+
         //if there is no into group, just create temp metadata ids
         if (dynamicCmd.getIntoGroup() == null) {
             while (columns.hasNext()) {
@@ -76,6 +78,7 @@ public class DynamicCommandResolver extends CommandResolver {
                 column.setMetadataID(new TempMetadataID(column.getShortName(), column.getType()));
             }
         } else if (dynamicCmd.getIntoGroup().isTempGroupSymbol()) {
+            resolvedColumns = true;
             while (columns.hasNext()) {
                 ElementSymbol column = (ElementSymbol)columns.next();
                 GroupSymbol gs = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL);
@@ -108,6 +111,12 @@ public class DynamicCommandResolver extends CommandResolver {
         if (intoSymbol != null) {
             if (!intoSymbol.isImplicitTempGroupSymbol()) {
                 ResolverUtil.resolveGroup(intoSymbol, metadata);
+                if (!resolvedColumns && getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_12_4)) {
+                    //must be a temp table from a higher scope
+                    for (ElementSymbol column : (List<ElementSymbol>)dynamicCmd.getAsColumns()) {
+                        column.setGroupSymbol(dynamicCmd.getIntoGroup().clone());
+                    }
+                }
             } else {
                 List symbols = dynamicCmd.getAsColumns();
                 ResolverUtil.resolveImplicitTempGroup(metadata, intoSymbol, symbols);

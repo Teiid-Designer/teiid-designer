@@ -27,13 +27,13 @@ import java.util.List;
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.sql.AbstractTestQueryParser;
+import org.teiid.query.sql.AbstractSqlTest;
 import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.lang.Drop;
 import org.teiid.query.sql.symbol.ElementSymbol;
 
 @SuppressWarnings( {"nls", "javadoc"} )
-public class Test7CreateDrop extends AbstractTestQueryParser {
+public class Test7CreateDrop extends AbstractSqlTest {
 
     private Test7Factory factory;
 

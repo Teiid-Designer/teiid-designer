@@ -34,7 +34,7 @@ public class ExistsCriteria extends Criteria
     }
 
     @Override
-    public void setCommand(QueryCommand subqueryCommand){
+    public void setCommand(QueryCommand subqueryCommand) {
         this.command = subqueryCommand;
     }
 
@@ -44,7 +44,7 @@ public class ExistsCriteria extends Criteria
     public boolean shouldEvaluate() {
         return shouldEvaluate;
     }
-    
+
     /**
      * @param shouldEvaluate
      */
@@ -56,7 +56,7 @@ public class ExistsCriteria extends Criteria
     public boolean isNegated() {
         return negated;
     }
-    
+
     @Override
     public void setNegated(boolean negated) {
         this.negated = negated;
@@ -68,7 +68,7 @@ public class ExistsCriteria extends Criteria
     public SubqueryHint getSubqueryHint() {
         return subqueryHint;
     }
-    
+
     /**
      * @param subqueryHint
      */
@@ -89,18 +89,27 @@ public class ExistsCriteria extends Criteria
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
         ExistsCriteria other = (ExistsCriteria)obj;
         if (this.command == null) {
-            if (other.command != null) return false;
-        } else if (!this.command.equals(other.command)) return false;
-        if (this.negated != other.negated) return false;
-        if (this.shouldEvaluate != other.shouldEvaluate) return false;
+            if (other.command != null)
+                return false;
+        } else if (!this.command.equals(other.command))
+            return false;
+        if (this.negated != other.negated)
+            return false;
+        if (this.shouldEvaluate != other.shouldEvaluate)
+            return false;
         if (this.subqueryHint == null) {
-            if (other.subqueryHint != null) return false;
-        } else if (!this.subqueryHint.equals(other.subqueryHint)) return false;
+            if (other.subqueryHint != null)
+                return false;
+        } else if (!this.subqueryHint.equals(other.subqueryHint))
+            return false;
         return true;
     }
 
@@ -114,11 +123,11 @@ public class ExistsCriteria extends Criteria
     public ExistsCriteria clone() {
         ExistsCriteria clone = new ExistsCriteria(this.parser, this.id);
 
-        if(getCommand() != null)
+        if (getCommand() != null)
             clone.setCommand(getCommand().clone());
         clone.setNegated(isNegated());
         clone.setShouldEvaluate(shouldEvaluate());
-        if(getSubqueryHint() != null)
+        if (getSubqueryHint() != null)
             clone.setSubqueryHint(getSubqueryHint().clone());
 
         return clone;

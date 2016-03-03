@@ -74,7 +74,7 @@ public class ProcedureParameterAspect extends RelationalEntityAspect implements 
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect#getDefaultValue(org.eclipse.emf.ecore.EObject)
      */
     @Override
-	public Object getDefaultValue(EObject eObject) {
+	public String getDefaultValue(EObject eObject) {
         CoreArgCheck.isInstanceOf(ProcedureParameter.class, eObject);
         ProcedureParameter proc = (ProcedureParameter) eObject;
         return proc.getDefaultValue();

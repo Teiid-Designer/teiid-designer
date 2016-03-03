@@ -148,7 +148,7 @@ public class ExpressionMappingVisitor extends LanguageVisitor {
     public void visit(DerivedColumn obj) {
     	Expression original = obj.getExpression();
     	obj.setExpression(replaceExpression(original));
-    	if (obj.isPropagateName() && obj.getAlias() == null && !(obj.getExpression() instanceof ElementSymbol) && original instanceof ElementSymbol) {
+    	if (obj.isPropagateName() && obj.getAlias() == null && original instanceof ElementSymbol) {
     		obj.setAlias(((ElementSymbol)original).getShortName());
     	}
     }

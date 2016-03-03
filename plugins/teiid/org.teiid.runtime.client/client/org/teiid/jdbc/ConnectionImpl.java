@@ -57,6 +57,7 @@ import org.teiid.client.xa.XATransactionException;
 import org.teiid.client.xa.XidImpl;
 import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.util.PropertiesUtils;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -147,10 +148,12 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
     	this.serverConn = serverConn;
         this.url = url;
         this.dqp = serverConn.getService(DQP.class);
-        
-        logger.fine(Messages.getString(Messages.JDBC.MMConnection_Session_success));
-        logConnectionProperties(url, info);
-        
+
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine(Messages.getString(Messages.JDBC.MMConnection_Session_success));
+            logConnectionProperties(url, info);
+        }
+
         setExecutionProperties(info);
     }
     
@@ -679,6 +682,9 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
         //Check to see the connection is open
         checkConnection();
         if (!autoCommitFlag) {
+            if (this.transactionXid != null) {
+                throw new SQLException(Messages.getString(Messages.JDBC.MMStatement_In_XA_Transaction)); 
+            }
             try {
             	if (this.inLocalTxn) {
             		this.inLocalTxn = false;
@@ -1162,5 +1168,9 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
 	public Properties getConnectionProps() {
 		return connectionProps;
 	}
-	
+
+	@Since(Version.TEIID_8_12_4)
+	void setTransactionXid(XidImpl transactionXid) {
+        this.transactionXid = transactionXid;
+    }
 }

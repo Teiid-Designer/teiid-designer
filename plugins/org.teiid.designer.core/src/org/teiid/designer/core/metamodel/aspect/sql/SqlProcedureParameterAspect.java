@@ -49,7 +49,7 @@ public interface SqlProcedureParameterAspect extends SqlAspect, SqlDatatypeCheck
      * @param eObject The <code>EObject</code> for which defaultValue prop is obtained 
      * @return parameter's default value
      */
-    Object getDefaultValue(EObject eObject);
+    String getDefaultValue(EObject eObject);
 
     /**
      * Get the parameter's nulltype

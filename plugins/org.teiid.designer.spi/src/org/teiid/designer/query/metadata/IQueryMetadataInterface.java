@@ -14,7 +14,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import javax.script.ScriptEngine;
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.annotation.Updated;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.xml.IMappingNode;
@@ -72,6 +75,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
             public static final int SELECT = 0;
             public static final int SEARCHABLE_LIKE = 1;
             public static final int SEARCHABLE_COMPARE = 2;
+            public static final int SEARCHABLE_EQUALITY = 3;
             public static final int NULL = 4;
             public static final int UPDATE = 5;
             public static final int DEFAULT_VALUE = 7;
@@ -211,7 +215,8 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @throws Exception implementation detected a problem during the request
      */
-    Object getDefaultValue(Object elementID) throws Exception;
+    @Updated(version=Version.TEIID_8_12_4)
+    String getDefaultValue(Object elementID) throws Exception;
 
     /**
      * Get the element's minimum value for an element symbol
@@ -870,4 +875,10 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * @return short name use property
      */
     boolean findShortName();
+
+    /**
+     * @return the widen comparison to string flag
+     */
+    @Since(Version.TEIID_8_12_4)
+    boolean widenComparisonToString();
 }

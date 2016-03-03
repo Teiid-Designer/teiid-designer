@@ -36,6 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.core.util.PropertiesUtils;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
@@ -85,6 +86,7 @@ import org.teiid.query.sql.lang.GroupBy;
 import org.teiid.query.sql.lang.HasCriteria;
 import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.Into;
+import org.teiid.query.sql.lang.IsDistinctCriteria;
 import org.teiid.query.sql.lang.IsNullCriteria;
 import org.teiid.query.sql.lang.JoinPredicate;
 import org.teiid.query.sql.lang.JoinType;
@@ -1396,7 +1398,8 @@ public class SQLStringVisitor extends LanguageVisitor
             append(")"); //$NON-NLS-1$
         }
 
-        addMakeDep(obj);
+        if (isLessThanTeiid8124())
+            addMakeDep(obj);
 
         enableComments(obj);
         addComments(obj);
@@ -1412,18 +1415,36 @@ public class SQLStringVisitor extends LanguageVisitor
             append(Option.OPTIONAL);
             append(SPACE);
         }
-        if (obj.getMakeDep() != null && obj.getMakeDep().isSimple()) {
-            append(Option.MAKEDEP);
-            append(SPACE);
+
+        if (obj.getMakeDep() != null) {
+            if (obj.getMakeDep().isSimple() && isLessThanTeiid8124()) {
+                append(Option.MAKEDEP);
+                append(SPACE);
+            } else {
+                append(Option.MAKEDEP);
+                appendMakeDepOptions(obj.getMakeDep());
+                append(SPACE);
+            }
         }
+        
         if (obj.isMakeNotDep()) {
             append(Option.MAKENOTDEP);
             append(SPACE);
         }
+        
+        // Will return false if NOT less than Teiid 8.12.4        
         if (obj.isMakeInd()) {
             append(FromClause.MAKEIND);
             append(SPACE);
         }
+
+        // Will return null if less than Teiid 8.12.4
+        if (obj.getMakeInd() != null) {
+            append(MAKEIND);
+            appendMakeDepOptions(obj.getMakeInd());
+            append(SPACE);
+        }
+
         if (obj.isNoUnnest()) {
             append(SubqueryHint.NOUNNEST);
             append(SPACE);
@@ -1632,11 +1653,15 @@ public class SQLStringVisitor extends LanguageVisitor
             append(Tokens.COLON);
             append(makedep.getMax());
         }
-        if (makedep.isJoin()) {
+        if (makedep.getJoin() != null) {
             if (space) {
                 append(SPACE);
             } else {
                 space = true;
+            }
+            if (!makedep.getJoin()) {
+                append(NO);
+                append(SPACE);
             }
             append(JOIN);
         }
@@ -2237,7 +2262,8 @@ public class SQLStringVisitor extends LanguageVisitor
         else
             append(groupSymbol.getOutputName());
 
-        addMakeDep(obj);
+        if (isLessThanTeiid8124())
+            addMakeDep(obj);
 
         enableComments(obj);
         addComments(obj);
@@ -2274,7 +2300,9 @@ public class SQLStringVisitor extends LanguageVisitor
 
         addHintComment(obj);
         visitNode(obj.getGroup());
-        addMakeDep(obj);
+
+        if (isLessThanTeiid8124())
+            addMakeDep(obj);
 
         enableComments(obj);
         addComments(obj);
@@ -2510,6 +2538,22 @@ public class SQLStringVisitor extends LanguageVisitor
             if (constantParts == null) {
                 if (isTeiid8OrGreater() && DataTypeManagerService.DefaultDataTypes.isLOB(type)) {
                     constantParts = new String[] {"?"}; //$NON-NLS-1$
+                } else if (isTeiid8124OrGreater()) {
+                    append('\'');
+                    String strValue = value.toString();
+                    for (int i = 0; i < strValue.length(); i++) {
+                        char c = strValue.charAt(i);
+                        if (c == '\'') {
+                            parts.append('\'');
+                        } else if (Character.isISOControl(c)) {
+                            parts.append("\\u" + PropertiesUtils.toHex((c >> 12) & 0xF) + PropertiesUtils.toHex((c >>  8) & 0xF) //$NON-NLS-1$ 
+                                    + PropertiesUtils.toHex((c >>  4) & 0xF) + PropertiesUtils.toHex(c & 0xF));
+                            continue;
+                        }
+                        parts.append(c);
+                    }
+                    parts.append('\'');
+                    return;
                 } else {
                     String strValue = value.toString();
                     strValue = escapeStringValue(strValue, "'"); //$NON-NLS-1$
@@ -3614,7 +3658,9 @@ public class SQLStringVisitor extends LanguageVisitor
         append(AS);
         append(SPACE);
         outputDisplayName(obj.getName());
-        addMakeDep(obj);
+
+        if (isLessThanTeiid8124())
+            addMakeDep(obj);
 
         enableComments(obj);
         addComments(obj);
@@ -3678,7 +3724,9 @@ public class SQLStringVisitor extends LanguageVisitor
         append(AS);
         append(SPACE);
         outputDisplayName(obj.getName());
-        addMakeDep(obj);
+
+        if (isLessThanTeiid8124())
+            addMakeDep(obj);
 
         enableComments(obj);
         addComments(obj);
@@ -3729,7 +3777,9 @@ public class SQLStringVisitor extends LanguageVisitor
         append(AS);
         append(SPACE);
         outputDisplayName(obj.getName());
-        addMakeDep(obj);
+
+        if (isLessThanTeiid8124())
+            addMakeDep(obj);
 
         enableComments(obj);
         addComments(obj);
@@ -3988,7 +4038,9 @@ public class SQLStringVisitor extends LanguageVisitor
         append(AS);
         append(SPACE);
         outputDisplayName(obj.getName());
-        addMakeDep(obj);
+
+        if (isLessThanTeiid8124())
+            addMakeDep(obj);
 
         enableComments(obj);
         addComments(obj);
@@ -4002,6 +4054,16 @@ public class SQLStringVisitor extends LanguageVisitor
         if (makeDep != null && !makeDep.isSimple()) {
             append(SPACE);
             append(MAKEDEP);
+            appendMakeDepOptions(makeDep);
+        }
+
+        if (isLessThanTeiid8124())
+            return;
+
+        makeDep = obj.getMakeInd();
+        if (makeDep != null && !makeDep.isSimple()) {
+            append(SPACE);
+            append(MAKEIND);
             appendMakeDepOptions(makeDep);
         }
     }
@@ -4159,6 +4221,24 @@ public class SQLStringVisitor extends LanguageVisitor
 
         enableComments(array);
         addComments(array);
+    }
+
+    @Override
+    @Since(Version.TEIID_8_12_4)
+    public void visit(IsDistinctCriteria isDistinctCriteria) {
+        append(isDistinctCriteria.getLeftRowValue());
+        append(SPACE);
+        append(IS);
+        append(SPACE);
+        if (isDistinctCriteria.isNegated()) {
+            append(NOT);
+            append(SPACE);
+        }
+        append(DISTINCT);
+        append(SPACE);
+        append(FROM);
+        append(SPACE);
+        append(isDistinctCriteria.getRightRowValue());
     }
 
     private String escapeSinglePart(String part) {

@@ -106,7 +106,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
      * @see org.teiid.designer.metadata.runtime.ColumnRecord#getDefaultValue()
      */
     @Override
-    public Object getDefaultValue() {
+    public String getDefaultValue() {
 		if((EObject)this.eObject != null && !defaultValueSet) {
 			setDefaultValue(getColumnAspect().getDefaultValue((EObject)this.eObject));
 		}
@@ -410,7 +410,7 @@ public class ColumnRecordImpl extends org.teiid.designer.metadata.runtime.impl.C
      * @param object
      */
     @Override
-    public void setDefaultValue(Object object) {
+    public void setDefaultValue(String object) {
         super.setDefaultValue(object);
 		defaultValueSet = true;
     }
