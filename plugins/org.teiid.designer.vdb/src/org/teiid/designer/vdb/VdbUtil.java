@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -682,9 +683,12 @@ public class VdbUtil implements VdbConstants {
 						if( resource == null ) {
 							// Find by name
 							Collection<IFile> resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
-							IFile someResource = resources.iterator().next();
-							if( ! ModelUtil.isVdbArchiveFile(someResource)) {
-								resource = someResource;
+							Iterator<IFile> iterator = resources.iterator();
+							if (iterator.hasNext()) {
+							    IFile someResource = iterator.next();
+							    if( ! ModelUtil.isVdbArchiveFile(someResource)) {
+							        resource = someResource;
+							    }
 							}
 						}
 					}
