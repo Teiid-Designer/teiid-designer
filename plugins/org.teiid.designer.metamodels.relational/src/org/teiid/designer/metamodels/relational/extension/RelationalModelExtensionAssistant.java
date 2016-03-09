@@ -246,6 +246,10 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
     	
     	if( isVirtual && !PropertyName.same(PropertyName.NON_PREPARED, propId)) {
     		super.setPropertyValue(modelObject, propId, newValue);
+    	} else if( !isVirtual && PropertyName.same(PropertyName.NATIVE_QUERY, propId)) {
+    		super.setPropertyValue(modelObject, propId, newValue);
+    	} else if( !isVirtual && PropertyName.same(PropertyName.NATIVE_TYPE, propId)) {
+    		super.setPropertyValue(modelObject, propId, newValue);
     	}
 
         // if setting aggregate to false remove these properties
