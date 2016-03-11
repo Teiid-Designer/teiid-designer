@@ -106,7 +106,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		return ddlBuffer.toString();
 	}
 	
-	private String getStatement(EObject eObj) {
+	public String getStatement(EObject eObj) {
 		if( eObj instanceof Table ) {
 			if( isVirtual ) {
 				// generate DDL for a View including SQL statement
@@ -792,12 +792,19 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
     			// If relational, we're handling this via getPropetyValue()...
     			if(ns.equals(RELATIONAL_PREFIX)) {
-    				String propId = BASE_TABLE_EXT_PROPERTIES.NATIVE_QUERY;
-    				String nativeQuery = assistant.getOverriddenValue(modelObject, propId);
-    				if(!CoreStringUtil.isEmpty(nativeQuery)) {
-    					propId = propId.replace(RELATIONAL_PREFIX, TEIID_REL_PREFIX);
-    					options.put(propId, nativeQuery);
-    				}
+    				addRelationalOption(options, BASE_TABLE_EXT_PROPERTIES.NATIVE_QUERY, modelObject, assistant);
+    				addRelationalOption(options, BASE_TABLE_EXT_PROPERTIES.ALLOW_MATVIEW_MANAGEMENT, modelObject, assistant);
+    				addRelationalOption(options, BASE_TABLE_EXT_PROPERTIES.MATVIEW_STATUS_TABLE, modelObject, assistant);
+    				addRelationalOption(options, BASE_TABLE_EXT_PROPERTIES.MATVIEW_BEFORE_LOAD_SCRIPT, modelObject, assistant);
+    				addRelationalOption(options, BASE_TABLE_EXT_PROPERTIES.MATVIEW_LOAD_SCRIPT, modelObject, assistant);
+    				addRelationalOption(options, BASE_TABLE_EXT_PROPERTIES.MATVIEW_AFTER_LOAD_SCRIPT, modelObject, assistant);
+    				addRelationalOption(options, BASE_TABLE_EXT_PROPERTIES.MATVIEW_SHARE_SCOPE, modelObject, assistant);
+    				addRelationalOption(options, BASE_TABLE_EXT_PROPERTIES.MATERIALIZED_STAGE_TABLE, modelObject, assistant);
+    				addRelationalOption(options, BASE_TABLE_EXT_PROPERTIES.ON_VDB_START_SCRIPT, modelObject, assistant);
+    				addRelationalOption(options, BASE_TABLE_EXT_PROPERTIES.ON_VDB_DROP_SCRIPT, modelObject, assistant);
+    				addRelationalOption(options, BASE_TABLE_EXT_PROPERTIES.MATVIEW_ONERROR_ACTION, modelObject, assistant);
+    				addRelationalOption(options, BASE_TABLE_EXT_PROPERTIES.MATVIEW_TTL, modelObject, assistant);
+    				
 //    				propId = BASE_TABLE_EXT_PROPERTIES.VIEW_TABLE_GLOBAL_TEMP_TABLE;
 //    				String globalTempTable = assistant.getOverriddenValue(modelObject, propId);
 //    				if(!CoreStringUtil.isEmpty(globalTempTable)) {
@@ -841,6 +848,14 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	
     	return options;
     	
+    }
+    
+    private void addRelationalOption(Map<String, String> options, String propId, EObject modelObject, ModelObjectExtensionAssistant assistant) throws Exception {
+		String value = assistant.getOverriddenValue(modelObject, propId);
+		if(!CoreStringUtil.isEmpty(value)) {
+			propId = propId.replace(RELATIONAL_PREFIX, TEIID_REL_PREFIX);
+			options.put(propId, value);
+		}
     }
     
     private boolean hasOption(EObject modelObject, String propId) throws Exception {
@@ -1008,6 +1023,10 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		}
     	
     	return null;
+    }
+    
+    public void setIsVirtual(boolean isVirtualModel) {
+    	isVirtual = isVirtualModel;
     }
     
     private String getRestPropertyValue(EObject eObj, String propertyID ) {

@@ -138,6 +138,17 @@ public interface RelationalConstants {
     class BASE_TABLE_EXT_PROPERTIES {
         public static final String NATIVE_QUERY = "relational:native-query"; //$NON-NLS-1$
         public static final String VIEW_TABLE_GLOBAL_TEMP_TABLE = "relational:global-temp-table"; //$NON-NLS-1$
+        public static final String ALLOW_MATVIEW_MANAGEMENT = "relational:ALLOW_MATVIEW_MANAGEMENT"; //$NON-NLS-1$
+        public static final String MATVIEW_STATUS_TABLE = "relational:MATVIEW_STATUS_TABLE"; //$NON-NLS-1$
+        public static final String MATVIEW_BEFORE_LOAD_SCRIPT = "relational:MATVIEW_BEFORE_LOAD_SCRIPT";  //$NON-NLS-1$
+        public static final String MATVIEW_LOAD_SCRIPT = "relational:MATVIEW_LOAD_SCRIPT"; //$NON-NLS-1$
+        public static final String MATVIEW_AFTER_LOAD_SCRIPT = "relational:MATVIEW_AFTER_LOAD_SCRIPT"; //$NON-NLS-1$
+        public static final String MATVIEW_SHARE_SCOPE = "relational:MATVIEW_SHARE_SCOPE"; //$NON-NLS-1$
+        public static final String MATERIALIZED_STAGE_TABLE = "relational:MATERIALIZED_STAGE_TABLE"; //$NON-NLS-1$
+        public static final String ON_VDB_START_SCRIPT = "relational:ON_VDB_START_SCRIPT"; //$NON-NLS-1$
+        public static final String ON_VDB_DROP_SCRIPT = "relational:ON_VDB_DROP_SCRIPT"; //$NON-NLS-1$
+        public static final String MATVIEW_ONERROR_ACTION = "relational:MATVIEW_ONERROR_ACTION"; //$NON-NLS-1$
+        public static final String MATVIEW_TTL = "relational:MATVIEW_TTL"; //$NON-NLS-1$
     }
     
     class FOREIGN_KEY_EXT_PROPERTIES {
