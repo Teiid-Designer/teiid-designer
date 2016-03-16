@@ -279,5 +279,14 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	@Override
+	public ModelResource getSelectedModelResource() {
+		return null;
+	}
+	
+	@Override
+    public boolean copyAllDescriptions() { 
+		return false;
+	}
 }

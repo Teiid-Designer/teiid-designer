@@ -143,4 +143,15 @@ public class TransformationLinkContributor implements INewModelWizardContributor
 	public void currentPageChanged(IWizardPage page) {
         // unneeded, for now
     }
+
+	@Override
+	public ModelResource getSelectedModelResource() {
+		return (ModelResource) transformationLinkPage.getViewer().getInput();
+	}
+	
+	@Override
+    public boolean copyAllDescriptions() { 
+		return transformationLinkPage.isCopyAllDescriptions();
+	}
+
 }

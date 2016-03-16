@@ -10,6 +10,7 @@ package org.teiid.designer.webservice.ui.wizard;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -331,4 +332,14 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
         }
         return Arrays.asList(getPages()).get(ndx - 1);
     }
+    
+	@Override
+	public ModelResource getSelectedModelResource() {
+		return null;
+	}
+	
+	@Override
+    public boolean copyAllDescriptions() { 
+		return false;
+	}
 }

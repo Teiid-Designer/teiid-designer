@@ -182,5 +182,14 @@ public class VirtualDocumentWizardContributor implements INewModelWizardContribu
             this.newVirtualDocumentPage.setMappingClassBuilderStrategy(theStrategy);
         }
     }
-
+    
+	@Override
+	public ModelResource getSelectedModelResource() {
+		return null;
+	}
+	
+	@Override
+    public boolean copyAllDescriptions() { 
+		return false;
+	}
 }

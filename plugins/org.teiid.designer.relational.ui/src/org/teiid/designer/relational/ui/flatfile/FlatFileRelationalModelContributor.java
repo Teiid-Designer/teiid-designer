@@ -243,4 +243,13 @@ public class FlatFileRelationalModelContributor implements INewModelWizardContri
 
 	}
 
+	@Override
+	public ModelResource getSelectedModelResource() {
+		return null;
+	}
+	
+	@Override
+    public boolean copyAllDescriptions() { 
+		return false;
+	}
 }

@@ -138,4 +138,14 @@ public class StructuralCopyContributor implements INewModelWizardContributor, Ui
 	public void currentPageChanged(IWizardPage page) {
         // unneeded, for now
     }
+    
+	@Override
+	public ModelResource getSelectedModelResource() {
+		return null;
+	}
+	
+	@Override
+    public boolean copyAllDescriptions() { 
+		return false;
+	}
 }
