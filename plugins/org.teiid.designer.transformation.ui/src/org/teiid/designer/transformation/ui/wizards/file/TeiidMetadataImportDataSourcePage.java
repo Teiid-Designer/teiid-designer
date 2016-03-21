@@ -89,24 +89,23 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
         
         this.jndiNameField.setEnabled(serverActive);
         
-        if(serverActive ) {
-	        this.jndiNameField.addModifyListener(new ModifyListener() {
+        this.jndiNameField.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				if( synchronizing ) return;
 				
-				@Override
-				public void modifyText(ModifyEvent e) {
-					if( synchronizing ) return;
-					
-					if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
-						jndiName = jndiNameField.getText();
-						info.setJBossJndiNameName(jndiName);
-					} else {
-						jndiName = ""; //$NON-NLS-1$
-						info.setJBossJndiNameName(null);
-					}
-					
+				if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
+					jndiName = jndiNameField.getText();
+					info.setJBossJndiNameName(jndiName);
+				} else {
+					jndiName = ""; //$NON-NLS-1$
+					info.setJBossJndiNameName(null);
 				}
-			});
-        }
+				
+			}
+		});
+	        
         GridDataFactory.fillDefaults().grab(true,  false).applyTo(jndiNameField);
         
         this.autoCreateDataSource = WidgetFactory.createCheckBox(theGroup, "Auto-create Data Source");

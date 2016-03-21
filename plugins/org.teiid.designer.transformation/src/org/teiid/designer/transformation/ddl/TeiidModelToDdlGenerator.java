@@ -77,6 +77,28 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     
     private ModelExtensionAssistantAggregator medAggregator = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator();
 
+    private boolean ignoreTeiidProcedures = false;
+    
+    
+    /**
+     * 
+     */
+	public TeiidModelToDdlGenerator() {
+		super();
+	}
+	
+    /**
+     * Constructor that allows setting a flag that will prevent teiid-specific procedures to NOT have ddl generated for them.
+     * 
+     * 
+     * @param ignoreTeiidProcedures
+     */
+	public TeiidModelToDdlGenerator(boolean ignoreTeiidProcedures) {
+		super();
+		
+		this.ignoreTeiidProcedures = ignoreTeiidProcedures;
+	}
+
 	/**
 	 * @param modelResource
 	 * @return the generated DDL for the given model
@@ -374,6 +396,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     private String procedure(Procedure procedure) {
         if (! includeProcedures)
             return null;
+        
+        if( ignoreTeiidProcedures && isTeiidProcedure(procedure.getName()) ) return null;
+        
         
         StringBuilder sb = new StringBuilder();
         boolean isFunction = procedure.isFunction();
@@ -1105,6 +1130,20 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	return uniqueConstraints;
     }
     
+    public boolean isTeiidProcedure(String name) {
+    	// Check for invokeHttp(), invoke(), getFiles(), getTextFiles() and saveFile()
+    	if( name.equalsIgnoreCase(TEIID_PROCEDURE_NAMES.INVOKE) ||
+    		name.equalsIgnoreCase(TEIID_PROCEDURE_NAMES.INVOKE_HTTP) ||
+    		name.equalsIgnoreCase(TEIID_PROCEDURE_NAMES.GET_FILES) ||
+    		name.equalsIgnoreCase(TEIID_PROCEDURE_NAMES.GET_TEXT_FILES) ||
+    		name.equalsIgnoreCase(TEIID_PROCEDURE_NAMES.SAVE_FILE) ) {
+    		return true;
+    	}
+    	
+    	return false;
+    }
+
+    
     private void addIssue(int severity, String message) {
     	issues.add(new Status(severity, TransformationPlugin.PLUGIN_ID, message));
     }
@@ -1177,8 +1216,6 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
     	public ProcedureHandler(Procedure procedure) {
     		this.proc = procedure;
-    		
-    		
     	}
     	
     	

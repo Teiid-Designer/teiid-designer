@@ -172,5 +172,14 @@ public interface RelationalConstants {
         public static final String UDF_JAR_PATH = "relational:udfJarPath"; //$NON-NLS-1$
         public static final String FUNCTION_CATEGORY = "relational:function-category"; //$NON-NLS-1$
     }
+    
+    class TEIID_PROCEDURE_NAMES {
+    	// invokeHttp(), invoke(), getFiles(), getTextFiles() and saveFile()
+    	public static final String INVOKE = "invoke"; //$NON-NLS-1$
+    	public static final String INVOKE_HTTP = "invokeHttp"; //$NON-NLS-1$
+    	public static final String GET_FILES = "getFiles"; //$NON-NLS-1$
+    	public static final String GET_TEXT_FILES = "getTextFiles"; //$NON-NLS-1$
+    	public static final String SAVE_FILE = "saveFile"; //$NON-NLS-1$
+    }
 
 }

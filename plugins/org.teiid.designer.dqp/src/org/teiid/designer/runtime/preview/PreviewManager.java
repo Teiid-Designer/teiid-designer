@@ -26,6 +26,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -521,16 +522,30 @@ public final class PreviewManager {
             if( !isVirtual ) {
             	sb.append("\n\t\t<source name=\""+ modelName+"\" translator-name=\""+translatorName+"\" connection-jndi-name=\""+jndiProp+"\" />"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             }
-            sb.append("\n\t\t<metadata type=\"DDL\"><![CDATA["); //$NON-NLS-1$ 
-            TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator();
             
+            // Check to see if statements will be generated
+            // invokeHttp(), invoke(), getFiles(), getTextFiles() and saveFile()
+            Collection<String> statements = new ArrayList<String>(eObjects.size());
+            TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator(true);
             generator.setIsVirtual(isVirtual);
             
             for( EObject eObj : eObjects ) {
             	String statement = generator.getStatement(eObj);
-            	sb.append("\n").append(statement);
+            	if( !StringUtilities.isEmpty(statement) ) {
+            		statements.add(statement);
+            		
+            	}
             }
-            sb.append("]]></metadata>");
+            
+            if( !statements.isEmpty() ) {
+	            sb.append("\n\t\t<metadata type=\"DDL\"><![CDATA["); //$NON-NLS-1$ 
+	            
+	            for( String statement : statements ) {
+	            	sb.append("\n").append(statement);
+	            }
+	            
+	            sb.append("]]></metadata>");
+            }
             sb.append("\n\t</model>"); //$NON-NLS-1$
             return sb.toString();
     	}
