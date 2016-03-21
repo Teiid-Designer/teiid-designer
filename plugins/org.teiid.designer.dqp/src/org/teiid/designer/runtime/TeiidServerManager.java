@@ -44,7 +44,6 @@ import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.runtime.IServersProvider.IServersInitialiseListener;
 import org.teiid.designer.runtime.importer.ImportManager;
-import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidServer;
@@ -509,9 +508,6 @@ public final class TeiidServerManager implements ITeiidServerManager, TeiidServe
      * that may well rely on it.
      */
     private void initialiseManagers() {
-        PreviewManager previewManager = PreviewManager.getInstance();
-        addListener(previewManager);
-
         addListener(ImportManager.getInstance());
 
         IEclipsePreferences preferences = DqpPlugin.getInstance().getPreferences(DESIGNER_UI_PLUGIN_ID);

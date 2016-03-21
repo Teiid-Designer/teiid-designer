@@ -169,6 +169,9 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         this.sourcePage = new TeiidMetadataImportSourcePage(getFileInfo());
         addPage(sourcePage);
         
+        
+        addPage(new TeiidMetadataImportDataSourcePage(getFileInfo()));
+        
         TeiidMetadataImportFormatPage formatSelectionPage = new TeiidMetadataImportFormatPage(getFileInfo());
         addPage(formatSelectionPage);
         

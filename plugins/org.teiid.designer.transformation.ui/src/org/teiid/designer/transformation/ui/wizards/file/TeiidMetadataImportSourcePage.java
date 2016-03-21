@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -65,6 +66,7 @@ import org.eclipse.ui.internal.misc.StringMatcher;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.URLHelper;
 import org.teiid.designer.core.workspace.DotProjectUtils;
@@ -74,6 +76,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.profiles.flatfile.IFlatFileProfileConstants;
 import org.teiid.designer.datatools.profiles.xml.IXmlProfileConstants;
@@ -1061,6 +1064,12 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         } else {
         	this.sourceModelFileText.setText(StringConstants.EMPTY_STRING);
         }
+        
+//        if( this.info.getJBossJndiName() != null ) {
+//        	this.jndiNameField.setText(this.info.getJBossJndiName());
+//        } else {
+//        	this.jndiNameField.setText(StringConstants.EMPTY_STRING);
+//        }
                 
         synchronizing = false;
     }
@@ -1084,6 +1093,10 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 				initialName = ModelNameUtil.getNewUniqueModelName(initialName, this.info.getTargetProject());
 			}
 			this.info.setSourceModelName(initialName);
+			
+			if( StringUtilities.isEmpty(this.info.getJBossJndiName()) && DataSourceConnectionHelper.isServerConnected() ) {
+				this.info.setJBossJndiNameName(initialName);
+			}
     	}
     	if( fileName_wo_extension != null && (this.info.getViewModelName() == null || this.info.getViewModelName().length() == 0) ) {
     		String initialName = "ViewModel"; //$NON-NLS-1$

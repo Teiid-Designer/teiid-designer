@@ -7,7 +7,6 @@
 */
 package org.teiid.designer.runtime.ui.preview;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import org.eclipse.core.resources.IProject;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -27,16 +26,16 @@ import org.eclipse.datatools.connectivity.IConnectionFactoryProvider;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IConnectionProfileProvider;
 import org.eclipse.datatools.sqltools.core.DatabaseIdentifier;
+import org.eclipse.datatools.sqltools.editor.core.connection.IConnectionTracker;
 import org.eclipse.datatools.sqltools.result.ui.ResultsViewUIPlugin;
 import org.eclipse.datatools.sqltools.routineeditor.launching.LaunchHelper;
 import org.eclipse.datatools.sqltools.routineeditor.launching.RoutineLaunchConfigurationAttribute;
 import org.eclipse.datatools.sqltools.sqleditor.result.SimpleSQLResultRunnable;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -50,11 +49,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressConstants;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.ui.TeiidAdHocScriptRunnable;
@@ -73,13 +70,10 @@ import org.teiid.designer.metamodels.webservice.Operation;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidJdbcInfo;
 import org.teiid.designer.runtime.preview.PreviewManager;
-import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbJob;
-import org.teiid.designer.runtime.preview.jobs.WorkspacePreviewVdbJob;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
-import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.dialogs.AccessPatternColumnsDialog;
 import org.teiid.designer.runtime.ui.dialogs.ParameterInputDialog;
@@ -87,7 +81,6 @@ import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.editors.ModelEditorManager;
-import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
@@ -110,30 +103,14 @@ public class PreviewDataWorker {
     static String getString( final String key, final Object param, final Object param2 ) {
     	return DqpUiConstants.UTIL.getString(THIS_CLASS + key, param, param2);
 	}
-    
-    /**
-     * Valid selections include Relational Tables, Procedures.
-     * @param eObject 
-     * 
-     * @return is previeable or not
-     */
-    public boolean isPreviewableEObject( EObject eObject ) {
-        // An object can be previewed if it is of a certain object type in a Source/Relational model
-        // This is changed from previous releases because the requirement of having a Source binding prior to
-        // enablement has changed. Now the binding check is moved to the run() method which performs the check
-        // and queries the user for any additional info that's needed to execute the preview, including creating
-        // a source binding if necessary.
+	
+	private PreviewManager manager;
+	
+	public PreviewDataWorker() {
+		super();
 
-
-        // eObj must be previewable
-        return ModelObjectUtilities.isExecutable(eObject);
-
-    }
-    
-    private Shell getShell() {
-        return UiUtil.getWorkbenchShellOnlyIfUiThread();
-    }
-    
+	}
+	
     /**
      * Has preview been enabled
      * 
@@ -158,37 +135,29 @@ public class PreviewDataWorker {
     }
     
     /**
+     * Valid selections include Relational Tables, Procedures.
      * @param eObject 
-     * @param planOnly 
-     * @see org.eclipse.jface.action.IAction#run()
-     * @since 5.0
+     * 
+     * @return is previeable or not
      */
-    public void run( final EObject eObject, final boolean planOnly ) {
+    public boolean isPreviewableEObject( EObject eObject ) {
+        // An object can be previewed if it is of a certain object type in a Source/Relational model
+        // This is changed from previous releases because the requirement of having a Source binding prior to
+        // enablement has changed. Now the binding check is moved to the run() method which performs the check
+        // and queries the user for any additional info that's needed to execute the preview, including creating
+        // a source binding if necessary.
 
-    	// if we get here we know preview is enabled and a server exists and can be connected to
-    	
-        if ((Job.getJobManager().find(WorkspacePreviewVdbJob.WORKSPACE_PREVIEW_FAMILY).length != 0) ||
-                (Job.getJobManager().find(TeiidPreviewVdbJob.TEIID_PREVIEW_FAMILY).length != 0)) {
-            PreviewUnavailableDialog dialog = new PreviewUnavailableDialog(getShell());
-            dialog.open();
-            
-            if (dialog.shouldOpenProgressView()) {
-                IWorkbenchPage page = UiUtil.getWorkbenchPage();
-                
-                if (page != null) {
-                    try {
-                        page.showView(IProgressConstants.PROGRESS_VIEW_ID);
-                    } catch (PartInitException e) {
-                        DqpUiConstants.UTIL.log(e);
-                    }
-                }
-            }
 
-            return;
-        }
-        
+        // eObj must be previewable
+        return ModelObjectUtilities.isExecutable(eObject);
+
+    }
+
+	
+	public void run(EObject targetObject, boolean planOnly) {
+		
         IConnectionInfoHelper helper = new ConnectionInfoHelper();
-        ModelResource mr = ModelUtilities.getModelResourceForModelObject(eObject);
+        ModelResource mr = ModelUtilities.getModelResourceForModelObject(targetObject);
         if (mr != null && ModelIdentifier.isPhysicalModelType(mr) ) { 
         	if( !helper.hasConnectionInfo(mr)) {
 	        	MessageDialog.openWarning(getShell(), 
@@ -222,52 +191,29 @@ public class PreviewDataWorker {
         if(! validateResultDisplayProperties()) {
         	return;
         }
-        
-        final PreviewManager previewManager = PreviewManager.getInstance();
-
-        ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
-        IRunnableWithProgress runnable = new IRunnableWithProgress() {
-            @Override
-            public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
-                try {
-                    previewManager.previewSetup(eObject, monitor);
-                } catch (InterruptedException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new InvocationTargetException(e);
-                }
-            }
-        };
-
-        
-        boolean setUpSuccessfull = false;
-        // show dialog
-        try {
-            dialog.run(true, true, runnable);
-            setUpSuccessfull = true;
-        } catch (InterruptedException e) {
-            // canceled by user
-        } catch (Throwable e) {
-            if (e instanceof InvocationTargetException) {
-                e = ((InvocationTargetException)e).getTargetException();
-            }
-            DqpUiConstants.UTIL.log(e);
-            ErrorHandler.toExceptionDialog(getString("error_in_execution"), e); //$NON-NLS-1$
-        }
-
-        if (dialog.getReturnCode() == Window.OK && setUpSuccessfull) {
-            // setup successful so run preview
-            try {
-                internalRun(eObject, planOnly);
-            } catch (Exception e) {
-                DqpUiConstants.UTIL.log(e);
-                MessageDialog.openError(getShell(),
-                                        null,
-                                        getString("error_in_execution")); //$NON-NLS-1$
-            }
-        }
-    }
-    
+		
+		
+		
+		manager = new PreviewManager(targetObject);
+		
+		// The deploying the vdb will generate a dynamic VDB that contains the minimum dependent models, tables
+		// and views to run a query against.
+		
+		IStatus status = manager.deployDynamicVdb();
+		
+		if( status.isOK() ) {
+			try {
+				// This method will also end up undeploying the dynamic VDB, removing all traces of it
+				internalRun(targetObject, planOnly);
+			} catch (ModelWorkspaceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			DqpUiConstants.UTIL.log(status.getMessage());
+		}
+	}
+	
     /**
      * Open the launch configuration dialog, passing in the current workbench selection.
      * 
@@ -282,8 +228,6 @@ public class PreviewDataWorker {
         boolean isXML = false;
         
     	ModelResource mr = ModelUtilities.getModelResourceForModelObject(eObject);
-
-    	IProject project = mr.getCorrespondingResource().getProject();
 
     	List accessPatternsColumns = null;
     	if (SqlAspectHelper.isTable(eObject)) {
@@ -376,10 +320,7 @@ public class PreviewDataWorker {
     	ITeiidServer defaultServer = getServerManager().getDefaultServer();
         try {
             String driverPath = defaultServer.getAdminDriverPath();
-            String vdbName = PreviewManager.getPreviewProjectVdbName(project);
-            if (vdbName.endsWith(ITeiidVdb.VDB_DOT_EXTENSION)) {
-                vdbName = vdbName.substring(0, vdbName.length() - 4);
-            }
+            String vdbName = manager.getPreviewVdbName();
    
             ITeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(vdbName, defaultServer.getTeiidJdbcInfo());
 
@@ -424,7 +365,7 @@ public class PreviewDataWorker {
 
             // This runnable executes the SQL and displays the results
             // in the DTP 'SQL Results' view.
-            executeSQLResultRunnable(sqlConnection, labelStr, sql, ID, config, profile);
+            executeSQLResultRunnable(sqlConnection, labelStr, sql, ID, config, profile, manager);
         } catch (Exception e) {
             DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
         }
@@ -448,14 +389,14 @@ public class PreviewDataWorker {
                                                                       final String sql, 
                                                                       final DatabaseIdentifier ID, 
                                                                       final ILaunchConfigurationWorkingCopy config,
-                                                                      final IConnectionProfile profile) {
+                                                                      final IConnectionProfile profile,
+                                                                      final PreviewManager previewManager) {
         Job job = new Job(labelStr + " ...") { //$NON-NLS-1$
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 try {
-                    SimpleSQLResultRunnable runnable = new TeiidAdHocScriptRunnable(
-                                                                                    sqlConnection, labelStr, sql, true, null,
-                                                                                    monitor, ID, config);
+                    SimpleSQLResultRunnable runnable = new CleanUpRunnable(sqlConnection, labelStr, sql, true, null,
+                                                                                    monitor, ID, config, previewManager);
                     runnable.run();
                 } finally {
                     try {
@@ -464,6 +405,7 @@ public class PreviewDataWorker {
                     }
 
                     ConnectivityUtil.deleteTransientTeiidProfile(profile);
+                    
                 }
 
                 return Status.OK_STATUS;
@@ -591,8 +533,30 @@ public class PreviewDataWorker {
 		return sql;
 	}
 	
+	private boolean validateResultDisplayProperties() {
+		
+		IPreferenceStore store = ResultsViewUIPlugin.getDefault().getPreferenceStore();
+		if(!store.getBoolean("org.eclipse.datatools.sqltools.result.ResultsFilterDialog.unknownProfile")){ //$NON-NLS-1$
+			boolean isOK = MessageDialog.openQuestion(getShell(), 
+					getString("propertyPromptTitle"),  //$NON-NLS-1$
+					getString("propertyPrompt")); //$NON-NLS-1$
+			
+			if( isOK ) {
+				store.setValue("org.eclipse.datatools.sqltools.result.ResultsFilterDialog.unknownProfile", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+				return true;
+			}
+			
+			return false;
+		}
+	    return true;
+	}
+	
     private ITeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
+    }
+    
+    protected Shell getShell() {
+        return UiUtil.getWorkbenchShellOnlyIfUiThread();
     }
     
     /**
@@ -618,24 +582,6 @@ public class PreviewDataWorker {
 
         return profile.createConnection(factoryId);
     }
-    
-	private boolean validateResultDisplayProperties() {
-		
-		IPreferenceStore store = ResultsViewUIPlugin.getDefault().getPreferenceStore();
-		if(!store.getBoolean("org.eclipse.datatools.sqltools.result.ResultsFilterDialog.unknownProfile")){ //$NON-NLS-1$
-			boolean isOK = MessageDialog.openQuestion(getShell(), 
-					getString("propertyPromptTitle"),  //$NON-NLS-1$
-					getString("propertyPrompt")); //$NON-NLS-1$
-			
-			if( isOK ) {
-				store.setValue("org.eclipse.datatools.sqltools.result.ResultsFilterDialog.unknownProfile", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-				return true;
-			}
-			
-			return false;
-		}
-	    return true;
-	}
 
     class PreviewUnavailableDialog extends MessageDialog {
         boolean openProgressView = false;
@@ -683,6 +629,26 @@ public class PreviewDataWorker {
         public boolean shouldOpenProgressView() {
             return this.openProgressView;
         }
+    }
+    
+    class CleanUpRunnable extends TeiidAdHocScriptRunnable {
+    	final PreviewManager previewManager;
+
+		public CleanUpRunnable(Connection con, String description, String sql, boolean closeCon,
+				IConnectionTracker tracker, IProgressMonitor parentMonitor, DatabaseIdentifier databaseIdentifier,
+				ILaunchConfiguration configuration, final PreviewManager previewManager) {
+			super(con, description, sql, closeCon, tracker, parentMonitor, databaseIdentifier, configuration);
+			this.previewManager = previewManager;
+		}
+
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			IStatus status = super.run(monitor);
+			previewManager.undeployDynamicVdb();
+			return status;
+		}
+    	
     }
 
 }

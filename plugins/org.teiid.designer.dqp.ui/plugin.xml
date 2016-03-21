@@ -28,18 +28,6 @@
             id="dqpUiPreferenceCategory"
             name="%dqpUiPreferenceCategory">
       </category>
-      <!-- Enable Preview Preference -->
-      <preference
-            id="enablePreviewPreferenceContributor"
-            categoryId="dqpUiPreferenceCategory"
-            class="org.teiid.designer.runtime.ui.preferences.EnablePreviewPreferenceContributor">
-      </preference>
-      <!-- Enable Teiid Preview Cleanup Preference -->
-      <preference
-            id="enableTeiidPreviewCleanupPreferenceContributor"
-            categoryId="dqpUiPreferenceCategory"
-            class="org.teiid.designer.runtime.ui.preferences.EnableTeiidPreviewCleanupPreferenceContributor">
-      </preference>
       <!-- Enable Auto-create Data Source Preference -->
       <preference
             id="autoCreateDataSourcePreferenceContributor"

@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.transformation.ui.UiPlugin;
+import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportDataSourcePage;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportInfo;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportViewModelPage;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportWizard;
@@ -73,6 +74,8 @@ public class TeiidRestImportWizard extends TeiidMetadataImportWizard {
         
         this.modelDefPage = new TeiidRestImporterModelDefinitionPage(getFileInfo());
         addPage(modelDefPage);
+
+        addPage(new TeiidMetadataImportDataSourcePage(getFileInfo()));
         
         TeiidXmlImportXmlConfigurationPage sqlPage = new TeiidXmlImportXmlConfigurationPage(getFileInfo());
         addPage(sqlPage);

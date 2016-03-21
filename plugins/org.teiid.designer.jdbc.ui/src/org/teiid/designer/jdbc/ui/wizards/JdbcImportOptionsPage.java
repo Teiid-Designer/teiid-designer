@@ -39,6 +39,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -61,6 +62,7 @@ import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.jdbc.CaseConversion;
 import org.teiid.designer.jdbc.JdbcImportSettings;
 import org.teiid.designer.jdbc.JdbcPlugin;
@@ -176,6 +178,10 @@ public class JdbcImportOptionsPage extends WizardPage implements
     
     private TabItem modelsTab;
     private TabItem nameOptionsTab;
+    
+    private Text jndiNameField;
+    private String jndiName;
+    private Button autoCreateDataSource;
     
     private JdbcImporter importer;
 
@@ -356,6 +362,89 @@ public class JdbcImportOptionsPage extends WizardPage implements
             }
         });
         this.includeCatalogCheckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+        
+        {
+    		// Add widgets to page
+        	Group theGroup = WidgetFactory.createGroup(mainPanel, getString("jndiGroup"), SWT.NONE, 2, 3); //$NON-NLS-1$
+        	theGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            
+            WidgetFactory.createLabel(theGroup, "JNDI Name "); //$NON-NLS-1$
+            
+            // Check to see if server is available and connected
+            boolean serverDefined = DataSourceConnectionHelper.isServerDefined();
+            boolean serverActive = DataSourceConnectionHelper.isServerConnected();
+            
+            this.jndiNameField = WidgetFactory.createTextField(theGroup);
+            this.jndiName = importer.getJBossJndiName();
+            if( this.jndiName != null && this.jndiName.length() > 0 ) {
+            	this.jndiNameField.setText(this.jndiName);
+            }
+            
+            this.jndiNameField.setEnabled(serverActive);
+            
+            if(serverActive ) {
+    	        this.jndiNameField.addModifyListener(new ModifyListener() {
+    				
+    				@Override
+    				public void modifyText(ModifyEvent e) {
+    					
+    					if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
+    						jndiName = jndiNameField.getText();
+    						importer.setJBossJndiNameName(jndiName);
+    					} else {
+    						jndiName = ""; //$NON-NLS-1$
+    						importer.setJBossJndiNameName(null);
+    					}
+    					
+    				}
+    			});
+            }
+            GridDataFactory.fillDefaults().grab(true,  false).applyTo(jndiNameField);
+            
+            this.autoCreateDataSource = WidgetFactory.createCheckBox(theGroup, "Auto-create Data Source");
+            GridDataFactory.fillDefaults().span(2,  1).grab(true,  false).applyTo(autoCreateDataSource);
+            this.autoCreateDataSource.setSelection(importer.doCreateDataSource());
+            
+            if( serverActive ) {
+    	        this.autoCreateDataSource.addSelectionListener(new SelectionListener() {
+    				
+    				@Override
+    				public void widgetSelected(SelectionEvent e) {
+    					importer.setCreateDataSource(autoCreateDataSource.getSelection());
+    				}
+    				
+    				@Override
+    				public void widgetDefaultSelected(SelectionEvent e) {
+    					// NOTHING
+    				}
+    			});
+            }
+            
+            this.autoCreateDataSource.setEnabled(serverActive);
+            
+            
+            if( !serverActive ) {
+            	// if server still exists and NOT connected display message of NOT CONNECTED/STARTED
+            	Group serverMessageGroup = WidgetFactory.createGroup(mainPanel, getString("serverUnavailableGroup"), SWT.NONE, 2, 3); //$NON-NLS-1$
+            	theGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+                
+           	
+            	Text msgText = new Text(serverMessageGroup, SWT.WRAP | SWT.READ_ONLY);
+            	msgText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+            	msgText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+            	GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).hint(0,  35).applyTo(serverMessageGroup);
+
+                if( !serverDefined ) {  
+                	msgText.setText(getString("noServerDefined", ModelerCore.getTeiidServerManager().getDefaultServer().getDisplayName())); //$NON-NLS-1$
+                } else {
+                	
+                	msgText.setText(getString("serverNotStarted")); //$NON-NLS-1$
+                }
+
+            	
+            	// if server == null, then display message of NO DEFAULT SERVER DEFINED
+            }
+        }
         
         return mainPanel;
     }

@@ -96,11 +96,6 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         
         Properties props = connectionProfile.getBaseProperties();
         
-        String password = props.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
-        if( password != null ) {
-        	connectionProps.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, password);
-        }
-        
         String url = readEndPointProperty(props);
         if (null != url) {
             connectionProps.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, url);
@@ -119,6 +114,11 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         	 String user = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
              if (null != user && !user.equals(StringConstants.EMPTY_STRING)) {
                  connectionProps.setProperty(ICredentialsCommon.USERNAME_PROP_ID, user);
+             }
+             
+             String password = props.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
+             if( password != null ) {
+             	connectionProps.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, password);
              }
         }
        

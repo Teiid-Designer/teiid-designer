@@ -34,7 +34,6 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.relational.extension.RestModelExtensionAssistant;
 import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
-import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 
 
@@ -76,6 +75,7 @@ public class DqpPlugin extends Plugin {
 
 
     private ModelWorkspaceNotificationAdapter workspaceListener = null;
+    
     
     /**
      * The shared instance.
@@ -266,9 +266,6 @@ public class DqpPlugin extends Plugin {
             if (getServerManager() != null) {
                 getServerManager().shutdown(null);
             }
-
-            // shutdown PreviewManager
-            PreviewManager.getInstance().shutdown(null);
         } finally {
             super.stop(context);
         }

@@ -50,6 +50,14 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
 	private String schemaFilter;
 	private String tableFilter;
 	private String storedProcFilter;
+	
+    /**
+     * The unique jbossJndiName
+     * 
+     */
+	private String jbossJndiName;
+	
+	private boolean autoCreateDataSource = true;
 
 	/**
      * @since 4.0
@@ -322,5 +330,38 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
     public String getStoredProcFilter( ) {
     	return this.storedProcFilter;
     }
+    
+	/**
+	 * 
+	 * @return sourceModelName the source relational model name
+	 */
+	public String getJBossJndiName() {
+        return this.jbossJndiName;
+	}
+	
+	/**
+	 * 
+	 * @param sourceModelName (never <code>null</code> or empty).
+	 */
+	public void setJBossJndiNameName(String jndiName) {
+		this.jbossJndiName = jndiName;
+	}
+	
+	/**
+	 * 
+	 * @return sourceModelName the source relational model name
+	 */
+	public boolean doCreateDataSource() {
+        return this.autoCreateDataSource;
+	}
+	
+	/**
+	 * 
+	 * @param sourceModelName (never <code>null</code> or empty).
+	 */
+	public void setCreateDataSource(boolean value) {
+		this.autoCreateDataSource = value;
+	}
+	
 	
 }

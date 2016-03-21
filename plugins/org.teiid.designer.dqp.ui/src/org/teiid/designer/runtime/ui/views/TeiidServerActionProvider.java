@@ -37,7 +37,6 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
@@ -104,27 +103,11 @@ public class TeiidServerActionProvider extends CommonActionProvider {
 
     private Action executeVdbAction;
     
-    private IAction showPreviewVdbsAction;
-
-    private IAction showPreviewDataSourcesAction;
-    
-    private IAction enablePreviewAction;
-    
     private IAction clearPreviewArtifactsAction;
     
     private Action createVdbDataSourceAction;
     
     private Action showVdbErrorsAction;
-
-    private final TeiidServerPreviewOptionContributor previewOptionContributor;
-
-    private IMenuListener enablePreviewActionListener = new IMenuListener() {
-
-        @Override
-        public void menuAboutToShow( IMenuManager manager ) {
-            enablePreviewAction.setChecked(isPreviewEnabled());
-        }
-    };
 
     private ISelectionProvider selectionProvider;
 
@@ -133,7 +116,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
      */
     public TeiidServerActionProvider() {
         super();
-        previewOptionContributor = TeiidServerPreviewOptionContributor.getDefault();
     }
     
     @Override
@@ -167,22 +149,6 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         }
 
         return Collections.emptyList();
-    }
-    
-    /**
-     * @return <code>true</code> if preview is enabled
-     */
-    private boolean isPreviewEnabled() {
-        return PreviewManager.getInstance().isPreviewEnabled();
-    }
-
-    /**
-     * Handler for when the show preview options menu actions are selected
-     */
-    private void toggleShowPreviewOptions() {
-        previewOptionContributor.setShowPreviewOptions(
-                                                       showPreviewDataSourcesAction.isChecked(),
-                                                       showPreviewVdbsAction.isChecked());
     }
 
     /*
@@ -444,52 +410,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
 
     private void fillLocalPullDown( IMenuManager menuMgr ) {
         menuMgr.removeAll();
-        menuMgr.removeMenuListener(enablePreviewActionListener);
-        
-        // add the show preview VDBs action
-        if (showPreviewVdbsAction == null) {
-            showPreviewVdbsAction = new Action(getString("showPreviewVdbsMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
-                @Override
-                public void run() {
-                    toggleShowPreviewOptions();
-                }
-            };
-        }
-        
-        // add the show preview data sources action
-        if (showPreviewDataSourcesAction == null) {
-            showPreviewDataSourcesAction = new Action(
-                                                       getString("showPreviewDataSourcesMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
-                @Override
-                public void run() {
-                    toggleShowPreviewOptions();
-                }
-            };
-        }
 
-        showPreviewVdbsAction.setChecked(previewOptionContributor.isShowPreviewVdbs());
-        showPreviewDataSourcesAction.setChecked(previewOptionContributor.isShowPreviewDataSources());
-
-        if (enablePreviewAction == null) {
-            enablePreviewAction = new Action(
-                                             getString("enablePreviewMenuItem"), SWT.TOGGLE) { //$NON-NLS-1$
-                @Override
-                public void setChecked( boolean checked ) {
-                    super.setChecked(checked);
-
-                    if (checked != isPreviewEnabled()) {
-                        DqpPlugin.getInstance().getPreferences().putBoolean(PreferenceConstants.PREVIEW_ENABLED, checked);
-                    }
-                }
-            };
-        }
-        
-        // before the menu shows set the state of the enable preview action
-        menuMgr.addMenuListener(enablePreviewActionListener);
-
-        menuMgr.add(showPreviewVdbsAction);
-        menuMgr.add(showPreviewDataSourcesAction);
-        menuMgr.add(enablePreviewAction);
         menuMgr.add(new Separator());
         menuMgr.add(clearPreviewArtifactsAction);
     }

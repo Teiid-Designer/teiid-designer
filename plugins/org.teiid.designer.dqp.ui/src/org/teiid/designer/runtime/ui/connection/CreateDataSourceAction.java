@@ -294,7 +294,10 @@ public class CreateDataSourceAction extends SortableSelectionAction implements I
                     Properties p2 = provider.getConnectionProperties(mr);
                     String translatorName = provider.getTranslatorName(mr);
                     for( Object key : p2.keySet()) {
-                    	properties.put(key, p2.get(key));
+                    	Object value = p2.get(key);
+                    	if( value != null ) {
+                    		properties.put(key, value);
+                    	}
                     }
                     if( translatorName != null ) {
                     	properties.put(getString("translatorKey"), translatorName); //$NON-NLS-1$

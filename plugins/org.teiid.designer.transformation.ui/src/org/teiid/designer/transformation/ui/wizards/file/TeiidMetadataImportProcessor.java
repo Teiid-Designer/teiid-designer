@@ -8,6 +8,7 @@
 package org.teiid.designer.transformation.ui.wizards.file;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -16,27 +17,33 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
+import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.flatfile.FlatFileConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.flatfile.FlatFileUrlConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.datatools.profiles.ws.WSConnectionInfoProvider;
+import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
@@ -46,6 +53,8 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 public class TeiidMetadataImportProcessor implements UiConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportProcessor.class);
 	protected static final String DEFAULT_EXTENSION_LCASE = ".xmi"; //$NON-NLS-1$
+	protected static String FILE_DS_TYPE = "file";  //$NON-NLS-1$
+	protected static String WS_DS_TYPE = "webservice"; //$NON-NLS-1$
 	
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
@@ -90,6 +99,10 @@ public class TeiidMetadataImportProcessor implements UiConstants {
             	}
                 theMonitor.worked(50);
                 
+                if( createStatus.isOK() ) {
+                	handleCreateDataSource();
+                }
+                
                 theMonitor.done();
             }
         };
@@ -121,7 +134,7 @@ public class TeiidMetadataImportProcessor implements UiConstants {
         	
         	// Inject the connection profile info into the model
         	if (this.info.getConnectionProfile() != null) {
-        		addConnectionProfileInfoToModel(sourceModel, this.info.getConnectionProfile());
+        		addConnectionProfileInfoToModel(sourceModel, info);
             }
         	monitor.subTask(getString("task.savingSourceModel", sourceModel.getItemName()) ); //$NON-NLS-1$
             try {
@@ -159,21 +172,27 @@ public class TeiidMetadataImportProcessor implements UiConstants {
     }
     
     
-    protected void addConnectionProfileInfoToModel(ModelResource sourceModel, IConnectionProfile profile) throws ModelWorkspaceException {
+    protected void addConnectionProfileInfoToModel(ModelResource sourceModel, TeiidMetadataImportInfo info) throws ModelWorkspaceException {
     	// Inject the connection profile info into the model
-    	if (profile != null) {
+    	if (info.getConnectionProfile() != null) {
     		IConnectionInfoProvider provider = null;
     		if( getInfo().isFlatFileLocalMode() ) {
     			provider = new FlatFileConnectionInfoProvider();
     		} else if( getInfo().isFlatFileUrlMode() ) {
-    			if( IWSProfileConstants.TEIID_WS_CONNECTION_PROFILE_ID.equalsIgnoreCase(profile.getProviderId()) ) {
+    			if( IWSProfileConstants.TEIID_WS_CONNECTION_PROFILE_ID.equalsIgnoreCase(info.getConnectionProfile().getProviderId()) ) {
     				provider = new WSConnectionInfoProvider();
     			} else {
     				provider = new FlatFileUrlConnectionInfoProvider();
     			}
     		}
     		if( provider != null ) {
-    			provider.setConnectionInfo(sourceModel, profile);
+    			provider.setConnectionInfo(sourceModel, info.getConnectionProfile());
+    		}
+
+    		String jndiName = info.getJBossJndiName();
+    		if( !StringUtilities.isEmpty(jndiName) ) {
+    			ConnectionInfoHelper helper = new ConnectionInfoHelper();
+    			helper.setJNDIName(sourceModel, jndiName);
     		}
         }
     }
@@ -389,8 +408,48 @@ public class TeiidMetadataImportProcessor implements UiConstants {
     	return null;
     }
     
+    protected void handleCreateDataSource() {
+    	if( info.doCreateDataSource() && DataSourceConnectionHelper.isServerConnected() ) {
+            ITeiidServer teiidServer = DataSourceConnectionHelper.getServer();
+            
+    		String dsName = info.getJBossJndiName();
+    		String jndiName = info.getJBossJndiName();
+    		DataSourceConnectionHelper helper = new DataSourceConnectionHelper(this.sourceModel, info.getConnectionProfile());
+    		
+        	Properties connProps = helper.getModelConnectionProperties();
+//        	String translatorType = helper.getTranslatorType();
+        	
+        	String dsType = helper.getDataSourceType(); //FILE_DS_TYPE;
+//        	if( translatorType.equalsIgnoreCase("WS")) {
+//        		dsType = WS_DS_TYPE;
+//        	}
+    		try {
+				teiidServer.getOrCreateDataSource(dsName, jndiName, dsType, connProps);
+			} catch (Exception e) {
+				DatatoolsUiConstants.UTIL.log(e);
+			}
+    	}
+    }
+    
+
+    
+    private IConnectionInfoProvider getProvider( ModelResource modelResource ) throws Exception {
+        IConnectionInfoProvider provider = null;
+        ConnectionInfoProviderFactory providerFactory = new ConnectionInfoProviderFactory();
+        provider = providerFactory.getProvider(modelResource);
+        if (null == provider) {
+            throw new Exception(getString("noConnectionInfoProvider.message")); //$NON-NLS-1$
+        }
+        return provider;
+
+    }
+    
     public TeiidMetadataImportInfo getInfo() {
     	return this.info;
+    }
+    
+    protected ModelResource getSourceModel() {
+    	return this.sourceModel;
     }
  
 }

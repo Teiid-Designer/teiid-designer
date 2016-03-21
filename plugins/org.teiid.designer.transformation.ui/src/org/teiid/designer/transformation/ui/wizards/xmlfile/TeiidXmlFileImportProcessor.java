@@ -11,14 +11,15 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.datatools.profiles.ws.WSConnectionInfoProvider;
@@ -107,21 +108,27 @@ public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor {
     }
 
 	@Override
-	protected void addConnectionProfileInfoToModel(ModelResource sourceModel, IConnectionProfile profile) throws ModelWorkspaceException {
+	protected void addConnectionProfileInfoToModel(ModelResource sourceModel, TeiidMetadataImportInfo info) throws ModelWorkspaceException {
     	// Inject the connection profile info into the model
-    	if (profile != null) {
+    	if (info.getConnectionProfile() != null) {
     		IConnectionInfoProvider provider = null;
     		if( getInfo().isXmlLocalFileMode() ) {
     			provider = new XmlFileConnectionInfoProvider();
     		} else if( getInfo().isXmlUrlFileMode() ) {
-    			if( IWSProfileConstants.TEIID_WS_CONNECTION_PROFILE_ID.equalsIgnoreCase(profile.getProviderId()) ) {
+    			if( IWSProfileConstants.TEIID_WS_CONNECTION_PROFILE_ID.equalsIgnoreCase(info.getConnectionProfile().getProviderId()) ) {
     				provider = new WSConnectionInfoProvider();
     			} else {
     				provider = new XmlUrlConnectionInfoProvider();
     			}
     		}
     		if( provider != null ) {
-    			provider.setConnectionInfo(sourceModel, profile);
+    			provider.setConnectionInfo(sourceModel, info.getConnectionProfile());
+    		}
+    		
+    		String jndiName = info.getJBossJndiName();
+    		if( !StringUtilities.isEmpty(jndiName) ) {
+    			ConnectionInfoHelper helper = new ConnectionInfoHelper();
+    			helper.setJNDIName(sourceModel, jndiName);
     		}
         }
 	}

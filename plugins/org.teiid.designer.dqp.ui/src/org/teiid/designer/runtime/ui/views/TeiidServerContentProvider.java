@@ -240,28 +240,6 @@ public class TeiidServerContentProvider implements ICommonContentProvider {
         }
     };
 
-    /**
-     * Listener that responds to property changes of the previewOptionContributor
-     */
-    private PropertyChangeListener propertyChangeListener = new PropertyChangeListener() {
-
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if (TeiidServerPreviewOptionContributor.PREVIEW_OPTIONS_PROPERTY.equals(evt.getPropertyName())) {
-
-                if (viewer == null || viewer.isBusy())
-                    return;
-
-                refreshThread.scheduleRefresh();
-            }
-        }
-    };
-
-    /**
-     * Determines the display of the preview data source and vdb options
-     */
-    private final TeiidServerPreviewOptionContributor previewOptionContributor;
-
     private RefreshThread refreshThread = new RefreshThread();
     
     private ServerToolTip tooltip;
@@ -277,10 +255,6 @@ public class TeiidServerContentProvider implements ICommonContentProvider {
 
         // Wire as listener to server manager and to receive configuration changes
         DqpPlugin.getInstance().getServerManager().addListener(configListener);
-
-        // Wire as a listener to the default preview options contributor
-        previewOptionContributor = TeiidServerPreviewOptionContributor.getDefault();
-        previewOptionContributor.addPropertyChangeListener(propertyChangeListener);
     }
 
     /**
@@ -309,24 +283,10 @@ public class TeiidServerContentProvider implements ICommonContentProvider {
     }
 
     /**
-     * @return whether to show preview data sources
-     */
-    public boolean isShowPreviewDataSources() {
-        return previewOptionContributor.isShowPreviewDataSources();
-    }
-
-    /**
      * @return whether to show vdbs
      */
     public boolean isShowVDBs() {
         return this.showVDBs;
-    }
-
-    /**
-     * @return whether to show preview vdbs
-     */
-    public boolean isShowPreviewVDBs() {
-        return previewOptionContributor.isShowPreviewVdbs();
     }
 
     /**
@@ -517,11 +477,11 @@ public class TeiidServerContentProvider implements ICommonContentProvider {
 
     @Override
     public void saveState(IMemento memento) {
-        previewOptionContributor.saveState(memento);
+        // Nothing to do
     }
 
     @Override
     public void restoreState(IMemento aMemento) {
-        previewOptionContributor.restoreState(aMemento);
+    	// Nothing to do
     }
 }

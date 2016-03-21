@@ -46,6 +46,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.Stopwatch;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.ui.wizard.IDifferencingWizard;
@@ -58,7 +59,10 @@ import org.teiid.designer.core.workspace.ModelResourceImpl;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.OpenableImpl;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.jdbc.JdbcException;
@@ -78,6 +82,7 @@ import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionAssistant;
 import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionConstants;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -810,6 +815,15 @@ public class JdbcImportWizard extends AbstractWizard
                 if (this.connectionProfile != null && ! isUpdatedModel()) {
                     IConnectionInfoProvider provider = new JDBCConnectionInfoProvider();
                     provider.setConnectionInfo(ppProcessorPack.getModelResource(), this.connectionProfile);
+                    if( isVirtual ) {
+                        if( handleCreateDataSource() ) {
+                    		String jndiName = importer.getJBossJndiName();
+                    		if( !StringUtilities.isEmpty(jndiName) ) {
+                    			ConnectionInfoHelper helper = new ConnectionInfoHelper();
+                    			helper.setJNDIName(ppProcessorPack.getModelResource(), jndiName);
+                    		}
+                        }
+                    }
                 }
 
                 // Check if Virtual, then re-set ModelType
@@ -828,6 +842,7 @@ public class JdbcImportWizard extends AbstractWizard
                     resrc.refreshLocal(IResource.DEPTH_INFINITE, monitor);
                 }
                 sWatch.stop();
+
 
                 sWatch.start(true);
                 ModelEditorManager.activate(ppProcessorPack.getModelFile(), true);
@@ -962,6 +977,32 @@ public class JdbcImportWizard extends AbstractWizard
      */
     public Properties getDesignerProperties() {
         return this.designerProperties;
+    }
+    
+    protected boolean handleCreateDataSource() {
+    	boolean didDeployDS = false;
+    	
+    	DataSourceConnectionHelper helper = new DataSourceConnectionHelper(ppProcessorPack.getModelResource(), connectionProfile);
+    	
+    	if( importer.doCreateDataSource() && DataSourceConnectionHelper.isServerConnected() ) {
+    		String dsName = importer.getJBossJndiName();
+    		String jndiName = importer.getJBossJndiName();
+
+        	Properties connProps = helper.getModelConnectionProperties();
+        	
+        	String dsType = helper.getDataSourceType();
+        	
+        	
+    		try {
+    			
+    			DataSourceConnectionHelper.getServer().getOrCreateDataSource(dsName, jndiName, dsType, connProps);
+    			didDeployDS = true;
+			} catch (Exception e) {
+				DatatoolsUiConstants.UTIL.log(e);
+			}
+    	}
+    	
+    	return didDeployDS;
     }
 
     // ===========================================================================================================================

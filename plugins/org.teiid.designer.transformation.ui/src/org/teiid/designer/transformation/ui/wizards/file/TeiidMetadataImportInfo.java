@@ -13,18 +13,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.proc.ITeiidMetadataFileInfo;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
 import org.teiid.designer.ui.viewsupport.ModelNameUtil;
@@ -111,6 +109,14 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 * The cached connection profile used to locate the data folder
 	 */
 	private IConnectionProfile connectionProfile;
+	
+    /**
+     * The unique jbossJndiName
+     * 
+     */
+	private String jbossJndiName;
+	
+	private boolean autoCreateDataSource = true;
 	
 	/**
 	 * Current <code>IStatus</code> representing the state of the input values for this instance of
@@ -207,6 +213,39 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	public IPath getViewModelLocation() {
 		return this.viewModelLocation;
 	}
+	
+	/**
+	 * 
+	 * @return sourceModelName the source relational model name
+	 */
+	public String getJBossJndiName() {
+        return this.jbossJndiName;
+	}
+	
+	/**
+	 * 
+	 * @param sourceModelName (never <code>null</code> or empty).
+	 */
+	public void setJBossJndiNameName(String jndiName) {
+		this.jbossJndiName = jndiName;
+	}
+	
+	/**
+	 * 
+	 * @return sourceModelName the source relational model name
+	 */
+	public boolean doCreateDataSource() {
+        return this.autoCreateDataSource;
+	}
+	
+	/**
+	 * 
+	 * @param sourceModelName (never <code>null</code> or empty).
+	 */
+	public void setCreateDataSource(boolean value) {
+		this.autoCreateDataSource = value;
+	}
+	
 	
 	/**
 	 * 
@@ -525,6 +564,19 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	public String getFileFilterText() {
 		return this.fileFilterText;
 	}
+	
+//	public boolean isServerDefined() {
+//        // Check to see if server is available and connected
+//        ITeiidServer server = ModelerCore.getTeiidServerManager().getDefaultServer();
+//        
+//        return server != null;
+//	}
+//	
+//	public boolean isServerConnected() {
+//		ITeiidServer server = ModelerCore.getTeiidServerManager().getDefaultServer();
+//
+//        return server != null && server.isConnected();
+//	}
 	
 //	private IProject getTargetProject() {
 //		if( getSourceModelLocation() != null ) {

@@ -10,17 +10,13 @@ package org.teiid.designer.runtime.ui.server;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.PreferenceConstants;
-import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 
@@ -46,7 +42,6 @@ public final class RuntimeAssistant {
      * @return <code>true</code> if preview is enabled, a Teiid Instance exists, and a connection to the server has been made
      */
     public static boolean ensurePreviewEnabled( Shell shell ) {
-        boolean previewEnabled = isPreviewEnabled();
         boolean parentServerConnecting = getServer().isConnecting();
         boolean parentServerConnected = getServer().isParentConnected();
         boolean defaultServerExists = previewServerExists();
@@ -59,11 +54,7 @@ public final class RuntimeAssistant {
         // PREVIEW ENABLED == FALSE
         // NO DEFAULT SERVER DEFINED = FALSE
 
-        if(! previewEnabled && ! defaultServerExists ) {
-        	msg = UTIL.getString(PREFIX + "previewDisabledNoTeiidInstanceMsg"); //$NON-NLS-1$
-        } else if( ! previewEnabled ) {
-        	msg = UTIL.getString(PREFIX + "previewDisabledMsg"); //$NON-NLS-1$
-        } else if( ! defaultServerExists ) {
+        if( ! defaultServerExists ) {
         	msg = UTIL.getString(PREFIX + "noTeiidInstanceMsg"); //$NON-NLS-1$
         }
         
@@ -93,19 +84,6 @@ public final class RuntimeAssistant {
 	        	}
 	        } 
         } else if (MessageDialog.openConfirm(shell, UTIL.getString(PREFIX + "confirmEnablePreviewTitle"), msg)) { //$NON-NLS-1$
-        	// if necessary open question dialog
-        	// if necessary change preference
-            if (!previewEnabled) {
-                IEclipsePreferences prefs = DqpPlugin.getInstance().getPreferences();
-                prefs.putBoolean(PreferenceConstants.PREVIEW_ENABLED, true);
-
-                // save
-                try {
-                    prefs.flush();
-                } catch (BackingStoreException e) {
-                    UTIL.log(e);
-                }
-            }
 
             // if necessary create new server
             if (!defaultServerExists) {
@@ -117,11 +95,10 @@ public final class RuntimeAssistant {
 
         // if dialog was shown get values again
         if (msg != null) {
-            previewEnabled = isPreviewEnabled();
             defaultServerExists = previewServerExists();
 
-            // if preview is not enabled or server does not exist then user canceled the dialog or the new server wizard
-            if (!previewEnabled || !defaultServerExists) {
+            // if server does not exist then user canceled the dialog or the new server wizard
+            if (!defaultServerExists) {
                 return false;
             }
         }
@@ -174,13 +151,6 @@ public final class RuntimeAssistant {
      */
     private static ITeiidServerManager getServerManager() {
         return DqpPlugin.getInstance().getServerManager();
-    }
-
-    /**
-     * @return <code>true</code> if the preview preference is enabled
-     */
-    private static boolean isPreviewEnabled() {
-        return PreviewManager.getInstance().isPreviewEnabled();
     }
     
     /**

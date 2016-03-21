@@ -35,7 +35,6 @@ import org.eclipse.datatools.connectivity.IProfileListener;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -67,6 +66,7 @@ import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.URLHelper;
@@ -75,6 +75,7 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.datatools.profiles.xml.IXmlProfileConstants;
@@ -89,7 +90,6 @@ import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
-import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
@@ -781,6 +781,11 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		fileViewer.getTable().select(0);
 		fileViewer.getTable().getItem(0).setChecked(true);
 		info.setDoProcessXml(fileInfo.getDataFile(), true);
+		if( info.getSourceModelName() != null ) {
+			if( StringUtilities.isEmpty(this.info.getJBossJndiName()) && DataSourceConnectionHelper.isServerConnected() ) {
+				this.info.setJBossJndiNameName( info.getSourceModelName());
+			}
+		}
 		fileParsingStatus = fileInfo.getParsingStatus();
 		if (fileParsingStatus.getSeverity() == IStatus.ERROR) {
 			MessageDialog.openError(this.getShell(),
@@ -1032,7 +1037,14 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 					sourceFileName = this.info.getSourceModelName();
 				} else {
 					sourceFileName = "SourceProcedures"; //$NON-NLS-1$
+					if( this.info.getSourceModelLocation() != null ) {
+						sourceFileName = ModelNameUtil.getNewUniqueModelName(sourceFileName, this.info.getTargetProject());
+					}
 					this.info.setSourceModelName(sourceFileName);
+					
+					if( StringUtilities.isEmpty(this.info.getJBossJndiName()) && DataSourceConnectionHelper.isServerConnected() ) {
+						this.info.setJBossJndiNameName(sourceFileName);
+					}
 				}
 				break;
 			}

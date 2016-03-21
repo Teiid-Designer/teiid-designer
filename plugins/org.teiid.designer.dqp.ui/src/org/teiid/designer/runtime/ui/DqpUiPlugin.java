@@ -19,7 +19,6 @@ import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
-import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.actions.ActionService;
 
@@ -81,13 +80,7 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
     public DqpUiPlugin() {
         plugin = this;
     }
-    
-    void cancelCleanupJobsRequested() {
-        for (Job job : Job.getJobManager().find(TeiidPreviewVdbCleanupJob.TEIID_CLEANUP_FAMILY)) {
-            // canceling the job will set the job's progress monitor state to canceled and the job can notice that
-            job.cancel();
-        }
-    }
+
 
     @Override
     protected ActionService createActionService( IWorkbenchPage workbenchPage ) {

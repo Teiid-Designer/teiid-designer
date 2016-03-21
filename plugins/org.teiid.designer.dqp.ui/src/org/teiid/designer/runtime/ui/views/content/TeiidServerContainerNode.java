@@ -116,8 +116,6 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
                     List<ITeiidDataSource> filteredDataSources = new ArrayList<ITeiidDataSource>(dataSources.size());
 
                     for (ITeiidDataSource dataSource : dataSources) {
-                        if (! provider.isShowPreviewDataSources() && dataSource.isPreview())
-                            continue;
 
                         // Either we are showing preview data source or dataSource is not a preview
                         // Check if preview data source name contains this workspace UUID
@@ -146,8 +144,6 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
                     List<ITeiidVdb> filteredVdbs = new ArrayList<ITeiidVdb>(vdbs.size());
 
                     for (ITeiidVdb vdb : vdbs) {
-                        if (! provider.isShowPreviewVDBs() && vdb.isPreviewVdb())
-                            continue;
 
                         // Either we are showing preview vdb or VDB is not a preview
                         // Check if preview VDB's name contains this workspace UUID
