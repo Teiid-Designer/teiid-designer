@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -26,6 +27,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.types.DatatypeManager;
@@ -34,8 +36,11 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
+import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
@@ -49,6 +54,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.query.proc.wsdl.IWsdlAttributeInfo;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.transformation.model.RelationalViewModelFactory;
 import org.teiid.designer.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
 import org.teiid.designer.transformation.util.SqlMappingRootCache;
@@ -79,6 +85,8 @@ public class ImportWsdlProcessor {
 	FlatFileRelationalModelFactory relationalProcedureFactory;
 	
     private static boolean isTransactionable = ModelerCore.getPlugin() != null;
+    
+    
 	
 	
 	public ImportWsdlProcessor(WSDLImportWizardManager importManager, Shell shell) {
@@ -101,13 +109,20 @@ public class ImportWsdlProcessor {
             	theMonitor.beginTask(("Creating source model" + importManager.getSourceModelName()), 100); //$NON-NLS-1$
                 
             	// Make sure models are found or created if they don't exist yet
-            	initializeModels(theMonitor);
+            	createStatus = initializeModels(theMonitor);
             	
-            	createSourceProcedures(theMonitor);
-
-                createViewProcedures(theMonitor);
-
+            	if( createStatus.isOK() ) {
+            		createStatus = createSourceProcedures(theMonitor);
+            	}
+            	
+            	if( createStatus.isOK()) {
+            		createViewProcedures(theMonitor);
+            	}
                 theMonitor.worked(50);
+                
+                if( createStatus.isOK() ) {
+                	handleCreateDataSource();
+                }
                 
                 theMonitor.done();
             }
@@ -177,6 +192,12 @@ public class ImportWsdlProcessor {
          	theMonitor.worked(10);
         	
         	addConnectionProfileInfoToSourceModel(theMonitor, false);
+        	
+    		String jndiName = importManager.getJBossJndiName();
+    		if( !StringUtilities.isEmpty(jndiName) ) {
+    			ConnectionInfoHelper helper = new ConnectionInfoHelper();
+    			helper.setJNDIName(sourceModel, jndiName);
+    		}
         	
         	theMonitor.subTask("Saving Source Model" + sourceModel.getItemName()); //$NON-NLS-1$
             try {
@@ -249,12 +270,16 @@ public class ImportWsdlProcessor {
         }
     }
 
-    private void createSourceProcedures(IProgressMonitor monitor) {
+    private IStatus createSourceProcedures(IProgressMonitor monitor) {
     	try {
 			relationalProcedureFactory.addMissingProcedure(this.sourceModel, FlatFileRelationalModelFactory.INVOKE);
 		} catch (ModelerCoreException ex) {
-			log(new Status(IStatus.ERROR, ModelGeneratorWsdlUiConstants.PLUGIN_ID, ex.getMessage(), ex));
+			IStatus status = new Status(IStatus.ERROR, ModelGeneratorWsdlUiConstants.PLUGIN_ID, ex.getMessage(), ex);
+			log(status);
+			return status;
 		}
+    	
+    	return Status.OK_STATUS;
     }
     
     private IStatus createViewModelInTxn(IProgressMonitor monitor) {
@@ -576,4 +601,22 @@ public class ImportWsdlProcessor {
         }
     }
     
+    protected void handleCreateDataSource() {
+    	if( importManager.doCreateDataSource() && DataSourceConnectionHelper.isServerConnected() ) {
+            ITeiidServer teiidServer = DataSourceConnectionHelper.getServer();
+            
+    		String dsName = importManager.getJBossJndiName();
+    		String jndiName = importManager.getJBossJndiName();
+    		DataSourceConnectionHelper helper = new DataSourceConnectionHelper(this.sourceModel, importManager.getConnectionProfile());
+    		
+        	Properties connProps = helper.getModelConnectionProperties();
+        	
+        	String dsType = helper.getDataSourceType();
+    		try {
+				teiidServer.getOrCreateDataSource(dsName, jndiName, dsType, connProps);
+			} catch (Exception e) {
+				DatatoolsUiConstants.UTIL.log(e);
+			}
+    	}
+    }
 }

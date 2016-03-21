@@ -72,6 +72,8 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     
     private WizardPage modelDefinitionPage;
     
+    private WizardPage dataSourceDefinitionPage;
+    
     private WizardPage operationsOptionsPage;
 
     private IStructuredSelection selection;
@@ -161,6 +163,12 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
         	this.modelDefinitionPage = new ModelDefinitionPage(this.importManager, this);
         	this.modelDefinitionPage.setPageComplete(false);
         	addPage(this.modelDefinitionPage);
+        }
+        
+        DEFINE_JNDI_DATA_SOURCE_PAGE : {
+        	this.dataSourceDefinitionPage = new ImportWsdlDataSourceDefinitionPage(this.importManager, this);
+        	this.dataSourceDefinitionPage.setPageComplete(true);
+        	addPage(this.dataSourceDefinitionPage);
         }
         
         

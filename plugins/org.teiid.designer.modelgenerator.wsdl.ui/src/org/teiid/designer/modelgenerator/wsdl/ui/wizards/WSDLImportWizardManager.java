@@ -73,6 +73,14 @@ public class WSDLImportWizardManager implements IChangeNotifier {
 	
 	private boolean generateDefaultProcedures;
 	
+    /**
+     * The unique jbossJndiName
+     * 
+     */
+	private String jbossJndiName;
+	
+	private boolean autoCreateDataSource = true;
+	
     private List<Operation> selectedOperations;
     private int uriSource = URL_SOURCE;
     private IConnectionProfile connectionProfile;
@@ -542,4 +550,36 @@ public class WSDLImportWizardManager implements IChangeNotifier {
     	
     	return true;
     }
+    
+	/**
+	 * 
+	 * @return sourceModelName the source relational model name
+	 */
+	public String getJBossJndiName() {
+        return this.jbossJndiName;
+	}	
+    
+	/**
+	 * 
+	 * @param sourceModelName (never <code>null</code> or empty).
+	 */
+	public void setJBossJndiNameName(String jndiName) {
+		this.jbossJndiName = jndiName;
+	}
+	
+	/**
+	 * 
+	 * @return sourceModelName the source relational model name
+	 */
+	public boolean doCreateDataSource() {
+        return this.autoCreateDataSource;
+	}
+	
+	/**
+	 * 
+	 * @param sourceModelName (never <code>null</code> or empty).
+	 */
+	public void setCreateDataSource(boolean value) {
+		this.autoCreateDataSource = value;
+	}
 }

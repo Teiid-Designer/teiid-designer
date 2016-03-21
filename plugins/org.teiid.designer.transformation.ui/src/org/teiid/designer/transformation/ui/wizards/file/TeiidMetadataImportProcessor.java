@@ -417,12 +417,8 @@ public class TeiidMetadataImportProcessor implements UiConstants {
     		DataSourceConnectionHelper helper = new DataSourceConnectionHelper(this.sourceModel, info.getConnectionProfile());
     		
         	Properties connProps = helper.getModelConnectionProperties();
-//        	String translatorType = helper.getTranslatorType();
         	
-        	String dsType = helper.getDataSourceType(); //FILE_DS_TYPE;
-//        	if( translatorType.equalsIgnoreCase("WS")) {
-//        		dsType = WS_DS_TYPE;
-//        	}
+        	String dsType = helper.getDataSourceType();
     		try {
 				teiidServer.getOrCreateDataSource(dsName, jndiName, dsType, connProps);
 			} catch (Exception e) {

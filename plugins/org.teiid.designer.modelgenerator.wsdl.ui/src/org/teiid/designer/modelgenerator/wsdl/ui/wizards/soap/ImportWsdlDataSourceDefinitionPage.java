@@ -1,11 +1,4 @@
-/*
- * JBoss, Home of Professional Open Source.
-*
-* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
-*
-* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
-*/
-package org.teiid.designer.transformation.ui.wizards.file;
+package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
@@ -21,27 +14,29 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
+import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
-public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implements UiConstants {
-	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportDataSourcePage.class);
+public class ImportWsdlDataSourceDefinitionPage extends AbstractWizardPage implements UiConstants {
+	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ImportWsdlDataSourceDefinitionPage.class);
 	private static final String TITLE = getString("title"); //$NON-NLS-1$
 
 	private static String getString(final String id) {
-		return Util.getString(I18N_PREFIX + id);
+		return ModelGeneratorWsdlUiPlugin.UTIL.getString(I18N_PREFIX + id);
 	}
 	
 	private static String getString(final String id, final Object var) {
-		return Util.getString(I18N_PREFIX + id, var);
+		return ModelGeneratorWsdlUiPlugin.UTIL.getString(I18N_PREFIX + id, var);
 	}
 
-	private final TeiidMetadataImportInfo info;
+	private final WSDLImportWizardManager theImportManager;
     
     private Text jndiNameField;
     private String jndiName;
@@ -49,9 +44,9 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
     
     private boolean synchronizing;
 
-	public TeiidMetadataImportDataSourcePage(TeiidMetadataImportInfo fileInfo) {
-		super(TeiidFlatFileImportOptionsPage.class.getSimpleName(), TITLE);
-		this.info = fileInfo;
+	public ImportWsdlDataSourceDefinitionPage(WSDLImportWizardManager theImportManager, ImportWsdlSoapWizard wizard) {
+		super(ImportWsdlDataSourceDefinitionPage.class.getSimpleName(), TITLE);
+		this.theImportManager = theImportManager;
 	}
 
 	@Override
@@ -84,10 +79,22 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
         boolean serverActive = DataSourceConnectionHelper.isServerConnected();
         
         this.jndiNameField = WidgetFactory.createTextField(theGroup);
-        this.jndiName = info.getJBossJndiName();
-        if( this.jndiName != null && this.jndiName.length() > 0 ) {
+        this.jndiName = theImportManager.getJBossJndiName();
+        if( !StringUtilities.isEmpty(this.jndiName) ) {
         	this.jndiNameField.setText(this.jndiName);
+        } else {
+        	String modelName = theImportManager.getSourceModelName();
+        	if( !StringUtilities.isEmpty(modelName) ) {
+        		if( modelName.toUpperCase().endsWith(".XMI") ) {
+        			int nameLength = modelName.length();
+        			modelName = modelName.substring(0, nameLength-4);
+        		}
+        		this.theImportManager.setJBossJndiNameName(modelName);
+                this.jndiName = theImportManager.getJBossJndiName();
+                this.jndiNameField.setText(this.jndiName);
+        	}
         }
+        
         
         this.jndiNameField.addModifyListener(new ModifyListener() {
 			
@@ -97,10 +104,10 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
 				
 				if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
 					jndiName = jndiNameField.getText();
-					info.setJBossJndiNameName(jndiName);
+					theImportManager.setJBossJndiNameName(jndiName);
 				} else {
 					jndiName = ""; //$NON-NLS-1$
-					info.setJBossJndiNameName(null);
+					theImportManager.setJBossJndiNameName(null);
 				}
 				
 			}
@@ -110,14 +117,14 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
         
         this.autoCreateDataSource = WidgetFactory.createCheckBox(theGroup, "Auto-create Data Source");
         GridDataFactory.fillDefaults().span(2,  1).grab(true,  false).applyTo(autoCreateDataSource);
-        this.autoCreateDataSource.setSelection(info.doCreateDataSource());
+        this.autoCreateDataSource.setSelection(theImportManager.doCreateDataSource());
         
         if( serverActive ) {
 	        this.autoCreateDataSource.addSelectionListener(new SelectionListener() {
 				
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					info.setCreateDataSource(autoCreateDataSource.getSelection());
+					theImportManager.setCreateDataSource(autoCreateDataSource.getSelection());
 				}
 				
 				@Override
@@ -174,10 +181,20 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
     void synchronizeUI(){
     	synchronizing = true;
         
-        if( this.info.getJBossJndiName() != null ) {
-        	this.jndiNameField.setText(this.info.getJBossJndiName());
+        this.jndiName = theImportManager.getJBossJndiName();
+        if( !StringUtilities.isEmpty(this.jndiName) ) {
+        	this.jndiNameField.setText(this.jndiName);
         } else {
-        	this.jndiNameField.setText(StringConstants.EMPTY_STRING);
+        	String modelName = theImportManager.getSourceModelName();
+        	if( !StringUtilities.isEmpty(modelName) ) {
+        		if( modelName.toUpperCase().endsWith(".XMI") ) {
+        			int nameLength = modelName.length();
+        			modelName = modelName.substring(0, nameLength-4);
+        		}
+        		this.theImportManager.setJBossJndiNameName(modelName);
+                this.jndiName = theImportManager.getJBossJndiName();
+                this.jndiNameField.setText(this.jndiName);
+        	}
         }
                 
         synchronizing = false;
