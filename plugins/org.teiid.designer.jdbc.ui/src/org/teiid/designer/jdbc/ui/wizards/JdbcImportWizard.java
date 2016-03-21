@@ -815,14 +815,12 @@ public class JdbcImportWizard extends AbstractWizard
                 if (this.connectionProfile != null && ! isUpdatedModel()) {
                     IConnectionInfoProvider provider = new JDBCConnectionInfoProvider();
                     provider.setConnectionInfo(ppProcessorPack.getModelResource(), this.connectionProfile);
-                    if( isVirtual ) {
-                        if( handleCreateDataSource() ) {
-                    		String jndiName = importer.getJBossJndiName();
-                    		if( !StringUtilities.isEmpty(jndiName) ) {
-                    			ConnectionInfoHelper helper = new ConnectionInfoHelper();
-                    			helper.setJNDIName(ppProcessorPack.getModelResource(), jndiName);
-                    		}
-                        }
+                    if( !isVirtual ) {
+                		String jndiName = importer.getJBossJndiName();
+                		if( !StringUtilities.isEmpty(jndiName) ) {
+                			ConnectionInfoHelper helper = new ConnectionInfoHelper();
+                			helper.setJNDIName(ppProcessorPack.getModelResource(), jndiName);
+                		}
                     }
                 }
 

@@ -79,6 +79,7 @@ import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.dialog.FolderSelectionDialog;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
+import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -363,6 +364,10 @@ public class JdbcImportOptionsPage extends WizardPage implements
         });
         this.includeCatalogCheckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
         
+        // Indent the change case group
+        Label spacer = new Label(mainPanel, SWT.NONE);
+        spacer.setText(""); //$NON-NLS-1$
+        
         {
     		// Add widgets to page
         	Group theGroup = WidgetFactory.createGroup(mainPanel, getString("jndiGroup"), SWT.NONE, 2, 3); //$NON-NLS-1$
@@ -380,25 +385,24 @@ public class JdbcImportOptionsPage extends WizardPage implements
             	this.jndiNameField.setText(this.jndiName);
             }
             
-            this.jndiNameField.setEnabled(serverActive);
+            this.jndiNameField.setEnabled(true);
             
-            if(serverActive ) {
-    	        this.jndiNameField.addModifyListener(new ModifyListener() {
-    				
-    				@Override
-    				public void modifyText(ModifyEvent e) {
-    					
-    					if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
-    						jndiName = jndiNameField.getText();
-    						importer.setJBossJndiNameName(jndiName);
-    					} else {
-    						jndiName = ""; //$NON-NLS-1$
-    						importer.setJBossJndiNameName(null);
-    					}
-    					
-    				}
-    			});
-            }
+	        this.jndiNameField.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					
+					if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
+						jndiName = jndiNameField.getText();
+						importer.setJBossJndiNameName(jndiName);
+					} else {
+						jndiName = ""; //$NON-NLS-1$
+						importer.setJBossJndiNameName(null);
+					}
+					
+				}
+			});
+    	        
             GridDataFactory.fillDefaults().grab(true,  false).applyTo(jndiNameField);
             
             this.autoCreateDataSource = WidgetFactory.createCheckBox(theGroup, "Auto-create Data Source");
@@ -453,10 +457,11 @@ public class JdbcImportOptionsPage extends WizardPage implements
      * Create the SQL Display tab panel
      */
     private Composite createNameOptionsPanel( Composite parent ) {
-        Composite caseOptionsGroup = WidgetFactory.createPanel(parent, GridData.HORIZONTAL_ALIGN_FILL | SWT.NO_SCROLL, 1, 2);
-        caseOptionsGroup.getHorizontalBar().setVisible(false);
+        Composite caseOptionsGroup = new Composite(parent, SWT.NONE);
+        GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(1).applyTo(caseOptionsGroup);
+        GridDataFactory.fillDefaults().grab(true,  false).applyTo(caseOptionsGroup);
         
-        this.fullyQualifiedNamesCheckBox = WidgetFactory.createCheckBox(caseOptionsGroup, FULLY_QUALIFIED_CHECKBOX, 0, 2);
+        this.fullyQualifiedNamesCheckBox = WidgetFactory.createCheckBox(caseOptionsGroup, FULLY_QUALIFIED_CHECKBOX, 0, 1);
         this.fullyQualifiedNamesCheckBox.setToolTipText(FULLY_QUALIFIED_CHECKBOX_TOOLTIP);
         this.fullyQualifiedNamesCheckBox.addSelectionListener(new SelectionAdapter() {
 
@@ -466,9 +471,13 @@ public class JdbcImportOptionsPage extends WizardPage implements
             }
         });
         this.fullyQualifiedNamesCheckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-        ((GridData) this.fullyQualifiedNamesCheckBox.getLayoutData()).horizontalSpan = 2;
         
-        this.modifyCaseCheckBox = WidgetFactory.createCheckBox(caseOptionsGroup, MODIFY_CASE_CHECKBOX, 0, 2);
+        GridDataFactory.fillDefaults().grab(true,  false).applyTo(fullyQualifiedNamesCheckBox);
+
+        Label spacer = new Label(caseOptionsGroup, SWT.NONE);
+        spacer.setText(""); //$NON-NLS-1$
+        
+        this.modifyCaseCheckBox = WidgetFactory.createCheckBox(caseOptionsGroup, MODIFY_CASE_CHECKBOX, 0, 1);
         this.modifyCaseCheckBox.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -477,16 +486,13 @@ public class JdbcImportOptionsPage extends WizardPage implements
             }
         });
         this.modifyCaseCheckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-        ((GridData) this.modifyCaseCheckBox.getLayoutData()).horizontalSpan = 2;
-        
-        // Indent the change case group
-        Label spacer = new Label(caseOptionsGroup, SWT.NONE);
-        spacer.setText("      "); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().grab(true,  false).applyTo(modifyCaseCheckBox);
         
         changeCaseGroup = WidgetFactory.createGroup(caseOptionsGroup,
                 CHANGE_CASE_GROUP,
                 GridData.HORIZONTAL_ALIGN_FILL,
                 1, 1);
+        GridDataFactory.fillDefaults().grab(true,  false).applyTo(changeCaseGroup);
         
         this.uppercaseButton = WidgetFactory.createRadioButton(changeCaseGroup, MAKE_ALL_UPPER_RADIO);
         this.uppercaseButton.addSelectionListener(new SelectionAdapter() {
