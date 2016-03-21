@@ -427,19 +427,6 @@ public class TeiidMetadataImportProcessor implements UiConstants {
     	}
     }
     
-
-    
-    private IConnectionInfoProvider getProvider( ModelResource modelResource ) throws Exception {
-        IConnectionInfoProvider provider = null;
-        ConnectionInfoProviderFactory providerFactory = new ConnectionInfoProviderFactory();
-        provider = providerFactory.getProvider(modelResource);
-        if (null == provider) {
-            throw new Exception(getString("noConnectionInfoProvider.message")); //$NON-NLS-1$
-        }
-        return provider;
-
-    }
-    
     public TeiidMetadataImportInfo getInfo() {
     	return this.info;
     }

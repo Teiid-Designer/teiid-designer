@@ -16,10 +16,12 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.profiles.ldap.LDAPConnectionInfoProvider;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -105,7 +107,7 @@ public class RelationalModelBuilder {
      *
      * @throws Exception
      */
-    public void modelEntries(IContainer modelLocation, String modelName, IConnectionProfile connectionProfile, Collection<ILdapEntryNode> ldapModelEntries) throws Exception {
+    public ModelResource modelEntries(IContainer modelLocation, String modelName, IConnectionProfile connectionProfile, Collection<ILdapEntryNode> ldapModelEntries) throws Exception {
         final ModelResource entryModel = createNewModelResource(modelLocation, modelName);
 
         ModelAnnotation modelAnnotation = entryModel.getModelAnnotation();
@@ -133,5 +135,7 @@ public class RelationalModelBuilder {
 
         IProgressMonitor monitor = new NullProgressMonitor();
         operation.run(monitor);
+        
+        return entryModel;
     }
 }

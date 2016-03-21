@@ -20,14 +20,20 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.util.KeyInValueHashMap;
 import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.datatools.profiles.ldap.LDAPConnectionFactory;
+import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.modelgenerator.ldap.RelationalModelBuilder;
 import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiConstants;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.impl.ConnectionNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.impl.LdapAttributeNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.impl.LdapEntryNode;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 /**
  * LDAP Import Manager - Business Object for interacting with GUI
@@ -48,6 +54,8 @@ public class LdapImportWizardManager implements IChangeNotifier {
     private String sourceModelName;
 	private boolean sourceModelExists;
     private IContainer sourceModelLocation;
+	private String jbossJndiName;
+	private boolean autoCreateDataSource = true;
 
     private IConnectionProfile connectionProfile;
 
@@ -453,8 +461,18 @@ public class LdapImportWizardManager implements IChangeNotifier {
     void createModel() {
       RelationalModelBuilder modelBuilder = new RelationalModelBuilder();
       try {
-          modelBuilder.modelEntries(getSourceModelLocation(), getSourceModelName(),
+          ModelResource model = modelBuilder.modelEntries(getSourceModelLocation(), getSourceModelName(),
                                                          getConnectionProfile(), getSelectedEntries());
+          
+          
+  		String jndiName = getJBossJndiName();
+  		if( !StringUtilities.isEmpty(jndiName) ) {
+  			ConnectionInfoHelper helper = new ConnectionInfoHelper();
+  			helper.setJNDIName(model, jndiName);
+  		}
+          
+          handleCreateDataSource(model);
+          
       } catch (Exception e) {
           ModelGeneratorLdapUiConstants.UTIL.log(e);
       }
@@ -520,5 +538,56 @@ public class LdapImportWizardManager implements IChangeNotifier {
      */
     public void setSynchronising(boolean synchronising) {
         this.synchronising = synchronising;
+    }
+    
+	/**
+	 * 
+	 * @return sourceModelName the source relational model name
+	 */
+	public String getJBossJndiName() {
+        return this.jbossJndiName;
+	}
+	
+	/**
+	 * 
+	 * @param sourceModelName (never <code>null</code> or empty).
+	 */
+	public void setJBossJndiNameName(String jndiName) {
+		this.jbossJndiName = jndiName;
+	}
+	
+	/**
+	 * 
+	 * @return sourceModelName the source relational model name
+	 */
+	public boolean doCreateDataSource() {
+        return this.autoCreateDataSource;
+	}
+	
+	/**
+	 * 
+	 * @param sourceModelName (never <code>null</code> or empty).
+	 */
+	public void setCreateDataSource(boolean value) {
+		this.autoCreateDataSource = value;
+	}
+	
+    protected void handleCreateDataSource(ModelResource model) {
+    	if( doCreateDataSource() && DataSourceConnectionHelper.isServerConnected() ) {
+            ITeiidServer teiidServer = DataSourceConnectionHelper.getServer();
+            
+    		String dsName = getJBossJndiName();
+    		String jndiName = getJBossJndiName();
+    		DataSourceConnectionHelper helper = new DataSourceConnectionHelper(model, getConnectionProfile());
+    		
+        	Properties connProps = helper.getModelConnectionProperties();
+        	
+        	String dsType = helper.getDataSourceType();
+    		try {
+				teiidServer.getOrCreateDataSource(dsName, jndiName, dsType, connProps);
+			} catch (Exception e) {
+				DatatoolsUiConstants.UTIL.log(e);
+			}
+    	}
     }
 }

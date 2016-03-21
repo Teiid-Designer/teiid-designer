@@ -13,15 +13,19 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -32,6 +36,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiConstants;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizardManager;
@@ -51,7 +56,9 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
     // Source Model Definition
     private Text sourceModelFileText;
     private Text sourceModelContainerText;
-//    private Text sourceModelHelpText;
+    private Text jndiNameField;
+    private String jndiName;
+    private Button autoCreateDataSource;
 
     private IConnectionInfoHelper connectionInfoHelper;
 
@@ -88,15 +95,20 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
             Group group = WidgetFactory.createGroup(parent, getString("sourceModelDefinition"), GridData.FILL_HORIZONTAL, 1, 3); //$NON-NLS-1$
             GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 5).applyTo(group);
             LdapPageUtils.setBackground(group, parent);
+            
             Label locationLabel = new Label(group, SWT.NULL);
             LdapPageUtils.setBackground(locationLabel, parent);
             locationLabel.setText(getString("location")); //$NON-NLS-1$
+            GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(locationLabel);
 
             this.sourceModelContainerText = new Text(group, SWT.BORDER | SWT.SINGLE);
             GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+            gridData.verticalAlignment = GridData.VERTICAL_ALIGN_CENTER;
             this.sourceModelContainerText.setLayoutData(gridData);
+//            GridDataFactory.fillDefaults().span(1, 1).align(SWT.BEGINNING, SWT.CENTER).grab(true, false).applyTo(sourceModelContainerText);
             WidgetUtil.colorizeWidget(this.sourceModelContainerText, WidgetUtil.TEXT_COLOR_BLUE, true);
             this.sourceModelContainerText.setEditable(false);
+            
 
             Button browseButton = new Button(group, SWT.PUSH);
             gridData = new GridData();
@@ -142,7 +154,93 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
                     handleSourceModelBrowse();
                 }
             });
+            
+            
+            JNDI_DATASOURCE_GROUP: {
+                
+        		// Add widgets to page
+            	Group theGroup = WidgetFactory.createGroup(group, getString("jndiGroup"), SWT.NONE, 2, 3); //$NON-NLS-1$
+            	GridLayoutFactory.fillDefaults().numColumns(2).margins(10,  10).applyTo(theGroup);
+            	GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(theGroup);
+
+                Label nameLabel = new Label(theGroup, SWT.NULL);
+                nameLabel.setText("JNDI Name "); //$NON-NLS-1$
+                GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(nameLabel);
+                
+                // Check to see if server is available and connected
+                boolean serverDefined = DataSourceConnectionHelper.isServerDefined();
+                boolean serverActive = DataSourceConnectionHelper.isServerConnected();
+                
+                this.jndiNameField = WidgetFactory.createTextField(theGroup);
+                this.jndiName = importManager.getJBossJndiName();
+                if( this.jndiName != null && this.jndiName.length() > 0 ) {
+                	this.jndiNameField.setText(this.jndiName);
+                }
+                
+                this.jndiNameField.addModifyListener(new ModifyListener() {
+        			
+        			@Override
+        			public void modifyText(ModifyEvent e) {
+        				
+        				if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
+        					jndiName = jndiNameField.getText();
+        					importManager.setJBossJndiNameName(jndiName);
+        				} else {
+        					jndiName = ""; //$NON-NLS-1$
+        					importManager.setJBossJndiNameName(null);
+        				}
+        				
+        			}
+        		});
+        	        
+                GridDataFactory.fillDefaults().grab(true,  false).applyTo(jndiNameField);
+                
+                this.autoCreateDataSource = WidgetFactory.createCheckBox(theGroup, "Auto-create Data Source");
+                GridDataFactory.fillDefaults().span(2,  1).grab(true,  false).applyTo(autoCreateDataSource);
+                this.autoCreateDataSource.setSelection(importManager.doCreateDataSource());
+                
+                if( serverActive ) {
+        	        this.autoCreateDataSource.addSelectionListener(new SelectionListener() {
+        				
+        				@Override
+        				public void widgetSelected(SelectionEvent e) {
+        					importManager.setCreateDataSource(autoCreateDataSource.getSelection());
+        				}
+        				
+        				@Override
+        				public void widgetDefaultSelected(SelectionEvent e) {
+        					// NOTHING
+        				}
+        			});
+                }
+                
+                this.autoCreateDataSource.setEnabled(serverActive);
+                
+                
+                if( !serverActive ) {
+                	// if server still exists and NOT connected display message of NOT CONNECTED/STARTED
+                	Group serverMessageGroup = WidgetFactory.createGroup(theGroup, getString("serverUnavailableGroup"), SWT.NONE, 2, 3); //$NON-NLS-1$
+                	serverMessageGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+                    
+               	
+                	Text msgText = new Text(serverMessageGroup, SWT.WRAP | SWT.READ_ONLY);
+                	msgText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+                	msgText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+                	GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).hint(0,  55).applyTo(serverMessageGroup);
+
+                    if( !serverDefined ) {  
+                    	msgText.setText(getString("noServerDefined", ModelerCore.getTeiidServerManager().getDefaultServer().getDisplayName())); //$NON-NLS-1$
+                    } else {
+                    	
+                    	msgText.setText(getString("serverNotStarted")); //$NON-NLS-1$
+                    }
+
+                	
+                	// if server == null, then display message of NO DEFAULT SERVER DEFINED
+                }
+            }
         }
+
     }
 
     /**

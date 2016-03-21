@@ -214,7 +214,7 @@ public class LdapDefinitionPage extends WizardPage
         Label ldapURILabel = new Label(ldapURIGroup, SWT.NONE);
         ldapURILabel.setText(getString("ldapLabel_text")); //$NON-NLS-1$
         LdapPageUtils.setBackground(ldapURILabel, pnl);
-        GridDataFactory.fillDefaults().grab(false, false).applyTo(ldapURILabel);
+        GridDataFactory.fillDefaults().grab(false, false).align(SWT.BEGINNING, SWT.CENTER).applyTo(ldapURILabel);
 
         // LDAP URI used for information only. Extracted from the connection profile
         ldapURIText = new Text(ldapURIGroup, SWT.BORDER | SWT.SINGLE);
@@ -226,7 +226,7 @@ public class LdapDefinitionPage extends WizardPage
         Label dnLabel = new Label(ldapURIGroup, SWT.NONE);
         dnLabel.setText(getString("dnLabel_text")); //$NON-NLS-1$
         LdapPageUtils.setBackground(dnLabel, pnl);
-        GridDataFactory.fillDefaults().grab(false, false).applyTo(dnLabel);
+        GridDataFactory.fillDefaults().grab(false, false).align(SWT.BEGINNING, SWT.CENTER).applyTo(dnLabel);
 
         baseDNCombo = new Combo(ldapURIGroup, SWT.DROP_DOWN);
         baseDNCombo.setToolTipText(getString("dnTextField_tooltip")); //$NON-NLS-1$
