@@ -39,6 +39,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.OperationUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.ModelBuildUtil;
@@ -214,6 +215,7 @@ public class DynamicVdb extends BasicVdb {
                         DynamicModel model = new DynamicModel();
                         model.setName(element.getName());
                         model.setVisible(element.isVisible());
+                        model.setDescription(element.getDescription());
 
                         model.addComments(element.getComments());
 
@@ -673,6 +675,12 @@ public class DynamicVdb extends BasicVdb {
                     }
 
                     modelResource = importer.model();
+                    // Add model description
+                    String desc = dynModel.getDescription();
+                    if( !StringUtilities.isEmpty(desc) ) {
+                    	modelResource.getModelAnnotation().setDescription(desc);
+                    	modelResource.save(monitor, false);
+                    }
                     
                     importerModelMap.put(modelResource, importer);
                 }
@@ -684,6 +692,11 @@ public class DynamicVdb extends BasicVdb {
                 //
                 for (Map.Entry<Object, Object> prop : dynModel.getProperties().entrySet()) {
                     modelEntry.setProperty(prop.getKey().toString(), prop.getValue().toString());
+                }
+                
+                String desc = dynModel.getDescription();
+                if( !StringUtilities.isEmpty(desc) ) {
+                	modelEntry.setDescription(desc);
                 }
 
                 VdbSourceInfo sourceInfo = modelEntry.getSourceInfo();
