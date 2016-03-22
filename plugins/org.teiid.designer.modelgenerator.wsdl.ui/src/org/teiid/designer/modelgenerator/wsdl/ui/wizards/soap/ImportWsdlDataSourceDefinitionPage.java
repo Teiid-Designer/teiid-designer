@@ -22,6 +22,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
+import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 public class ImportWsdlDataSourceDefinitionPage extends AbstractWizardPage implements UiConstants {
@@ -72,13 +73,15 @@ public class ImportWsdlDataSourceDefinitionPage extends AbstractWizardPage imple
     	((GridLayout)theGroup.getLayout()).marginLeft = 10;
     	((GridLayout)theGroup.getLayout()).marginRight = 10;
         
-        WidgetFactory.createLabel(theGroup, "JNDI Name "); //$NON-NLS-1$
+    	Label label = WidgetFactory.createLabel(theGroup, getString("jndiLabel")); //$NON-NLS-1$
+        label.setToolTipText(getString("jndiToolTip")); //$NON-NLS-1$
         
         // Check to see if server is available and connected
         boolean serverDefined = DataSourceConnectionHelper.isServerDefined();
         boolean serverActive = DataSourceConnectionHelper.isServerConnected();
         
         this.jndiNameField = WidgetFactory.createTextField(theGroup);
+        this.jndiNameField.setToolTipText(getString("jndiToolTip")); //$NON-NLS-1$
         this.jndiName = theImportManager.getJBossJndiName();
         if( !StringUtilities.isEmpty(this.jndiName) ) {
         	this.jndiNameField.setText(this.jndiName);

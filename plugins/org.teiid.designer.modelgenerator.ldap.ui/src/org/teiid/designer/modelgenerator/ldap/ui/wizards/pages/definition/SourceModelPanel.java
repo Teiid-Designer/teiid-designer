@@ -164,7 +164,8 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
             	GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(theGroup);
 
                 Label nameLabel = new Label(theGroup, SWT.NULL);
-                nameLabel.setText("JNDI Name "); //$NON-NLS-1$
+                nameLabel.setText(getString("jndiLabel")); //$NON-NLS-1$
+                nameLabel.setToolTipText(getString("jndiToolTip")); //$NON-NLS-1$
                 GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(nameLabel);
                 
                 // Check to see if server is available and connected
@@ -172,6 +173,7 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
                 boolean serverActive = DataSourceConnectionHelper.isServerConnected();
                 
                 this.jndiNameField = WidgetFactory.createTextField(theGroup);
+                this.jndiNameField.setToolTipText(getString("jndiToolTip")); //$NON-NLS-1$
                 this.jndiName = importManager.getJBossJndiName();
                 if( this.jndiName != null && this.jndiName.length() > 0 ) {
                 	this.jndiNameField.setText(this.jndiName);

@@ -27,6 +27,7 @@ import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
+import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implements UiConstants {
@@ -77,13 +78,15 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
     	((GridLayout)theGroup.getLayout()).marginLeft = 10;
     	((GridLayout)theGroup.getLayout()).marginRight = 10;
         
-        WidgetFactory.createLabel(theGroup, "JNDI Name "); //$NON-NLS-1$
+    	Label label = WidgetFactory.createLabel(theGroup, getString("jndiLabel")); //$NON-NLS-1$
+        label.setToolTipText(getString("jndiToolTip")); //$NON-NLS-1$
         
         // Check to see if server is available and connected
         boolean serverDefined = DataSourceConnectionHelper.isServerDefined();
         boolean serverActive = DataSourceConnectionHelper.isServerConnected();
         
         this.jndiNameField = WidgetFactory.createTextField(theGroup);
+        this.jndiNameField.setToolTipText(getString("jndiToolTip")); //$NON-NLS-1$
         this.jndiName = info.getJBossJndiName();
         if( this.jndiName != null && this.jndiName.length() > 0 ) {
         	this.jndiNameField.setText(this.jndiName);

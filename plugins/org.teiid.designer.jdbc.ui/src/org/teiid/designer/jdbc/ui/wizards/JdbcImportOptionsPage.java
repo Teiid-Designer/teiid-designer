@@ -373,13 +373,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
         	Group theGroup = WidgetFactory.createGroup(mainPanel, getString("jndiGroup"), SWT.NONE, 2, 3); //$NON-NLS-1$
         	theGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             
-            WidgetFactory.createLabel(theGroup, "JNDI Name "); //$NON-NLS-1$
+        	org.teiid.designer.ui.common.widget.Label label = WidgetFactory.createLabel(theGroup, getString("jndiLabel")); //$NON-NLS-1$
+            label.setToolTipText(getString("jndiToolTip")); //$NON-NLS-1$
             
             // Check to see if server is available and connected
             boolean serverDefined = DataSourceConnectionHelper.isServerDefined();
             boolean serverActive = DataSourceConnectionHelper.isServerConnected();
             
             this.jndiNameField = WidgetFactory.createTextField(theGroup);
+            this.jndiNameField.setToolTipText(getString("jndiToolTip")); //$NON-NLS-1$
             this.jndiName = importer.getJBossJndiName();
             if( this.jndiName != null && this.jndiName.length() > 0 ) {
             	this.jndiNameField.setText(this.jndiName);
