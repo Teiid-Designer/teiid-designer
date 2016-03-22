@@ -2544,15 +2544,15 @@ public class SQLStringVisitor extends LanguageVisitor
                     for (int i = 0; i < strValue.length(); i++) {
                         char c = strValue.charAt(i);
                         if (c == '\'') {
-                            parts.append('\'');
+                            append('\'');
                         } else if (Character.isISOControl(c)) {
-                            parts.append("\\u" + PropertiesUtils.toHex((c >> 12) & 0xF) + PropertiesUtils.toHex((c >>  8) & 0xF) //$NON-NLS-1$ 
+                            append("\\u" + PropertiesUtils.toHex((c >> 12) & 0xF) + PropertiesUtils.toHex((c >>  8) & 0xF) //$NON-NLS-1$ 
                                     + PropertiesUtils.toHex((c >>  4) & 0xF) + PropertiesUtils.toHex(c & 0xF));
                             continue;
                         }
-                        parts.append(c);
+                        append(c);
                     }
-                    parts.append('\'');
+                    append('\'');
                     return;
                 } else {
                     String strValue = value.toString();
