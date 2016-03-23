@@ -13,7 +13,7 @@ import org.eclipse.osgi.util.NLS;
  * @since 8.0
  */
 @SuppressWarnings("javadoc")
-public class Messages extends NLS {
+public class Messages extends org.teiid.designer.relational.ui.Messages {
     public static String Browse;
     public static String Edit;
     public static String EditColumnTitle;
@@ -77,7 +77,6 @@ public class Messages extends NLS {
     public static String uniqueLabel;
     public static String filterConditionLabel;
     public static String referencedColumnsLabel;
-    public static String indexesLabel;
     public static String indexLabel;
     public static String tableSelectionTitle;
     public static String selectExistingTableForIndexInitialMessage;
@@ -86,9 +85,7 @@ public class Messages extends NLS {
     public static String materializedLabel;
     public static String tableReferenceLabel;
     public static String systemTableLabel;
-    public static String foreignKeysLabel;
-    public static String primaryKeyLabel;
-    public static String uniqueConstraintLabel;
+
     public static String globalTempTableLabel;
 
     public static String nameLabel;
@@ -103,12 +100,10 @@ public class Messages extends NLS {
     public static String nameInSourceLabel;
     public static String cardinalityLabel;
     public static String supportsUpdateLabel;
-    public static String columnsLabel;
     public static String columnNameLabel;
     public static String dataTypeLabel;
     public static String lengthLabel;
     public static String procedureLabel;
-    public static String parametersLabel;
     public static String parameterNameLabel;
 	public static String isFunctionLabel;
 	public static String directionLabel;

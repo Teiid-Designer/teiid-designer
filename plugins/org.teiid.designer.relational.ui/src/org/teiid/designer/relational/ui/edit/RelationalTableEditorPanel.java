@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -95,18 +96,18 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	private TabItem	indexesTab;
 	
 	// table property widgets
-	private Button materializedCB, supportsUpdateCB, isSystemTableCB, includePrimaryKeyCB, includeUniqueConstraintCB;
+	private Button materializedCB, supportsUpdateCB, isSystemTableCB, includePrimaryKeyCB;
 	private Button findTableReferenceButton;
 	private Label materializedTableLabel;
 	private Text cardinalityText, materializedTableText,
-		primaryKeyNameText, uniqueConstraintNameText,
-		primaryKeyNISText, uniqueConstraintNISText,
+		primaryKeyNameText,
+		primaryKeyNISText,
 		nativeQueryHelpText;
 	private StyledTextEditor nativeQueryTextEditor;
 	
 	// column widgets
 	private Button addColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
-	private Button changePkColumnsButton, changeUcColumnsButton, addFKButton, editFKButton, deleteFKButton;
+	private Button changePkColumnsButton, addFKButton, editFKButton, deleteFKButton;
 	private Button addUCButton, editUCButton, deleteUCButton;
 	private Button addIndexButton, deleteIndexButton, editIndexButton;
 	private TableViewerBuilder columnsViewer;
@@ -125,13 +126,12 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	 */
 	public RelationalTableEditorPanel(Composite parent, RelationalDialogModel dialogModel, IDialogStatusListener statusListener) {
 		super(parent, dialogModel, statusListener);
-
 		MULTIPLICITY_LIST = new ArrayList<String>();
 		for( String str : MULTIPLICITY.AS_ARRAY ) {
 			MULTIPLICITY_LIST.add(str);
 		}
 		
-		synchronizeUI();
+		finishedStartup = true;
 	}
 
 	@Override
@@ -159,9 +159,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		createForeignKeysTab(tabFolder);
 		createIndexesTab(tabFolder);
 		createNativeQueryTab(tabFolder);
-		
-		finishedStartup = true;
-		
 	}
 
 	private void createGeneralPropertiesTab(TabFolder folderParent) {
@@ -252,6 +249,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	
 	@Override
 	protected void synchronizeExtendedUI() {
+
 	    synchronizePropertiesTab();
 		synchronizeColumnsTab();
         synchronizePrimaryKeyTab();
@@ -264,6 +262,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	        setNativeQueryEnablement(! isRelationalView() );
 	        setKeyTabsEnablement(! isRelationalView());
         }
+
 	}
 
 	/**
@@ -398,7 +397,14 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         		}
         	}
 
-        	uniqueConstraintTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.UC, getRelationalReference().getModelType(), getRelationalReference().getUniqueContraint().getStatus()));
+        	// Find highest severity status
+        	IStatus ucStatus = Status.OK_STATUS;
+        	for( RelationalUniqueConstraint constraint : getRelationalReference().getUniqueConstraints() ) {
+        		if( constraint.getStatus().getSeverity() > ucStatus.getSeverity() ) {
+        			ucStatus = constraint.getStatus();
+        		}
+        	}
+        	uniqueConstraintTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.UC, getRelationalReference().getModelType(), ucStatus));
         }
     }
 
@@ -454,15 +460,34 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	
 	private void setKeyTabsEnablement(boolean enable) {
 		addFKButton.setEnabled(enable);
-		editFKButton.setEnabled(enable);
-		deleteFKButton.setEnabled(enable);
+		editFKButton.setEnabled(false);
+		deleteFKButton.setEnabled(false);
 		includePrimaryKeyCB.setEnabled(enable);
 		addUCButton.setEnabled(enable);
-		editUCButton.setEnabled(enable);
-		deleteUCButton.setEnabled(enable);
+		editUCButton.setEnabled(false);
+		deleteUCButton.setEnabled(false);
 		addIndexButton.setEnabled(enable);
-		editIndexButton.setEnabled(enable);
-		deleteIndexButton.setEnabled(enable);
+		editIndexButton.setEnabled(false);
+		deleteIndexButton.setEnabled(false);
+		// Update buttons
+		{
+			IStructuredSelection selection = (IStructuredSelection)uniqueConstraintsViewer.getSelection();
+			boolean value = ! selection.isEmpty();
+			editUCButton.setEnabled(value);
+			deleteUCButton.setEnabled(value);
+		}
+		{
+			IStructuredSelection selection = (IStructuredSelection)fkViewer.getSelection();
+			boolean value = ! selection.isEmpty();
+			editFKButton.setEnabled(value);
+			deleteFKButton.setEnabled(value);
+		}
+		{
+			IStructuredSelection selection = (IStructuredSelection)indexesViewer.getSelection();
+			boolean value = ! selection.isEmpty();
+			editIndexButton.setEnabled(value);
+			deleteIndexButton.setEnabled(value);
+		}
 	}
 
 	private Composite createPropertiesPanel(Composite parent) {
@@ -778,7 +803,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 					
 					EditUniqueConstraintDialog dialog = new EditUniqueConstraintDialog(getShell(), getRelationalReference(), uc, true);
 		        	
-		        	int result = dialog.open();
+		        	dialog.open();
 
 		        	handleInfoChanged();
 		        	
@@ -787,6 +812,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			}
     		
 		});
+    	this.editUCButton.setEnabled(false);
     	
     	this.deleteUCButton = new Button(buttonPanel, SWT.PUSH);
     	this.deleteUCButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
@@ -806,12 +832,14 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 				}
 				if( uc != null ) {
 					getRelationalReference().removeUniqueConstraint(uc);
-					deleteFKButton.setEnabled(false);
+					deleteUCButton.setEnabled(false);
+					editUCButton.setEnabled(false);
 					handleInfoChanged();
 				}
 			}
     		
 		});
+    	this.deleteUCButton.setEnabled(false);
     	
         this.uniqueConstraintsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.uniqueConstraintsViewer.getTableComposite());
@@ -826,6 +854,19 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	        	this.uniqueConstraintsViewer.add(row);
 	        }
         }
+        
+        this.uniqueConstraintsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				// Update buttons
+				IStructuredSelection selection = (IStructuredSelection)uniqueConstraintsViewer.getSelection();
+				boolean enable = ! selection.isEmpty();
+				editUCButton.setEnabled(enable);
+				deleteUCButton.setEnabled(enable);
+				
+			}
+		});
 
     	return thePanel;
 	}
@@ -901,6 +942,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			}
     		
 		});
+    	this.editFKButton.setEnabled(false);
     	
     	this.deleteFKButton = new Button(buttonPanel, SWT.PUSH);
     	this.deleteFKButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
@@ -926,6 +968,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			}
     		
 		});
+    	this.deleteFKButton.setEnabled(false);
 
         this.fkViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.fkViewer.getTableComposite());
@@ -940,6 +983,19 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	        	this.fkViewer.add(row);
 	        }
         }
+        
+        this.fkViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				// Update buttons
+				IStructuredSelection selection = (IStructuredSelection)fkViewer.getSelection();
+				boolean enable = ! selection.isEmpty();
+				editFKButton.setEnabled(enable);
+				deleteFKButton.setEnabled(enable);
+				
+			}
+		});
         
         return thePanel;
 	}
@@ -1010,6 +1066,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			}
     		
 		});
+    	this.editIndexButton.setEnabled(false);
     	
     	this.deleteIndexButton = new Button(buttonPanel, SWT.PUSH);
     	this.deleteIndexButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
@@ -1020,7 +1077,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			public void widgetSelected(SelectionEvent e) {
 				RelationalIndex index = null;
 				
-				IStructuredSelection selection = (IStructuredSelection)fkViewer.getSelection();
+				IStructuredSelection selection = (IStructuredSelection)indexesViewer.getSelection();
 				for( Object obj : selection.toArray()) {
 					if( obj instanceof RelationalIndex ) {
 						index =  (RelationalIndex) obj;
@@ -1035,6 +1092,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			}
     		
 		});
+    	this.deleteIndexButton.setEnabled(false);
 
         this.indexesViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.indexesViewer.getTableComposite());
@@ -1049,6 +1107,19 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	        	this.indexesViewer.add(row);
 	        }
         }
+        
+        this.indexesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				// Update buttons
+				IStructuredSelection selection = (IStructuredSelection)indexesViewer.getSelection();
+				boolean enable = ! selection.isEmpty();
+				editIndexButton.setEnabled(enable);
+				deleteIndexButton.setEnabled(enable);
+				
+			}
+		});
 
     	return thePanel;
 	}
@@ -1277,7 +1348,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		if( !validationPerformed && this.getRelationalReference().getName() != null ) {
 			return true;
 		} else if( validationPerformed) {
-			return true;
+			return this.getRelationalReference().getName() != null;
 		}
 		
 		return false;
@@ -1606,8 +1677,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         
         private Set<RelationalColumn> selectedColumns = new HashSet<RelationalColumn>();
         
-        private boolean isPrimaryKeyColumns = false;
-            
         //=============================================================
         // Constructors
         //=============================================================
@@ -1620,7 +1689,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         public SelectColumnsDialog(Shell parent, RelationalTable theTable, boolean isPrimaryKeyColumns) {
             super(parent);
             this.theTable = theTable;
-            this.isPrimaryKeyColumns = isPrimaryKeyColumns;
         }
         
         @Override
@@ -1704,23 +1772,13 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
     		
     		this.columnDataViewer.setInput(this.theTable);
     		
-    		if( isPrimaryKeyColumns )  {
-    			for( RelationalColumn col : this.theTable.getPrimaryKey().getColumns() ) {
-    				for( TableItem item : columnDataViewer.getTable().getItems() ) {
-    	        		if( item.getData() == col ) {
-    	        			item.setChecked(true);
-    	        		}
-    	        	}
-    			}
-    		} else {
-    			for( RelationalColumn col : this.theTable.getUniqueContraint().getColumns() ) {
-    				for( TableItem item : columnDataViewer.getTable().getItems() ) {
-    	        		if( item.getData() == col ) {
-    	        			item.setChecked(true);
-    	        		}
-    	        	}
-    			}
-    		}
+			for( RelationalColumn col : this.theTable.getPrimaryKey().getColumns() ) {
+				for( TableItem item : columnDataViewer.getTable().getItems() ) {
+	        		if( item.getData() == col ) {
+	        			item.setChecked(true);
+	        		}
+	        	}
+			}
             
             setMessage(Messages.selectColumnsMessage);
             return composite;

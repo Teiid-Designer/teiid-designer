@@ -334,6 +334,7 @@ public class EditUniqueConstraintDialog extends TitleAreaDialog {
 				setMessage(editedConstraint.getStatus().getMessage(), IMessageProvider.WARNING);
 			} else if (editedConstraint.getStatus().getSeverity() == IStatus.ERROR) {
 				setErrorMessage(editedConstraint.getStatus().getMessage());
+				enable = false;
 			}
 		}
 

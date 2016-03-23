@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.edit.RelationalEditorPanel;
 import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
+import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.ScrollableTitleAreaDialog;
 
 /**
@@ -68,7 +69,6 @@ public class EditRelationalObjectDialog extends ScrollableTitleAreaDialog implem
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite pnlOuter = (Composite) super.createDialogArea(parent);
-        
         this.setTitle(dialogModel.getDialogTitle());
         this.setMessage(dialogModel.getHelpText());
 

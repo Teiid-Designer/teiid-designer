@@ -87,7 +87,7 @@ public class RelationalUniqueConstraint extends RelationalReference {
      * @param columns Sets columns to the specified value.
      */
     public void setColumns( Collection<RelationalColumn> columns ) {
-        this.columns = new ArrayList(columns);
+        this.columns = new ArrayList<RelationalColumn>(columns);
         handleInfoChanged();
     }
     

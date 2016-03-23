@@ -17,7 +17,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -57,18 +56,14 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalForeignKey;
 import org.teiid.designer.relational.model.RelationalIndex;
-import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.relational.model.RelationalPrimaryKey;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
@@ -77,6 +72,7 @@ import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.edit.EditForeignKeyDialog;
 import org.teiid.designer.relational.ui.edit.EditIndexDialog;
+import org.teiid.designer.relational.ui.edit.EditUniqueConstraintDialog;
 import org.teiid.designer.relational.ui.edit.RelationalEditorPanel;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
 import org.teiid.designer.transformation.ui.Messages;
@@ -92,10 +88,7 @@ import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
-import org.teiid.designer.ui.viewsupport.ModelUtilities;
-import org.teiid.designer.ui.viewsupport.SelectFromEObjectListDialog;
 
 
 /**
@@ -104,7 +97,7 @@ import org.teiid.designer.ui.viewsupport.SelectFromEObjectListDialog;
  *
  * @since 8.0
  */
-public class ViewTableEditorPanel extends RelationalEditorPanel implements RelationalConstants {
+public class ViewTableEditorPanel extends RelationalEditorPanel implements RelationalConstants {	
 	private List<String> MULTIPLICITY_LIST;
 
 	private TabItem generalPropertiesTab;
@@ -116,24 +109,28 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 	private TabItem	indexesTab;
 	
 	// table property widgets
-	private Button materializedCB, supportsUpdateCB, isSystemTableCB, includePrimaryKeyCB, includeUniqueConstraintCB,
-		globalTempTableCB;
+	private Button materializedCB, supportsUpdateCB, isSystemTableCB, includePrimaryKeyCB;
 	private Button findTableReferenceButton;
 	private Label materializedTableLabel;
-	private Text cardinalityText, materializedTableText, 
-		primaryKeyNameText, uniqueConstraintNameText,
-		primaryKeyNISText, uniqueConstraintNISText;
+	private Text cardinalityText, materializedTableText,
+	primaryKeyNameText,
+	primaryKeyNISText;
     // Table SQL Text Tab Controls
 	private SqlTextViewer sqlTextViewer;
 	private Document sqlDocument;
 	
 	// column widgets
 	private Button addColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
-	private Button changePkColumnsButton, changeUcColumnsButton, addFKButton, editFKButton, deleteFKButton;
+	private Button changePkColumnsButton, addFKButton, editFKButton, deleteFKButton;
+	private Button addUCButton, editUCButton, deleteUCButton;
 	private Button addIndexButton, deleteIndexButton, editIndexButton;
 	private TableViewerBuilder columnsViewer;
-	private TableViewerBuilder pkColumnsViewer, ucColumnsViewer, fkViewer;
-	private TableViewerBuilder indexesViewer;
+	private TableViewerBuilder pkColumnsViewer, fkViewer;  //ucColumnsViewer,
+	private TableViewerBuilder uniqueConstraintsViewer, indexesViewer;
+
+	private boolean validationPerformed = false;
+	
+	private int HEIGHT_HINT_80 = 80;
 
 	/**
 	 * @param parent the parent panel
@@ -142,18 +139,19 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 	 */
 	public ViewTableEditorPanel(Composite parent, TransformationDialogModel dialogModel, IDialogStatusListener statusListener) {
 		super(parent, dialogModel, statusListener);
-		
 		MULTIPLICITY_LIST = new ArrayList<String>();
 		for( String str : MULTIPLICITY.AS_ARRAY ) {
 			MULTIPLICITY_LIST.add(str);
 		}
-		
-		synchronizeUI();
 	}
-	
+
 	@Override
 	protected RelationalViewTable getRelationalReference() {
 	    return (RelationalViewTable) super.getRelationalReference();
+	}
+
+	private boolean isPhysicalModel() {
+	    return getRelationalReference().getModelType() == ModelType.PHYSICAL;
 	}
 	
 	@Override
@@ -169,7 +167,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 		createForeignKeysTab(tabFolder);
 		createIndexesTab(tabFolder);
 	}
-	
+
 	private void createGeneralPropertiesTab(TabFolder folderParent) {
         // build the SELECT tab
 		Composite thePanel = createPropertiesPanel(folderParent);
@@ -200,8 +198,10 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         this.columnsTab.setText(Messages.columnsLabel);
         this.columnsTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.COLUMN, ModelType.PHYSICAL, Status.OK_STATUS));
 	}
-
+	
+	
 	private void createPrimaryKeyTab(TabFolder folderParent) {
+
         Composite thePanel = createPrimaryKeyPanel(folderParent);
         
         this.primaryKeyTab = new TabItem(folderParent, SWT.NONE);
@@ -210,8 +210,10 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         this.primaryKeyTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.PK, ModelType.PHYSICAL, Status.OK_STATUS));
 
 	}
-
+	
+	
 	private void createUniqueConstraintTab(TabFolder folderParent) {
+
         Composite thePanel = createUniqueConstraintPanel(folderParent);
         
         this.uniqueConstraintTab = new TabItem(folderParent, SWT.NONE);
@@ -220,8 +222,10 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         this.uniqueConstraintTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.UC, ModelType.PHYSICAL, Status.OK_STATUS));
 
 	}
-
+	
+	
 	private void createForeignKeysTab(TabFolder folderParent) {
+
         Composite thePanel = createForeignKeysPanel(folderParent);
 
         this.foreignKeysTab = new TabItem(folderParent, SWT.NONE);
@@ -231,6 +235,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 	}
 	
 	private void createIndexesTab(TabFolder folderParent) {
+
         Composite thePanel = createIndexesPanel(folderParent);
         
         this.indexesTab = new TabItem(folderParent, SWT.NONE);
@@ -242,31 +247,51 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 	
 	@Override
 	protected void synchronizeExtendedUI() {
-		if( WidgetUtil.widgetValueChanged(this.cardinalityText, this.getRelationalReference().getCardinality()) ) {
-			this.cardinalityText.setText(Integer.toString(this.getRelationalReference().getCardinality()));
+
+	    synchronizePropertiesTab();
+		synchronizeColumnsTab();
+        synchronizePrimaryKeyTab();
+        synchronizeForeignKeyTab();
+        synchronizeUniqueConstraintTab();
+        synchronizeIndexTab();
+	    setKeyTabsEnablement(true);
+
+	}
+
+	/**
+     * Properties Tab
+     */
+    private void synchronizePropertiesTab() {
+        if (generalPropertiesTab == null)
+            return;
+
+		if( WidgetUtil.widgetValueChanged(this.cardinalityText, getRelationalReference().getCardinality()) ) {
+			this.cardinalityText.setText(Integer.toString(getRelationalReference().getCardinality()));
 		}
-		
-		boolean isGlobalTempTable = this.getRelationalReference().isGlobalTempTable();
-		if( WidgetUtil.widgetValueChanged(globalTempTableCB, isGlobalTempTable)) {
-			this.materializedCB.setSelection(isGlobalTempTable);
+
+		if (this.materializedCB != null) {
+            boolean isMaterialized = getRelationalReference().isMaterialized();
+            if (WidgetUtil.widgetValueChanged(materializedCB, isMaterialized)) {
+                this.materializedCB.setSelection(isMaterialized);
+            }
+            this.materializedTableText.setEnabled(isMaterialized);
+            this.findTableReferenceButton.setEnabled(isMaterialized);
+
+            if (WidgetUtil.widgetValueChanged(materializedCB, getRelationalReference().getSupportsUpdate())) {
+                this.supportsUpdateCB.setSelection(getRelationalReference().getSupportsUpdate());
+            }
 		}
-		
-		boolean isMaterialized = this.getRelationalReference().isMaterialized();	
-		if( WidgetUtil.widgetValueChanged(materializedCB, isMaterialized)) {
-			this.materializedCB.setSelection(isMaterialized);
-		}
-		this.materializedTableText.setEnabled(isMaterialized);
-		this.findTableReferenceButton.setEnabled(isMaterialized);
-		
-		if( WidgetUtil.widgetValueChanged(materializedCB, this.getRelationalReference().getSupportsUpdate())) {
-			this.supportsUpdateCB.setSelection(this.getRelationalReference().getSupportsUpdate());
-		}
-		
-		if( WidgetUtil.widgetValueChanged(isSystemTableCB, this.getRelationalReference().isSystem())) {
-			this.isSystemTableCB.setSelection(this.getRelationalReference().isSystem());
+
+		if( WidgetUtil.widgetValueChanged(isSystemTableCB, getRelationalReference().isSystem())) {
+			this.isSystemTableCB.setSelection(getRelationalReference().isSystem());
 		}
 		generalPropertiesTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.TABLE, getRelationalReference().getModelType(), Status.OK_STATUS));
-		
+    }
+
+    private void synchronizeColumnsTab() {
+        /*
+		 * Columns Tab
+		 */
     	this.columnsViewer.getTable().removeAll();
     	IStatus maxStatus = Status.OK_STATUS;
         for( RelationalColumn row : getRelationalReference().getColumns() ) {
@@ -276,18 +301,36 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         	this.columnsViewer.add(row);
         }
         columnsTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.COLUMN, getRelationalReference().getModelType(), maxStatus));
-        
+    }
+
+    /**
+     * Foreign Keys Tab
+     */
+    private void synchronizeForeignKeyTab() {
+        if (foreignKeysTab == null)
+            return;
+
+        IStatus maxStatus;
+
         maxStatus = Status.OK_STATUS;
         this.fkViewer.getTable().removeAll();
-        for( RelationalForeignKey row : this.getRelationalReference().getForeignKeys()) {
+        for( RelationalForeignKey row : getRelationalReference().getForeignKeys()) {
         	if( row.getStatus().getSeverity() > maxStatus.getSeverity() ) {
         		maxStatus = row.getStatus();
         	}
         	this.fkViewer.add(row);
         }
         foreignKeysTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.FK, getRelationalReference().getModelType(), maxStatus));
+    }
+
+    /**
+     * Primary Key Tab
+     */
+    private void synchronizePrimaryKeyTab() {
+        if (primaryKeyTab == null)
+            return;
         
-        if( this.getRelationalReference().getPrimaryKey() == null ) {
+        if( getRelationalReference().getPrimaryKey() == null ) {
         	if( WidgetUtil.widgetValueChanged(includePrimaryKeyCB, false)) {
         		this.includePrimaryKeyCB.setSelection(false);
         	}
@@ -309,83 +352,110 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         		this.includePrimaryKeyCB.setSelection(true);
         	}
         	this.primaryKeyNameText.setEnabled(true);
-        	if( this.getRelationalReference().getPrimaryKey().getName() != null && WidgetUtil.widgetValueChanged(primaryKeyNameText, this.getRelationalReference().getPrimaryKey().getName())) {
-        		this.primaryKeyNameText.setText(this.getRelationalReference().getPrimaryKey().getName());
+        	if( getRelationalReference().getPrimaryKey().getName() != null && WidgetUtil.widgetValueChanged(primaryKeyNameText, getRelationalReference().getPrimaryKey().getName())) {
+        		this.primaryKeyNameText.setText(getRelationalReference().getPrimaryKey().getName());
         	}
         	this.primaryKeyNISText.setEnabled(true);
-        	if( this.getRelationalReference().getPrimaryKey().getNameInSource() != null && WidgetUtil.widgetValueChanged(primaryKeyNISText, this.getRelationalReference().getPrimaryKey().getNameInSource())) {
-        		this.primaryKeyNISText.setText(this.getRelationalReference().getPrimaryKey().getNameInSource());
+        	if( getRelationalReference().getPrimaryKey().getNameInSource() != null && WidgetUtil.widgetValueChanged(primaryKeyNISText, getRelationalReference().getPrimaryKey().getNameInSource())) {
+        		this.primaryKeyNISText.setText(getRelationalReference().getPrimaryKey().getNameInSource());
         	}
         	this.pkColumnsViewer.getTable().removeAll();
-        	if( !this.getRelationalReference().getPrimaryKey().getColumns().isEmpty() ) {
-        		for( RelationalColumn column : this.getRelationalReference().getPrimaryKey().getColumns() ) {
+        	if( !getRelationalReference().getPrimaryKey().getColumns().isEmpty() ) {
+        		for( RelationalColumn column : getRelationalReference().getPrimaryKey().getColumns() ) {
         			this.pkColumnsViewer.add(column);
         		}
         	}
         	this.changePkColumnsButton.setEnabled(true);
-        	primaryKeyTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.PK, getRelationalReference().getModelType(), this.getRelationalReference().getPrimaryKey().getStatus()));
+        	primaryKeyTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.PK, getRelationalReference().getModelType(), getRelationalReference().getPrimaryKey().getStatus()));
         }
-        
-        if( this.getRelationalReference().getUniqueContraint() == null ) {
-        	if( WidgetUtil.widgetValueChanged(includeUniqueConstraintCB, false)) {
-        		this.includeUniqueConstraintCB.setSelection(false);
-        	}
-        	this.uniqueConstraintNameText.setEnabled(false);
-        	if( WidgetUtil.widgetValueChanged(uniqueConstraintNameText, EMPTY_STRING)) {
-        		this.uniqueConstraintNameText.setText(EMPTY_STRING);
-        	}
-        	this.uniqueConstraintNISText.setEnabled(false);
-        	if( WidgetUtil.widgetValueChanged(uniqueConstraintNISText, EMPTY_STRING)) {
-        		this.uniqueConstraintNISText.setText(EMPTY_STRING);
-        	}
-        	this.changeUcColumnsButton.setEnabled(false);
-        	this.ucColumnsViewer.getTable().removeAll();
-        	this.ucColumnsViewer.getTable().setEnabled(false);
+    }
+
+    /**
+     * Unique Constraint Tab
+     */
+    private void synchronizeUniqueConstraintTab() {
+        if (uniqueConstraintTab == null)
+            return;
+
+        if( getRelationalReference().getUniqueConstraints().isEmpty() ) {
+        	this.uniqueConstraintsViewer.getTable().removeAll();
+        	this.uniqueConstraintsViewer.getTable().setEnabled(false);
         } else {
-        	this.ucColumnsViewer.getTable().setEnabled(true);
-        	if( WidgetUtil.widgetValueChanged(includeUniqueConstraintCB, true)) {
-        		this.includeUniqueConstraintCB.setSelection(true);
-        	}
-        	this.uniqueConstraintNameText.setEnabled(true);
-        	if( this.getRelationalReference().getUniqueContraint().getName() != null && WidgetUtil.widgetValueChanged(uniqueConstraintNameText, this.getRelationalReference().getUniqueContraint().getName())) {
-        		this.uniqueConstraintNameText.setText(this.getRelationalReference().getUniqueContraint().getName());
-        	}
-        	this.uniqueConstraintNISText.setEnabled(true);
-        	if( this.getRelationalReference().getUniqueContraint().getNameInSource() != null && WidgetUtil.widgetValueChanged(uniqueConstraintNISText, this.getRelationalReference().getUniqueContraint().getNameInSource())) {
-        		this.uniqueConstraintNISText.setText(this.getRelationalReference().getUniqueContraint().getName());
-            }
-    		
-        	this.ucColumnsViewer.getTable().removeAll();
-        	if( !this.getRelationalReference().getUniqueContraint().getColumns().isEmpty() ) {
-        		for( RelationalColumn column : this.getRelationalReference().getUniqueContraint().getColumns() ) {
-        			this.ucColumnsViewer.add(column);
+        	this.uniqueConstraintsViewer.getTable().setEnabled(true);
+
+        	this.uniqueConstraintsViewer.getTable().removeAll();
+        	if( !getRelationalReference().getUniqueConstraints().isEmpty() ) {
+        		for( RelationalUniqueConstraint column : getRelationalReference().getUniqueConstraints() ) {
+        			this.uniqueConstraintsViewer.add(column);
         		}
         	}
-        	this.changeUcColumnsButton.setEnabled(true);
-        	uniqueConstraintTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.UC, getRelationalReference().getModelType(), this.getRelationalReference().getUniqueContraint().getStatus()));
+
+        	// Find highest severity status
+        	IStatus ucStatus = Status.OK_STATUS;
+        	for( RelationalUniqueConstraint constraint : getRelationalReference().getUniqueConstraints() ) {
+        		if( constraint.getStatus().getSeverity() > ucStatus.getSeverity() ) {
+        			ucStatus = constraint.getStatus();
+        		}
+        	}
+        	uniqueConstraintTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.UC, getRelationalReference().getModelType(), ucStatus));
         }
-        
+    }
+
+    /**
+     * Index Tab
+     */
+    private void synchronizeIndexTab() {
+        if (indexesTab == null)
+            return;
+
+        IStatus maxStatus;
+
         maxStatus = Status.OK_STATUS;
         this.indexesViewer.getTable().removeAll();
-        for( RelationalIndex row : this.getRelationalReference().getIndexes()) {
+        for( RelationalIndex row : getRelationalReference().getIndexes()) {
         	if( row.getStatus().getSeverity() > maxStatus.getSeverity() ) {
         		maxStatus = row.getStatus();
         	}
         	this.indexesViewer.add(row);
         }
         indexesTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.INDEX, getRelationalReference().getModelType(), maxStatus));
-        
-        if( getRelationalReference().getModelType() == ModelType.PHYSICAL ) {
-        	this.materializedCB.setVisible(false);
-        	this.materializedTableLabel.setVisible(false);
-        	this.materializedTableText.setVisible(false);
-        	this.findTableReferenceButton.setVisible(false);
-        	this.globalTempTableCB.setVisible(false);
-        }
-	}
+    }
+
 	
+	private void setKeyTabsEnablement(boolean enable) {
+		addFKButton.setEnabled(true);
+		editFKButton.setEnabled(false);
+		deleteFKButton.setEnabled(false);
+		includePrimaryKeyCB.setEnabled(true);
+		addUCButton.setEnabled(true);
+		editUCButton.setEnabled(false);
+		deleteUCButton.setEnabled(false);
+		addIndexButton.setEnabled(true);
+		editIndexButton.setEnabled(false);
+		deleteIndexButton.setEnabled(false);
+		// Update buttons
+		{
+			IStructuredSelection selection = (IStructuredSelection)uniqueConstraintsViewer.getSelection();
+			boolean value = ! selection.isEmpty();
+			editUCButton.setEnabled(value);
+			deleteUCButton.setEnabled(value);
+		}
+		{
+			IStructuredSelection selection = (IStructuredSelection)fkViewer.getSelection();
+			boolean value = ! selection.isEmpty();
+			editFKButton.setEnabled(value);
+			deleteFKButton.setEnabled(value);
+		}
+		{
+			IStructuredSelection selection = (IStructuredSelection)indexesViewer.getSelection();
+			boolean value = ! selection.isEmpty();
+			editIndexButton.setEnabled(value);
+			deleteIndexButton.setEnabled(value);
+		}
+	}
+
 	private Composite createPropertiesPanel(Composite parent) {
-		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
+		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 3);
 		GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
 		GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
 
@@ -396,7 +466,8 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         Label label = new Label(cardinalityPanel, SWT.NONE);
         label.setText(Messages.cardinalityLabel);
         
-        this.cardinalityText = new Text(cardinalityPanel, SWT.BORDER | SWT.SINGLE);
+        this.cardinalityText =  new Text(cardinalityPanel, SWT.BORDER | SWT.SINGLE);
+        this.cardinalityText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         GridDataFactory.fillDefaults().grab(true, false).applyTo(this.cardinalityText);
         this.cardinalityText.addModifyListener(new ModifyListener() {
     		@Override
@@ -414,7 +485,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
     			                                getShell(), 
     			                                Messages.cardinalityErrorTitle, 
     			                                Messages.cardinalityMustBeAnInteger);
-    			        return;
+	        				    return;
     			    }
     			}
     		}
@@ -438,7 +509,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
                 handleInfoChanged();
             }
         });
-        
+
         this.isSystemTableCB = new Button(checkButtonPanel, SWT.CHECK | SWT.RIGHT);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.isSystemTableCB);
         this.isSystemTableCB.setText(Messages.systemTableLabel);
@@ -454,60 +525,47 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
             }
         });
 
-        this.materializedCB = new Button(checkButtonPanel, SWT.CHECK | SWT.RIGHT);
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.materializedCB);
-        this.materializedCB.setText(Messages.materializedLabel);
-        this.materializedCB.addSelectionListener(new SelectionAdapter() {
-            /**            		
-             * {@inheritDoc}
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                getRelationalReference().setMaterialized(materializedCB.getSelection());
-                if (!materializedCB.getSelection()) {
-                    getRelationalReference().setMaterializedTable(null);
+        if (isPhysicalModel()) {
+            this.materializedCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
+            GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.materializedCB);
+            this.materializedCB.setText(Messages.materializedLabel);
+            this.materializedCB.addSelectionListener(new SelectionAdapter() {
+                /**            		
+                 * {@inheritDoc}
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    getRelationalReference().setMaterialized(materializedCB.getSelection());
+                    if (!materializedCB.getSelection()) {
+                        getRelationalReference().setMaterializedTable(null);
+                    }
+                    handleInfoChanged();
                 }
-                handleInfoChanged();
-            }
-        });
-        
-        this.globalTempTableCB = new Button(checkButtonPanel, SWT.CHECK | SWT.RIGHT);
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.globalTempTableCB);
-        this.globalTempTableCB.setText(Messages.globalTempTableLabel);
-        this.globalTempTableCB.addSelectionListener(new SelectionAdapter() {
-            /**            		
-             * {@inheritDoc}
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                getRelationalReference().setGlobalTempTable(globalTempTableCB.getSelection());
-                handleInfoChanged();
-            }
-        });
+            });
 
-        Composite materializedPanel = new Composite(thePanel, SWT.NONE);
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(materializedPanel);
-        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(materializedPanel);
+            Composite materializedPanel = new Composite(thePanel, SWT.NONE);
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(materializedPanel);
+            GridLayoutFactory.fillDefaults().numColumns(3).applyTo(materializedPanel);
 
-        materializedTableLabel = new Label(materializedPanel, SWT.NONE | SWT.RIGHT);
-        materializedTableLabel.setText(Messages.tableReferenceLabel);
-        GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(this.materializedTableLabel);
+            materializedTableLabel = new Label(materializedPanel, SWT.NONE | SWT.RIGHT);
+            materializedTableLabel.setText(Messages.tableReferenceLabel);
+            GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(materializedTableLabel);
 
-        this.materializedTableText = new Text(materializedPanel, SWT.BORDER | SWT.SINGLE);
-        this.materializedTableText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(this.materializedTableText);
+            this.materializedTableText = new Text(materializedPanel, SWT.BORDER | SWT.SINGLE);
+            this.materializedTableText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(this.materializedTableText);
 
-        this.findTableReferenceButton = new Button(materializedPanel, SWT.PUSH);
-        this.findTableReferenceButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ELIPSIS));
-        GridDataFactory.fillDefaults().hint(30, SWT.DEFAULT).applyTo(findTableReferenceButton);
-        this.findTableReferenceButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                handleBrowseWorkspaceForTablePressed();
-            }
-        });
+            this.findTableReferenceButton = new Button(materializedPanel, SWT.PUSH);
+            this.findTableReferenceButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ELIPSIS));
+            GridDataFactory.fillDefaults().hint(30, SWT.DEFAULT).applyTo(this.findTableReferenceButton);
+            this.findTableReferenceButton.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+
+                }
+            });
+        }
 
         createDescriptionPanel(thePanel);
 
@@ -518,9 +576,9 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 	 * Simple panel containing name, name in source values as well as a list of primary key columns from this table
 	 */
 	private Composite createPrimaryKeyPanel(Composite parent) {
-		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
-		GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(thePanel);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
+	    Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(thePanel);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
 
         this.includePrimaryKeyCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).span(2, 1).applyTo(this.includePrimaryKeyCB);
@@ -620,155 +678,160 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 		});
 
         this.pkColumnsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 100).applyTo(this.pkColumnsViewer.getTableComposite());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.pkColumnsViewer.getTableComposite());
 
         // create columns
-        TableViewerColumn column = pkColumnsViewer.createColumn(SWT.LEFT, 100, 40, false);
+        TableViewerColumn column = pkColumnsViewer.createColumn(SWT.LEFT, 100, 40, true);
         column.getColumn().setText(Messages.columnNameLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(0));
-        
+
         if( getRelationalReference() != null && getRelationalReference().getPrimaryKey() != null ) {
-	        for( RelationalColumn row : this.getRelationalReference().getPrimaryKey().getColumns() ) {
+	        for( RelationalColumn row : getRelationalReference().getPrimaryKey().getColumns() ) {
 	        	this.columnsViewer.add(row);
 	        }
         }
-    	
+
     	return thePanel;
 	}
 	
 	private Composite createUniqueConstraintPanel(Composite parent) {
-		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
-		GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(thePanel);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
-    	
-        this.includeUniqueConstraintCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).span(2, 1).applyTo(this.includeUniqueConstraintCB);
-        this.includeUniqueConstraintCB.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.INCLUDE));
-        this.includeUniqueConstraintCB.addSelectionListener(new SelectionAdapter() {
-            /**            		
-             * {@inheritDoc}
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-            	if( includeUniqueConstraintCB.getSelection() ) {
-            		if( getRelationalReference().getUniqueContraint() == null ) {
-            			RelationalUniqueConstraint key = new RelationalUniqueConstraint();
-            			if( uniqueConstraintNameText.getText() != null ) {
-            				key.setName(uniqueConstraintNameText.getText());
-            			}
-            			getRelationalReference().setUniqueConstraint(key);
-            		}
-            	} else {
-            		getRelationalReference().setUniqueConstraint(null);
-            	}
-                handleInfoChanged();
-            }
-        });
+		// TODO: This panel needs to operate like the Foreign Key panel to allow multiple Unique Constraints
+		// These constraints will behave just like Primary Keys so they won't need to referenced external columns/tables
+		
+	    Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
+        GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
         
-        Label label = new Label(thePanel, SWT.NONE | SWT.RIGHT);
-        label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
-        GridDataFactory.fillDefaults().applyTo(label);
-        
-        this.uniqueConstraintNameText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
-        this.uniqueConstraintNameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        GridDataFactory.fillDefaults().applyTo(this.uniqueConstraintNameText);
-        this.uniqueConstraintNameText.addModifyListener(new ModifyListener() {
-    		@Override
-			public void modifyText( final ModifyEvent event ) {
-    			String value = uniqueConstraintNameText.getText();
-    			if( value == null ) {
-    				value = EMPTY_STRING;
-    			}
-        		if( getRelationalReference().getUniqueContraint() != null ) {
-        			RelationalUniqueConstraint key = getRelationalReference().getUniqueContraint();
-        			key.setName(value);
-        		}
-    			
-        		handleInfoChanged();
-    		}
-        });
-        
-        label = new Label(thePanel, SWT.NONE | SWT.RIGHT);
-        label.setText(Messages.nameInSourceLabel);
-        GridDataFactory.fillDefaults().applyTo(label);
-        
-        this.uniqueConstraintNISText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
-        this.uniqueConstraintNISText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        GridDataFactory.fillDefaults().applyTo(this.uniqueConstraintNISText);
-        this.uniqueConstraintNISText.addModifyListener(new ModifyListener() {
-    		@Override
-			public void modifyText( final ModifyEvent event ) {
-    			String value = uniqueConstraintNISText.getText();
-    			if( value == null ) {
-    				value = EMPTY_STRING;
-    			}
-        		if( getRelationalReference().getUniqueContraint() != null ) {
-        			RelationalUniqueConstraint key = getRelationalReference().getUniqueContraint();
-        			key.setNameInSource(value);
-        		}
-    			
-        		handleInfoChanged();
-    		}
-        });
-        
-    	Composite buttonPanel = new Composite(thePanel, SWT.NONE);
-    	GridLayoutFactory.fillDefaults().applyTo(buttonPanel);
-    	GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.BEGINNING).applyTo(buttonPanel);
-	  	
-    	this.changeUcColumnsButton = new Button(buttonPanel, SWT.PUSH);
-    	this.changeUcColumnsButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.CHANGE_ELIPSIS));
-    	GridDataFactory.fillDefaults().applyTo(this.changeUcColumnsButton);
-    	this.changeUcColumnsButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-	    		SelectColumnsDialog dialog = new SelectColumnsDialog(getShell(), getRelationalReference(), false);
-	        	
-	        	int result = dialog.open();
-	        	if( result == Window.OK) {
-	        		Collection<RelationalColumn> selectedColumns = dialog.getSelectedColumns();
-	        		if( !selectedColumns.isEmpty() ) {
-	        			getRelationalReference().getUniqueContraint().setColumns(selectedColumns);
-	        		} else {
-	        			getRelationalReference().getUniqueContraint().setColumns(Collections.<RelationalColumn> emptyList());
-	        		}
-	        	}
-	        	handleInfoChanged();
-			}
-    		
-		});
-
-        this.ucColumnsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 100).applyTo(this.ucColumnsViewer.getTableComposite());
-        
-        // create columns
-        TableViewerColumn column = ucColumnsViewer.createColumn(SWT.LEFT, 100, 40, false);
-        column.getColumn().setText(Messages.columnNameLabel);
-        column.setLabelProvider(new ColumnDataLabelProvider(0));
-
-        if( getRelationalReference() != null && getRelationalReference().getUniqueContraint() != null ) {
-	        for( RelationalColumn row : this.getRelationalReference().getUniqueContraint().getColumns() ) {
-	        	this.ucColumnsViewer.add(row);
-	        }
-        }
-
-    	return thePanel;
-	}
-	
-	private Composite createForeignKeysPanel(Composite parent) {
-		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
-		GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
-    	GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
-    	
     	// Create 1 panels
     	// Top is just a Table of current FK with Add/Edit/Delete buttons
     	
     	// Bottom panel is the "Edit
         
-    	Composite buttonPanel = new Composite(thePanel, SWT.NONE);
-    	GridLayoutFactory.fillDefaults().numColumns(3).applyTo(buttonPanel);
-	  	GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
+        Composite buttonPanel = new Composite(thePanel, SWT.NONE);
+        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(buttonPanel);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
+
+    	this.addUCButton = new Button(buttonPanel, SWT.PUSH);
+    	this.addUCButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ADD));
+    	GridDataFactory.fillDefaults().applyTo(this.addUCButton);
+    	this.addUCButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				RelationalUniqueConstraint newUC = new RelationalUniqueConstraint();
+				
+				EditUniqueConstraintDialog dialog = new EditUniqueConstraintDialog(getShell(), getRelationalReference(), newUC, false);
+	        	
+	        	int result = dialog.open();
+	        	if( result == Window.OK) {
+	        		getRelationalReference().addUniqueConstraint(newUC);
+	        	}
+	        	handleInfoChanged();
+			}
+    		
+		});
+    	
+    	this.editUCButton = new Button(buttonPanel, SWT.PUSH);
+    	this.editUCButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.EDIT_ELIPSIS));
+    	GridDataFactory.fillDefaults().applyTo(this.editUCButton);
+    	this.editUCButton.addSelectionListener(new SelectionAdapter() {
+
+    		@Override
+			public void widgetSelected(SelectionEvent e) {
+    			RelationalUniqueConstraint uc = null;
+				
+				IStructuredSelection selection = (IStructuredSelection)uniqueConstraintsViewer.getSelection();
+				for( Object obj : selection.toArray()) {
+					if( obj instanceof RelationalUniqueConstraint ) {
+						uc =  (RelationalUniqueConstraint) obj;
+						break;
+					}
+				}
+				if( uc != null ) {
+					
+					EditUniqueConstraintDialog dialog = new EditUniqueConstraintDialog(getShell(), getRelationalReference(), uc, true);
+		        	
+		        	dialog.open();
+
+		        	handleInfoChanged();
+		        	
+		        	editUCButton.setEnabled(false);
+				}
+			}
+    		
+		});
+    	this.editUCButton.setEnabled(false);
+    	
+    	this.deleteUCButton = new Button(buttonPanel, SWT.PUSH);
+    	this.deleteUCButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
+    	GridDataFactory.fillDefaults().applyTo(this.deleteUCButton);
+    	this.deleteUCButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				RelationalUniqueConstraint uc= null;
+				
+				IStructuredSelection selection = (IStructuredSelection)uniqueConstraintsViewer.getSelection();
+				for( Object obj : selection.toArray()) {
+					if( obj instanceof RelationalUniqueConstraint ) {
+						uc =  (RelationalUniqueConstraint) obj;
+						break;
+					}
+				}
+				if( uc != null ) {
+					getRelationalReference().removeUniqueConstraint(uc);
+					deleteUCButton.setEnabled(false);
+					editUCButton.setEnabled(false);
+					handleInfoChanged();
+				}
+			}
+    		
+		});
+    	this.deleteUCButton.setEnabled(false);
+    	
+        this.uniqueConstraintsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.uniqueConstraintsViewer.getTableComposite());
+
+        // create columns
+        TableViewerColumn column = uniqueConstraintsViewer.createColumn(SWT.LEFT, 100, 40, false);
+        column.getColumn().setText(Messages.uniqueConstraintsLabel);
+        column.setLabelProvider(new UniqueConstraintLabelProvider(0));
+
+        if( getRelationalReference() != null && getRelationalReference().getUniqueConstraints() != null ) {
+	        for( RelationalUniqueConstraint row : getRelationalReference().getUniqueConstraints() ) {
+	        	this.uniqueConstraintsViewer.add(row);
+	        }
+        }
+        
+        this.uniqueConstraintsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				// Update buttons
+				IStructuredSelection selection = (IStructuredSelection)uniqueConstraintsViewer.getSelection();
+				boolean enable = ! selection.isEmpty();
+				editUCButton.setEnabled(enable);
+				deleteUCButton.setEnabled(enable);
+				
+			}
+		});
+
+    	return thePanel;
+	}
+	
+	private Composite createForeignKeysPanel(Composite parent) {
+	    Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
+        GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
+
+    	// Create 1 panels
+    	// Top is just a Table of current FK with Add/Edit/Delete buttons
+    	
+    	// Bottom panel is the "Edit
+        
+        Composite buttonPanel = new Composite(thePanel, SWT.NONE);
+        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(buttonPanel);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
 
     	this.addFKButton = new Button(buttonPanel, SWT.PUSH);
     	this.addFKButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ADD));
@@ -819,6 +882,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 			}
     		
 		});
+    	this.editFKButton.setEnabled(false);
     	
     	this.deleteFKButton = new Button(buttonPanel, SWT.PUSH);
     	this.deleteFKButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
@@ -844,9 +908,10 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 			}
     		
 		});
+    	this.deleteFKButton.setEnabled(false);
 
         this.fkViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(this.fkViewer.getTableComposite());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.fkViewer.getTableComposite());
 
         // create columns
         TableViewerColumn column = fkViewer.createColumn(SWT.LEFT, 100, 40, false);
@@ -854,22 +919,35 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         column.setLabelProvider(new FKDataLabelProvider(0));
 
         if( getRelationalReference() != null) {
-	        for( RelationalForeignKey row : this.getRelationalReference().getForeignKeys()) {
+	        for( RelationalForeignKey row : getRelationalReference().getForeignKeys()) {
 	        	this.fkViewer.add(row);
 	        }
         }
+        
+        this.fkViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				// Update buttons
+				IStructuredSelection selection = (IStructuredSelection)fkViewer.getSelection();
+				boolean enable = ! selection.isEmpty();
+				editFKButton.setEnabled(enable);
+				deleteFKButton.setEnabled(enable);
+				
+			}
+		});
         
         return thePanel;
 	}
 	
 	private Composite createIndexesPanel(Composite parent) {
-		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
-		GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
-    	GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
-        
-    	Composite buttonPanel = new Composite(thePanel, SWT.NONE);
-    	GridLayoutFactory.fillDefaults().numColumns(3).applyTo(buttonPanel);
-	  	GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
+	    Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
+        GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
+
+        Composite buttonPanel = new Composite(thePanel, SWT.NONE);
+        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(buttonPanel);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
 
     	this.addIndexButton = new Button(buttonPanel, SWT.PUSH);
     	this.addIndexButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ADD));
@@ -920,6 +998,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 			}
     		
 		});
+    	this.editIndexButton.setEnabled(false);
     	
     	this.deleteIndexButton = new Button(buttonPanel, SWT.PUSH);
     	this.deleteIndexButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
@@ -930,7 +1009,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 			public void widgetSelected(SelectionEvent e) {
 				RelationalIndex index = null;
 				
-				IStructuredSelection selection = (IStructuredSelection)fkViewer.getSelection();
+				IStructuredSelection selection = (IStructuredSelection)indexesViewer.getSelection();
 				for( Object obj : selection.toArray()) {
 					if( obj instanceof RelationalIndex ) {
 						index =  (RelationalIndex) obj;
@@ -945,9 +1024,10 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 			}
     		
 		});
+    	this.deleteIndexButton.setEnabled(false);
 
         this.indexesViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(this.indexesViewer.getTableComposite());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.indexesViewer.getTableComposite());
 
         // create columns
         TableViewerColumn column = indexesViewer.createColumn(SWT.LEFT, 100, 40, false);
@@ -955,23 +1035,36 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         column.setLabelProvider(new IndexDataLabelProvider(0));
 
         if( getRelationalReference() != null && getRelationalReference().getIndexes() != null ) {
-	        for( RelationalIndex row : this.getRelationalReference().getIndexes() ) {
+	        for( RelationalIndex row : getRelationalReference().getIndexes() ) {
 	        	this.indexesViewer.add(row);
 	        }
         }
-    	
+        
+        this.indexesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				// Update buttons
+				IStructuredSelection selection = (IStructuredSelection)indexesViewer.getSelection();
+				boolean enable = ! selection.isEmpty();
+				editIndexButton.setEnabled(enable);
+				deleteIndexButton.setEnabled(enable);
+				
+			}
+		});
+
     	return thePanel;
 	}
 
 	private Composite createColumnTableGroup(Composite parent) {
 		  	
-	  	Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
-	  	GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
-	  	GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
+	    Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
+        GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
 
-	  	Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 4);
-	  	GridLayoutFactory.fillDefaults().numColumns(4).applyTo(buttonPanel);
-	  	GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
+        Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 4);
+        GridLayoutFactory.fillDefaults().numColumns(4).applyTo(buttonPanel);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
 
     	addColumnButton = new Button(buttonPanel, SWT.PUSH);
     	addColumnButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ADD));
@@ -1072,26 +1165,26 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
     		
 		});
     	
-    	this.columnsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.FULL_SELECTION |SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+    	this.columnsViewer = new TableViewerBuilder(thePanel, (SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER));  	
 
         // create columns
-        TableViewerColumn column = columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
+        TableViewerColumn column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.columnNameLabel);
         column.setEditingSupport(new ColumnNameEditingSupport(this.columnsViewer.getTableViewer()));
         column.setLabelProvider(new ColumnDataLabelProvider(0));
 
-        column = columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
+        column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.dataTypeLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(1));
         column.setEditingSupport(new DatatypeEditingSupport(this.columnsViewer.getTableViewer()));
-
-        column = columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
+        
+        column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.lengthLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(2));
         column.setEditingSupport(new ColumnWidthEditingSupport(this.columnsViewer.getTableViewer()));
 
         if( getRelationalReference() != null ) {
-	        for( RelationalColumn row : this.getRelationalReference().getColumns() ) {
+	        for( RelationalColumn row : getRelationalReference().getColumns() ) {
 	        	this.columnsViewer.add(row);
 	        }
         }
@@ -1211,92 +1304,32 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         sqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(sqlTextViewer.getControl());
     }
-	
+
 	@Override
 	protected void validate() {
-		this.getRelationalReference().validate();
+		getRelationalReference().validate();
 		
-		setCanFinish(this.getRelationalReference().nameIsValid());	
+		setCanFinish(getRelationalReference().nameIsValid());
 		
-		IStatus currentStatus = this.getRelationalReference().getStatus();
+		IStatus currentStatus = getRelationalReference().getStatus();
 		if( currentStatus.isOK() ) {
 			setStatus(Status.OK_STATUS);
 		} else {
 			setStatus(currentStatus);
 		}
-
+		validationPerformed = true;
 	}
 	
-	private void handleBrowseWorkspaceForTablePressed() {
-		ModelResource mr = ModelUtilities.getModelResourceForIFile( getModelFile(), true);
-		
-		List<EObject> childList = new ArrayList<EObject>(); 
-		
-		try {
-			childList = mr.getEObjects();
-		} catch (ModelWorkspaceException ex) {
-			ex.printStackTrace();
+	@Override
+	public boolean canFinish() {
+		// check if procedure name is not-null
+		if( !validationPerformed && this.getRelationalReference().getName() != null ) {
+			return true;
+		} else if( validationPerformed) {
+			return this.getRelationalReference().getName() != null;
 		}
 		
-		List<EObject> tablesOnlyList = new ArrayList<EObject>();
-		for( EObject child : childList) {
-			if( child instanceof org.teiid.designer.metamodels.relational.Table ) {
-				tablesOnlyList.add(child);
-			}
-		}
-		
-		SelectFromEObjectListDialog sdDialog = createTableSelectionDialog(tablesOnlyList);
-		
-		sdDialog.open();
-
-        if (sdDialog.getReturnCode() == Window.OK) {
-            Object[] selections = sdDialog.getResult();
-            // should be single selection
-            EObject tableObject = (EObject)selections[0];
-            // TODO:
-            // Create RelationalTable object from EObject and get "columns" and populate the columns viewer
-            RelationalTable relTable = (RelationalTable)RelationalModelFactory.INSTANCE.getRelationalObject(tableObject);
-            this.materializedTableText.setText(relTable.getName());
-            this.getRelationalReference().setMaterializedTable(relTable);
-            
-    		columnsViewer.setInput(relTable);
-
-            handleInfoChanged();
-        }
-
-	}
-	
-	/**
-	 * @param tableList the list of tables
-	 * @return the dialog
-	 */
-	private SelectFromEObjectListDialog createTableSelectionDialog(List<EObject> tableList) {
-		String title = Messages.tableSelectionTitle;
-		String message = Messages.selectExistingTableForIndexInitialMessage;
-		
-        SelectFromEObjectListDialog dialog = 
-                new SelectFromEObjectListDialog(
-                		getShell(), 
-                		tableList, 
-                         false, 
-                         title, 
-                         message,
-                         ModelUtilities.getModelObjectLabelProvider());
-
-        dialog.setValidator(new ISelectionStatusValidator() {
-			@Override
-			public IStatus validate(Object[] selection) {
-				if (selection == null || selection.length == 0
-						|| selection[0] == null
-						|| (!(selection[0] instanceof org.teiid.designer.metamodels.relational.Table)) ) {
-					return new StatusInfo(UiConstants.PLUGIN_ID, IStatus.ERROR,Messages.noTableSelectedMessage);
-				}
-				return new StatusInfo(UiConstants.PLUGIN_ID);
-			}
-		});
-
-
-		return dialog;
+		return false;
 	}
 
 	class ColumnDataLabelProvider extends ColumnLabelProvider {
@@ -1507,7 +1540,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
          */
         public DatatypeEditingSupport( ColumnViewer viewer ) {
             super(viewer);
-            
+
             Collection<String> unsortedTypes = new ArrayList<String>();
             try {
 				unsortedTypes = DatatypeUtilities.getAllDesignTimeTypeNames();
@@ -1515,7 +1548,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 				UiConstants.Util.log(e);
 			}
     		Collection<String> dTypes = new ArrayList<String>();
-
+    		
     		String[] sortedStrings = unsortedTypes.toArray(new String[unsortedTypes.size()]);
     		Arrays.sort(sortedStrings);
     		for( String dType : sortedStrings ) {
@@ -1622,8 +1655,6 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         
         private Set<RelationalColumn> selectedColumns = new HashSet<RelationalColumn>();
         
-        private boolean isPrimaryKeyColumns = false;
-            
         //=============================================================
         // Constructors
         //=============================================================
@@ -1636,7 +1667,6 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         public SelectColumnsDialog(Shell parent, RelationalTable theTable, boolean isPrimaryKeyColumns) {
             super(parent);
             this.theTable = theTable;
-            this.isPrimaryKeyColumns = isPrimaryKeyColumns;
         }
         
         @Override
@@ -1665,10 +1695,10 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
             Composite composite = (Composite)super.createDialogArea(parent);
             //------------------------------        
             // Set layout for the Composite
-            //------------------------------        
+            //------------------------------
             GridLayoutFactory.fillDefaults().applyTo(composite);
-            GridDataFactory.fillDefaults().grab(true, true).applyTo(composite);
-            
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
+
         	Group columnsGroup = WidgetFactory.createGroup(composite, Messages.selectColumnsTitle, SWT.NONE, 1, 2);
         	GridDataFactory.fillDefaults().grab(true, true).applyTo(columnsGroup);
 
@@ -1676,12 +1706,11 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
     		table.setHeaderVisible(false);
     		table.setLinesVisible(true);
     		table.setLayout(new TableLayout());
-    		GridDataFactory.fillDefaults().grab(true, true).applyTo(table);
 
     		this.columnDataViewer = new TableViewer(table);
-    		GridDataFactory.fillDefaults().grab(true, true).applyTo(this.columnDataViewer.getControl());
+    		GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).span(2, 1).applyTo(this.columnDataViewer.getControl());
     		this.columnDataViewer.setContentProvider(new ITreeContentProvider() {
-				
+
 				@Override
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 					// TODO Auto-generated method stub
@@ -1721,23 +1750,13 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
     		
     		this.columnDataViewer.setInput(this.theTable);
     		
-    		if( isPrimaryKeyColumns )  {
-    			for( RelationalColumn col : this.theTable.getPrimaryKey().getColumns() ) {
-    				for( TableItem item : columnDataViewer.getTable().getItems() ) {
-    	        		if( item.getData() == col ) {
-    	        			item.setChecked(true);
-    	        		}
-    	        	}
-    			}
-    		} else {
-    			for( RelationalColumn col : this.theTable.getUniqueContraint().getColumns() ) {
-    				for( TableItem item : columnDataViewer.getTable().getItems() ) {
-    	        		if( item.getData() == col ) {
-    	        			item.setChecked(true);
-    	        		}
-    	        	}
-    			}
-    		}
+			for( RelationalColumn col : this.theTable.getPrimaryKey().getColumns() ) {
+				for( TableItem item : columnDataViewer.getTable().getItems() ) {
+	        		if( item.getData() == col ) {
+	        			item.setChecked(true);
+	        		}
+	        	}
+			}
             
             setMessage(Messages.selectColumnsMessage);
             return composite;
@@ -1827,7 +1846,76 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 		@Override
 		public Image getImage(Object element) {
 			if( this.columnNumber == 0 ) {
-				return UiPlugin.getDefault().getImage(UiConstants.Images.COLUMN_ICON);
+				return UiPlugin.getDefault().getImage(UiConstants.Images.INDEX_ICON);
+			}
+			return null;
+		}
+	}
+    
+    class UniqueConstraintLabelProvider extends ColumnLabelProvider {
+
+		private final int columnNumber;
+
+		public UniqueConstraintLabelProvider(int columnNumber) {
+			this.columnNumber = columnNumber;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+		 */
+		@Override
+		public String getText(Object element) {
+			if( element instanceof RelationalUniqueConstraint ) {
+				switch (this.columnNumber) {
+					case 0: {
+						if(element instanceof RelationalUniqueConstraint) {
+							RelationalUniqueConstraint index = (RelationalUniqueConstraint)element;
+							
+							String value = index.getName();
+							
+							if(! index.getColumns().isEmpty() ) {
+								int i=0;
+								value = value + " : "; //$NON-NLS-1$
+								for( RelationalColumn col : index.getColumns()) {
+									value += col.getName();
+									i++;
+									if( i < index.getColumns().size()) {
+										value += ", "; //$NON-NLS-1$
+									}
+								}
+							}
+							return value;
+						}
+					}
+				}
+			}
+			return EMPTY_STRING;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
+		 */
+		@Override
+		public String getToolTipText(Object element) {
+			switch (this.columnNumber) {
+			case 0: {
+				return "Tooltip 1"; //getString("columnNameColumnTooltip"); //$NON-NLS-1$
+			}
+			case 1: {
+				return "Tooltip 2"; //getString("datatypeColumnTooltip"); //$NON-NLS-1$
+			}
+		}
+		return "unknown tooltip"; //$NON-NLS-1$
+		}
+
+		@Override
+		public Image getImage(Object element) {
+			if( this.columnNumber == 0 ) {
+				return UiPlugin.getDefault().getImage(UiConstants.Images.UC_ICON);
 			}
 			return null;
 		}
