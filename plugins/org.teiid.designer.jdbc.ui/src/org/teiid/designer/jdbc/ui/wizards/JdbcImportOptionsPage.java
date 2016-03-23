@@ -642,6 +642,11 @@ public class JdbcImportOptionsPage extends WizardPage implements
 	        
         }
         this.nameText.setText(name);
+        if( importer.getJBossJndiName() == null ) {
+        	this.jndiName = StringUtilities.removeXmiExtension(name) + "_DS";
+        	importer.setJBossJndiNameName(this.jndiName);
+        	this.jndiNameField.setText(this.jndiName);
+        }
         try {
             // Save object selections from previous page
             final JdbcSource src = wizard.getSource();

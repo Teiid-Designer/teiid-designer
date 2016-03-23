@@ -126,6 +126,10 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
                 throw new ModelWorkspaceException(err);
             }
         }
+        if( this.jbossJndiName == null ) {
+        	String modelName = this.updatedModel.getItemName();
+        	this.jbossJndiName = modelName + "_DS";
+        }
     }
 
     /**

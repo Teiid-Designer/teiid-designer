@@ -529,6 +529,14 @@ public class StringUtilities implements StringConstants {
             ++len;
         return len;
     } 
+    
+    public static String removeXmiExtension(String input) {
+    	if( input.toUpperCase().endsWith(".XMI") ) {
+    		return input.substring(0, input.length() - 4);
+    	}
+    	
+    	return input;
+    }
 
     private StringUtilities() {
     }

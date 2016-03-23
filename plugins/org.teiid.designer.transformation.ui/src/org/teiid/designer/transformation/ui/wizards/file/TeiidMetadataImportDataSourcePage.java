@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -180,7 +181,13 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
         if( this.info.getJBossJndiName() != null ) {
         	this.jndiNameField.setText(this.info.getJBossJndiName());
         } else {
-        	this.jndiNameField.setText(StringConstants.EMPTY_STRING);
+        	if( this.info.getSourceModelName() != null ) {
+        		this.jndiName = StringUtilities.removeXmiExtension(this.info.getSourceModelName()) + "_DS";
+                this.info.setJBossJndiNameName(this.jndiName);
+                this.jndiNameField.setText(this.info.getJBossJndiName());
+        	} else {
+        		this.jndiNameField.setText(StringConstants.EMPTY_STRING);
+        	}
         }
                 
         synchronizing = false;

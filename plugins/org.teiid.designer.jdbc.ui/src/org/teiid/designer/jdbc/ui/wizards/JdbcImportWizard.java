@@ -841,6 +841,7 @@ public class JdbcImportWizard extends AbstractWizard
                 }
                 sWatch.stop();
 
+                handleCreateDataSource();
 
                 sWatch.start(true);
                 ModelEditorManager.activate(ppProcessorPack.getModelFile(), true);
