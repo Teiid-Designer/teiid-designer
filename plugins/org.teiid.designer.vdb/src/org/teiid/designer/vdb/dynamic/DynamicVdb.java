@@ -698,6 +698,8 @@ public class DynamicVdb extends BasicVdb {
                 if( !StringUtilities.isEmpty(desc) ) {
                 	modelEntry.setDescription(desc);
                 }
+                
+                modelEntry.setVisible(dynModel.isVisible());
 
                 VdbSourceInfo sourceInfo = modelEntry.getSourceInfo();
                 sourceInfo.setIsMultiSource(dynModel.isMultiSource());

@@ -983,6 +983,7 @@ public final class XmiVdb extends BasicVdb {
                 DynamicModel model = new DynamicModel();
                 model.setName(entry.getName());
                 model.setDescription(entry.getDescription());
+                model.setVisible(entry.isVisible());
 
                 for (Map.Entry<Object, Object> prop : entry.getProperties().entrySet()) {
                     model.setProperty(prop.getKey().toString(), prop.getValue().toString());
