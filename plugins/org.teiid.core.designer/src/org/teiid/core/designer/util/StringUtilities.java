@@ -171,6 +171,16 @@ public class StringUtilities implements StringConstants {
     public static boolean isEmpty( final String text ) {
         return ((text == null) || (text.trim().length() == 0));
     }
+    
+    /**
+     * Indicates if the specified text is not empty or <code>null</code>.
+     * 
+     * @param text the text being checked (may be not be <code>null</code>)
+     * @return <code>true</code> if the specified text is not empty or <code>null</code>
+     */
+    public static boolean isNotEmpty( final String text ) {
+        return ((text != null) && (text.trim().length() > 0));
+    }
 
     /**
      * Returns a new string that lowercases the first character in the passed in value String

@@ -89,6 +89,7 @@ import org.teiid.designer.webservice.util.WebServiceUtil;
 /**
  * @since 8.0
  */
+@SuppressWarnings("restriction")
 public class PreviewDataWorker {
 	private static final String THIS_CLASS = I18nUtil.getPropertyPrefix(PreviewDataWorker.class);
 	
@@ -199,9 +200,9 @@ public class PreviewDataWorker {
 		// The deploying the vdb will generate a dynamic VDB that contains the minimum dependent models, tables
 		// and views to run a query against.
 		
-		IStatus status = manager.deployDynamicVdb();
-		
-		if( status.isOK() ) {
+//		IStatus status = manager.deployDynamicVdb();
+//		
+//		if( status.isOK() ) {
 			try {
 				// This method will also end up undeploying the dynamic VDB, removing all traces of it
 				internalRun(targetObject, planOnly);
@@ -209,9 +210,9 @@ public class PreviewDataWorker {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else {
-			DqpUiConstants.UTIL.log(status.getMessage());
-		}
+//		} else {
+//			DqpUiConstants.UTIL.log(status.getMessage());
+//		}
 	}
 	
     /**
@@ -226,13 +227,13 @@ public class PreviewDataWorker {
         final Shell shell = getShell();
         
         boolean isXML = false;
-        
-    	ModelResource mr = ModelUtilities.getModelResourceForModelObject(eObject);
 
-    	List accessPatternsColumns = null;
+    	@SuppressWarnings("rawtypes")
+		List accessPatternsColumns = null;
     	if (SqlAspectHelper.isTable(eObject)) {
     		SqlTableAspect tableAspect = (SqlTableAspect)SqlAspectHelper.getSqlAspect(eObject);
-    		Collection accessPatterns = tableAspect.getAccessPatterns(eObject);
+    		@SuppressWarnings("rawtypes")
+			Collection accessPatterns = tableAspect.getAccessPatterns(eObject);
 
     		if (accessPatterns != null && !accessPatterns.isEmpty()) {
     			// first need to type the collection since dialog requires typed collection
@@ -276,7 +277,8 @@ public class PreviewDataWorker {
     		isXML = true;
     	} else if (SqlAspectHelper.isProcedure(eObject)) {
     		SqlProcedureAspect procAspect = (SqlProcedureAspect)SqlAspectHelper.getSqlAspect(eObject);
-    		List<EObject> params = procAspect.getParameters(eObject);
+    		@SuppressWarnings("unchecked")
+			List<EObject> params = procAspect.getParameters(eObject);
             // create list - (only the IN and IN/OUT parameters)
             List<EObject> inParams = new ArrayList<EObject>();
             for (EObject param : params) {
@@ -316,6 +318,18 @@ public class PreviewDataWorker {
     	                                       "failed to produce valid SQL to execute", null)); //$NON-NLS-1$
     	    return;
     	}
+    	
+        PreviewDataInputDialog dialog = new PreviewDataInputDialog(getShell(), sql, manager.getDynamicVdbString());
+        
+        if( dialog.open() != Window.OK ) return;
+
+		IStatus status = manager.deployDynamicVdb();
+		if( status.isOK() ) {
+            sql = dialog.getSQL();
+		} else {
+			MessageDialog.openError(getShell(), "VDB Deployment Error", status.getMessage());
+		}
+    	
 
     	ITeiidServer defaultServer = getServerManager().getDefaultServer();
         try {
@@ -355,17 +369,19 @@ public class PreviewDataWorker {
                 executePlan(sqlConnection, sql, eObject, profile);
                 return;
             }
-            
+
             String labelStr = null;
             if (isXML) {
                 labelStr = getString("previewWithPlanFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
             } else {
                 labelStr = getString("previewWithPlanFor.label") + " " + ModelerCore.getModelEditor().getName(eObject); //$NON-NLS-1$ //$NON-NLS-2$                               
             }
+            
+            String finalSQL = dialog.getSQL();
 
             // This runnable executes the SQL and displays the results
             // in the DTP 'SQL Results' view.
-            executeSQLResultRunnable(sqlConnection, labelStr, sql, ID, config, profile, manager);
+            executeSQLResultRunnable(sqlConnection, labelStr, finalSQL, ID, config, profile, manager);
         } catch (Exception e) {
             DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
         }
@@ -567,7 +583,8 @@ public class PreviewDataWorker {
      */
     private ILaunchConfigurationWorkingCopy creatLaunchConfig( String sql,
                                                                DatabaseIdentifier ID ) throws CoreException {
-        ILaunchConfigurationWorkingCopy config = LaunchHelper.createExternalClientConfiguration(ID, "pvdb"); //$NON-NLS-1$
+
+		ILaunchConfigurationWorkingCopy config = LaunchHelper.createExternalClientConfiguration(ID, "pvdb"); //$NON-NLS-1$
         config.setAttribute(RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_SQL, sql);
         // ROUTINE_LAUNCH_TYPE 3 is ad-hoc SQL
         config.setAttribute(RoutineLaunchConfigurationAttribute.ROUTINE_LAUNCH_TYPE, 3);

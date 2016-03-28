@@ -128,6 +128,20 @@ public class CoreModelExtensionAssistant  extends EmfModelObjectExtensionAssista
     
     /**
      * @param modelResource the model resource
+     * @return vdb name property if exists
+     * @throws Exception if problem finding model annotation object
+     */
+    public String getVdbVersion(final ModelResource modelResource) throws Exception {
+    	if( modelResource.getModelAnnotation() != null) {
+    		String version = super.getPropertyValue(modelResource.getModelAnnotation(), PropertyName.VDB_VERSION.toString());
+    		return version;
+    	}
+    	
+    	return null;
+    }
+    
+    /**
+     * @param modelResource the model resource
      * @return if vdb name property exists then TRUE
      * @throws Exception if problem finding model annotation object
      */

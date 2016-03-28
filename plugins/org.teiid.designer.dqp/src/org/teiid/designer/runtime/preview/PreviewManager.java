@@ -14,8 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -32,7 +32,11 @@ import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionConstants;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.importer.Messages;
@@ -60,12 +64,6 @@ import net.jcip.annotations.ThreadSafe;
 public final class PreviewManager {
     private static final String DYNAMIC_VDB_SUFFIX = "-vdb.xml";  //$NON-NLS-1$
     public static final String IMPORT_SRC_MODEL = "SrcModel";  //$NON-NLS-1$
-    private static final String JNDI_PROPERTY_KEY = "jndi-name";  //$NON-NLS-1$
-    
-    /**
-     * The Teiid Instance being used for importers (may be <code>null</code>).
-     */
-    private volatile AtomicReference<ITeiidServer> importServer = new AtomicReference<ITeiidServer>();
     
     IStatus vdbDeploymentStatus = null;
     
@@ -96,7 +94,15 @@ public final class PreviewManager {
 		deploymentName = vdbName+DYNAMIC_VDB_SUFFIX;
 	}
 	
-	public String getDynamicVdbString() {
+	public String getDynamicVdbString() throws ModelWorkspaceException {
+		if( dynamicVdb == null ) {
+			try {
+				generateDynamicVdb();
+			} catch (ModelWorkspaceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return dynamicVdb;
 	}
 	
@@ -109,8 +115,9 @@ public final class PreviewManager {
 	}
 	
 	private void generateDynamicVdb() throws ModelWorkspaceException {
-		
-		dynamicVdb = createDynamicVdb(); 
+		if( dynamicVdb == null ) {
+			dynamicVdb = createDynamicVdb();
+		}
 	}
 	
     /**
@@ -228,17 +235,6 @@ public final class PreviewManager {
     	// Work remaining for progress monitor
     	int workRemaining = 100;
 
-        // If an import VDB with the supplied name exists, undeploy it first
-//        ITeiidVdb deployedImportVdb;
-//        try {
-//            deployedImportVdb = getImportServer().getVdb(vdbName);
-//            if( deployedImportVdb != null ) {
-//                getImportServer().undeployDynamicVdb(deployedImportVdb.getName());
-//            }
-//        } catch (Exception ex) {
-//            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerUndeployVdbError, vdbName));
-//            return resultStatus;
-//        }
         monitor.worked(10);
         workRemaining -= 10;
         
@@ -339,12 +335,21 @@ public final class PreviewManager {
         sb.append("\n\t<property name=\"UseConnectorMetadata\" value=\"true\" />"); //$NON-NLS-1$
         sb.append("\n\t<property name=\"deployment-name\" value=\""+ deploymentName +"\" />"); //$NON-NLS-1$ //$NON-NLS-2$
         
+        Collection<VdbSourceModelInfo> vdbImports = getVdbSourceModelInfos();
+        
+        for( VdbSourceModelInfo info : vdbImports ) {
+        	sb.append(info.getXml());
+        }
+        
         Collection<ModelFragmentInfo> modelFragments = getModelFragments();
         
         for( ModelFragmentInfo info : modelFragments ) {
         	sb.append(info.getModelXml());
         }
-        
+        String transOverrides = getTranslatorOverrides(modelFragments);
+        if( StringUtilities.isNotEmpty(transOverrides)) {
+        	sb.append(transOverrides);
+        }
         sb.append("\n</vdb>"); //$NON-NLS-1$
         return sb.toString();
     }
@@ -395,6 +400,47 @@ public final class PreviewManager {
             if(!isLoading || hasFailed || hasValidityErrors || isActive) return true;
         } while (System.currentTimeMillis() < waitUntil);
         return false;
+    }
+    
+    private String getTranslatorOverrides(Collection<ModelFragmentInfo> modelFragments) {
+        StringBuffer sb = new StringBuffer();
+        for( ModelFragmentInfo info : modelFragments ) {
+            final ConnectionInfoHelper helper = new ConnectionInfoHelper();
+            ModelResource mr = info.getModelResource();
+            String translatorType = helper.getTranslatorName(mr);
+        	if(!StringUtilities.isEmpty(translatorType)) {
+        		String translatorOverrideName = translatorType + "_override";
+                Properties translatorProps = helper.getTranslatorOverrideProperties(mr);
+                Properties nonNameProperties = new Properties();
+                for( Object key : translatorProps.keySet() ) {
+                	String keyStr = (String)key;
+                	String value = translatorProps.getProperty(keyStr);
+                	if( !keyStr.toUpperCase().equals("NAME") ) {
+                		nonNameProperties.put(keyStr, value);
+                	}
+                }
+                
+                if( !nonNameProperties.isEmpty() ) {
+                	/*
+						<translator name="PartsSQL2000_sqlserver" type="sqlserver">
+							<property name="supportsFullOuterJoins" value="true"/>
+							<property name="MaxInCriteriaSize" value="2000"/>
+						</translator> 
+					*/
+                    sb.append("\n\t\t<translator name=\""+ translatorOverrideName + "\" type=\"" + translatorType + "\" >"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    for( Object key : nonNameProperties.keySet() ) {
+                    	String keyStr = (String)key;
+                    	String value = nonNameProperties.getProperty(keyStr);
+                    	sb.append("\n\t\t\t<property name=\""+ keyStr + "\" value=\"" + value + "\" />"); //$NON-NLS-1$
+                    }
+                    sb.append("\n\t\t</translator>");
+
+                	
+                }
+        	}
+        }
+        
+        return sb.toString();
     }
     
     /**
@@ -461,6 +507,9 @@ public final class PreviewManager {
 	    	
 	    	for( EObject eObj : allDependentObjects ) {
 	    		ModelResource nextMR = getModelResource(eObj);
+	    		
+	    		if( isVdbSourceModel(nextMR) ) continue;
+	    		
 	    		boolean newMR = true;
 	    		for( ModelFragmentInfo info : modelFragments ) {
 	    			if( info.matchesModelResource(nextMR) ) {
@@ -479,12 +528,162 @@ public final class PreviewManager {
     	return modelFragments;
     }
     
+    private Collection<VdbSourceModelInfo> getVdbSourceModelInfos() throws ModelWorkspaceException {
+    	Collection<VdbSourceModelInfo> vdbSources = new ArrayList<VdbSourceModelInfo>();
+    	
+    	// Create the target fragment info
+    	ModelResource targetMR = getModelResource(targetObject);
+    	if( isVdbSourceModel(targetMR)) {
+    		String vdbName = getVdbName(targetMR);
+    		int version = 1;
+    		String versionStr = getVdbVersion(targetMR);
+    		if( StringUtilities.isNotEmpty(versionStr) ) {
+    			try {
+					version = Integer.parseInt(versionStr);
+				} catch (NumberFormatException ex) {
+					DqpPlugin.Util.log(IStatus.ERROR, ex, ex.getMessage());
+				}
+    		}
+    		vdbSources.add(new VdbSourceModelInfo(targetMR, vdbName, version));
+    	}
+
+    	
+    	boolean isVirtual = ModelType.VIRTUAL_LITERAL.equals(((EmfResource)targetMR.getEmfResource()).getModelAnnotation().getModelType());
+    	
+    	if( isVirtual ) {
+    		DependentObjectHelper helper = new DependentObjectHelper(targetObject);
+	    	Set<EObject> allDependentObjects = helper.getDependentObjects();
+	
+	    	
+	    	for( EObject eObj : allDependentObjects ) {
+	    		ModelResource nextMR = getModelResource(eObj);
+	        	if( isVdbSourceModel(nextMR)) {
+	        		String vdbName = getVdbName(nextMR);
+		    		boolean newMR = true;
+		    		for( VdbSourceModelInfo info : vdbSources ) {
+		    			if( info.matchesModelResource(nextMR) ) {
+		    				newMR = false;
+		    				break;
+		    			}
+		    		}
+		    		
+		    		if( newMR ) {
+		        		int version = 1;
+		        		String versionStr = getVdbVersion(targetMR);
+		        		if( StringUtilities.isNotEmpty(versionStr) ) {
+		        			try {
+		    					version = Integer.parseInt(versionStr);
+		    				} catch (NumberFormatException ex) {
+		    					DqpPlugin.Util.log(IStatus.ERROR, ex, ex.getMessage());
+		    				}
+		        		}
+		    			vdbSources.add(new VdbSourceModelInfo(nextMR, vdbName, version));
+		    		}
+	        	}
+	    	}
+    	}
+    	
+    	return vdbSources;
+    }
+    
     private ModelResource getModelResource(EObject eObj) {
         return ModelerCore.getModelEditor().findModelResource(eObj);
     }
     
     private ITeiidServer getDefaultServer() {
     	return DqpPlugin.getInstance().getServerManager().getDefaultServer();
+    }
+    
+    private boolean isVdbSourceModel(final ModelResource modelResource) {
+    	if (modelResource != null ) {
+    		try {
+        		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+    			CoreModelExtensionAssistant assistant = 
+    					(CoreModelExtensionAssistant)registry.getModelExtensionAssistant(CoreModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+    			
+    			if( assistant != null ) {
+    				return assistant.isVdbSourceModel(modelResource);
+    			}
+			} catch (Exception ex) {
+				DqpPlugin.Util.log(IStatus.ERROR, ex, ex.getMessage());
+			}
+    	}
+    	
+    	return false;
+    }
+    
+    private String getVdbName(final ModelResource modelResource) {
+    	if (modelResource != null ) {
+    		try {
+        		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+    			CoreModelExtensionAssistant assistant = 
+    					(CoreModelExtensionAssistant)registry.getModelExtensionAssistant(CoreModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+    			
+    			if( assistant != null ) {
+    				return assistant.getVdbName(modelResource);
+    			}
+			} catch (Exception ex) {
+				DqpPlugin.Util.log(IStatus.ERROR, ex, ex.getMessage());
+			}
+    	}
+    	
+    	return null;
+    }
+    
+    private String getVdbVersion(final ModelResource modelResource) {
+    	if (modelResource != null ) {
+    		try {
+        		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+    			CoreModelExtensionAssistant assistant = 
+    					(CoreModelExtensionAssistant)registry.getModelExtensionAssistant(CoreModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+    			
+    			if( assistant != null ) {
+    				return assistant.getVdbVersion(modelResource);
+    			}
+			} catch (Exception ex) {
+				DqpPlugin.Util.log(IStatus.ERROR, ex, ex.getMessage());
+			}
+    	}
+    	
+    	return null;
+    }
+    
+    class VdbSourceModelInfo {
+    	ModelResource modelResource;
+    	String vdbName;
+    	int version;
+    	
+    	public VdbSourceModelInfo(ModelResource mr, String vdbName, int version) {
+    		this.modelResource = mr;
+    		this.vdbName = vdbName;
+    		this.version = version;
+    	}
+    	
+		public ModelResource getModelResource() {
+			return modelResource;
+		}
+		
+		public String getVdbName() {
+			return vdbName;
+		}
+		
+		public int getVdbVersion() {
+			return version;
+		}
+		
+    	private boolean matchesModelResource(ModelResource mr) {
+    		return mr == modelResource;
+    	}
+    	
+    	private String getXml() {
+    		StringBuffer sb = new StringBuffer();
+    		/*
+    		<import-vdb name="common" version="1" import-data-policies="false"/>
+    		*/
+    		sb.append("\n\t<import-vdb name=\""+ vdbName + "\" version=\"" + version + "\" import-data-policies=\"false\"/>"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    		
+    		return sb.toString();
+    	}
     }
 
     /*

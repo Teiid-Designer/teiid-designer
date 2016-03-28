@@ -97,7 +97,14 @@ public class Messages extends NLS {
     public static String GenerateVdbButton_Tooltip;
 
     public static String GenerateVdbWizard_ConvertJobName;
-
+    
+    public static String PreviewDataInputDialog_previewDynamicVdbXmlTabLabel;
+    public static String PreviewDataInputDialog_sqlQueryLabel;
+    public static String PreviewDataInputDialog_previewSqlLabel;
+    public static String PreviewDataInputDialog_title;
+    public static String PreviewDataInputDialog_initialMessage;
+    public static String PreviewDataInputDialog_previewXMLLabel;
+    
     static {
         NLS.initializeMessages("org.teiid.designer.runtime.ui.messages", Messages.class); //$NON-NLS-1$
     }
