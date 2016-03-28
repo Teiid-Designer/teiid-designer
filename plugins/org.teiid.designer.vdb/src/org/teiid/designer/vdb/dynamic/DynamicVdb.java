@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,6 +32,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -40,6 +42,7 @@ import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.ModelBuildUtil;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -207,7 +210,7 @@ public class DynamicVdb extends BasicVdb {
                         DynamicModel model = new DynamicModel();
                         model.setName(element.getName());
                         model.setVisible(element.isVisible());
-
+                        model.setDescription(element.getDescription());
 
                         for (final PropertyElement property : element.getProperties()) {
                             final String name = property.getName();
@@ -637,6 +640,12 @@ public class DynamicVdb extends BasicVdb {
                     }
 
                     modelResource = importer.model();
+                     // Add model description
+                    String desc = dynModel.getDescription();
+                    if( !StringUtilities.isEmpty(desc) ) {
+                    	modelResource.getModelAnnotation().setDescription(desc);
+                    	modelResource.save(monitor, false);
+                    }
                 }
 
                 VdbModelEntry modelEntry = xmiVdb.addEntry(modelFile.getFullPath());
@@ -647,6 +656,13 @@ public class DynamicVdb extends BasicVdb {
                 for (Map.Entry<Object, Object> prop : dynModel.getProperties().entrySet()) {
                     modelEntry.setProperty(prop.getKey().toString(), prop.getValue().toString());
                 }
+                
+                String desc = dynModel.getDescription();
+                if( !StringUtilities.isEmpty(desc) ) {
+                	modelEntry.setDescription(desc);
+                }
+                
+                modelEntry.setVisible(dynModel.isVisible());
 
                 VdbSourceInfo sourceInfo = modelEntry.getSourceInfo();
                 sourceInfo.setIsMultiSource(dynModel.isMultiSource());
