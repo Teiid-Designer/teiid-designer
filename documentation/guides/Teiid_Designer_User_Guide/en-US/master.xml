@@ -2,7 +2,7 @@
 <!-- =============================================================================== 
  # JBoss, Home of Professional Open Source. 
  # 
- # Copyright (c) 2000, 2013 MetaMatrix, Inc. and Red Hat, Inc. 
+ # Copyright (c) 2000, 2016 MetaMatrix, Inc. and Red Hat, Inc. 
  # 
  # Some portions of this file may be copyrighted by other 
  # contributors and licensed to Red Hat, Inc. under one or more 
@@ -34,7 +34,7 @@
       </imageobject>
     </mediaobject>
     <copyright>
-      <year>2015
+      <year>2016
       </year>
       <holder>Red Hat, Inc.
       </holder>
