@@ -236,7 +236,8 @@
 			Instead, an &lt;import-vdb&gt; element (described above) reference is added in it's place.
 		</para>
 		<para>If VDB imports exist for a VDB, the <emphasis role="bold">Show Import VDBs</emphasis> button will be 
-			enabled and allow viewing the names of the imported VDBs as shown below.
+			enabled and allow viewing the names of the imported VDBs as shown below. Note that the dialog now supports editing of the version number for 
+			each referenced VDB.
 		</para>
 		<mediaobject>
 			<imageobject>

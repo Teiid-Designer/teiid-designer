@@ -76,7 +76,7 @@
                         <para>Teiid Server 8.0, 8.1, 8.2 and 8.3 versions installed on JBoss Server 7;</para>
                     </listitem>
                     <listitem>
-                        <para>Teiid Server 8.4 thru 8.7 installed on JBoss Server 7.1.1, 7.2 and EAP 6.1.</para>
+                        <para>Teiid Server 8.4 thru 8.12.4 installed on JBoss Server 7.1.1, 7.2 and EAP 6.1 or greater.</para>
                     </listitem>
                 </itemizedlist>
                 This allows multiple client runtime support from within a single installation of Teiid Designer. However, in order

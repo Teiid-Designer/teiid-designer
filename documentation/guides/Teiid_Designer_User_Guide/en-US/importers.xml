@@ -478,6 +478,26 @@
 					</listitem>
 					<listitem>
 						<para><emphasis role="bold">Step 5</emphasis> - The next page, 
+						titled <emphasis role="bold">Data Source Definition Options</emphasis>, 
+						provides the option for defining a unique JBoss JNDI name for the deployed 
+						data source that this imported model will prepresent. This name will be 
+						stored as a property on your model and changeable via the 
+						<emphasis role="bold">Modeling &gt; Set JBoss JNDI Data Source Name</emphasis> action. 
+						If there you have a default server defined and running, then
+						<emphasis role="bold">Auto-Create Data Source</emphasis> check box will be enabled.
+						On completion of this import, the wizard will check for an existing deployed data source
+						with this JNDI name and create one if needed.</para>
+						<para>When finished with this page, click <emphasis role="bold">
+						Next&gt;</emphasis>.</para>
+						<figure>
+							<title>Data File Source Selection Page</title>
+							<mediaobject><imageobject>
+							<imagedata fileref="images/screencaps/data-source-definition-options-page-flat-file.png"/>
+							</imageobject></mediaobject>
+						</figure>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 6</emphasis> - The next page, 
 						titled <emphasis role="bold">Flat File Column Format 
 						Definition</emphasis>, requires defining the format of your 
 						column data in the file. The options are <guibutton>Character 
@@ -495,7 +515,7 @@
 						</figure>
 					</listitem>
 					<listitem>
-						<para><emphasis role="bold">Step 6a : Character Delimited 
+						<para><emphasis role="bold">Step 7a : Character Delimited 
 						Option</emphasis> - The primary purpose of this importer is to 
 						help you create a view table containing the transformation 
 						required to query the user-defined data file. This page presents 
@@ -536,7 +556,7 @@
 						</figure>
 					</listitem>
 					<listitem>
-						<para><emphasis role="bold">Step 6b : Fixed Column Width 
+						<para><emphasis role="bold">Step 7b : Fixed Column Width 
 						Option</emphasis> - The primary purpose of this importer is to 
 						help you create a view table containing the transformation 
 						required to query the user-defined data file. This page presents 
@@ -566,7 +586,7 @@
 						</figure>
 					</listitem>
 					<listitem>
-						<para><emphasis role="bold">Step 7</emphasis> - On the 
+						<para><emphasis role="bold">Step 8</emphasis> - On the 
 						<emphasis role="bold">View Model Definition</emphasis> page, 
 						select the target folder location where your new view model will 
 						be created. You can also select an existing model for your new 
@@ -734,7 +754,27 @@
 						</figure>
 					</listitem>
 					<listitem>
-						<para><emphasis role="bold">Step 5</emphasis> - The primary 
+						<para><emphasis role="bold">Step 5</emphasis> - The next page, 
+						titled <emphasis role="bold">Data Source Definition Options</emphasis>, 
+						provides the option for defining a unique JBoss JNDI name for the deployed 
+						data source that this imported model will prepresent. This name will be 
+						stored as a property on your model and changeable via the 
+						<emphasis role="bold">Modeling &gt; Set JBoss JNDI Data Source Name</emphasis> action. 
+						If there you have a default server defined and running, then
+						<emphasis role="bold">Auto-Create Data Source</emphasis> check box will be enabled.
+						On completion of this import, the wizard will check for an existing deployed data source
+						with this JNDI name and create one if needed.</para>
+						<para>When finished with this page, click <emphasis role="bold">
+						Next&gt;</emphasis>.</para>
+						<figure>
+							<title>Data File Source Selection Page</title>
+							<mediaobject><imageobject>
+							<imagedata fileref="images/screencaps/data-source-definition-options-page-flat-file.png"/>
+							</imageobject></mediaobject>
+						</figure>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 6</emphasis> - The primary 
 						purpose of this importer is to help you create a view table 
 						containing the transformation required to query the user-defined 
 						data file. This page presents a number of options you can use to 
@@ -771,7 +811,7 @@
 						</figure>
 					</listitem>
 					<listitem>
-						<para><emphasis role="bold">Step 6</emphasis> - On the 
+						<para><emphasis role="bold">Step 7</emphasis> - On the 
 						<emphasis role="bold">View Model Definition</emphasis> page, 
 						select the target folder location where your new view model will 
 						be created. You can also select an existing model for your new 
@@ -1147,31 +1187,20 @@
 		</section>
 	</section>
 	<!-- 
-		####### WSDL AS SOURCE IMPORTER 
+		####### REST WEB SERVICE IMPORTER 
 		#########################################
 	 -->
-	<section id="wsdl-to-relational-import-section">
-		<title>Import WSDL into Relational Models</title>
-		<para>You can turn your WSDL file (local or URL) into a queryable 
-		relational procedures that represent your desired request and 
-		response web service structure defined through your WSDL&apos;s 
-		schema definition. This importer is accessed by launching 
-		Eclipse&apos;s &quot;Import...&quot; action and selecting the 
-		&quot;Teiid Designer &gt; WSDL File or URL &gt;&gt; Source and View 
-		Model (SOAP)&quot; option. <emphasis>Web Services Connection 
-		Profile</emphasis> defined by a WSDL file in your workspace or 
-		defined by a URL. Designer will interpret the WSDL, locate any 
-		associated or dependent XML schema files, generate a physical model 
-		to invoke the service, and generate virtual models containg 
-		procedures to build and parse the XML declared as the service 
-		messages.</para>
+	<section id="rest-web-service-import-section">
+		<title>Import Data From REST Service</title>
 		<itemizedlist>
 			<listitem>
-				<para>
-					To create relational models from 
-					<emphasis role="bold">WSDL</emphasis>
-					 use the steps below.
-					<itemizedlist>
+				<para>In addition to SOAP web services, Teiid supports REST web 
+				services as data sources. Using the steps below you will define 
+				your REST web service data source, select the elements to include 
+				in your generated view table and generate a source model containing 
+				the required Teiid procedure.</para>
+				<para>To import from your target REST web service source:</para>
+				<itemizedlist>
 						<listitem>
 							<para><emphasis role="bold">Step 1</emphasis> - In 
 							<emphasis role="bold">Model Explorer</emphasis> choose the 
@@ -1225,7 +1254,42 @@
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 6</emphasis> - This wizard 
+							<para><emphasis role="bold">Step 6</emphasis> - The next page, 
+							titled <emphasis role="bold">Data Source Definition Options</emphasis>, 
+							provides the option for defining a unique JBoss JNDI name for the deployed 
+							data source that this imported model will prepresent. This name will be 
+							stored as a property on your model and changeable via the 
+							<emphasis role="bold">Modeling &gt; Set JBoss JNDI Data Source Name</emphasis> action. 
+							If there you have a default server defined and running, then
+							<emphasis role="bold">Auto-Create Data Source</emphasis> check box will be enabled.
+							On completion of this import, the wizard will check for an existing deployed data source
+							with this JNDI name and create one if needed.</para>
+							<para>When finished with this page, click <emphasis role="bold">
+							Next&gt;</emphasis>.</para>
+							<figure>
+								<title>Data File Source Selection Page</title>
+								<mediaobject><imageobject>
+								<imagedata fileref="images/screencaps/import-wsdl-to-source-page-4.png"/>
+								</imageobject></mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 7</emphasis> - The next page 
+							entitled Operations Type Selection gives you the option to define custom procedures 
+							(Recommended)shown in <emphasis role="bold">Step 8 below</emphasis>.
+							or generate default procedures you can edit later. 
+							button to select existing folders or models.
+							If customer procedure is selected, click <emphasis role="bold">Next&gt;</emphasis> to proceed 
+							or <emphasis role="bold">Finish</emphasis> if default option is selected</para>
+							<figure>
+								<title>WSDL Source Selection</title>
+								<mediaobject><imageobject>
+								<imagedata fileref="images/screencaps/import-wsdl-to-source-page-5.png"/>
+								</imageobject></mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 8</emphasis> - This wizard 
 							generates both request and response procedures that are used in 
 							the queryable wrapped procedure. The next page, Procedure 
 							Definition, provides the means to define the details of your 
@@ -1250,7 +1314,7 @@
 							<figure>
 								<title>Procedure Definition Page</title>
 								<mediaobject><imageobject>
-								<imagedata fileref="images/screencaps/import-wsdl-to-source-page-4-request.png"/>
+								<imagedata fileref="images/screencaps/import-wsdl-to-source-page-6.png"/>
 								</imageobject></mediaobject>
 							</figure>
 						</listitem>
@@ -1261,198 +1325,6 @@
 							workspace.</para>
 						</listitem>
 					</itemizedlist>
-				</para>
-			</listitem>
-		</itemizedlist>
-		<para>In the <emphasis role="bold">Model Explorer</emphasis> you can 
-		see the importer created the following a single <emphasis role="bold">
-		physical model</emphasis> containing a single procedure called 
-		invoke. This model and procedure correspond to the single port 
-		declared in the WSDL.</para>
-		<para>A single <emphasis role="bold">view model</emphasis> was also 
-		created containing your new procedures named after the operations 
-		declared in the WSDL. For each operation a wrapper procedure was 
-		created which can be previewed in Designer. Below is an example 
-		dependency diagram showing the sources for the wrapper procedure as 
-		request, response procedures and the invoke() source procedure.</para>
-		<figure>
-			<title>Example Web Services Wrapper Procedure</title>
-			<mediaobject><imageobject>
-			<imagedata fileref="images/screencaps/import-wsdl-to-source-procedure-dependency-diagram.png"/>
-			</imageobject></mediaobject>
-		</figure>
-		<section>
-			<title>Circular References in WSDL Schemas</title>
-			<para>It is possible for a WSDL schema to either contain a very deep 
-			set of XML type references or indeed for such references to be 
-			circular. This is legal in the WSDL schema but can make processing 
-			the schema in Designer difficult. If left unchecked such circular 
-			references can result in a JVM <emphasis role="bold">
-			StackOverFlow</emphasis> exception and exiting of the 
-			application.</para>
-			<para>To mitigate this possibility a depth limit of 750 references 
-			has been introduced. Should the depth exceed this limit then a 
-			warning is displayed and further processing of that fragment of the 
-			schema will end. It may be the case that the reference in question 
-			is not circular but just very deep so in such a case it is possible 
-			to increase the depth limit by setting the JVM property 
-			<emphasis role="bold">WsdlSchemaHandlerRecursiveDepth</emphasis> to 
-			a larger value, eg. -D WsdlSchemaHandlerRecursiveDepth=800. This 
-			should only be used with caution as on some systems it is possible 
-			the JVM throws a <emphasis role="bold">StackOverFlow</emphasis> 
-			exception before the new depth limit is reached.</para>
-			<figure>
-				<title>Warning message displayed if depth limit has been 
-				reached</title>
-				<mediaobject><imageobject>
-				<imagedata fileref="images/screencaps/import-wsdl-to-source-procedure-depth-limit-warning.png"/>
-				</imageobject></mediaobject>
-			</figure>
-		</section>
-	</section>
-	<!-- 
-		####### REST WEB SERVICE IMPORTER 
-		#########################################
-	 -->
-	<section id="rest-web-service-import-section">
-		<title>Import Data From REST Service</title>
-		<itemizedlist>
-			<listitem>
-				<para>In addition to SOAP web services, Teiid supports REST web 
-				services as data sources. Using the steps below you will define 
-				your REST web service data source, select the elements to include 
-				in your generated view table and generate a source model containing 
-				the required Teiid procedure.</para>
-				<para>To import from your target REST web service source:</para>
-				<itemizedlist>
-					<listitem>
-						<para><emphasis role="bold">Step 1</emphasis> - In 
-						<emphasis role="bold">Model Explorer</emphasis> choose the 
-						<emphasis role="bold">File &gt; Import</emphasis> action 
-						<inlinemediaobject><imageobject>
-						<imagedata fileref="images/icons/import-wiz.png"/>
-						</imageobject></inlinemediaobject> in the toolbar or select a 
-						project, folder or model in the tree and choose 
-						<emphasis role="bold">Import...</emphasis></para>
-					</listitem>
-					<listitem>
-						<para><emphasis role="bold">Step 2</emphasis> - Select the import 
-						option <emphasis role="bold">Teiid Designer &gt; Web Service 
-						Source &gt;&gt; Source and View Model (REST)</emphasis> and click 
-						<emphasis role="bold">Next&gt;</emphasis></para>
-						<figure>
-							<title>Import from REST Web Service Source</title>
-							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/teiid-designer-import-options.png"/>
-							</imageobject></mediaobject>
-						</figure>
-					</listitem>
-					<listitem>
-						<para><emphasis role="bold">Step 3</emphasis> - Select existing 
-						or previous connection profile from the drop-down selector or 
-						press <guibutton>New...</guibutton> button to launch the 
-						<guilabel>New Connection Profile</guilabel> dialog or <guibutton>
-						Edit...</guibutton> to modify/change an existing connection 
-						profile prior to selection.</para>
-
-						<para>Name your new REST Connection Profile and click the 
-						<guibutton>Next &gt;</guibutton></para>
-						<figure>
-							<title>New REST Connection Profile</title>
-							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/rest-connection-profile.png"/>
-							</imageobject></mediaobject>
-						</figure>
-						<para>Set your REST URL in the Connection URL text field, the 
-						Response Type to either XML or JSON (depending upon what your 
-						target service is returning), and your Security Type and 
-						credentials, if applicable. There is also an option to add URL 
-						and Request Header parameters. The importer assumes an 
-						<emphasis role="bold">Accept</emphasis> header value of 
-						<emphasis role="bold">application/xml</emphasis> and a 
-						<emphasis role="bold">Content-Type</emphasis> header value of 
-						<emphasis role="bold">application/xml</emphasis>. These defaults 
-						can be overriden in the <emphasis role="bold">Optional Request 
-						Header Properties</emphasis> section. You can also add any other 
-						header properties required for the service. When adding a 
-						parameter you can specify URI or Query String, depending on what 
-						the target service is expecting. Click the <guibutton>Test 
-						Connection</guibutton> button to validate your connection 
-						properties are correct. Click <guibutton>Next &gt;</guibutton> to 
-						see a summary of your properties or click <guibutton>
-						Finish</guibutton>.</para>
-					</listitem>
-					<listitem>
-						<para><emphasis role="bold">Step 4</emphasis> - After selecting or creating a new <emphasis role="bold">
-						Connection Profile</emphasis>, the REST XML result from the 
-						connection profile will be displayed in the <emphasis role="bold">
-						Available Data Files</emphasis> panel. Check the data file you 
-						wish to process. The data from this web service, along with your 
-						custom import options, will be used to construct a view table 
-						with the required SQL transformation for querying your data and 
-						returning a result set.</para>
-						<para>When finished with this page, click <emphasis role="bold">
-						Next&gt;</emphasis>.</para>
-						<figure>
-							<title>REST Web Service Source Selection</title>
-							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/teiid-rest-source-page-2.png"/>
-							</imageobject></mediaobject>
-						</figure>
-						<para>Next enter or select unique source and view model names in their
-						respective sections and a name for your generated virtual procedure</para>
-						<note>
-							<para>The <emphasis role="bold">Model Status</emphasis> section 
-							which will indicate the validity of the model name, whether the 
-							model exists or not and whether the model already contains the 
-							getTextFiles() procedure. In this case, the source model nor the 
-							table will be generated.</para>
-						</note>
-						<para>When finished with this page, click <emphasis role="bold">
-						Next&gt;</emphasis>.</para>
-						<figure>
-							<title>REST Result Data File Source Selection Page</title>
-							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/teiid-rest-source-page-3.png"/>
-							</imageobject></mediaobject>
-						</figure>
-					</listitem>
-					<listitem>
-						<para><emphasis role="bold">Step 5</emphasis> - The primary 
-						purpose of this importer is to help you create a view procedure 
-						containing the transformations required to query the user-defined 
-						data file. The panel contains an XML tree view of your result 
-						contents and actions/buttons you can use to create column entries 
-						displayed in the middle, <emphasis role="bold">Column 
-						Information</emphasis> panel.</para>
-						<para>The root path is used for xpath parsing of the result 
-						document. The importer sets a root path for you. You can change 
-						the root path, if needed, by selecting an XML element and 
-						right-click select <guibutton>Set as root path</guibutton> 
-						action. Next, select columns in the tree that you wish to include 
-						on your query and select <guibutton>Add</guibutton> button. You 
-						can also modify or create custom columns, by using the <guibutton>
-						ADD</guibutton>, <guibutton>DELETE</guibutton>, <guibutton>
-						UP</guibutton>, <guibutton>DOWN</guibutton> to manage the column 
-						info in your SQL.</para>
-						<note>
-							<para>The <guibutton>Path</guibutton> property value for a 
-							column is the selected element&apos;s path relative to the 
-							defined root path. If no root path is defined all paths are 
-							absolute. Each column entry requires a datatype and an optional 
-							default value. See the Teiid User&apos;s Guide for details on 
-							the XMLTABLE() function.</para>
-						</note>
-						<para>Press <emphasis role="bold">Finish</emphasis> to generate 
-						your models and finish the wizard.</para>
-						<figure>
-							<title>REST Service Columns Selection Page</title>
-							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/teiid-rest-source-page-4.png"/>
-							</imageobject></mediaobject>
-						</figure>
-					</listitem>
-				</itemizedlist>
 			</listitem>
 		</itemizedlist>
 	</section>
@@ -1465,7 +1337,17 @@
 		<itemizedlist>
 			<listitem>
 				<para>In addition to REST web services, Teiid supports SOAP web 
-				services as data sources. Using the steps below you will define 
+				services as data sources. 
+				This importer is accessed by launching Eclipse&apos;s &quot;Import...&quot; action 
+				and selecting the &quot;Teiid Designer &gt; WSDL File or URL &gt;&gt; Source and View 
+				Model (SOAP)&quot; option. <emphasis>Web Services Connection 
+				Profile</emphasis> defined by a WSDL file in your workspace or 
+				defined by a URL. Designer will interpret the WSDL, locate any 
+				associated or dependent XML schema files, generate a physical model 
+				to invoke the service, and generate virtual models containg 
+				procedures to build and parse the XML declared as the service 
+				messages.</para>
+				<para>Using the steps below you will define 
 				your SOAP web service data source, select the elements to include 
 				in your generated view table and generate a source model containing 
 				the required Teiid procedure.</para>
@@ -1551,6 +1433,51 @@
 				</itemizedlist>
 			</listitem>
 		</itemizedlist>
+		<para>In the <emphasis role="bold">Model Explorer</emphasis> you can 
+		see the importer created the following a single <emphasis role="bold">
+		physical model</emphasis> containing a single procedure called 
+		invoke. This model and procedure correspond to the single port 
+		declared in the WSDL.</para>
+		<para>A single <emphasis role="bold">view model</emphasis> was also 
+		created containing your new procedures named after the operations 
+		declared in the WSDL. For each operation a wrapper procedure was 
+		created which can be previewed in Designer. Below is an example 
+		dependency diagram showing the sources for the wrapper procedure as 
+		request, response procedures and the invoke() source procedure.</para>
+		<figure>
+			<title>Example Web Services Wrapper Procedure</title>
+			<mediaobject><imageobject>
+			<imagedata fileref="images/screencaps/import-wsdl-to-source-procedure-dependency-diagram.png"/>
+			</imageobject></mediaobject>
+		</figure>
+		<section>
+			<title>Circular References in WSDL Schemas</title>
+			<para>It is possible for a WSDL schema to either contain a very deep 
+			set of XML type references or indeed for such references to be 
+			circular. This is legal in the WSDL schema but can make processing 
+			the schema in Designer difficult. If left unchecked such circular 
+			references can result in a JVM <emphasis role="bold">
+			StackOverFlow</emphasis> exception and exiting of the 
+			application.</para>
+			<para>To mitigate this possibility a depth limit of 750 references 
+			has been introduced. Should the depth exceed this limit then a 
+			warning is displayed and further processing of that fragment of the 
+			schema will end. It may be the case that the reference in question 
+			is not circular but just very deep so in such a case it is possible 
+			to increase the depth limit by setting the JVM property 
+			<emphasis role="bold">WsdlSchemaHandlerRecursiveDepth</emphasis> to 
+			a larger value, eg. -D WsdlSchemaHandlerRecursiveDepth=800. This 
+			should only be used with caution as on some systems it is possible 
+			the JVM throws a <emphasis role="bold">StackOverFlow</emphasis> 
+			exception before the new depth limit is reached.</para>
+			<figure>
+				<title>Warning message displayed if depth limit has been 
+				reached</title>
+				<mediaobject><imageobject>
+				<imagedata fileref="images/screencaps/import-wsdl-to-source-procedure-depth-limit-warning.png"/>
+				</imageobject></mediaobject>
+			</figure>
+		</section>
 	</section>
 	<!-- 
 		####### WSDL AS WEB SERVICE IMPORTER 

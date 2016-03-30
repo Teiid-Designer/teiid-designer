@@ -590,6 +590,10 @@
 	   		  updated based on how the VDB is configured. Since VDB's are just databases once they are deployed, they 
 	   		  can be used as sources to other view model transformations. This allows creating and deploying re-usable 
 	   		  or common VDB's in multiple layers depending on your business needs. </para>
+	   		  <para>Starting in Teiid Designer 9.0, support was added for converting between archive (ZIP) VDBs and simple 
+	   		  Dynamic VDB XML files. Dynamic VDBs provide users to define their source and view metadata via 
+	   		  Teiid DDL statements. This capability allows some users to maintain a simpler version of their VDBs 
+	   		  in a source control system.  (See the <xref linkend="vdb-dynamic-import-export"/> section for more details) </para>
 			
 		    <section id="vdb-content-and-structure">
     			<title>VDB Content and Structure</title>

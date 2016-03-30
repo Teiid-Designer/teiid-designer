@@ -132,5 +132,52 @@
             </figure>
 	    </para>
     </section>
+        <section id="legacy-user-defined-functions-section">
+	    <title>Using legacy UDF models</title>
+	    <para>
+			Function models have been deprecated and tooling support to create or edit them will be removed in Teiid Designer 11.0.
+			In 10.0, we've added a feature to convert the functions in your legacy function models into User Defined Functions (virtual procedures)
+			in a target view model.
+			<para>To convert your function model:
+	    	<itemizedlist>
+				<listitem>
+					<para><emphasis role="bold">Step 1</emphasis> - In the
+					<emphasis role="bold">Model Explorer</emphasis> select your function model and select the
+					<emphasis role="bold">Modeling &gt; Convert Legacy Functions to Virtual Procedures</emphasis> action.
+					</para>
+					<figure>
+						<title>Convert Legacy Functions to Virtual Procedures Action</title>
+						<mediaobject><imageobject>
+						<imagedata fileref="images/screencaps/convert-functions-to-procedures-action.png"/>
+						</imageobject></mediaobject>
+					</figure>
+			    </listitem>
+			  	<listitem>
+			    	<para><emphasis role="bold">Step 2</emphasis> - In the dialog, check the functions you wish to convert and
+			    	select the target virtual model and click <emphasis role="bold">OK&gt;</emphasis>.
+			    	</para>
+			    	<figure>
+						<title>Convert Legacy Functions Dialog</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/convert-functions-to-procedures-dialog.png"/>
+							</imageobject>
+						</mediaobject>
+					</figure>
+			    </listitem>
+		    </itemizedlist>
+	    </para>
+			<para>The selected scalar functions are now defined as virtual model User Defined Functions and available to use in
+			your transformations</para>
+			<figure>
+                <title>Converted Functions Diagram</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/screencaps/converted-functions-to-procedures-diagram.png" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+	    </para>
+    </section>
 </chapter>
     
