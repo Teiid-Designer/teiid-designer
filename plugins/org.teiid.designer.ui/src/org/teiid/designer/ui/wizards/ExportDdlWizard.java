@@ -148,6 +148,7 @@ public final class ExportDdlWizard extends AbstractWizard
     private static final String METADATA_GROUP = getString("metadataGroup"); //$NON-NLS-1$
     private static final String OPTIONS_GROUP = getString("optionsGroup"); //$NON-NLS-1$
     private static final String COMMENT_OPTIONS_GROUP = getString("commentOptionsGroup"); //$NON-NLS-1$
+    private static final String TYPE_LABEL = getString("typeLabel"); //$NON-NLS-1$
     private static final String USE_NAMES_IN_SOURCE_CHECKBOX = getString("useNamesInSourceCheckBox"); //$NON-NLS-1$
     private static final String USE_NATIVE_TYPE_CHECKBOX = getString("useNativeTypeCheckBox"); //$NON-NLS-1$
     private static final String FILE_GROUP = getString("fileGroup"); //$NON-NLS-1$
@@ -370,10 +371,10 @@ public final class ExportDdlWizard extends AbstractWizard
 
         Composite buttonComposite = new Composite(exportToGroup, SWT.NONE);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonComposite);
-        GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).applyTo(buttonComposite);
+        GridLayoutFactory.fillDefaults().numColumns(3).margins(10,2).applyTo(buttonComposite);
 
         final Composite exportToFilePanel = new Composite(exportToGroup, SWT.NONE);
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 50).applyTo(exportToFilePanel);
+        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 30).applyTo(exportToFilePanel);
         GridLayoutFactory.fillDefaults().numColumns(3).applyTo(exportToFilePanel);
 
         /* Contents of button composite */
@@ -589,11 +590,32 @@ public final class ExportDdlWizard extends AbstractWizard
         final DdlOptions options = this.writer.getOptions();
         final IDialogSettings settings = getDialogSettings();
 
+        final String type = settings.get(TYPE_LABEL);
+        if (type != null) {
+            options.setStyle(registry.getStyle(settings.get(TYPE_LABEL)));
+        }
         options.setNameInSourceUsed(settings.getBoolean(USE_NAMES_IN_SOURCE_CHECKBOX));
         options.setNativeTypeUsed(settings.getBoolean(USE_NATIVE_TYPE_CHECKBOX));
 
         group = WidgetFactory.createGroup(pg, OPTIONS_GROUP, GridData.FILL_HORIZONTAL, 1, 2);
         {
+            WidgetFactory.createLabel(group, TYPE_LABEL);
+            final Style style = options.getStyle();
+            this.typeCombo = WidgetFactory.createCombo(group,
+                                                       SWT.READ_ONLY,
+                                                       GridData.FILL_HORIZONTAL,
+                                                       new ArrayList(styles),
+                                                       style,
+                                                       comboLabelProvider);
+            this.typeCombo.addModifyListener(new ModifyListener() {
+                @Override
+				public void modifyText( final ModifyEvent event ) {
+                    typeModified();
+                }
+            });
+            if (style != null) {
+                this.typeCombo.setToolTipText(style.getDescription());
+            }
 
  
             this.useNamesInSourceCheckBox = WidgetFactory.createCheckBox(group,
