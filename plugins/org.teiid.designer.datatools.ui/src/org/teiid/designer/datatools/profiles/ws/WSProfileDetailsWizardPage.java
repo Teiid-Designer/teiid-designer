@@ -8,7 +8,6 @@
 package org.teiid.designer.datatools.profiles.ws;
 
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -26,11 +25,9 @@ import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.internal.ui.ConnectivityUIPlugin;
 import org.eclipse.datatools.connectivity.internal.ui.dialogs.ExceptionHandler;
-import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
@@ -51,7 +48,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.core.designer.util.StringConstants;
-import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.dialogs.ScrolledConnectionProfileDetailsPage;
@@ -59,7 +55,6 @@ import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.CredentialsComposite;
-import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 
 public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetailsPage implements DatatoolsUiConstants {
 
@@ -173,7 +168,7 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 
         responseTypeCombo.setVisibleItemCount(2);
         
-        credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER);
+        credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER, "rest"); //$NON-NLS-1$
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         credentialsComposite.setLayoutData(gd);

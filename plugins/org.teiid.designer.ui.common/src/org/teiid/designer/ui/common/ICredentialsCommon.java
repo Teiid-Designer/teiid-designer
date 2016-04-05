@@ -16,11 +16,13 @@ public interface ICredentialsCommon {
 
     String PASSWORD_PROP_ID = "AuthPassword"; //$NON-NLS-1$
     String USERNAME_PROP_ID = "AuthUserName"; //$NON-NLS-1$
-    String SECURITY_TYPE_ID = "SecurityType"; //$NON-NLS-1$ //None, HTTPBasic, WS-Security
+    String SECURITY_TYPE_ID = "SecurityType"; //$NON-NLS-1$ //None, HTTPBasic, HTTPDigest
     
-    enum SecurityType {
+    public enum SecurityType {
         None,
-        HTTPBasic;
+        HTTPBasic,
+        HTTPDigest;
+        
         
         /*
          * Disabled since it is not currently 

@@ -9,24 +9,30 @@ package org.teiid.designer.transformation.ui.wizards.rest;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthPolicy;
+import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
@@ -63,7 +69,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
-import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
@@ -95,21 +100,20 @@ import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 /**
  * @since 8.6
  */
-public class TeiidRestImportSourcePage extends AbstractWizardPage implements
-		UiConstants, InternalUiConstants.Widgets, CoreStringUtil.Constants {
+public class TeiidRestImportSourcePage extends AbstractWizardPage
+		implements UiConstants, InternalUiConstants.Widgets, CoreStringUtil.Constants {
 
 	// ===========================================================================================================================
 	// Constants
 
-	private static final String I18N_PREFIX = I18nUtil
-			.getPropertyPrefix(TeiidMetadataImportSourcePage.class);
+	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportSourcePage.class);
 
 	private static final String TITLE = getString("title"); //$NON-NLS-1$
 	private static final String REST_TITLE = getString("restTitle"); //$NON-NLS-1$
 	private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
 	private static final String REST_SOURCE_LABEL = getString("restSourceLabel"); //$NON-NLS-1$
-	private static final String NEW_BUTTON = "New..."; //Util.getString("Widgets.newLabel"); //$NON-NLS-1$
-	private static final String EDIT_BUTTON = "Edit..."; //Util.getString("Widgets.editLabel"); //$NON-NLS-1$
+	private static final String NEW_BUTTON = "New..."; // Util.getString("Widgets.newLabel"); //$NON-NLS-1$
+	private static final String EDIT_BUTTON = "Edit..."; // Util.getString("Widgets.editLabel"); //$NON-NLS-1$
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 	private static final String DOT_XML = ".XML"; //$NON-NLS-1$
 	private static final String DOT_XML_LOWER = ".xml"; //$NON-NLS-1$
@@ -119,18 +123,18 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	private static final String LOCAL_FILE_NAME_KEY = IXmlProfileConstants.LOCAL_FILE_PATH_PROP_ID;
 	private static final String FILE_URL_NAME_KEY = IXmlProfileConstants.URL_PROP_ID;
 
-	//private static final String CONTENT_TYPE_XML = "application/xml"; //$NON-NLS-1$
+	// private static final String CONTENT_TYPE_XML = "application/xml";
+	// //$NON-NLS-1$
 
 	private static final int DEFAULT_READING_SIZE = 8192;
 
 	private static String getString(final String id) {
 		return Util.getString(I18N_PREFIX + id);
 	}
-	
+
 	private static String getString(final String id, String arg) {
 		return Util.getString(I18N_PREFIX + id, arg);
 	}
-
 
 	private ILabelProvider srcLabelProvider;
 	private Combo srcCombo;
@@ -138,7 +142,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	private TableViewer fileViewer;
 	private DataFolderContentProvider fileContentProvider;
 	private TableViewerColumn fileNameColumn;
-	
+
 	Text responseTypeText;
 
 	private Map<String, Object> parameterMap;
@@ -159,7 +163,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	IConnectionInfoHelper connectionInfoHelper;
 
 	Properties designerProperties;
-	
+
 	boolean controlComplete = false;
 	boolean visibleCompleted = false;
 
@@ -177,14 +181,12 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	/**
 	 * @since 4.0
 	 */
-	public TeiidRestImportSourcePage(Object selection,
-			TeiidMetadataImportInfo info) {
+	public TeiidRestImportSourcePage(Object selection, TeiidMetadataImportInfo info) {
 		super(TeiidMetadataImportSourcePage.class.getSimpleName(), TITLE);
 		// Set page incomplete initially
 		this.info = info;
 		setPageComplete(false);
-		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(
-				Images.IMPORT_TEIID_METADATA));
+		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(Images.IMPORT_TEIID_METADATA));
 		this.connectionInfoHelper = new ConnectionInfoHelper();
 		this.parameterMap = new HashMap<String, Object>();
 	}
@@ -192,28 +194,28 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	@Override
 	public void createControl(Composite parent) {
 		controlComplete = false;
-		
-        final Composite hostPanel = new Composite(parent, SWT.NONE);
-        hostPanel.setLayout(new GridLayout(1, false));
-        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
-        
-        // Create page            
-        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel);
-        hostPanel.setLayout(new GridLayout(1, false));
-        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        final Composite mainPanel = scrolledComposite.getPanel();
-        mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
-        mainPanel.setLayout(new GridLayout(1, false));
+		final Composite hostPanel = new Composite(parent, SWT.NONE);
+		hostPanel.setLayout(new GridLayout(1, false));
+		hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		// Create page
+		DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel);
+		hostPanel.setLayout(new GridLayout(1, false));
+		hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		final Composite mainPanel = scrolledComposite.getPanel();
+		mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+		mainPanel.setLayout(new GridLayout(1, false));
 
 		// Add widgets to page
 
 		createProfileGroup(mainPanel);
 
 		createFolderContentsListGroup(mainPanel);
-		
+
 		scrolledComposite.sizeScrolledPanel();
-		
+
 		setControl(hostPanel);
 
 		setMessage(INITIAL_MESSAGE);
@@ -227,7 +229,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		// ---------------------------------------------------------------------------
 		Group profileGroup = WidgetFactory.createGroup(parent, REST_SOURCE_LABEL, SWT.NONE, 2, 3);
 		profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		((GridData)profileGroup.getLayoutData()).widthHint = 400;
+		((GridData) profileGroup.getLayoutData()).widthHint = 400;
 
 		this.srcLabelProvider = new LabelProvider() {
 
@@ -236,9 +238,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				return ((IConnectionProfile) source).getName();
 			}
 		};
-		this.srcCombo = WidgetFactory.createCombo(profileGroup, SWT.READ_ONLY,
-				GridData.FILL_HORIZONTAL, (ArrayList<IConnectionProfile>) this.connectionProfiles,
-				null, // this.src,
+		this.srcCombo = WidgetFactory.createCombo(profileGroup, SWT.READ_ONLY, GridData.FILL_HORIZONTAL,
+				(ArrayList<IConnectionProfile>) this.connectionProfiles, null, // this.src,
 				this.srcLabelProvider, true);
 		this.srcCombo.addSelectionListener(new SelectionListener() {
 
@@ -256,14 +257,13 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 		this.srcCombo.setVisibleItemCount(10);
 
-		WidgetFactory.createButton(profileGroup, NEW_BUTTON)
-				.addSelectionListener(new SelectionAdapter() {
+		WidgetFactory.createButton(profileGroup, NEW_BUTTON).addSelectionListener(new SelectionAdapter() {
 
-					@Override
-					public void widgetSelected(final SelectionEvent event) {
-						createNewConnectionProfile();
-					}
-				});
+			@Override
+			public void widgetSelected(final SelectionEvent event) {
+				createNewConnectionProfile();
+			}
+		});
 
 		editCPButton = WidgetFactory.createButton(profileGroup, EDIT_BUTTON);
 		editCPButton.addSelectionListener(new SelectionAdapter() {
@@ -275,8 +275,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		});
 
 		editCPButton.setEnabled(false);
-		
-		Composite responseTypePanel = WidgetFactory.createPanel(profileGroup,SWT.NONE, GridData.FILL_HORIZONTAL, 1, 2);
+
+		Composite responseTypePanel = WidgetFactory.createPanel(profileGroup, SWT.NONE, GridData.FILL_HORIZONTAL, 1, 2);
 		Label typeLabel = new Label(responseTypePanel, SWT.NONE);
 		typeLabel.setText("Response Type"); //$NON-NLS-1$
 
@@ -298,8 +298,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	private void createFolderContentsListGroup(Composite parent) {
 		String groupLabel = getString("folderRestContentsGroup"); //$NON-NLS-1$
 
-		Group folderContentsGroup = WidgetFactory.createGroup(parent,
-				groupLabel, SWT.FILL, 3, 3);
+		Group folderContentsGroup = WidgetFactory.createGroup(parent, groupLabel, SWT.FILL, 3, 3);
 		GridData gd_1 = new GridData(GridData.FILL_BOTH);
 		gd_1.heightHint = 180;
 		folderContentsGroup.setLayoutData(gd_1);
@@ -308,19 +307,19 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		locationLabel.setText(getString("folderLocation")); //$NON-NLS-1$
 
 		createFileTableViewer(folderContentsGroup);
-		
+
 		Button showFileContentsButton = new Button(folderContentsGroup, SWT.PUSH);
 		showFileContentsButton.setText("Show Contents"); //$NON-NLS-1$
 		showFileContentsButton.addSelectionListener(new SelectionListener() {
-			
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if( info.getSourceXmlFileInfo() != null ) {
-					FileUiUtils.INSTANCE.showFileContents(getShell(), info.getSourceXmlFileInfo().getDataFile(), 
+				if (info.getSourceXmlFileInfo() != null) {
+					FileUiUtils.INSTANCE.showFileContents(getShell(), info.getSourceXmlFileInfo().getDataFile(),
 							"Response Document", info.getSourceXmlFileInfo().getDataFile().getName()); //$NON-NLS-1$
 				}
 			}
-			
+
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -330,8 +329,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 	private void createFileTableViewer(Composite parent) {
 
-		Table table = new Table(parent, SWT.SINGLE | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.BORDER | SWT.CHECK);
+		Table table = new Table(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		table.setLayout(new TableLayout());
@@ -349,64 +347,57 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		// Check events can occur separate from selection events.
 		// In this case move the selected node.
 		// Also trigger selection of node in model.
-		this.fileViewer.getTable().addSelectionListener(
-				new SelectionListener() {
+		this.fileViewer.getTable().addSelectionListener(new SelectionListener() {
 
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						if (processingChecks) {
-							return;
-						}
-						processingChecks = true;
-						if (e.detail == SWT.CHECK) {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (processingChecks) {
+					return;
+				}
+				processingChecks = true;
+				if (e.detail == SWT.CHECK) {
 
-							TableItem tableItem = (TableItem) e.item;
-							boolean wasChecked = tableItem.getChecked();
+					TableItem tableItem = (TableItem) e.item;
+					boolean wasChecked = tableItem.getChecked();
 
-							if (tableItem.getData() instanceof File) {
-								fileViewer.getTable().setSelection(
-										new TableItem[] { tableItem });
-								if (wasChecked) {
-									for (TableItem item : fileViewer.getTable()
-											.getItems()) {
-										if (item != tableItem) {
-											item.setChecked(false);
-										}
-									}
+					if (tableItem.getData() instanceof File) {
+						fileViewer.getTable().setSelection(new TableItem[] { tableItem });
+						if (wasChecked) {
+							for (TableItem item : fileViewer.getTable().getItems()) {
+								if (item != tableItem) {
+									item.setChecked(false);
 								}
-
-								info.setDoProcessXml(
-										(File) tableItem.getData(), wasChecked);
 							}
 						}
-						processingChecks = false;
-						synchronizeUI();
-						validatePage();
-					}
 
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
+						info.setDoProcessXml((File) tableItem.getData(), wasChecked);
 					}
-				});
+				}
+				processingChecks = false;
+				synchronizeUI();
+				validatePage();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 
 		// create columns
 		fileNameColumn = new TableViewerColumn(this.fileViewer, SWT.LEFT);
 		if (this.info.getFileMode() == TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_URL) {
-			fileNameColumn.getColumn().setText("XML Data File URL"); //getString("dataFileNameColumn")); //$NON-NLS-1$
+			fileNameColumn.getColumn().setText("XML Data File URL"); // getString("dataFileNameColumn")); //$NON-NLS-1$
 		} else {
-			fileNameColumn.getColumn().setText(
-					getString("xmlDataFileNameColumn")); //$NON-NLS-1$
+			fileNameColumn.getColumn().setText(getString("xmlDataFileNameColumn")); //$NON-NLS-1$
 		}
-		fileNameColumn
-				.setLabelProvider(new DataFileContentColumnLabelProvider());
+		fileNameColumn.setLabelProvider(new DataFileContentColumnLabelProvider());
 		fileNameColumn.getColumn().pack();
 	}
 
 	void profileComboSelectionChanged() {
 		boolean changed = false;
 		if (this.srcCombo.getSelectionIndex() > -1) {
-			String cpName = this.srcCombo.getItem(this.srcCombo
-					.getSelectionIndex());
+			String cpName = this.srcCombo.getItem(this.srcCombo.getSelectionIndex());
 			for (IConnectionProfile profile : this.connectionProfiles) {
 				if (profile.getName().equalsIgnoreCase(cpName)) {
 					changed = setConnectionProfile(profile, false);
@@ -435,19 +426,20 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 	private boolean setConnectionProfile(IConnectionProfile profile, boolean wasEdited) {
 		IConnectionProfile existingProfile = info.getConnectionProfile();
-		
-		if (existingProfile == null){
-			//If existingProfile == null continue since this is a new CP and we want to update the page.
-		}else if  
-		 (!wasEdited && profile != null && existingProfile.getName().equals(profile.getName())) {
+
+		if (existingProfile == null) {
+			// If existingProfile == null continue since this is a new CP and we
+			// want to update the page.
+		} else if (!wasEdited && existingProfile != null && profile != null
+				&& existingProfile.getName().equals(profile.getName())) {
 			return false;
 		}
-		
+
 		if (profile == null || isInvalidXmlFileProfile(profile)) {
 			this.fileViewer.setInput(null);
 			clearFileListViewer();
 		}
-		
+
 		this.parameterMap.clear();
 
 		this.info.setConnectionProfile(profile);
@@ -469,11 +461,9 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 	private boolean isValidProfileForPage(IConnectionProfile profile) {
 		boolean isValid = false;
-		if (this.info.isXmlLocalFileMode()
-				&& profile.getProviderId().equalsIgnoreCase(XML_FILE_ID)) {
+		if (this.info.isXmlLocalFileMode() && profile.getProviderId().equalsIgnoreCase(XML_FILE_ID)) {
 			isValid = true;
-		} else if (this.info.isRestUrlFileMode() 
-				&& profile.getProviderId().equalsIgnoreCase(TEIID_WS_ID)) {
+		} else if (this.info.isRestUrlFileMode() && profile.getProviderId().equalsIgnoreCase(TEIID_WS_ID)) {
 			isValid = true;
 		}
 		return isValid;
@@ -499,6 +489,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		if (getConnectionProfile() != null) {
 			File theXmlFile = getFileForConnectionProfile(getConnectionProfile());
 			String urlString = getUrlStringForConnectionProfile();
+			String securityType = getSecurityTypeForConnectionProfile();
 
 			if (theXmlFile != null) {
 				if (theXmlFile.exists() && theXmlFile.isFile()) {
@@ -510,30 +501,28 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				// This will be the case if No XML is defined and URL
 				// version exists OR if nothing is defined in CP
 				fileViewer.setInput("no input"); //$NON-NLS-1$
-				
+
 				if (isRestConnectionProfile()) {
 					xmlFile = getXmlFileFromRestUrl(getConnectionProfile());
 				} else {
-					xmlFile = getXmlFileFromUrl(urlString);
+					xmlFile = getXmlFileFromUrl(securityType, urlString);
 				}
-//				if( this.modelsDefinitionSection.getXmlFileInfo() == null ) {
-					if (xmlFile != null && xmlFile.exists()) {
-						setXmlFile(xmlFile, true, urlString);
-					}
-//				} else if (xmlFile != null && xmlFile.exists() ) {
-//					resetXmlFile(xmlFile);
-//				}
+				// if( this.modelsDefinitionSection.getXmlFileInfo() == null ) {
+				if (xmlFile != null && xmlFile.exists()) {
+					setXmlFile(xmlFile, true, urlString);
+				}
+				// } else if (xmlFile != null && xmlFile.exists() ) {
+				// resetXmlFile(xmlFile);
+				// }
 			} else {
 				fileViewer.setInput(null);
-				MessageDialog.openError(this.getShell(),
-						getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
+				MessageDialog.openError(this.getShell(), getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
 						getString("invalidRESTConnectionProfileMessage")); //$NON-NLS-1$
 			}
 		}
 	}
 
-	private int write(final OutputStream out, final InputStream is)
-			throws IOException {
+	private int write(final OutputStream out, final InputStream is) throws IOException {
 		byte[] l_buffer = new byte[DEFAULT_READING_SIZE];
 		int writen = 0;
 		try {
@@ -557,27 +546,24 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	private File getXmlFileFromRestUrl(IConnectionProfile profile) {
 		Properties props = profile.getBaseProperties();
 		String endpoint = ConnectionInfoHelper.readEndPointProperty(props);
-		String username = (String) props
-				.get(ICredentialsCommon.USERNAME_PROP_ID);
-		String password = (String) props
-				.get(ICredentialsCommon.PASSWORD_PROP_ID);
+		String username = (String) props.get(ICredentialsCommon.USERNAME_PROP_ID);
+		String password = (String) props.get(ICredentialsCommon.PASSWORD_PROP_ID);
 		File xmlFile = null;
 		File jsonFile = null;
 		FileOutputStream fos = null;
-		
-    	for( Object key : props.keySet() )  {
-    		String keyStr = (String)key;
-    		
-    		if( keyStr.startsWith(Parameter.PREFIX) ||
-    			keyStr.startsWith(Parameter.HEADER_PREFIX)) {
-    			Parameter newParam = new Parameter(keyStr, props.getProperty((String)key));
-    			parameterMap.put(newParam.getName(), newParam);
-    		}
-    	}
-		
+
+		for (Object key : props.keySet()) {
+			String keyStr = (String) key;
+
+			if (keyStr.startsWith(Parameter.PREFIX) || keyStr.startsWith(Parameter.HEADER_PREFIX)) {
+				Parameter newParam = new Parameter(keyStr, props.getProperty((String) key));
+				parameterMap.put(newParam.getName(), newParam);
+			}
+		}
+
 		String responseType = IWSProfileConstants.XML;
-		if(  props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY) != null) {
-			responseType = (String)props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY);
+		if (props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY) != null) {
+			responseType = (String) props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY);
 		}
 		responseTypeText.setText(responseType);
 
@@ -585,82 +571,79 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 			endpoint = getUrl(endpoint, parameterMap);
 			final URL url = new URL(endpoint);
-			final HttpURLConnection httpConn = (HttpURLConnection) url
-					.openConnection();
+			final URI uri = new URI(endpoint);
+			GetMethod httpget = new GetMethod(uri.toString());
+			String securityType = (String) props.get(ICredentialsCommon.SECURITY_TYPE_ID);
 			String filePath = formatPath(url);
+			boolean secure = (username != null && !username.isEmpty());
 
-			// TODO Validate content is XML
-			// if(
-			// !CONTENT_TYPE_XML.equalsIgnoreCase(httpConn.getContentType())) {
-			// return null;
-			// }
-
-			if (username != null && !username.isEmpty()) {
-				httpConn.setRequestProperty(
-						IWSProfileConstants.AUTHORIZATION_KEY,
-						"Basic " + Base64.encodeBytes((username + ':' + password).getBytes())); //$NON-NLS-1$
+			HttpClient client = new HttpClient();
+			if (secure){
+				client.getState().setCredentials(new AuthScope(uri.getHost(), uri.getPort()),
+						new UsernamePasswordCredentials(username, password));
+				List<String> authPrefs = new ArrayList<String>(1);
+				if (securityType.equals(ICredentialsCommon.SecurityType.HTTPBasic.toString())) {
+					authPrefs.add(AuthPolicy.BASIC);
+				} else if (securityType.equals(ICredentialsCommon.SecurityType.HTTPDigest.toString())) {
+					authPrefs.add(AuthPolicy.DIGEST);
+				}
+				client.getParams().setParameter(AuthPolicy.AUTH_SCHEME_PRIORITY, authPrefs);
 			}
 
-			httpConn.setDoOutput(false);
 			if (props.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY) != null) {
-				httpConn.setRequestProperty(
-						IWSProfileConstants.ACCEPT_PROPERTY_KEY, (String) props
-								.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY));
+				httpget.addRequestHeader(IWSProfileConstants.ACCEPT_PROPERTY_KEY,
+						(String) props.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY));
 			} else {
-				if( responseType.equalsIgnoreCase(IWSProfileConstants.JSON) ) {
-					httpConn.setRequestProperty(
-							IWSProfileConstants.ACCEPT_PROPERTY_KEY,
+				if (responseType.equalsIgnoreCase(IWSProfileConstants.JSON)) {
+					httpget.addRequestHeader(IWSProfileConstants.ACCEPT_PROPERTY_KEY,
 							IWSProfileConstants.CONTENT_TYPE_JSON_VALUE);
 				} else {
-					httpConn.setRequestProperty(
-							IWSProfileConstants.ACCEPT_PROPERTY_KEY,
+					httpget.addRequestHeader(IWSProfileConstants.ACCEPT_PROPERTY_KEY,
 							IWSProfileConstants.ACCEPT_DEFAULT_VALUE);
 				}
 			}
 
 			if (props.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY) != null) {
-				httpConn.setRequestProperty(
-						IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY,
-						(String) props
-								.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY));
+				httpget.addRequestHeader(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY,
+						(String) props.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY));
 			} else {
-				httpConn.setRequestProperty(
-						IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY,
+				httpget.addRequestHeader(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY,
 						IWSProfileConstants.CONTENT_TYPE_DEFAULT_VALUE);
 			}
 
 			for (Object key : props.keySet()) {
 				String keyStr = (String) key;
-				if (IWSProfileConstants.AUTHORIZATION_KEY
-						.equalsIgnoreCase(keyStr)
-						|| ICredentialsCommon.PASSWORD_PROP_ID
-								.equalsIgnoreCase(keyStr)
-						|| ICredentialsCommon.SECURITY_TYPE_ID
-								.equalsIgnoreCase(keyStr)
-						|| ICredentialsCommon.USERNAME_PROP_ID
-								.equalsIgnoreCase(keyStr)
-						|| IWSProfileConstants.END_POINT_URI_PROP_ID
-								.equalsIgnoreCase(keyStr)
-						|| IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY
-								.equalsIgnoreCase(keyStr)
-						|| IWSProfileConstants.ACCEPT_PROPERTY_KEY
-								.equalsIgnoreCase(keyStr)
-						|| IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY
-								.equalsIgnoreCase(keyStr)
-						|| IWSProfileConstants.PARAMETER_MAP
-								.equalsIgnoreCase(keyStr)
+				if (IWSProfileConstants.AUTHORIZATION_KEY.equalsIgnoreCase(keyStr)
+						|| ICredentialsCommon.PASSWORD_PROP_ID.equalsIgnoreCase(keyStr)
+						|| ICredentialsCommon.SECURITY_TYPE_ID.equalsIgnoreCase(keyStr)
+						|| ICredentialsCommon.USERNAME_PROP_ID.equalsIgnoreCase(keyStr)
+						|| IWSProfileConstants.END_POINT_URI_PROP_ID.equalsIgnoreCase(keyStr)
+						|| IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY.equalsIgnoreCase(keyStr)
+						|| IWSProfileConstants.ACCEPT_PROPERTY_KEY.equalsIgnoreCase(keyStr)
+						|| IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY.equalsIgnoreCase(keyStr)
+						|| IWSProfileConstants.PARAMETER_MAP.equalsIgnoreCase(keyStr)
 						|| keyStr.startsWith(Parameter.PREFIX)) {
 					// do nothing;
 				} else {
-					httpConn.setRequestProperty(getKey(keyStr),
-							getValue(props.getProperty(keyStr)));
+					httpget.addRequestHeader(getKey(keyStr), getValue(props.getProperty(keyStr)));
 				}
 			}
 
-			InputStream is = httpConn.getInputStream();
-			if (props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY)==null || IWSProfileConstants.XML.equals(props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY))) {
-				xmlFile = File.createTempFile(
-						CoreStringUtil.createFileName(filePath), DOT_XML_LOWER);
+			int code =0;
+			if (secure) {
+				client.getParams().setAuthenticationPreemptive(true); 
+				httpget.setDoAuthentication(true);
+					code = client.executeMethod(httpget);
+			} else {
+				client.getParams().setAuthenticationPreemptive(false); 
+				httpget.setDoAuthentication(false);
+				code = client. executeMethod(httpget);
+			}
+			
+			InputStream is = httpget.getResponseBodyAsStream(); 
+			if (props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY) == null
+					|| IWSProfileConstants.XML.equals(props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY))) {
+				xmlFile = File.createTempFile(CoreStringUtil.createFileName(filePath), DOT_XML_LOWER);
 				fos = new FileOutputStream(xmlFile);
 				write(fos, is);
 			} else {
@@ -670,37 +653,31 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				xmlFile = convertJsonToXml(jsonFile);
 			}
 
-		} catch (MalformedURLException ex) {
+		} catch (
+
+		MalformedURLException ex) {
 			Util.log(ex);
-			MessageDialog.openError(this.getShell(),
-					getString("malformedUrlErrorTitle"), //$NON-NLS-1$
+			MessageDialog.openError(this.getShell(), getString("malformedUrlErrorTitle"), //$NON-NLS-1$
 					getString("malformedUrlErrorMessage") + ex.getMessage()); //$NON-NLS-1$
 		} catch (ProtocolException ex) {
 			Util.log(ex);
-			MessageDialog.openError(this.getShell(),
-					getString("protocolErrorTitle"), //$NON-NLS-1$
+			MessageDialog.openError(this.getShell(), getString("protocolErrorTitle"), //$NON-NLS-1$
 					getString("protocolUrlErrorMessage") + ex.getMessage()); //$NON-NLS-1$
 
-		} catch (FileNotFoundException fnfex) {
-			Util.log(fnfex);
-			MessageDialog.openError(this.getShell(), getString("fileNotFoundTitle"), //$NON-NLS-1$
-					getString("fileNotFoundMessage") + fnfex.getMessage()); //$NON-NLS-1$
 		} catch (IOException ex) {
 			Util.log(ex);
 			MessageDialog.openError(this.getShell(), getString("ioErrorTitle"), //$NON-NLS-1$
 					getString("ioErrorMessage") + ex.getMessage()); //$NON-NLS-1$
 		} catch (Exception ex) {
-			if( ex instanceof JSONException ) { //$NON-NLS-1$
-				
+			if (ex instanceof JSONException) { // $NON-NLS-1$
+
 				String message = getString("invalidRESTResponseTypeMessage", responseType); //$NON-NLS-1$
-				message+="\r\n"+ex.getLocalizedMessage();
-				MessageDialog.openError(this.getShell(),
-						getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
-						message); //$NON-NLS-1$
+				message += "\r\n" + ex.getLocalizedMessage(); //$NON-NLS-1$
+				MessageDialog.openError(this.getShell(), getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
+						message); // $NON-NLS-1$
 			} else {
-				MessageDialog.openError(this.getShell(),
-						getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
-						ex.getLocalizedMessage()); //$NON-NLS-1$
+				MessageDialog.openError(this.getShell(), getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
+						ex.getLocalizedMessage()); // $NON-NLS-1$
 			}
 		} finally {
 			try {
@@ -720,24 +697,26 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	 * @return
 	 */
 	private String getKey(String keyStr) {
-		if (keyStr.startsWith(Parameter.HEADER_PREFIX)) keyStr = keyStr.substring(keyStr.indexOf(":")+1);
+		if (keyStr.startsWith(Parameter.HEADER_PREFIX))
+			keyStr = keyStr.substring(keyStr.indexOf(":") + 1); //$NON-NLS-1$
 		return keyStr;
 	}
-	
+
 	/**
 	 * @param value
 	 * @return
 	 */
 	private String getValue(String value) {
-		if (value.startsWith(Parameter.Type.Header.name())) value = value.substring(value.indexOf(":")+1);
+		if (value.startsWith(Parameter.Type.Header.name()))
+			value = value.substring(value.indexOf(":") + 1); //$NON-NLS-1$
 		return value;
 	}
-	
+
 	/**
 	 * @param jsonFile
 	 * @return
-	 * @throws IOException 
-	 * @throws JSONException 
+	 * @throws IOException
+	 * @throws JSONException
 	 */
 	private File convertJsonToXml(File jsonFile) throws IOException, Exception {
 
@@ -750,14 +729,14 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		}
-		if (jsonText.trim().startsWith("[")) {
+		if (jsonText.trim().startsWith("[")) { //$NON-NLS-1$
 			isArray = true;
 		}
-			
-		if (isArray){
+
+		if (isArray) {
 			JSONArray jsonArray = new JSONArray(jsonText);
 			xml = "<response>" + XML.toString(jsonArray, "response") + "</response>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		} else{
+		} else {
 			JSONObject jsonObject = new JSONObject(jsonText);
 			xml = XML.toString(jsonObject, "response"); //$NON-NLS-1$
 		}
@@ -779,20 +758,15 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		return buf.toString();
 	}
 
-	private File getXmlFileFromUrl(String urlString) {
+	private File getXmlFileFromUrl(String securityType, String urlString) {
 		File xmlFile = null;
 		URL newUrl = null;
 		try {
 			newUrl = URLHelper.buildURL(urlString);
 		} catch (MalformedURLException e) {
 			Util.log(e);
-			MessageDialog
-					.openError(
-							this.getShell(),
-							getString("malformedUrlErrorTitle"), //$NON-NLS-1$
-							UiConstants.Util
-									.getString(
-											"malformedUrlErrorMessage", urlString, e.getMessage())); //$NON-NLS-1$
+			MessageDialog.openError(this.getShell(), getString("malformedUrlErrorTitle"), //$NON-NLS-1$
+					UiConstants.Util.getString("malformedUrlErrorMessage", urlString, e.getMessage())); //$NON-NLS-1$
 		}
 
 		if (newUrl != null) {
@@ -807,8 +781,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			if (resolved) {
 				try {
 					String filePath = formatPath(newUrl);
-					xmlFile = URLHelper.createFileFromUrl(newUrl,
-							CoreStringUtil.createFileName(filePath),
+					xmlFile = URLHelper.createFileFromUrl(newUrl, CoreStringUtil.createFileName(filePath),
 							DOT_XML_LOWER);
 				} catch (MalformedURLException theException) {
 					Util.log(theException);
@@ -839,10 +812,10 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 	/**
 	 * @return
-	 * @throws UnsupportedEncodingException 
+	 * @throws UnsupportedEncodingException
 	 */
-	private String buildParameterString(String url,
-			Map<String, Parameter> parameterMap) throws UnsupportedEncodingException {
+	private String buildParameterString(String url, Map<String, Parameter> parameterMap)
+			throws UnsupportedEncodingException {
 
 		StringBuilder parameterString = new StringBuilder();
 		if (parameterMap == null)
@@ -851,13 +824,14 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		for (String key : parameterMap.keySet()) {
 			Parameter value = parameterMap.get(key);
 			if (value.getType() == Parameter.Type.URI) {
-				parameterString.append(url.endsWith("/") ? StringConstants.EMPTY_STRING : "/").append(value.getDefaultValue()); //$NON-NLS-1$ //$NON-NLS-2$
+				parameterString.append(url.endsWith("/") ? StringConstants.EMPTY_STRING : "/") //$NON-NLS-1$ //$NON-NLS-2$
+						.append(value.getDefaultValue());
 			}
 			if (value.getType() == Parameter.Type.Query) {
 				if (parameterString.length() == 0 || !parameterString.toString().contains("?")) { //$NON-NLS-1$
 					parameterString.append("?"); //$NON-NLS-1$
 				} else {
-					parameterString.append("&"); //$NON-NLS-1$  
+					parameterString.append("&"); //$NON-NLS-1$
 				}
 				parameterString.append(encodeString(key)).append("=").append(encodeString(value.getDefaultValue())); //$NON-NLS-1$
 			}
@@ -865,37 +839,36 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 		return parameterString.toString();
 	}
-	
+
 	private String encodeString(String str) throws UnsupportedEncodingException {
-		return  URLEncoder.encode(str, Charset.defaultCharset().displayName());
+		return URLEncoder.encode(str, Charset.defaultCharset().displayName());
 	}
-	
 
 	private void setXmlFile(File xmlFile, boolean isUrl, String urlString) {
 		fileViewer.setInput(xmlFile);
-		
+
 		TeiidXmlFileInfo oldFileInfo = this.info.getXmlFileInfo(xmlFile);
 		String oldVPName = null;
-		if( oldFileInfo != null ) {
+		if (oldFileInfo != null) {
 			oldVPName = oldFileInfo.getViewProcedureName();
 			this.info.clearXmlFileInfos();
 		} else {
-			if( !this.info.getXmlFileInfos().isEmpty() ) {
+			if (!this.info.getXmlFileInfos().isEmpty()) {
 				this.info.clearXmlFileInfos();
 			}
 		}
-		
+
 		TeiidXmlFileInfo fileInfo = new TeiidXmlFileInfo(xmlFile);
-		if( oldVPName != null ) {
+		if (oldVPName != null) {
 			fileInfo.setViewProcedureName(oldVPName);
 		}
-		
+
 		fileInfo.setIsUrl(isUrl);
 		if (isUrl) {
 			fileInfo.setParameterMap(this.parameterMap);
 			fileInfo.setXmlFileUrl(urlString);
 			Properties props = getConnectionProfile().getBaseProperties();
-			fileInfo.setResponseType((String)props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY));
+			fileInfo.setResponseType((String) props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY));
 		}
 
 		this.info.addXmlFileInfo(fileInfo);
@@ -904,26 +877,24 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		info.setDoProcessXml(fileInfo.getDataFile(), true);
 		fileParsingStatus = fileInfo.getParsingStatus();
 		if (fileParsingStatus.getSeverity() == IStatus.ERROR) {
-			MessageDialog.openError(this.getShell(),
-					getString("parsingErrorTitle"), //$NON-NLS-1$
+			MessageDialog.openError(this.getShell(), getString("parsingErrorTitle"), //$NON-NLS-1$
 					fileParsingStatus.getMessage());
 		}
 		this.info.setSourceXmlFileInfo();
 	}
-	
+
 	private void resetXmlFile(File xmlFile) {
 		fileViewer.setInput(xmlFile);
-		
+
 		TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(xmlFile);
-		
+
 		fileViewer.getTable().select(0);
 		fileViewer.getTable().getItem(0).setChecked(true);
-		if( fileInfo != null ) {
+		if (fileInfo != null) {
 			info.setDoProcessXml(fileInfo.getDataFile(), true);
 			fileParsingStatus = fileInfo.getParsingStatus();
 			if (fileParsingStatus.getSeverity() == IStatus.ERROR) {
-				MessageDialog.openError(this.getShell(),
-						getString("parsingErrorTitle"), //$NON-NLS-1$
+				MessageDialog.openError(this.getShell(), getString("parsingErrorTitle"), //$NON-NLS-1$
 						fileParsingStatus.getMessage());
 			}
 		}
@@ -970,8 +941,26 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		if (getConnectionProfile() != null) {
 			Properties props = getConnectionProfile().getBaseProperties();
 			if (isRestConnectionProfile()) {
-				String fileListValue = ConnectionInfoHelper
-						.readEndPointProperty(props);
+				String fileListValue = ConnectionInfoHelper.readEndPointProperty(props);
+				if (fileListValue != null) {
+					return fileListValue;
+				}
+			} else {
+				String fileListValue = (String) props.get(FILE_URL_NAME_KEY);
+				if (fileListValue != null) {
+					return fileListValue;
+				}
+			}
+		}
+
+		return null;
+	}
+	
+	private String getSecurityTypeForConnectionProfile() {
+		if (getConnectionProfile() != null) {
+			Properties props = getConnectionProfile().getBaseProperties();
+			if (isRestConnectionProfile()) {
+				String fileListValue = ConnectionInfoHelper.readEndPointProperty(props);
 				if (fileListValue != null) {
 					return fileListValue;
 				}
@@ -1001,13 +990,12 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		// TeiidXmlConnectionOptionsDialog dialog = new
 		// TeiidXmlConnectionOptionsDialog(Display.getCurrent().getActiveShell());
 
-		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent()
-				.getActiveShell(), wiz);
+		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
 		wizardDialog.setBlockOnOpen(true);
 
 		CPListener listener = new CPListener();
 		ProfileManager.getInstance().addProfileListener(listener);
-		
+
 		if (wizardDialog.open() == Window.OK) {
 
 			refreshConnectionProfiles();
@@ -1016,15 +1004,15 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			setConnectionProfile(listener.getChangedProfile(), true);
 
 			selectProfile(listener.getChangedProfile());
-			
+
 			profileComboSelectionChanged();
 			loadFileListViewer();
-			
+
 			synchronizeUI();
 			validatePage();
 			this.editCPButton.setEnabled(getConnectionProfile() != null);
 		}
-		
+
 		ProfileManager.getInstance().removeProfileListener(listener);
 	}
 
@@ -1042,16 +1030,14 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 	void resetCPComboItems() {
 		if (this.srcCombo != null) {
-			WidgetUtil.setComboItems(this.srcCombo, this.connectionProfiles,
-					this.srcLabelProvider, true);
+			WidgetUtil.setComboItems(this.srcCombo, this.connectionProfiles, this.srcLabelProvider, true);
 		}
 	}
 
 	void editConnectionProfile() {
 		if (getConnectionProfile() != null) {
 			IConnectionProfile currentProfile = getConnectionProfile();
-			EditConnectionProfileAction action = new EditConnectionProfileAction(
-					getShell(), currentProfile);
+			EditConnectionProfileAction action = new EditConnectionProfileAction(getShell(), currentProfile);
 
 			CPListener listener = new CPListener();
 			ProfileManager.getInstance().addProfileListener(listener);
@@ -1068,42 +1054,37 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 				// Need to clear the file info
 				info.clearXmlFileInfos();
-				
+
 				info.setSourceXmlFileInfo();
-				
+
 				setConnectionProfile(null, false);
-				
+
 				selectConnectionProfile(currentProfile.getName());
 
 				ProfileManager.getInstance().removeProfileListener(listener);
 
-				//profileComboSelectionChanged();
+				// profileComboSelectionChanged();
 			}
-			
+
 			ProfileManager.getInstance().removeProfileListener(listener);
 		}
 	}
-
-
-
-
 
 	void synchronizeUI() {
 		synchronizing = true;
 
 		String fileName = EMPTY_STRING;
 
- 		for (TeiidXmlFileInfo fileInfo : this.info.getXmlFileInfos()) {
+		for (TeiidXmlFileInfo fileInfo : this.info.getXmlFileInfos()) {
 			if (fileInfo.doProcess()) {
 				fileName = fileInfo.getDataFile().getName();
 				break;
 			}
 		}
-//		this.selectedFileText.setText(fileName);
+		// this.selectedFileText.setText(fileName);
 
 		synchronizing = false;
 	}
-
 
 	public void selectConnectionProfile(String name) {
 		if (name == null) {
@@ -1130,8 +1111,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	private void setProfileFromProperties() {
 		// Check for Connection Profile in properties
 		if (this.designerProperties != null) {
-			String profileName = DesignerPropertiesUtil
-					.getConnectionProfileName(this.designerProperties);
+			String profileName = DesignerPropertiesUtil.getConnectionProfileName(this.designerProperties);
 			if (profileName != null && !profileName.isEmpty()) {
 				// Select profile
 				selectConnectionProfile(profileName);
@@ -1145,15 +1125,11 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		final IConnectionProfile[] tempProfiles = profileManager
 				.getProfilesByCategory(IXmlProfileConstants.TEIID_CATEGORY);
 		for (final IConnectionProfile profile : tempProfiles) {
-			if (this.info.isXmlLocalFileMode()
-					&& profile.getProviderId().equalsIgnoreCase(XML_FILE_ID)) {
+			if (this.info.isXmlLocalFileMode() && profile.getProviderId().equalsIgnoreCase(XML_FILE_ID)) {
 				connectionProfiles.add(profile);
-			} else if (this.info.isXmlUrlFileMode()
-					&& profile.getProviderId()
-							.equalsIgnoreCase(XML_URL_FILE_ID)) {
+			} else if (this.info.isXmlUrlFileMode() && profile.getProviderId().equalsIgnoreCase(XML_URL_FILE_ID)) {
 				connectionProfiles.add(profile);
-			} else if (this.info.isRestUrlFileMode()
-					&& profile.getProviderId().equalsIgnoreCase(TEIID_WS_ID)) {
+			} else if (this.info.isRestUrlFileMode() && profile.getProviderId().equalsIgnoreCase(TEIID_WS_ID)) {
 				connectionProfiles.add(profile);
 			}
 		}
@@ -1167,7 +1143,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			setThisPageComplete(getString("noRestConnectionProfileSelected"), ERROR);//$NON-NLS-1$
 			return false;
 		}
-
 
 		// Check for model file selected
 		boolean fileSelected = false;
@@ -1191,7 +1166,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 		return true;
 	}
-
 
 	protected void setThisPageComplete(String message, int severity) {
 		WizardUtil.setPageComplete(this, message, severity);
@@ -1298,8 +1272,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		 */
 		@Override
 		public Object getParent(Object theElement) {
-			return ((theElement instanceof File) ? ((File) theElement)
-					.getParentFile() : null);
+			return ((theElement instanceof File) ? ((File) theElement).getParentFile() : null);
 		}
 
 		/**
@@ -1318,8 +1291,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		 * @since 4.2
 		 */
 		@Override
-		public void inputChanged(Viewer theViewer, Object theOldInput,
-				Object theNewInput) {
+		public void inputChanged(Viewer theViewer, Object theOldInput, Object theNewInput) {
 		}
 	}
 
@@ -1364,8 +1336,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-		
-		
 
 		if (visible) {
 			this.setTitle(REST_TITLE);
@@ -1401,7 +1371,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 			setProfileFromProperties();
 			validatePage();
-			
+
 			visibleCompleted = true;
 		}
 	}

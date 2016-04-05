@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.datatools.help.ContextProviderDelegate;
@@ -49,8 +50,10 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -68,6 +71,7 @@ import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.CredentialsComposite;
 
 public class PropertyPage extends ProfileDetailsPropertyPage implements
 		IContextProvider, DatatoolsUiConstants {
@@ -76,16 +80,11 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	private ContextProviderDelegate contextProviderDelegate = new ContextProviderDelegate(
 			DatatoolsUiPlugin.getDefault().getBundle().getSymbolicName());
 	private Composite scrolled;
-	private Label usernameLabel;
-	private Text usernameText;
-	private Label passwordLabel;
-	private Text passwordText;
 	private Label urlLabel;
 	private Text urlText;
 	private Label urlPreviewLabel;
 	Text urlPreviewText;
-	private Text securityText;
-	private Label securityLabel;
+	private CredentialsComposite credentialsComposite;
 	private Map<String, Parameter> parameterMap = new LinkedHashMap<String, Parameter>();
 	private Label responseTypeLabel;
     private Combo responseTypeCombo; 
@@ -154,55 +153,15 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         gd.grabExcessHorizontalSpace = true;
         gd.horizontalSpan = 1;
         urlText.setLayoutData(gd);
-
-        securityLabel = new Label(scrolled, SWT.NONE);
-        securityLabel.setText(UTIL.getString("Common.Security.Type.Label")); //$NON-NLS-1$
-        securityLabel.setToolTipText(UTIL.getString("Common.Security.Type.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.verticalAlignment = GridData.CENTER;
-        securityLabel.setLayoutData(gd);
-
-        securityText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
-        securityText.setToolTipText(UTIL.getString("Common.Security.Type.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.horizontalAlignment = GridData.FILL;
-        gd.verticalAlignment = GridData.BEGINNING;
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalSpan = 1;
-        securityText.setLayoutData(gd);
-
-        usernameLabel = new Label(scrolled, SWT.NONE);
-        usernameLabel.setText(UTIL.getString("Common.Username.Label")); //$NON-NLS-1$
-        usernameLabel.setToolTipText(UTIL.getString("Common.Username.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.verticalAlignment = GridData.CENTER;
-        usernameLabel.setLayoutData(gd);
-
-        usernameText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
-        usernameText.setToolTipText(UTIL.getString("Common.Username.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.horizontalAlignment = GridData.FILL;
-        gd.verticalAlignment = GridData.BEGINNING;
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalSpan = 1;
-        usernameText.setLayoutData(gd);
-
-        passwordLabel = new Label(scrolled, SWT.NONE);
-        passwordLabel.setText(UTIL.getString("Common.Password.Label")); //$NON-NLS-1$
-        passwordLabel.setToolTipText(UTIL.getString("Common.Password.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.verticalAlignment = GridData.CENTER;
-        passwordLabel.setLayoutData(gd);
-
-        passwordText = new Text(scrolled, SWT.SINGLE | SWT.BORDER | SWT.PASSWORD);
-        passwordText.setToolTipText(UTIL.getString("Common.Password.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.horizontalAlignment = GridData.FILL;
-        gd.verticalAlignment = GridData.BEGINNING;
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalSpan = 1;
-        passwordText.setLayoutData(gd);
         
+        Label spacerLabel = new Label(scrolled, SWT.NONE);
+        spacerLabel.setVisible(false);
+        GridDataFactory.swtDefaults().grab(false, false).applyTo(spacerLabel);
+
+        credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER, "rest");  //$NON-NLS-1$
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        credentialsComposite.setLayoutData(gd);
+
         responseTypeLabel = new Label(scrolled, SWT.NONE);
         responseTypeLabel.setText(UTIL.getString("Common.ResponseType.Label")); //$NON-NLS-1$
         responseTypeLabel.setToolTipText(UTIL.getString("Common.ResponseType.ToolTip")); //$NON-NLS-1$
@@ -370,36 +329,19 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
      * 
      */
     private void addlisteners() {
-        usernameText.addModifyListener(new ModifyListener() {
+    	
+    	 Listener listener = new Listener() {
 
-            @Override
-            public void modifyText( ModifyEvent e ) {
-                validate();
-            }
-        });
-
-        passwordText.addModifyListener(new ModifyListener() {
-
-            @Override
-            public void modifyText( ModifyEvent e ) {
-                validate();
-            }
-        });
-
-        urlText.addModifyListener(new ModifyListener() {
-
-            @Override
-            public void modifyText( ModifyEvent e ) {
-                validate();
-            }
-        });
-        securityText.addModifyListener(new ModifyListener() {
-
-            @Override
-            public void modifyText( ModifyEvent e ) {
-                validate();
-            }
-        });
+             @Override
+             public void handleEvent(Event event) {
+                 validate();
+             }
+         };
+    	
+        urlText.addListener(SWT.Modify, listener);
+        credentialsComposite.addSecurityOptionListener(SWT.Modify, listener);
+        credentialsComposite.addUserNameListener(SWT.Modify, listener);
+        credentialsComposite.addPasswordListener(SWT.Modify, listener);
 
     }
 
@@ -412,34 +354,6 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
             setErrorMessage(errorMessage);
             setValid(valid);
             return;
-        }
-        //An empty or null security type value is treated the same as "None"
-        String securityType = securityText.getText();
-        if (securityType!=null && (!securityType.trim().equals(StringConstants.EMPTY_STRING) &&
-        	!SecurityType.None.name().equals(securityType)) &&
-                !SecurityType.HTTPBasic.name().equals(securityText.getText())) {
-        	errorMessage = UTIL.getString("Common.Security.Error.Message"); //$NON-NLS-1$
-    		valid = false;
-    		setErrorMessage(errorMessage);
-            setValid(valid);
-            return;
-        }
-        if (securityType!=null && !securityType.trim().equals(StringConstants.EMPTY_STRING) &&
-           (!SecurityType.None.name().equals(securityType))) {
-        	if (null == passwordText.getText() || passwordText.getText().isEmpty()) {
-        		errorMessage = UTIL.getString("Common.Password.Error.Message"); //$NON-NLS-1$
-        		valid = false;
-        		setErrorMessage(errorMessage);
-                setValid(valid);
-                return;
-        	}
-        	if (null == usernameText.getText() || usernameText.getText().isEmpty()) {
-        		errorMessage = UTIL.getString("Common.Username.Error.Message"); //$NON-NLS-1$
-        		valid = false;
-        		setErrorMessage(errorMessage);
-                setValid(valid);
-                return;
-        	}
         }
         setErrorMessage(errorMessage);
         setValid(valid);
@@ -456,18 +370,24 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         // Check properties and load any existing parameters into parametersMap
         loadParameters(props);
         
-        if (null != props.get(ICredentialsCommon.USERNAME_PROP_ID)) {
-            usernameText.setText((String)props.get(ICredentialsCommon.USERNAME_PROP_ID));
+        String securityType = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
+        if (null != securityType) {
+            credentialsComposite.setSecurityOption(securityType);
         }
-        if (null != props.get(ICredentialsCommon.PASSWORD_PROP_ID)) {
-            passwordText.setText((String)props.get(ICredentialsCommon.PASSWORD_PROP_ID));
+
+        String username = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
+        if (null != username) {
+            credentialsComposite.setUserName(username);
         }
+
+        String password = props.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
+        if (null != password) {
+            credentialsComposite.setPassword(password);
+        }
+        
         String url = ConnectionInfoHelper.readEndPointProperty(props);
         if (null != url) {
             urlText.setText(url);
-        }
-        if (null != props.get(ICredentialsCommon.SECURITY_TYPE_ID)) {
-            securityText.setText((String)props.get(ICredentialsCommon.SECURITY_TYPE_ID));
         }
         
         if (null != props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY)) {
@@ -521,9 +441,13 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
             result = new Properties();
         }
         result.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, urlText.getText());
-        result.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, securityText.getText().trim());
-        result.setProperty(ICredentialsCommon.USERNAME_PROP_ID, usernameText.getText());
-        result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, passwordText.getText());
+        result.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, credentialsComposite.getSecurityOption().name());
+        if( credentialsComposite.getUserName() != null ) {
+        	result.setProperty(ICredentialsCommon.USERNAME_PROP_ID, credentialsComposite.getUserName());
+        }
+        if( credentialsComposite.getPassword() != null) {
+        	result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, credentialsComposite.getPassword());
+        }
         result.setProperty(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY, responseTypeCombo.getText());
         
         Properties extraProps = getExtraProperties();
