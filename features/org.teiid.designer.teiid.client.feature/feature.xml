@@ -2,7 +2,7 @@
 <feature
       id="org.teiid.designer.teiid.client.feature"
       label="Teiid Runtime Clients"
-      version="9.0.6.qualifier"
+      version="9.0.7.qualifier"
       provider-name="%providerName">
 
    <description url="www.jboss.org/projects/teiiddesigner">

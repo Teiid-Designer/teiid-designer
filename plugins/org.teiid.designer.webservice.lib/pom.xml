@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>org.teiid.designer.webservice.lib</artifactId>
-	<version>9.0.6-SNAPSHOT</version>
+	<version>9.0.7-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 	<properties>
 		<war.lib.dir>webapps/WEB-INF/lib</war.lib.dir>
