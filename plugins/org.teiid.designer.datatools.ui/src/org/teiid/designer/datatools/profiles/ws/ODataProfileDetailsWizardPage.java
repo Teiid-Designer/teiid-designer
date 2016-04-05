@@ -116,7 +116,7 @@ public class ODataProfileDetailsWizardPage extends ConnectionProfileDetailsPage 
         spacerLabel.setVisible(false);
         GridDataFactory.swtDefaults().grab(false, false).applyTo(spacerLabel);
         
-        credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER);
+        credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER, "odata"); //$NON-NLS-1$
         gd = new GridData(GridData.FILL_HORIZONTAL);
         credentialsComposite.setLayoutData(gd);
 

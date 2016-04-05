@@ -35,7 +35,7 @@ public class CredentialsComposite extends Composite implements UiConstants, List
 
     private Label securityLabel;
 
-    private Combo securityCombo;
+    protected Combo securityCombo;
 
     private Label usernameLabel;
 
@@ -51,13 +51,13 @@ public class CredentialsComposite extends Composite implements UiConstants, List
      * Need to stash the inputted values since they may be retrieved after the
      * composite has been disposed.
      */
-    private SecurityType securityType = SecurityType.None;
+    protected SecurityType securityType = SecurityType.None;
 
     private String password;
 
     private String userName;
 
-    public CredentialsComposite(Composite parent, int style) {
+    public CredentialsComposite(Composite parent, int style, String wsType) {
         super(parent, style);
         GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(this);
 
@@ -67,10 +67,16 @@ public class CredentialsComposite extends Composite implements UiConstants, List
         GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(securityLabel);
 
         securityCombo = new Combo(this, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+        if ("rest".equals(wsType)){ //$NON-NLS-1$
+      		 securityCombo.setItems(new String[] { SecurityType.None.name(),
+      	                SecurityType.HTTPBasic.name(),  SecurityType.HTTPDigest.name() });
+      	        securityCombo.setText(SecurityType.None.name());
+   	   	}else{
+   	   		 securityCombo.setItems(new String[] { SecurityType.None.name(),
+   		                SecurityType.HTTPBasic.name() });
+   		        securityCombo.setText(SecurityType.None.name());
+   	   	}
         securityCombo.setToolTipText(Util.getString(PREFIX + "Common.Context.Factory.ToolTip")); //$NON-NLS-1$
-        securityCombo.setItems(new String[] { SecurityType.None.name(),
-                SecurityType.HTTPBasic.name() });
-        securityCombo.setText(SecurityType.None.name());
         securityCombo.addListener(SWT.Modify, this);
         GridDataFactory.swtDefaults().grab(false, false).applyTo(securityCombo);
 
@@ -97,8 +103,6 @@ public class CredentialsComposite extends Composite implements UiConstants, List
         GridDataFactory.fillDefaults().grab(true, false).applyTo(passwordText);
     }
     
-    
-
     /*
      * (non-Javadoc)
      * 

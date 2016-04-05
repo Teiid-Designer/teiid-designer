@@ -120,7 +120,7 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
         spacerLabel.setVisible(false);
         GridDataFactory.swtDefaults().grab(false, false).applyTo(spacerLabel);
 
-        credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER);
+        credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER, "soap"); //$NON-NLS-1$
         gd = new GridData(GridData.FILL_HORIZONTAL);
         credentialsComposite.setLayoutData(gd);
 

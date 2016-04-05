@@ -44,7 +44,7 @@ public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implemen
         String securityTypeId = source.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
         SecurityType securityType = SecurityType.retrieveValue(securityTypeId);
         switch (securityType) {
-            case HTTPBasic:
+            case HTTPBasic: case HTTPDigest:
                 String username = source.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
                 if (username == null) {
                     username = source.getProperty(IWSProfileConstants.DS_AUTH_USER_NAME);

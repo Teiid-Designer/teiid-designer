@@ -239,7 +239,7 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, UiConstant
         //
         // Username / password composite
         //
-        credentialsComposite = new CredentialsComposite(panel, SWT.BORDER);
+        credentialsComposite = new CredentialsComposite(panel, SWT.BORDER, "soap"); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(credentialsComposite);
 
         //
