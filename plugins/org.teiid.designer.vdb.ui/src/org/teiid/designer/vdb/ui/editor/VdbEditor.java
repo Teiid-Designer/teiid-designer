@@ -579,44 +579,51 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         CTabFolder tabFolder = WidgetFactory.createTabFolder(pnlBottom);
 
         { // roles tab
-            CTabItem rolesTab = new CTabItem(tabFolder, SWT.NONE);
-            rolesTab.setText(i18n("rolesTab")); //$NON-NLS-1$
-            rolesTab.setToolTipText(i18n("rolesTabToolTip")); //$NON-NLS-1$
-            Composite pnlRoles = new Composite(tabFolder, SWT.NONE);
-            pnlRoles.setLayout(new GridLayout());
-            pnlRoles.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            rolesTab.setControl(pnlRoles);
-            dataRolesPanel = new DataRolesPanel(pnlRoles, this);
+            CTabItem theTab = new CTabItem(tabFolder, SWT.NONE);
+            theTab.setText(i18n("rolesTab")); //$NON-NLS-1$
+            theTab.setToolTipText(i18n("rolesTabToolTip")); //$NON-NLS-1$
+            Composite tabPanel = new Composite(tabFolder, SWT.NONE);
+            tabPanel.setLayout(new GridLayout());
+            tabPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            theTab.setControl(tabPanel);
+            dataRolesPanel = new DataRolesPanel(tabPanel, this);
+            theTab.setControl(tabPanel);
+            tabPanel.layout();
         }
 
         { // properties tab
-            CTabItem propertiesTab = new CTabItem(tabFolder, SWT.NONE);
-            propertiesTab.setText(i18n("propertiesTab")); //$NON-NLS-1$
-            propertiesTab.setToolTipText(i18n("propertiesTabToolTip")); //$NON-NLS-1$
-            Composite pnlProperties = new Composite(tabFolder, SWT.NONE);
-            pnlProperties.setLayout(new GridLayout());
-            pnlProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            propertiesTab.setControl(pnlProperties);
-            propertiesPanel = new PropertiesPanel(pnlProperties, getVdb());
+            CTabItem theTab = new CTabItem(tabFolder, SWT.NONE);
+            theTab.setText(i18n("propertiesTab")); //$NON-NLS-1$
+            theTab.setToolTipText(i18n("propertiesTabToolTip")); //$NON-NLS-1$
+            Composite tabPanel = new Composite(tabFolder, SWT.NONE);
+            tabPanel.setLayout(new GridLayout());
+            tabPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            theTab.setControl(tabPanel);
+            propertiesPanel = new PropertiesPanel(tabPanel, getVdb());
+            theTab.setControl(tabPanel);
+            tabPanel.layout();
         }
         
         { // properties tab
-            CTabItem tab = new CTabItem(tabFolder, SWT.NONE);
-            tab.setText(i18n("userDefinedPropertiesTab")); //$NON-NLS-1$
-            tab.setToolTipText(i18n("userDefinedPropertiesTabToolTip")); //$NON-NLS-1$
-            Composite pnlProperties = new Composite(tabFolder, SWT.NONE);
-            pnlProperties.setLayout(new GridLayout());
-            pnlProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            tab.setControl(pnlProperties);
-            userDefinedPropertiesPanel = new UserDefinedPropertiesPanel(pnlProperties, getVdb());
+            CTabItem theTab = new CTabItem(tabFolder, SWT.NONE);
+            theTab.setText(i18n("userDefinedPropertiesTab")); //$NON-NLS-1$
+            theTab.setToolTipText(i18n("userDefinedPropertiesTabToolTip")); //$NON-NLS-1$
+            Composite tabPanel = new Composite(tabFolder, SWT.NONE);
+            tabPanel.setLayout(new GridLayout());
+            tabPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            theTab.setControl(tabPanel);
+            userDefinedPropertiesPanel = new UserDefinedPropertiesPanel(tabPanel, getVdb());
+            theTab.setControl(tabPanel);
+            tabPanel.layout();
         }
 
         { // translator overrides tab
-            CTabItem translatorOverridesTab = new CTabItem(tabFolder, SWT.NONE);
-            translatorOverridesTab.setText(i18n("translatorOverridesTab")); //$NON-NLS-1$
-            translatorOverridesTab.setToolTipText(i18n("translatorOverridesTabToolTip")); //$NON-NLS-1$
+            CTabItem theTab = new CTabItem(tabFolder, SWT.NONE);
+            theTab.setText(i18n("translatorOverridesTab")); //$NON-NLS-1$
+            theTab.setToolTipText(i18n("translatorOverridesTabToolTip")); //$NON-NLS-1$
             pnlTranslatorOverrides = new TranslatorOverridesPanel(tabFolder, this.vdb);
-            translatorOverridesTab.setControl(pnlTranslatorOverrides);
+            theTab.setControl(pnlTranslatorOverrides);
+            pnlTranslatorOverrides.layout();
         }
 
         tabFolder.setSelection(0);

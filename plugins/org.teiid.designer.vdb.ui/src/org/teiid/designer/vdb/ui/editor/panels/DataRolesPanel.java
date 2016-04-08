@@ -27,6 +27,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelEditorImpl;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ContainerImpl;
@@ -35,6 +36,8 @@ import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 import org.teiid.designer.roles.DataRole;
+import org.teiid.designer.roles.Permission;
+import org.teiid.designer.roles.Crud.Type;
 import org.teiid.designer.roles.ui.wizard.DataRoleWizard;
 import org.teiid.designer.ui.common.table.DefaultTableProvider;
 import org.teiid.designer.ui.common.table.TableAndToolBar;
@@ -178,8 +181,26 @@ public class DataRolesPanel {
                     // Get the Data Policy
                     DataRole dp = wizard.getFinalDataRole();
                     if (dp != null) {
-                        vdbEditor.getVdb().removeDataRole(dataRole.getName());
-                        vdbEditor.getVdb().addDataRole(dp);
+                    	if( !vdbEditor.getVdb().getDataRoles().contains(dp) ) {
+                        	dataRole.setName(dp.getName());
+                        	dataRole.setAnyAuthenticated(dp.isAnyAuthenticated());
+                        	dataRole.setAllowCreateTempTables(dp.isAllowCreateTempTables());
+                        	dataRole.setGrantAll(dp.isGrantAll());
+                        	dataRole.setDescription(dp.getDescription());
+                        	dataRole.setPermissions(dp.getPermissions());
+                        	
+                        	Permission systemPerm = dataRole.getPermission(DataRole.SYS_ADMIN_TABLE_TARGET);
+                        	if( systemPerm != null ) {
+                        		dataRole.addPermission(new Permission(DataRole.SYS_ADMIN_TABLE_TARGET,
+                        				false, systemPerm.getCRUDValue(Type.READ).booleanValue(), false, 
+                        				false, systemPerm.getCRUDValue(Type.EXECUTE).booleanValue(), false));
+                        	}
+                            if (!dataRole.isAnyAuthenticated() && !dp.getRoleNames().isEmpty()) {
+                            	dataRole.setRoleNames(dp.getRoleNames());
+                            }
+                            
+                            refresh();
+                    	}
                     }
 
                 }
@@ -285,6 +306,7 @@ public class DataRolesPanel {
              */
             @Override
             public String getValue( final DataRole element ) {
+            	if( element.getDescription() == null ) return StringConstants.EMPTY_STRING;
                 return element.getDescription();
             }
 

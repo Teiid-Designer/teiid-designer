@@ -30,17 +30,22 @@ public class DataRole extends VdbUnit {
     /**
      * The default value for the <code>create temporary tables</code> property. Value is {@value} .
      */
-    boolean DEFAULT_ALLOW_CREATE_TEMP_TABLES = false;
+    public boolean DEFAULT_ALLOW_CREATE_TEMP_TABLES = false;
 
     /**
      * The default value for the <code>any authenticated</code> property. Value is {@value} .
      */
-    boolean DEFAULT_ANY_AUTHENTICATED = false;
+    public boolean DEFAULT_ANY_AUTHENTICATED = false;
 
     /**
      * The default value for the <code>grant all</code> property. Value is {@value} .
      */
-    boolean DEFAULT_GRANT_ALL = false;
+    public boolean DEFAULT_GRANT_ALL = false;
+    
+    @SuppressWarnings("javadoc")
+	public static final String SYS_ADMIN_TABLE_TARGET = "sysadmin"; //$NON-NLS-1$
+    @SuppressWarnings("javadoc")
+	public static final String SYS_TABLE_TARGET = "sys"; //$NON-NLS-1$
 
     /**
      * An empty array of data roles.

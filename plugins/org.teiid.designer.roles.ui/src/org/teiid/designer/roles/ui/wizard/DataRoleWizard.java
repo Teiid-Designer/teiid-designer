@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
@@ -51,6 +53,8 @@ import org.teiid.designer.roles.ui.wizard.panels.ColumnMaskingPanel;
 import org.teiid.designer.roles.ui.wizard.panels.CrudPanel;
 import org.teiid.designer.roles.ui.wizard.panels.RowBasedSecurityPanel;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.designer.ui.common.UILabelUtil;
+import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.InternalUiConstants.Widgets;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
@@ -82,7 +86,8 @@ public class DataRoleWizard extends AbstractWizard {
     }
 
     private DataRole existingDataRole;
-//    private DataRole dataRole;
+    private DataRole editedDataRole;
+
     private Container tempContainer;
 
     private boolean isEdit = false;
@@ -151,7 +156,9 @@ public class DataRoleWizard extends AbstractWizard {
             this.allowCreateTempTables = false;
             this.grantAll = false;
             this.mappedRoleNames = new HashSet<String>();
+            this.editedDataRole = new DataRole(this.dataRoleName);
         } else {
+            this.editedDataRole = this.existingDataRole.clone();
             this.dataRoleName = existingDataRole.getName();
             this.description = existingDataRole.getDescription();
             this.allowCreateTempTables = existingDataRole.isAllowCreateTempTables();
@@ -248,15 +255,14 @@ public class DataRoleWizard extends AbstractWizard {
     void createDesciptionTab(CTabFolder mainTabFolder) {
     	descTabItem = new CTabItem(mainTabFolder, SWT.NONE);
     	descTabItem.setText(Messages.desciption);
+    	
+    	Composite descPanel = new Composite(mainTabFolder, SWT.NONE);
+    	GridLayoutFactory.fillDefaults().applyTo(descPanel);
 
         // ===========>>>> Create Description Group
-        descriptionTextEditor = new StyledTextEditor(mainTabFolder, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-        final GridData descGridData = new GridData(GridData.FILL_BOTH);
-        descGridData.horizontalSpan = 2;
-        descGridData.heightHint = 50;
-        descGridData.minimumHeight = 30;
-        descGridData.grabExcessVerticalSpace = true;
-        descriptionTextEditor.setLayoutData(descGridData);
+        descriptionTextEditor = new StyledTextEditor(descPanel, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 60).minSize(SWT.DEFAULT, 30).applyTo(descriptionTextEditor.getTextWidget());
+
         if( this.description != null ) {
         	descriptionTextEditor.setText(this.description);
         } else {
@@ -275,8 +281,8 @@ public class DataRoleWizard extends AbstractWizard {
                 // NO OP
             }
         });
-
-        descTabItem.setControl(descriptionTextEditor.getTextWidget());
+ 
+        descTabItem.setControl(descPanel);
     }
     
     void createPermissionsTab(CTabFolder mainTabFolder) {
@@ -617,36 +623,32 @@ public class DataRoleWizard extends AbstractWizard {
 
     
     public DataRole getFinalDataRole() {
-    	if (existingDataRole == null) {
-    		existingDataRole = new DataRole(this.dataRoleName);
-    	}
-
-    	existingDataRole.setName(this.dataRoleName);
-    	existingDataRole.setAnyAuthenticated(this.anyAuthentication);
-    	existingDataRole.setAllowCreateTempTables(this.allowCreateTempTables);
-    	existingDataRole.setGrantAll(this.grantAll);
-    	existingDataRole.setDescription(this.description);
-    	existingDataRole.setPermissions(this.treeProvider.getPermissions());
+    	editedDataRole.setName(this.dataRoleName);
+    	editedDataRole.setAnyAuthenticated(this.anyAuthentication);
+    	editedDataRole.setAllowCreateTempTables(this.allowCreateTempTables);
+    	editedDataRole.setGrantAll(this.grantAll);
+    	editedDataRole.setDescription(this.description);
+    	editedDataRole.setPermissions(this.treeProvider.getPermissions());
     	
-    	Permission systemPerm = existingDataRole.getPermission(SYS_ADMIN_TABLE_TARGET);
+    	Permission systemPerm = editedDataRole.getPermission(SYS_ADMIN_TABLE_TARGET);
         if (allowSystemTables ) {
         	if( systemPerm == null ) {
-        		existingDataRole.addPermission(new Permission(SYS_ADMIN_TABLE_TARGET,
+        		editedDataRole.addPermission(new Permission(SYS_ADMIN_TABLE_TARGET,
         				false, allowSystemRead, false, 
         				false, allowSystemExecute, false));
         	}
         } else {
         	if( systemPerm != null ) {
-        		existingDataRole.removePermission(systemPerm);
+        		editedDataRole.removePermission(systemPerm);
         	}
         }
         if (!this.anyAuthentication && !mappedRoleNames.isEmpty()) {
-        	existingDataRole.setRoleNames(mappedRoleNames);
+        	editedDataRole.setRoleNames(mappedRoleNames);
         } else {
-        	existingDataRole.getRoleNames().clear();
+        	editedDataRole.getRoleNames().clear();
         }
         
-        return this.existingDataRole;
+        return this.editedDataRole;
     }
     
     public DataRolesModelTreeProvider getTreeProvider() {
