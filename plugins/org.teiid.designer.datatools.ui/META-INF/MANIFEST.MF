@@ -30,3 +30,8 @@ Export-Package: org.teiid.designer.datatools.profiles.ldap.widget,
  org.teiid.designer.datatools.ui.actions,
  org.teiid.designer.datatools.ui.dialogs,
  org.teiid.designer.datatools.ui.jobs
+Import-Package: org.apache.commons.httpclient,
+ org.apache.commons.httpclient.auth;version="3.1.0",
+ org.apache.commons.httpclient.methods;version="3.1.0",
+ org.apache.commons.httpclient.params;version="3.1.0",
+ org.apache.http.auth;version="4.3.6"

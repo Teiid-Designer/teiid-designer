@@ -595,7 +595,7 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
         }
 
         public Exception testXmlUrlConnection( IConnectionProfile icp ) {
-        	return WSWizardUtils.testURLConnection(icp, IWSProfileConstants.END_POINT_URI_PROP_ID);
+        	return WSWizardUtils.testRestURLConnection(icp, IWSProfileConstants.END_POINT_URI_PROP_ID);
         }
 
         public Throwable getTestConnectionException( IConnection conn ) {
