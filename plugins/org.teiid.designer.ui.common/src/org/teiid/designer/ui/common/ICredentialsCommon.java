@@ -21,7 +21,7 @@ public interface ICredentialsCommon {
     public enum SecurityType {
         None,
         HTTPBasic,
-        HTTPDigest;
+        Digest;
         
         
         /*
