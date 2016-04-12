@@ -14,6 +14,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -25,6 +26,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -50,6 +52,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.BaseTable;
+import org.teiid.designer.metamodels.relational.Column;
 
 public class DdlImporterTest {
 
@@ -269,15 +272,7 @@ public class DdlImporterTest {
                 final BaseTable table = (BaseTable)obj;
                 final String tableName = table.getName();
                 final int cardinality = table.getCardinality();
-                String actual = "";
-
-                // copied from FloatAsIntPropertyEditorFactory
-                if (cardinality >= -1) {
-                    actual = Integer.toString(cardinality);
-                } else {
-                    final float floatValue = Float.intBitsToFloat(cardinality & 0x7fffffff);
-                    actual = String.format("%.0f", floatValue);
-                }
+                final String actual = convertIntToFloatString(cardinality);
 
                 String expected = "";
 
@@ -295,6 +290,57 @@ public class DdlImporterTest {
                 assertThat(actual, is(expected));
             }
         }
+    }
+
+    /**
+     * Verify fix for TEIIDDES-1810.
+     */
+    @Test
+    public void shouldImportColumnStatisticValuesGreaterThanMaxInt() throws Exception {
+        final File ddlFile = SmartTestDesignerSuite.getTestDataFile(DdlImporterTest.class, "largeColumnStatisticValues.xml");
+        final String ddl = new String(Files.readAllBytes(ddlFile.toPath()));
+        final ModelResource model = importDdl(ddl);
+
+        for (final Object obj : model.getAllRootEObjects()) {
+            if (obj instanceof BaseTable) {
+                final BaseTable table = (BaseTable)obj;
+                final String tableName = table.getName();
+                assertThat(tableName, is("largeColumnStatisticValues"));
+                
+                final List<Column> columns = table.getColumns();
+                assertThat(columns.size(), is(2));
+                
+                final Column col1 = columns.get(0);
+                int distinctValueCount = -1;
+                int nullValueCount = -1;
+                
+                if ("col_a".equals(col1.getName())) {
+                    distinctValueCount = col1.getDistinctValueCount();
+                    nullValueCount = columns.get(1).getNullValueCount();
+                } else if ("col_b".equals(col1.getName())) {
+                    nullValueCount = col1.getNullValueCount();
+                    distinctValueCount = columns.get(1).getDistinctValueCount();
+                } else {
+                    fail("Unexpected column name of " + col1.getName());
+                }
+                
+                final String distinctValueCountAsString = convertIntToFloatString(distinctValueCount);
+                assertThat(distinctValueCountAsString, is("3500000000"));
+                
+                final String nullValueCountAsString = convertIntToFloatString(nullValueCount);
+                assertThat(nullValueCountAsString, is("6000000000"));
+            }
+        }
+    }
+    
+    private String convertIntToFloatString(final int value) {
+        // copied from FloatAsIntPropertyEditorFactory
+        if (value >= -1) {
+            return Integer.toString(value);
+        }
+        
+        final float floatValue = Float.intBitsToFloat(value & 0x7fffffff);
+        return String.format("%.0f", floatValue);
     }
 
 }

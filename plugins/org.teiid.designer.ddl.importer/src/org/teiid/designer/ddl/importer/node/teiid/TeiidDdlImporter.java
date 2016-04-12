@@ -953,6 +953,22 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 		}
 		return;
 	}
+	
+    private int convertLargeStatisticValueToInt( final String optionValueStr ) {
+        assert ( ( optionValueStr != null ) && !optionValueStr.isEmpty() );
+        final long value = Long.parseLong( optionValueStr );
+
+        // short circuit when -1
+        if ( ( value == -1 ) || ( value < 0 ) ) {
+            return -1;
+        }
+
+        if ( value <= Integer.MAX_VALUE ) {
+            return ( int )value;
+        }
+
+        return ( Float.floatToRawIntBits( value ) | 0x80000000 );
+    }
 
 	/**
 	 * Handle the OPTION keys that may be set on Tables for Teiid DDL
@@ -969,17 +985,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 				String optionValueStr = (String)optionValue;
 				if(!CoreStringUtil.isEmpty(optionValueStr)) {
 					if(optionName.equalsIgnoreCase(TeiidDDLConstants.CARDINALITY)) {
-                        final long value = Long.parseLong(optionValueStr);
-                        int cardinality = RelationalTable.DEFAULT_CARDINALITY;
-
-                        if ((value == -1) || (value < 0)) {
-                            cardinality = -1;
-                        } else if (value <= Integer.MAX_VALUE) {
-                            cardinality = (int)value;
-                        } else {
-                            cardinality = (Float.floatToRawIntBits(value) | 0x80000000);
-                        }
-
+                        final int cardinality = convertLargeStatisticValueToInt(optionValueStr);
                         table.setCardinality(cardinality);
 						nodeIter.remove();
 					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MATERIALIZED)) {
@@ -1149,9 +1155,14 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 						column.setNativeType(optionValueStr);
 						nodeIter.remove();
 						resolveColumnDatatype(column, optionValueStr);
-					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NULL_VALUE_COUNT)) {
-						column.setNullValueCount(Integer.parseInt(optionValueStr));
-						nodeIter.remove();
+                    } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NULL_VALUE_COUNT)) {
+                        final int nullValueCount = convertLargeStatisticValueToInt(optionValueStr);
+                        column.setNullValueCount(nullValueCount);
+                        nodeIter.remove();
+                    } else if(optionName.equalsIgnoreCase(TeiidDDLConstants.DISTINCT_VALUES)) {
+                        final int distinctValues = convertLargeStatisticValueToInt(optionValueStr);
+                        column.setDistinctValueCount(distinctValues);
+                        nodeIter.remove();
 					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.RADIX)) {
 						column.setRadix(Integer.parseInt(optionValueStr));
 						nodeIter.remove();

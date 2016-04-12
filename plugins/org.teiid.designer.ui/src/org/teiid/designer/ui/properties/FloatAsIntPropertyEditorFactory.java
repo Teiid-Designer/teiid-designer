@@ -24,7 +24,9 @@ public class FloatAsIntPropertyEditorFactory implements IPropertyEditorFactory {
 
     private static final Collection<EStructuralFeature> FLOAT_AS_INT_FEATURES =
         Collections.unmodifiableCollection(Arrays.asList(new EStructuralFeature[] {
-            RelationalPackage.eINSTANCE.getTable_Cardinality()
+            RelationalPackage.eINSTANCE.getTable_Cardinality(),
+            RelationalPackage.eINSTANCE.getColumn_DistinctValueCount(),
+            RelationalPackage.eINSTANCE.getColumn_NullValueCount()
     }));
 
     /**
