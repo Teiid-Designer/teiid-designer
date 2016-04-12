@@ -48,6 +48,8 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         String security = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
         if (security == null) {
             security = SecurityType.None.name();
+        } else if( security.equals(ICredentialsCommon.SecurityType.Digest.toString()) ) {
+        	security = "Digest";
         }
         
         connectionProps.setProperty(CONNECTION_NAMESPACE

@@ -69,7 +69,7 @@ public class CredentialsComposite extends Composite implements UiConstants, List
         securityCombo = new Combo(this, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
         if ("rest".equals(wsType)){ //$NON-NLS-1$
       		 securityCombo.setItems(new String[] { SecurityType.None.name(),
-      	                SecurityType.HTTPBasic.name(),  SecurityType.HTTPDigest.name() });
+      	                SecurityType.HTTPBasic.name(),  SecurityType.Digest.name() });
       	        securityCombo.setText(SecurityType.None.name());
    	   	}else{
    	   		 securityCombo.setItems(new String[] { SecurityType.None.name(),

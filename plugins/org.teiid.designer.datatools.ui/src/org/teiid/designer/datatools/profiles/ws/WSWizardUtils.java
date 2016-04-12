@@ -83,7 +83,7 @@ public class WSWizardUtils {
 				List<String> authPrefs = new ArrayList<String>(1);
 				if (securityType.equals(ICredentialsCommon.SecurityType.HTTPBasic.toString())) {
 					authPrefs.add(AuthPolicy.BASIC);
-				} else if (securityType.equals(ICredentialsCommon.SecurityType.HTTPDigest.toString())) {
+				} else if (securityType.equals(ICredentialsCommon.SecurityType.Digest.toString())) {
 					authPrefs.add(AuthPolicy.DIGEST);
 				}
 				client.getParams().setParameter(AuthPolicy.AUTH_SCHEME_PRIORITY, authPrefs);
