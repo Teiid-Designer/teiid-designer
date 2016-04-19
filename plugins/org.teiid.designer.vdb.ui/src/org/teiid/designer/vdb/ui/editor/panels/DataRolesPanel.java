@@ -181,7 +181,7 @@ public class DataRolesPanel {
                     // Get the Data Policy
                     DataRole dp = wizard.getFinalDataRole();
                     if (dp != null) {
-                    	if( !vdbEditor.getVdb().getDataRoles().contains(dp) ) {
+                    	if( vdbEditor.getVdb().getDataRoles().contains(dp) ) {
                         	dataRole.setName(dp.getName());
                         	dataRole.setAnyAuthenticated(dp.isAnyAuthenticated());
                         	dataRole.setAllowCreateTempTables(dp.isAllowCreateTempTables());
