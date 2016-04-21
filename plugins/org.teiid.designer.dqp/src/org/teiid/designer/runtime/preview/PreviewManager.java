@@ -25,6 +25,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
+import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
@@ -89,8 +90,8 @@ public final class PreviewManager {
 			modelName = modelName.substring(0, length-4);
 		}
 		
-		String targetName = ModelerCore.getModelEditor().getName(this.targetObject);
-		vdbName = "PREVIEW_" + modelName + "_" + targetName;
+		String uuid = new UUID(java.util.UUID.randomUUID()).exportableForm();
+		vdbName = "PREVIEW-" + uuid;
 		deploymentName = vdbName+DYNAMIC_VDB_SUFFIX;
 	}
 	
