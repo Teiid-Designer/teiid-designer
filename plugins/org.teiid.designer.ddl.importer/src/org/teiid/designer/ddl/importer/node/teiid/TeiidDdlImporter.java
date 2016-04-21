@@ -687,6 +687,10 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 		// Create a RelationalModel for the imported DDL
 		RelationalModel model = getFactory().createModel("ddlImportedModel"); //$NON-NLS-1$
 		model.setModelType(importManager.getModelType().getValue());
+		
+		if( model.getModelType() == ModelType.VIRTUAL) {
+			getImporterManager().optToHelpCreateTransform(true);
+		}
 
 		// Map for holding deferred nodes, which much be created later
 		Map<AstNode,RelationalReference> deferredCreateMap = new HashMap<AstNode,RelationalReference>();

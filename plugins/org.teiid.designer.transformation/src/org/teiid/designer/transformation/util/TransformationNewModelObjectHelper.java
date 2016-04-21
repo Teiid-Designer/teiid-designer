@@ -158,9 +158,16 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
                 selectSql = providedSQL;
             }
 
-            if (selectSql == null)
-                return false;
-
+            if (selectSql == null) {
+            	if( !doValidate) return false;
+            	
+            	// Some SQL statements are NULL but are still valid (GLOBAL TEMP TABLE, for instance)
+                QueryValidator validator = new TransformationValidator((SqlTransformationMappingRoot)tRoot);
+                validator.validateSql(selectSql, QueryValidator.SELECT_TRNS, true);
+                
+                return true;
+            }
+            
             TransformationHelper.setSelectSqlString(tRoot, selectSql, false, this);
             TransformationMappingHelper.reconcileMappingsOnSqlChange(tRoot, null);
             TransformationMappingHelper.reconcileTargetAttributes(tRoot, null);
