@@ -726,7 +726,10 @@ public final class PreviewManager {
             // Check to see if statements will be generated
             // invokeHttp(), invoke(), getFiles(), getTextFiles() and saveFile()
             Collection<String> statements = new ArrayList<String>(eObjects.size());
+            
             TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator(true);
+            generator.setIncludeFKs(false);
+            
             generator.setIsVirtual(isVirtual);
             
             for( EObject eObj : eObjects ) {

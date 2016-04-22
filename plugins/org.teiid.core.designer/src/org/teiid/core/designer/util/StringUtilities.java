@@ -547,6 +547,18 @@ public class StringUtilities implements StringConstants {
     	
     	return input;
     }
+    
+    public static String getQuotedValue(String value, String quoteStr) {
+    	if( value.length() > 3 && value.startsWith(quoteStr) && value.endsWith(quoteStr) ) {
+    		return value;
+    	}
+    	String quotedValue = quoteStr + value + quoteStr;
+    	return quotedValue;
+    }
+    
+    public static boolean isSingleQuoted(String value) {
+    	return value.length() > 1 && value.startsWith(QUOTE_MARK) && value.endsWith(QUOTE_MARK);
+    }
 
     private StringUtilities() {
     }

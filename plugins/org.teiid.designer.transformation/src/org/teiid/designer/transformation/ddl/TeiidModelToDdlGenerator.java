@@ -67,6 +67,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
     private boolean includeProcedures = true;
     
+    private boolean includeFKs = true;
+    
     private boolean isVirtual = false;
     
     private RelationalModelExtensionAssistant assistant;
@@ -551,6 +553,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         //
         String defaultValue = col.getDefaultValue();
         if (!StringUtilities.isEmpty(defaultValue)) {
+        	if( !StringUtilities.isSingleQuoted(defaultValue ) ) {
+        		defaultValue = StringUtilities.getQuotedValue(defaultValue, QUOTE_MARK);
+        	}
             sb.append(TeiidSQLConstants.Reserved.DEFAULT).append(SPACE).append(defaultValue).append(SPACE);
         }
 
@@ -681,12 +686,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			}
 			sb.append(theSB.toString());
 			
-			if( hasFKs || hasUCs ) sb.append(COMMA);
+			if( (hasFKs && includeFKs) || hasUCs ) sb.append(COMMA);
 		}
 		
 		// FK
 		// CONSTRAINT CUSTOMER_ACCOUNT_FK FOREIGN KEY(CUSTID) REFERENCES ACCOUNT (CUSTID)
-		if( hasFKs ) {
+		if( hasFKs && includeFKs) {
 			int nFKs = table.getForeignKeys().size();
 			int countFK = 0;
 			for( Object obj : table.getForeignKeys()) {
@@ -1152,7 +1157,20 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	issues.add(new Status(severity, TransformationPlugin.PLUGIN_ID, message, e));
     }
     
-    class OptionsStatement {
+
+    public void setIncludeTables(boolean includeTables) {
+		this.includeTables = includeTables;
+	}
+
+	public void setIncludeProcedures(boolean includeProcedures) {
+		this.includeProcedures = includeProcedures;
+	}
+
+	public void setIncludeFKs(boolean includeFKs) {
+		this.includeFKs = includeFKs;
+	}
+
+	class OptionsStatement {
     	boolean hasOptions;
     	StringBuilder sb;
     	
