@@ -8,6 +8,7 @@
 package org.teiid.designer.vdb.dynamic;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import java.io.File;
@@ -37,6 +38,7 @@ import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbSourceInfo;
 import org.teiid.designer.vdb.VdbTestUtils;
+import org.teiid.designer.vdb.manifest.EntryElement;
 import org.w3c.dom.Document;
 
 @SuppressWarnings( "javadoc" )
@@ -169,6 +171,16 @@ public class TestDynamicVdbExport implements VdbConstants {
             assertEquals(entry.getDescription(), dynModel.getDescription());
 
             for (Map.Entry<Object, Object> prop : entry.getProperties().entrySet()) {
+                if (EntryElement.INDEX_NAME.equals(prop.getKey())) {
+                    assertFalse(dynModel.getProperties().containsKey(EntryElement.INDEX_NAME));
+                    continue;
+                }
+
+                if (EntryElement.CHECKSUM.equals(prop.getKey())) {
+                    assertFalse(dynModel.getProperties().containsKey(EntryElement.CHECKSUM));
+                    continue;
+                }
+
                 assertEquals(prop.getValue(), dynModel.getProperties().getProperty(prop.getKey().toString()));
             }
 
@@ -319,6 +331,16 @@ public class TestDynamicVdbExport implements VdbConstants {
             assertEquals(entry.getDescription(), dynModel.getDescription());
 
             for (Map.Entry<Object, Object> prop : entry.getProperties().entrySet()) {
+                if (EntryElement.INDEX_NAME.equals(prop.getKey())) {
+                    assertFalse(dynModel.getProperties().containsKey(EntryElement.INDEX_NAME));
+                    continue;
+                }
+
+                if (EntryElement.CHECKSUM.equals(prop.getKey())) {
+                    assertFalse(dynModel.getProperties().containsKey(EntryElement.CHECKSUM));
+                    continue;
+                }
+
                 assertEquals(prop.getValue(), dynModel.getProperties().getProperty(prop.getKey().toString()));
             }
 

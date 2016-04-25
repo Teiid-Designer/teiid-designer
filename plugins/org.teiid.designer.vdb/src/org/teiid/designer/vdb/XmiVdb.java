@@ -986,7 +986,22 @@ public final class XmiVdb extends BasicVdb {
                 model.setVisible(entry.isVisible());
 
                 for (Map.Entry<Object, Object> prop : entry.getProperties().entrySet()) {
-                    model.setProperty(prop.getKey().toString(), prop.getValue().toString());
+                    String name = prop.getKey().toString();
+
+                    //
+                    // Not applicable to dynamic vdb models since index files are not used
+                    //
+                    if (EntryElement.INDEX_NAME.equals(name))
+                        continue;
+
+                    //
+                    // Not applicable to dynamic vdb models since models are declarative
+                    // within the vdb rather than in their own files
+                    //
+                    if (EntryElement.CHECKSUM.equals(name))
+                        continue;
+
+                    model.setProperty(name, prop.getValue().toString());
                 }
 
                 DynamicModel.Type type = DynamicModel.Type.fromString(entry.getType());
