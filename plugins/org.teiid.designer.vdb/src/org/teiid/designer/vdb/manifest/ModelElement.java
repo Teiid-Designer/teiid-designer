@@ -63,6 +63,11 @@ public class ModelElement extends EntryElement {
     /**
      * 
      */
+    public static final String MULTI_SOURCE = "multisource"; //$NON-NLS-1$
+    
+    /**
+     * 
+     */
     public static final String MULTI_SOURCE_ADD_COLUMN = "multisource.addColumn"; //$NON-NLS-1$
     
     /**
@@ -127,7 +132,7 @@ public class ModelElement extends EntryElement {
         }
         props.add(new PropertyElement(BUILT_IN, Boolean.toString(entry.isBuiltIn())));
         if( entry.getSourceInfo().isMultiSource() ) {
-        	props.add(new PropertyElement(SUPPORTS_MULTI_SOURCE, Boolean.toString(true)));
+        	props.add(new PropertyElement(MULTI_SOURCE, Boolean.toString(true)));
         	if( entry.getSourceInfo().isAddColumn() ) {
         		props.add(new PropertyElement(MULTI_SOURCE_ADD_COLUMN, Boolean.toString(true)));
         	}
@@ -174,7 +179,7 @@ public class ModelElement extends EntryElement {
         }
 
         if (model.isMultiSource())
-            getProperties().add(new PropertyElement(SUPPORTS_MULTI_SOURCE, Boolean.toString(model.isMultiSource())));
+            getProperties().add(new PropertyElement(MULTI_SOURCE, Boolean.toString(model.isMultiSource())));
 
         if (model.doAddColumn())
             getProperties().add(new PropertyElement(MULTI_SOURCE_ADD_COLUMN, Boolean.toString(model.doAddColumn())));

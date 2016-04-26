@@ -256,7 +256,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
             else if (ModelElement.MODEL_UUID.equals(name)) modelUuid = property.getValue();
             else if (ModelElement.IMPORT_VDB_REFERENCE.equals(name)) {
             	importVdbNames.add(property.getValue());
-            } else if( ModelElement.SUPPORTS_MULTI_SOURCE.equals(name)) {
+            } else if( ModelElement.SUPPORTS_MULTI_SOURCE.equals(name) || ModelElement.MULTI_SOURCE.equals(name) ) {
             	sourceInfo.setIsMultiSource(Boolean.parseBoolean(property.getValue()));
             } else if( ModelElement.MULTI_SOURCE_ADD_COLUMN.equals(name)) {
             	sourceInfo.setAddColumn(Boolean.parseBoolean(property.getValue()));
