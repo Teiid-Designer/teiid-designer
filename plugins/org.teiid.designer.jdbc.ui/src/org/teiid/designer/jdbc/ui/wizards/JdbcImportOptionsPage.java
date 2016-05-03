@@ -79,7 +79,6 @@ import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.dialog.FolderSelectionDialog;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
-import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -441,7 +440,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             	GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).hint(0,  35).applyTo(serverMessageGroup);
 
                 if( !serverDefined ) {  
-                	msgText.setText(getString("noServerDefined", ModelerCore.getTeiidServerManager().getDefaultServer().getDisplayName())); //$NON-NLS-1$
+                	msgText.setText(getString("noServerDefined")); //$NON-NLS-1$
                 } else {
                 	
                 	msgText.setText(getString("serverNotStarted")); //$NON-NLS-1$
