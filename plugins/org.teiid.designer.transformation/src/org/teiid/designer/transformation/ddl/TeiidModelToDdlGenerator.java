@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.transformation.ddl;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -613,6 +614,34 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	options.add(SIGNED, Boolean.toString(col.isSigned()), Boolean.TRUE.toString());
     	options.add(CURRENCY, Boolean.toString(col.isCurrency()), Boolean.FALSE.toString());
     	options.add(FIXED_LENGTH, Boolean.toString(col.isFixedLength()), Boolean.FALSE.toString());
+    	
+    	// DISTINCT VALUE COUNT
+    	int distinctValueCt = col.getDistinctValueCount();
+
+		if( distinctValueCt > -1 ) {
+			options.add(DISTINCT_VALUES, Integer.toString(distinctValueCt), Integer.toString(0));
+		} else if( distinctValueCt < -1 ) {
+    		Integer obj = new Integer(distinctValueCt);
+    		final float floatValue = Float.intBitsToFloat(obj & 0x7fffffff);
+    		DecimalFormat myFormatter = new DecimalFormat("###");
+    		String output = myFormatter.format(floatValue);
+    		
+			options.add(DISTINCT_VALUES, output, Integer.toString(0));
+		}
+    	// NULL VALUE COUNT
+    	int nullValueCt = col.getNullValueCount();
+
+		if( nullValueCt > -1 ) {
+			options.add(NULL_VALUE_COUNT, Integer.toString(nullValueCt), Integer.toString(0));
+		} else if( distinctValueCt < -1 ) {
+    		Integer obj = new Integer(nullValueCt);
+    		final float floatValue = Float.intBitsToFloat(obj & 0x7fffffff);
+    		DecimalFormat myFormatter = new DecimalFormat("###");
+    		String output = myFormatter.format(floatValue);
+    		
+			options.add(NULL_VALUE_COUNT, output, Integer.toString(0));
+		}
+    	
     	String desc = getDescription(col);
     	if( !StringUtilities.isEmpty(desc) ) {
     		options.add(ANNOTATION, desc, EMPTY_STRING);
@@ -783,8 +812,19 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	options.add(NAMEINSOURCE, table.getNameInSource(), null);
     	options.add(MATERIALIZED, Boolean.toString(table.isMaterialized()), Boolean.FALSE.toString());
     	options.add(UPDATABLE, Boolean.toString(table.isSupportsUpdate()), Boolean.TRUE.toString());
-    	if( table.getCardinality() > 0 ) {
-    		options.add(CARDINALITY, Integer.toString(table.getCardinality()), Integer.toString(0));
+    	if( table.getCardinality() != 0 ) {
+    		int cardValue = table.getCardinality();
+
+    		if( cardValue > 0 ) {
+    			options.add(CARDINALITY, Integer.toString(table.getCardinality()), Integer.toString(0));
+    		} else {
+        		Integer obj = new Integer(cardValue);
+        		final float floatValue = Float.intBitsToFloat(obj & 0x7fffffff);
+        		DecimalFormat myFormatter = new DecimalFormat("###");
+        		String output = myFormatter.format(floatValue);
+        		
+    			options.add(CARDINALITY, output, Integer.toString(0));
+    		}
     	}
     	if( table.getMaterializedTable() != null ) {
     		options.add(MATERIALIZED_TABLE, table.getMaterializedTable().getName(), null);
