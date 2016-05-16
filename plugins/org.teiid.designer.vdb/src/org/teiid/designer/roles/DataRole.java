@@ -82,9 +82,9 @@ public class DataRole extends VdbUnit {
 
     private Map<String, Permission> permissions;
 
-    private Boolean anyAuthenticated;
+    private Boolean anyAuthenticated = Boolean.FALSE;
 
-    private Boolean allowCreateTempTables;
+    private Boolean allowCreateTempTables = Boolean.FALSE;
 
     /**
      * @param name
@@ -116,8 +116,8 @@ public class DataRole extends VdbUnit {
      */
     public DataRole(final DataRoleElement element) {
         this(element.getName());
-        setAnyAuthenticated(element.isAnyAuthenticated());
-        setAllowCreateTempTables(element.allowCreateTempTables());
+        setAnyAuthenticated(element.isAnyAuthenticated() == null ? Boolean.FALSE : element.isAnyAuthenticated());
+        setAllowCreateTempTables(element.allowCreateTempTables() == null ? Boolean.FALSE : element.allowCreateTempTables());
         setGrantAll(element.doGrantAll() == null ? Boolean.FALSE : element.doGrantAll());
         setDescription(element.getDescription() == null ? EMPTY_STRING : element.getDescription());
         setRoleNames(element.getMappedRoleNames());
