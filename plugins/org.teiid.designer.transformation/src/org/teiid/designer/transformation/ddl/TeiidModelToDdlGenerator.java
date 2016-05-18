@@ -815,9 +815,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	if( table.getCardinality() != 0 ) {
     		int cardValue = table.getCardinality();
 
-    		if( cardValue > 0 ) {
+    		if( cardValue > -1 ) {
     			options.add(CARDINALITY, Integer.toString(table.getCardinality()), Integer.toString(0));
-    		} else {
+    		} else if( cardValue < -1) {
         		Integer obj = new Integer(cardValue);
         		final float floatValue = Float.intBitsToFloat(obj & 0x7fffffff);
         		DecimalFormat myFormatter = new DecimalFormat("###");
