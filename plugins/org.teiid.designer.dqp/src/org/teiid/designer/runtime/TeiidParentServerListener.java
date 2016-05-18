@@ -190,8 +190,6 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
 
         Runnable serverStartRunnable = new Runnable() {
 
-            private boolean connected = false;
-
             @Override
             public void run() {
 
@@ -208,7 +206,12 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
              * @throws Exception
              */
             private void tryConnecting(final IServer parentServer) throws Exception {
-            	int waitTimeInMS = getTimeoutPrefSecs() * 1000;
+            	// Default wait time == 120 seconds (2 minutes)
+            	// Calculate the # attempts to based on a 4 second wait time
+            	int timeOutTotal = getTimeoutPrefSecs();
+            	int waitTimeInMS = 4000; // 4 seconds
+            	int calcAttempts = timeOutTotal/4;
+            	int nAttempts = calcAttempts == 0 ? 10 : calcAttempts;
             	
                 ITeiidServer teiidServer = factory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
                 if (teiidServer != null) {
@@ -231,7 +234,7 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                 
                 Exception logThisException = null;
                 
-                while ( (!parentConnected || queryServer == null ) && attempts < 10) {
+                while ( (!parentConnected || queryServer == null ) && attempts < nAttempts) {
                     try {
                         attempts++;
                         parentConnected = teiidServer != null && teiidServer.isParentConnected() && adaptServerOK(parentServer);
@@ -282,7 +285,6 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                             Util.getString("warningServerNotFullyStarted_RefreshServer", parentServer.getName())); //$NON-NLS-1$
                     Util.log(status);
                 }
-
                 return;
             }
         };
