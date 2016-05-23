@@ -46,6 +46,7 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
     private JdbcDatabase db;
     private boolean isVdbSourceModel;
     private String vdbSourceModelName;
+    private int vdbVersion;
     private boolean reachedObjectsPage;
 	private String schemaFilter;
 	private String tableFilter;
@@ -274,6 +275,21 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
 	 */
 	public void setVdbSourceModelName(String name) {
 		this.vdbSourceModelName = name;
+	}
+	
+	/**
+	 * @return the vdb version number
+	 */
+	public int getVdbVersion() {
+		return vdbVersion;
+	}
+	
+	/**
+	 * @param name the vdb version number
+
+	 */
+	public void setVdbVersion(int version) {
+		this.vdbVersion = version;
 	}
 
 	/**

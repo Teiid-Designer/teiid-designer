@@ -31,6 +31,11 @@ public interface VdbConstants extends StringConstants {
      * The extension property key for vdb-name
      */
     String VDB_NAME_KEY = "core:vdb-name"; //$NON-NLS-1$
+    
+    /**
+     * The extension property key for vdb-name
+     */
+    String VDB_VERSION_KEY = "core:vdb-version"; //$NON-NLS-1$
 
     /**
      * The prefix used before the workspace identifier when creating a Preview VDB name.

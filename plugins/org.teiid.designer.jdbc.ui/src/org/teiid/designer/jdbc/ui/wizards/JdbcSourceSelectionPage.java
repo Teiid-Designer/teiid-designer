@@ -20,6 +20,7 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.datatools.connectivity.db.generic.ui.wizard.NewJDBCFilteredCPWizard;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -29,7 +30,6 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -61,6 +61,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
+import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
@@ -99,6 +100,10 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     private static final String TEIID_PROFILE_OPTIONS_GROUP_LABEL = getString("teiidProfileOptionsGroupLabel"); //$NON-NLS-1$
     private static final String IS_VDB_SOURCE_MODEL_CHECKBOX = getString("isVdbSourceModelCheckboxLabel"); //$NON-NLS-1$
     private static final String IS_VDB_SOURCE_MODEL_CHECKBOX_MESSAGE = getString("isVdbSourceModelCheckboxLabel.message"); //$NON-NLS-1$
+    
+    private static final String VDB_VERSION = getString("vdbVersion"); //$NON-NLS-1$
+    private static final String INVALID_INTEGER_INPUT_TITLE = getString("invalidVdbVersionValueTitle"); //$NON-NLS-1$
+    private static final String INVALID_INTEGER_INPUT_MESSAGE = getString("invalidVdbVersionValueMessage"); //$NON-NLS-1$
 
     // ===========================================================================================================================
     // Static Methods
@@ -124,6 +129,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     private Combo srcCombo;
     private Button editCPButton;
     private Button isVdbSourceModelCheckBox;
+    private int lastVdbVersion = 1;
     private Composite editPanel;
     private Composite teiidProfileGroup;
     private CLabel driverLabel, urlLabel, userNameLabel;
@@ -339,8 +345,9 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         TEIID_PROFILE_GROUP: {
 	        this.teiidProfileGroup = WidgetFactory.createGroup(mainPanel,  TEIID_PROFILE_OPTIONS_GROUP_LABEL,
 	        		GridData.HORIZONTAL_ALIGN_FILL, 1, 1);
+	        GridLayoutFactory.swtDefaults().numColumns(1).applyTo(this.teiidProfileGroup);
 	        
-	        this.isVdbSourceModelCheckBox = WidgetFactory.createCheckBox(teiidProfileGroup, IS_VDB_SOURCE_MODEL_CHECKBOX, 0, 1);
+	        this.isVdbSourceModelCheckBox = WidgetFactory.createCheckBox(teiidProfileGroup, IS_VDB_SOURCE_MODEL_CHECKBOX, 0, 2);
 	        this.isVdbSourceModelCheckBox.setToolTipText(getString("isVdbSourceModelCheckboxTooltip")); //$NON-NLS-1$
 	        this.isVdbSourceModelCheckBox.addSelectionListener(new SelectionAdapter() {
 	
@@ -350,14 +357,39 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
 	            }
 	        });
 	        Text descriptionText = new Text(teiidProfileGroup,  SWT.WRAP | SWT.READ_ONLY);
-	        GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-	        gd.heightHint = 60;
-	        gd.widthHint = 500;
-	        descriptionText.setLayoutData(gd);
+	        GridDataFactory.fillDefaults().hint(500,  60).span(2,1).applyTo(descriptionText);
 	        descriptionText.setText(IS_VDB_SOURCE_MODEL_CHECKBOX_MESSAGE);
 	        descriptionText.setBackground(teiidProfileGroup.getBackground());
 	        descriptionText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-
+	        
+	    	Composite versionPanel = WidgetFactory.createPanel(teiidProfileGroup, SWT.NONE, GridData.BEGINNING, 2, 2);
+	    	GridLayoutFactory.swtDefaults().numColumns(2).applyTo(versionPanel);
+	        // Add VDB Version entry field
+	        Label vdbVersionLabel = WidgetFactory.createLabel(versionPanel, VDB_VERSION); //$NON-NLS-1$
+	    	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(vdbVersionLabel);
+	    	
+	        final Text vdbVersionText = WidgetFactory.createTextField(versionPanel);
+	    	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true,  false).hint(50, SWT.DEFAULT).applyTo(vdbVersionText);
+	    	vdbVersionText.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					try {
+	                    int versionValue = Integer.parseInt(vdbVersionText.getText());
+	                    if (versionValue > -1) {
+	                        importer.setVdbVersion(versionValue);
+	                        lastVdbVersion = versionValue;
+						}
+					} catch (NumberFormatException ex) {
+						MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
+	                            INVALID_INTEGER_INPUT_TITLE,
+	                            INVALID_INTEGER_INPUT_MESSAGE);
+						vdbVersionText.setText(Integer.toString(lastVdbVersion));
+					}
+					
+				}
+			});
+	    	vdbVersionText.setText(Integer.toString(1));
         }
         
         sourceModified();
@@ -370,9 +402,6 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
             setMessage(INITIAL_MESSAGE);
         }
 
-
-//        scrolledComposite.setContent(mainPanel);
-//        scrolledComposite.setMinSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
         scrolledComposite.sizeScrolledPanel();
         
         setControl(hostPanel);
@@ -746,6 +775,14 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         }
 		
 		return null;
+    }
+    
+    /**
+     * 
+     * @return the vdb version
+     */
+    public int getVdbVersion() {
+    	return lastVdbVersion;
     }
 
 	/**

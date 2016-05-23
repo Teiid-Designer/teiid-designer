@@ -755,6 +755,7 @@ public class JdbcImportWizard extends AbstractWizard
         			assistant.saveModelExtensionDefinition(resrc);
         			assistant.setPropertyValue(modelAnnotation, CoreModelExtensionConstants.PropertyIds.LOCKED, Boolean.TRUE.toString());
         			assistant.setPropertyValue(modelAnnotation, CoreModelExtensionConstants.PropertyIds.VDB_NAME, srcPg.getVdbName());
+        			assistant.setPropertyValue(modelAnnotation, CoreModelExtensionConstants.PropertyIds.VDB_VERSION, Integer.toString(srcPg.getVdbVersion()));
                 }
                 JdbcImportWizard.this.status = processor.execute(resrc, getDatabase(), src.getImportSettings(), monitor);
 

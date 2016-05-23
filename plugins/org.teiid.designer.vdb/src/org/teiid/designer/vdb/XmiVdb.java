@@ -112,7 +112,6 @@ public final class XmiVdb extends BasicVdb {
     private CopyOnWriteArraySet<VdbSchemaEntry> schemaEntries;
     private CopyOnWriteArraySet<VdbModelEntry> modelEntries;
     private VdbModelBuilder builder;
-    private Map<String, Set<String>> modelToImportVdbMap;
 
     private boolean excludeSourceMetadata;
 
@@ -169,13 +168,6 @@ public final class XmiVdb extends BasicVdb {
             modelEntries = new CopyOnWriteArraySet<VdbModelEntry>();
 
         return modelEntries;
-    }
-
-    private Map<String, Set<String>> modelToImportVdbMap() {
-        if (modelToImportVdbMap == null)
-            modelToImportVdbMap = new HashMap<String, Set<String>>();
-
-        return modelToImportVdbMap;
     }
 
     private VdbModelBuilder builder() {
@@ -676,16 +668,7 @@ public final class XmiVdb extends BasicVdb {
     }
     
     private final void handleRemovedVdbModelEntry(String vdbModelEntryName) {
-    	// Clean up import VDBs
-    	// Assume that any registered vdb names for the model entry are stale
-    	Set<String> existingSet = modelToImportVdbMap().get(vdbModelEntryName);
-    	
-    	
-    	// If Set does not exist for modelName, create it
-    	if( existingSet != null ) {
-    		unregisterStaleImportVdbs(existingSet);
-    		modelToImportVdbMap().remove(vdbModelEntryName);
-    	}
+    	removeStaleVdbImports();
     }
     
     /**
@@ -702,36 +685,62 @@ public final class XmiVdb extends BasicVdb {
     }
 
     /**
+     * This method provides VdbModelEntry's the ability to register any dependent import VDB objects
+     * 
+     * The VDB contains a list of VdbImportVdbEntry objects (VDB name and version)
+     * 
+     * As models are added to the VDB, they are checked to see if there are model imports that are
+     * VDB source models that contain VDB name and VDB Version properties. This is done in the
+     * synchronize method of the VdbModelEntry
+     * 
+     * When a model is removed from a VDB (deleted), the VDB needs to be smart enough to check the Import VDB objects
+     * against the remaining models in the VDB to check for VDB References and remove any STALE VDB imports that are not
+     * used anymore.
+     * 
+     * 
+     * The responsibility of this method is to look at the current map of import VDBs and 
+     * 
      * @param importVdbNames the list of imported vdb names
      * @param modelName the model name (<code>IPath</code>) from the <code>VdbModelEntry</code>
      */
-    public final void registerImportVdbs(Collection<String> importVdbNames, String modelName) {
-    	Set<String> existingSet = modelToImportVdbMap().get(modelName);
-    	Set<String> staleImportVdbs = new HashSet<String>();
-    	
-    	// If Set does not exist for modelName, create it
-    	if( existingSet == null ) {
-    		existingSet = new HashSet<String>();
-    		modelToImportVdbMap().put(modelName, existingSet);
-    	} else { // If set exists, then need to check collect any potential stale import vdb names
-    		for( String importVdb : existingSet ) {
-    			if( !importVdbNames.contains(importVdb)) {
-    				staleImportVdbs.add(importVdb);
-    			}
-    		}
-    	}
-    	existingSet.addAll(importVdbNames);
-    	
-    	unregisterStaleImportVdbs(staleImportVdbs);
+    public final void registerImportVdbs(Collection<VdbImportInfo> vdbImports, String modelName) {
+
+    	removeStaleVdbImports();
     	
     	// Only add the import if it doesn't already exist
-    	for( String importVdbName : importVdbNames ) {
-	    	if( getImportVdbEntry(importVdbName) == null ) {
-	    		addImport(importVdbName);
+    	for( VdbImportInfo vdbImport : vdbImports ) {
+	    	if( getImportVdbEntry(vdbImport.getName()) == null ) {
+	    		addImport(vdbImport.getName(), vdbImport.getVersion());
 	    	}
     	}
     }
     
+    /** check for VDB References and remove any STALE VDB imports that are not
+    * used anymore.
+    * 
+    */
+    
+    private  final void removeStaleVdbImports() {
+    	// Collect import vdb names from VdbModelEntries
+    	Set<String> allImportVdbNames = new HashSet<String>();
+    	for( VdbModelEntry entry : getModelEntries() ) {
+    		allImportVdbNames.addAll(entry.getImportVdbNames());
+    	}
+    	
+    	// Now check each VdbImportVdbEntry and see if it's name is in this list
+    	// Collect any stale VdbImportVdbEntry's
+    	Set<VdbImportVdbEntry> staleImports = new HashSet<VdbImportVdbEntry>();
+    	for( VdbImportVdbEntry entry : getImports() ) {
+    		if( ! allImportVdbNames.contains(entry.getName())) {
+    			staleImports.add(entry);
+    		}
+    	}
+    	
+    	for( VdbImportVdbEntry entry : staleImports ) {
+    		removeImport(entry);
+    	}
+    	
+    }
 
     
 
@@ -872,30 +881,6 @@ public final class XmiVdb extends BasicVdb {
         getBuilder().stop();
     }
     
-    private final void unregisterStaleImportVdbs(Set<String> proposedStaleImportVdbs) {
-    	Set<String> actualStaleImportVdbs = new HashSet<String>();
-		for( String importVdb : proposedStaleImportVdbs ) {
-			boolean keep = true;
-			for( String modelName : modelToImportVdbMap().keySet() ) {
-				Set<String> importVdbSet = modelToImportVdbMap().get(modelName);
-				if( importVdbSet.contains(importVdb)) {
-					keep = false;
-					break;
-				}
-			}
-			
-			if( !keep ) {
-				actualStaleImportVdbs.add(importVdb);
-			}
-		}
-		
-		for( String staleImportVdb : actualStaleImportVdbs ) {
-			VdbImportVdbEntry entry = getImportVdbEntry(staleImportVdb);
-			if( entry != null ) {
-				removeImport(entry);
-			}
-		}
-    }
 
     /**
      * @return builder
