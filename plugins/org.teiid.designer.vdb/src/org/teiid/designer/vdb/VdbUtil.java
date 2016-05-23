@@ -1056,7 +1056,7 @@ public class VdbUtil implements VdbConstants {
                     String finalModelPath = projectFilePath + '/' + projectRelativeTargetFolder;
                     File entryFile = new File(finalModelPath);
                     if( !entryFile.getParentFile().exists() ) {
-                        entryFile.getParentFile().mkdir();
+                        entryFile.getParentFile().mkdirs();
                     }
 
                     FileOutputStream outstream = new FileOutputStream(finalModelPath);
