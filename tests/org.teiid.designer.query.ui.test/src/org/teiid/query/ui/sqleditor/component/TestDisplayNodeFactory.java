@@ -87,7 +87,8 @@ public class TestDisplayNodeFactory extends TestCase {
                                                         Version.TEIID_8_8,
                                                         Version.TEIID_8_9,
                                                         Version.TEIID_8_10,
-                                                        Version.TEIID_8_11
+                                                        Version.TEIID_8_11,
+                                                        Version.TEIID_8_12_4
                                                         };
 
     private IQueryFactory factory;
@@ -196,7 +197,11 @@ public class TestDisplayNodeFactory extends TestCase {
         }
 
         for (Version version84 : VERSIONS_8_4) {
-            addExpectedResult("testRaiseStatement", version84, "RAISE 'My Error';");  //$NON-NLS-1$//$NON-NLS-2$
+        	if( version84 == Version.TEIID_8_12_4) {
+        		addExpectedResult("testRaiseStatement", version84, "RAISE 'My<undefined>Error';");  //$NON-NLS-1$//$NON-NLS-2$
+        	} else {
+        		addExpectedResult("testRaiseStatement", version84, "RAISE 'My Error';");  //$NON-NLS-1$//$NON-NLS-2$
+        	}
         }
 
         addExpectedResult("testRaiseStatementWithExpression", VERSION_7_7_0, "ERROR a;");  //$NON-NLS-1$//$NON-NLS-2$
@@ -216,7 +221,11 @@ public class TestDisplayNodeFactory extends TestCase {
         }
 
         for (Version version84 : VERSIONS_8_4) {
-            addExpectedResult("testBlock1", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        	if( version84 == Version.TEIID_8_12_4) {
+        		addExpectedResult("testBlock1", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My<undefined>Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        	} else {
+        		addExpectedResult("testBlock1", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        	}
         }
 
         addExpectedResult("testCreateUpdateProcedure1", VERSION_7_7_0, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -226,7 +235,11 @@ public class TestDisplayNodeFactory extends TestCase {
         }
 
         for (Version version84 : VERSIONS_8_4) {
-            addExpectedResult("testCreateUpdateProcedure1", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        	if( version84 == Version.TEIID_8_12_4) {
+        		addExpectedResult("testCreateUpdateProcedure1", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My<undefined>Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        	} else {
+        		addExpectedResult("testCreateUpdateProcedure1", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        	}
         }
 
         addExpectedResult("testCreateUpdateProcedure2", VERSION_7_7_0, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -236,7 +249,11 @@ public class TestDisplayNodeFactory extends TestCase {
         }
 
         for (Version version84 : VERSIONS_8_4) {
-            addExpectedResult("testCreateUpdateProcedure2", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        	if( version84 == Version.TEIID_8_12_4) {
+        		addExpectedResult("testCreateUpdateProcedure2", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My<undefined>Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        	} else {
+        		addExpectedResult("testCreateUpdateProcedure2", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        	}
         }
 
         addExpectedResult("testCreateUpdateProcedure3", VERSION_7_7_0, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -246,7 +263,11 @@ public class TestDisplayNodeFactory extends TestCase {
         }
 
         for (Version version84 : VERSIONS_8_4) {
-            addExpectedResult("testCreateUpdateProcedure3", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        	if( version84 == Version.TEIID_8_12_4) {
+        		addExpectedResult("testCreateUpdateProcedure3", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My<undefined>Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        	} else {
+        		addExpectedResult("testCreateUpdateProcedure3", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+        	}
         }
 
         addExpectedResult("testTrimAliasSymbol", VERSION_7_7_0, "SELECT\n\t\ttrim(' ' FROM X) AS ID\n\tFROM\n\t\tY"); //$NON-NLS-1$ //$NON-NLS-2$
