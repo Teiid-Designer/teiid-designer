@@ -380,7 +380,7 @@ public class JdbcImportObjectsPage extends WizardPage
                 saveWidgetValues();
             }
         });
-        this.showFilteredSchemaButton = WidgetFactory.createRadioButton(showGroup, "Select and connection filtered schema"); //RADIO_SHOW_FILTERED_SCHEMA_TXT);
+        this.showFilteredSchemaButton = WidgetFactory.createRadioButton(showGroup, "Selected and connection filtered schema"); //RADIO_SHOW_FILTERED_SCHEMA_TXT);
         this.showFilteredSchemaButton.setToolTipText(RADIO_SHOW_FILTERED_SCHEMA_TIP);
         this.showFilteredSchemaButton.addSelectionListener(new SelectionAdapter() {
 
