@@ -17,6 +17,7 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.teiid.core.designer.id.ObjectID;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexConstants;
@@ -108,7 +109,10 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
         if( table != null ) {
         	Table materializedTable = table.getMaterializedTable();
         	if( materializedTable != null ) {
-        		return ModelerCore.getObjectId(materializedTable).toString();
+        		ObjectID objID = ModelerCore.getObjectId(materializedTable);
+        		if( objID != null) {
+        			return ModelerCore.getObjectId(materializedTable).toString();
+        		}
         	}
         }
         

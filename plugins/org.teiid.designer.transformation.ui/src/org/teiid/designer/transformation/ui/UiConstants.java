@@ -96,6 +96,11 @@ public interface UiConstants {
 		String SCHEMA_ELEMENT = PC.OBJ16 + "XSDElementDeclaration.gif"; //$NON-NLS-1$
 		String SCHEMA_ATTRIBUTE = PC.OBJ16 + "XSDAttributeDeclaration.gif"; //$NON-NLS-1$
 
+		String VIRTUAL_RELATIONAL_TABLE = PC.OBJ16 + "virtual-relational-table.png"; //$NON-NLS-1$
+		String RELATIONAL_TABLE = PC.OBJ16 + "relational-table.png"; //$NON-NLS-1$
+		String SOURCE_MODEL = PC.OBJ16 + "source-model.gif"; //$NON-NLS-1$
+		String VIEW_MODEL = PC.OBJ16 + "view-model.gif"; //$NON-NLS-1$
+		String FOLDER = PC.OBJ16 + "folder.png"; //$NON-NLS-1$
 	}
     
     interface SQLPanels {
