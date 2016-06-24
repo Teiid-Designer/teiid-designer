@@ -73,6 +73,7 @@ public class RuntimeTypesConstants {
         public static final String GEOMETRY             = "geometry";//$NON-NLS-1$
         public static final String VARBINARY            = "varbinary";//$NON-NLS-1$
         public static final String BYTE               	= "byte"; //$NON-NLS-1$
+        public static final String LONG                 = "long"; //$NON-NLS-1$
 
     
     /**
@@ -126,6 +127,7 @@ public class RuntimeTypesConstants {
     	SQL_TO_DTYPE_MAP.put(CHAR, DefaultDataTypes.CHAR);
     	SQL_TO_DTYPE_MAP.put(INTEGER, DefaultDataTypes.INTEGER);
     	SQL_TO_DTYPE_MAP.put(DOUBLE, DefaultDataTypes.DOUBLE);
+    	SQL_TO_DTYPE_MAP.put(LONG, DefaultDataTypes.LONG);
     	SQL_TO_DTYPE_MAP.put(BIGDECIMAL, DefaultDataTypes.BIG_DECIMAL);
     	SQL_TO_DTYPE_MAP.put(DATE, DefaultDataTypes.DATE);
     	SQL_TO_DTYPE_MAP.put(TIME, DefaultDataTypes.TIME);
