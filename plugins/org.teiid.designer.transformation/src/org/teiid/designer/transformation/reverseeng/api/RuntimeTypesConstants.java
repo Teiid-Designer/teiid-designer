@@ -34,8 +34,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.metamodels.transformation.TransformationPlugin;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeAliases;
@@ -74,51 +77,102 @@ public class RuntimeTypesConstants {
         public static final String VARBINARY            = "varbinary";//$NON-NLS-1$
         public static final String BYTE               	= "byte"; //$NON-NLS-1$
         public static final String LONG                 = "long"; //$NON-NLS-1$
+        public static final String ANYURI               = "anyURI"; //$NON-NLS-1$
+        public static final String BASE64BINARY         = "base64Binary"; //$NON-NLS-1$
+        public static final String BIGINTEGER           = "biginteger"; //$NON-NLS-1$
+        public static final String DATETIME             = "dateTime"; //$NON-NLS-1$
+        public static final String DECIMAL              = "decimal"; //$NON-NLS-1$
+        public static final String DURATION             = "duration"; //$NON-NLS-1$
+        public static final String ENTTIES              = "ENTITIES"; //$NON-NLS-1$
+        public static final String ENTITY               = "ENTITY"; //$NON-NLS-1$
+        public static final String GDAY                 = "gDay"; //$NON-NLS-1$
+        public static final String GMONTH               = "gMonth"; //$NON-NLS-1$
+        public static final String GMONTYDAY            = "gMonthDay"; //$NON-NLS-1$
+        public static final String GYEAR                = "gYear"; //$NON-NLS-1$
+        public static final String GYEARMONTH           = "gYearMonth"; //$NON-NLS-1$
+        public static final String HEXBINARY            = "hexBinary"; //$NON-NLS-1$
+        public static final String ID                   = "ID"; //$NON-NLS-1$
+        public static final String IDREF                = "IDREF"; //$NON-NLS-1$
+        public static final String IDREFS               = "IDREFS"; //$NON-NLS-1$
+        public static final String INT                  = "int"; //$NON-NLS-1$
+        public static final String LANGUAGE             = "language"; //$NON-NLS-1$
+        public static final String NAME                 = "Name"; //$NON-NLS-1$
+        public static final String NCNAME               = "NCName"; //$NON-NLS-1$
+        public static final String NEGATIVE_INTEGER     = "negativeInteger"; //$NON-NLS-1$
+        public static final String NMTOKEN              = "NMTOKEN"; //$NON-NLS-1$
+        public static final String NMTOKENS             = "NMTOKENS"; //$NON-NLS-1$
+        public static final String NON_NEGATIVE_INTEGER = "nonNegativeInteger"; //$NON-NLS-1$
+        public static final String NON_POSITIVE_INTEGER = "nonPositiveInteger"; //$NON-NLS-1$
+        public static final String NORMALIZED_STRING    = "normalizedString"; //$NON-NLS-1$
+        public static final String NOTATION             = "NOTATION"; //$NON-NLS-1$
+        public static final String POSITIVE_INTEGER     = "positiveInteger"; //$NON-NLS-1$
+        public static final String QNAME                = "Qname"; //$NON-NLS-1$
+        public static final String TOKEN                = "unsignedByte"; //$NON-NLS-1$
+        public static final String UNSIGNED_BYTE        = "unsignedByte"; //$NON-NLS-1$
+        public static final String UNSIGNED_INT         = "unsignedInt"; //$NON-NLS-1$
+        public static final String UNSIGNED_LONG        = "unsignedLong"; //$NON-NLS-1$
+        public static final String UNSIGNED_SHORT       = "unsignedShort"; //$NON-NLS-1$
+        public static final String XML_LITERAL          = "XMLLiteral"; //$NON-NLS-1$
+    
+/*
+ * 
+        Design-time	Run-time	Java
+        anyURI	string	String
+        base64Binary	string	String
+        bigdecimal	bigdecimal	BigDecimal
+        biginteger	biginteger	BigInteger
+        blob	blob	Object
+        boolean	boolean	Boolean
+        byte	byte	Byte
+        char	char	Character
+        clob	clob	String
+        date	date	Date
+        dateTime	timestamp	Timestamp
+        decimal	bigdecimal	BigDecimal
+        double	double	Double
+        duration	string	String
+        ENTITIES	string	String
+        ENTITY	string	String
+        float	float	Float
+        gDay	biginteger	BigInteger
+        geometry	geometry	Object
+        gMonth	biginteger	BigInteger
+        gMonthDay	timestamp	Timestamp
+        gYear	biginteger	BigInteger
+        gYearMonth	timestamp	Timestamp
+        hexBinary	string	String
+        ID	string	String
+        IDREF	string	String
+        IDREFS	string	String
+        int	integer	Integer
+        language	string	String
+        long	long	Long
+        Name	string	String
+        NCName	string	String
+        negativeInteger	biginteger	BigInteger
+        NMTOKEN	string	String
+		NMTOKENS	string	String
+		nonNegativeInteger	biginteger	BigInteger
+		nonPositiveInteger	biginteger	BigInteger
+		normalizedString	string	String
+		NOTATION	string	String
+		object	object	Object
+		positiveInteger	biginteger	BigInteger
+		Qname	string	String
+		short	short	Short
+		string	string	String
+		time	time	Time
+		timestamp	timestamp	Timestamp
+		token	string	String
+		unsignedByte	short	Short
+		unsignedInt	long	Long
+		unsignedLong	biginteger	BigInteger
+		unsignedShort	integer	Integer
+		varbinary	varbinary	String
+		XMLLiteral	xml	String
 
-    
-    /**
-     * JavaTypeClassNames
+
      */
-        // char constants for Java data types
-//        public static final String JAVA_LONG = "java.lang.Long";
-//        public static final String JAVA_BYTES = "byte[]";
-//        public static final String JAVA_BOOLEAN = "java.lang.Boolean";
-//        public static final String JAVA_STRING = "java.lang.String";
-//        public static final String JAVA_SQLDATE = "java.sql.Date";
-//        public static final String JAVA_UTILDATE = "java.util.Date";
-//        public static final String JAVA_BIGDECIMAL = "java.math.BigDecimal";
-//        public static final String JAVA_DOUBLE = "java.lang.Double";
-//        public static final String JAVA_FLOAT = "java.lang.Float";
-//        public static final String JAVA_INTEGER = "java.lang.Integer";
-//        public static final String JAVA_SHORT = "java.lang.Short";
-//        public static final String JAVA_BYTE = "java.lang.Byte";
-//        public static final String JAVA_TIME = "java.sql.Time";
-//        public static final String JAVA_TIMESTAMP = "java.sql.Timestamp";
-//        public static final String JAVA_BLOB = "java.sql.Blob";
-//        public static final String JAVA_OBJECT = "java.lang.Object";
-//        public static final String JAVA_CHARACTER = "java.lang.Character";
-    
-//    static {
-//    	SQL_TO_JAVA_MAP.put(STRING, JAVA_STRING);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_BOOLEAN);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_BOOLEAN);
-//    	SQL_TO_JAVA_MAP.put(FLOAT, JAVA_FLOAT);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_BIGDECIMAL);
-//    	SQL_TO_JAVA_MAP.put(BLOB, JAVA_BLOB);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_BYTE);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_BYTES);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_DOUBLE);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_INTEGER);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_LONG);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_OBJECT);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_SHORT);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_SQLDATE);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_TIME);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_TIMESTAMP);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_UTILDATE);
-//    	SQL_TO_JAVA_MAP.put(BOOLEAN, JAVA_UTILDATE);
-//    }
-    
     static {
     	SQL_TO_DTYPE_MAP.put(STRING, DefaultDataTypes.STRING);
     	SQL_TO_DTYPE_MAP.put(BOOLEAN, DefaultDataTypes.BOOLEAN);
@@ -136,6 +190,43 @@ public class RuntimeTypesConstants {
     	SQL_TO_DTYPE_MAP.put(GEOMETRY, DefaultDataTypes.OBJECT);
     	SQL_TO_DTYPE_MAP.put(CLOB, DefaultDataTypes.STRING);
     	SQL_TO_DTYPE_MAP.put(BLOB, DefaultDataTypes.OBJECT);
+        SQL_TO_DTYPE_MAP.put(ANYURI, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(BASE64BINARY, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(BIGINTEGER, DefaultDataTypes.BIG_INTEGER);
+        SQL_TO_DTYPE_MAP.put(DATETIME, DefaultDataTypes.TIMESTAMP);
+        SQL_TO_DTYPE_MAP.put(DECIMAL, DefaultDataTypes.BIG_DECIMAL);
+        SQL_TO_DTYPE_MAP.put(DURATION, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(ENTTIES, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(ENTITY, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(GDAY, DefaultDataTypes.BIG_INTEGER);
+        SQL_TO_DTYPE_MAP.put(GMONTH, DefaultDataTypes.BIG_INTEGER);
+        SQL_TO_DTYPE_MAP.put(GMONTYDAY, DefaultDataTypes.TIMESTAMP);
+        SQL_TO_DTYPE_MAP.put(GYEAR, DefaultDataTypes.BIG_INTEGER);
+        SQL_TO_DTYPE_MAP.put(GYEARMONTH, DefaultDataTypes.TIMESTAMP);
+        SQL_TO_DTYPE_MAP.put(HEXBINARY, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(ID, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(IDREF, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(IDREFS, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(INT, DefaultDataTypes.INTEGER);
+        SQL_TO_DTYPE_MAP.put(LANGUAGE, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(NAME, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(NCNAME, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(NEGATIVE_INTEGER, DefaultDataTypes.BIG_INTEGER);
+        SQL_TO_DTYPE_MAP.put(NMTOKEN, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(NMTOKENS, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(NON_NEGATIVE_INTEGER, DefaultDataTypes.BIG_INTEGER);
+        SQL_TO_DTYPE_MAP.put(NON_POSITIVE_INTEGER, DefaultDataTypes.BIG_INTEGER);
+        SQL_TO_DTYPE_MAP.put(NORMALIZED_STRING, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(NOTATION, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(POSITIVE_INTEGER, DefaultDataTypes.BIG_INTEGER);
+        SQL_TO_DTYPE_MAP.put(QNAME, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(TOKEN, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(UNSIGNED_BYTE, DefaultDataTypes.SHORT);
+        SQL_TO_DTYPE_MAP.put(UNSIGNED_INT, DefaultDataTypes.LONG);
+        SQL_TO_DTYPE_MAP.put(UNSIGNED_LONG, DefaultDataTypes.BIG_INTEGER);
+        SQL_TO_DTYPE_MAP.put(UNSIGNED_SHORT, DefaultDataTypes.INTEGER);
+        SQL_TO_DTYPE_MAP.put(VARBINARY, DefaultDataTypes.STRING);
+        SQL_TO_DTYPE_MAP.put(XML_LITERAL, DefaultDataTypes.STRING);
     }
     
     public enum DefaultDataTypes {
@@ -333,7 +424,13 @@ public class RuntimeTypesConstants {
     
     
     public static String getJavaType(String runtimeTypeName) {
-    	String typeString = SQL_TO_DTYPE_MAP.get(runtimeTypeName).getTypeClass().toString();
+    	DefaultDataTypes type = SQL_TO_DTYPE_MAP.get(runtimeTypeName);
+    	if( type == null ) {
+    		TransformationPlugin.Util.log(IStatus.WARNING, "Runtime Type: " + runtimeTypeName + 
+    				" is not supported. Java type Object will be used.");
+    		return DefaultDataTypes.OBJECT.getTypeClass().toString();
+    	}
+    	String typeString = type.getTypeClass().toString();
     	if( typeString.startsWith("class ") ) {
     		typeString = typeString.substring(6);
     	}

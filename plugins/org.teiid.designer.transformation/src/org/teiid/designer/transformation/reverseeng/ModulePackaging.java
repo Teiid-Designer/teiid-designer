@@ -30,9 +30,9 @@ import org.teiid.designer.transformation.reverseeng.util.ObjectConverterUtil;
  */
 public class ModulePackaging {
 	
-	private static final String REMOTE_CACHE_TEMPLATE = "org/teiid/reverseeng/remote_cache_module_template.xml";
-	private static final String LIBRARY_MODE_TEMPLATE = "org/teiid/reverseeng/library_mode_module_template.xml";
-	private static final String UNKNOWN_TEMPLATE = "org/teiid/reverseeng/unknown_module_template.xml";
+	private static final String REMOTE_CACHE_TEMPLATE = "org/teiid/designer/transformation/reverseeng/remote_cache_module_template.xml";
+	private static final String LIBRARY_MODE_TEMPLATE = "org/teiid/designer/transformation/reverseeng/library_mode_module_template.xml";
+	private static final String UNKNOWN_TEMPLATE = "org/teiid/designer/transformation/reverseeng/unknown_module_template.xml";
 
 	private static final String MODULE = "modules";
 	
