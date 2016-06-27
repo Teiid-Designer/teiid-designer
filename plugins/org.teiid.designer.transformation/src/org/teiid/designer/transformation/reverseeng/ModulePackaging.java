@@ -18,6 +18,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.designer.metamodels.transformation.TransformationPlugin;
 import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.transformation.reverseeng.api.Options;
 import org.teiid.designer.transformation.reverseeng.util.ObjectConverterUtil;
@@ -88,16 +89,18 @@ public class ModulePackaging {
 		File[] filesInModule = new File[2];  // jar and module files
 		filesInModule[0]=pojoDest;
 		filesInModule[1]=moduleFile;
-		
+
 		String moduleLocation = options.getProperty(Options.Parms.BUILD_LOCATION);
+		
+		TransformationPlugin.Util.log(IStatus.INFO, "[ReverseEngineering] Creating module at : " + moduleLocation);
+		
 		createZip(
 				filesInModule, 
 				moduleLocation + File.separator + moduleZipFileName, 
 				MODULE + File.separator + packageFilePath);
 		
-//		ReverseEngineerPlugin.LOGGER.info("[ReverseEngineering] Completed packaging module: " + moduleZipFileName);
+		TransformationPlugin.Util.log(IStatus.INFO, "[ReverseEngineering] Completed packaging module: " + moduleZipFileName);
 
-		
 	}
 	
 	private String getModuleTemplate(String module_template) throws IOException {
@@ -154,6 +157,8 @@ public class ModulePackaging {
 			fos.close();
 	
         }catch(IOException ex){
+    		
+    		TransformationPlugin.Util.log(IStatus.ERROR, "[ReverseEngineering] Exception creating module " + targetZip);
            ex.printStackTrace();
         }
     
