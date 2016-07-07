@@ -146,7 +146,7 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
         	GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).hint(0,  55).applyTo(serverMessageGroup);
 
             if( !serverDefined ) {  
-            	msgText.setText(getString("noServerDefined", ModelerCore.getTeiidServerManager().getDefaultServer().getDisplayName())); //$NON-NLS-1$
+            	msgText.setText(getString("noServerDefined")); //$NON-NLS-1$
             } else {
             	
             	msgText.setText(getString("serverNotStarted")); //$NON-NLS-1$
