@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
 import org.teiid.designer.jdbc.metadata.JdbcTable;
+import org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants.Processors;
 import org.teiid.designer.jdbc.relational.impl.Context;
 import org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
@@ -269,5 +270,10 @@ public class OracleModelProcessor extends RelationalModelProcessorImpl {
         }
         return nis;
     }
+    
+	@Override
+	public String getType() {
+		return Processors.ORACLE;
+	}
 
 }

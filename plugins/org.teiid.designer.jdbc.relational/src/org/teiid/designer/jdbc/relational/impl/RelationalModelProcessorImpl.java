@@ -2621,10 +2621,12 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         	}
         } else {
         	if(nameInSource!=null) {
-            	String quoteStr = getQuoteString(context,problems);
-            	if( quoteStr != null && quoteStr.length() > 0 ) {
-            		nameInSource = quoteStr + CoreStringUtil.replaceAll(nameInSource,quoteStr,quoteStr+quoteStr) + quoteStr;
-            	}
+        		if( !getType().equalsIgnoreCase(Processors.SYBASE) ) {
+	            	String quoteStr = getQuoteString(context,problems);
+	            	if( quoteStr != null && quoteStr.length() > 0 ) {
+	            		nameInSource = quoteStr + CoreStringUtil.replaceAll(nameInSource,quoteStr,quoteStr+quoteStr) + quoteStr;
+	            	}
+        		}
         		entity.setNameInSource(nameInSource);
         	}
         }
@@ -2866,4 +2868,11 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 	public void setDebugLogTiming( boolean logTiming ) {
         this.debugTimingEnabled = logTiming;
     }
+
+	@Override
+	public String getType() {
+		return Processors.JDBC;
+	}
+    
+    
 }

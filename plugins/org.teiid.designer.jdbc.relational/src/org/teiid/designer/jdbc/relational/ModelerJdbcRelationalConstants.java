@@ -67,5 +67,18 @@ public interface ModelerJdbcRelationalConstants {
 	 * @since 4.0
 	 */
 	PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, PC.I18N_NAME, ResourceBundle.getBundle(PC.I18N_NAME));
+	
+	interface Processors {
+		String JDBC = "jdbc"; //$NON-NLS-1$
+		String ORACLE = "oracle"; //$NON-NLS-1$
+		String SQLSERVER = "sqlserver"; //$NON-NLS-1$
+		String SYBASE = "Sybase"; //$NON-NLS-1$
+		String DB2 = "DB2"; //$NON-NLS-1$
+		String POSTGRES = "postgres"; //$NON-NLS-1$
+		String ODBC = "ODBC"; //$NON-NLS-1$
+		String MODESHAPE = "modeshape"; //$NON-NLS-1$
+		String TEIID = "teiid"; //$NON-NLS-1$
+		String EXCEL = "excel"; //$NON-NLS-1$
+	}
     
 }
