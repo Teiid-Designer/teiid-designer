@@ -53,8 +53,6 @@ import org.teiid.designer.roles.ui.wizard.panels.ColumnMaskingPanel;
 import org.teiid.designer.roles.ui.wizard.panels.CrudPanel;
 import org.teiid.designer.roles.ui.wizard.panels.RowBasedSecurityPanel;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.designer.ui.common.UILabelUtil;
-import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.InternalUiConstants.Widgets;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
@@ -159,15 +157,15 @@ public class DataRoleWizard extends AbstractWizard {
             this.editedDataRole = new DataRole(this.dataRoleName);
         } else {
             this.editedDataRole = this.existingDataRole.clone();
-            this.dataRoleName = existingDataRole.getName();
-            this.description = existingDataRole.getDescription();
-            this.allowCreateTempTables = existingDataRole.isAllowCreateTempTables();
-            this.anyAuthentication = existingDataRole.isAnyAuthenticated();
-            this.grantAll = existingDataRole.isGrantAll();
-            this.allowSystemTables = existingDataRole.getPermission(SYS_ADMIN_TABLE_TARGET) != null;
+            this.dataRoleName = editedDataRole.getName();
+            this.description = editedDataRole.getDescription();
+            this.allowCreateTempTables = editedDataRole.isAllowCreateTempTables();
+            this.anyAuthentication = editedDataRole.isAnyAuthenticated();
+            this.grantAll = editedDataRole.isGrantAll();
+            this.allowSystemTables = editedDataRole.getPermission(SYS_ADMIN_TABLE_TARGET) != null;
             this.isEdit = true;
             this.setWindowTitle(EDIT_TITLE);
-            this.mappedRoleNames = new HashSet<String>(existingDataRole.getRoleNames());
+            this.mappedRoleNames = new HashSet<String>(editedDataRole.getRoleNames());
         }
         
         disableGrantAll = ModelerCore.getTeiidServerManager().getDefaultServer() == null || ModelerCore.getTeiidServerVersion().isLessThan(Version.TEIID_8_7);
@@ -445,7 +443,9 @@ public class DataRoleWizard extends AbstractWizard {
     	optionsTabItem = new CTabItem(mainTabFolder, SWT.NONE);
     	optionsTabItem.setText(Messages.options);
     	optionsTabItem.setToolTipText(Messages.optionsTabDescription);
-    	final Composite miscOptionsGroup = WidgetFactory.createPanel(mainTabFolder, GridData.FILL_HORIZONTAL, 2, 3);
+    	final Composite miscOptionsGroup = new Composite(mainTabFolder, SWT.NONE); //WidgetFactory.createPanel(mainTabFolder, GridData.FILL_HORIZONTAL, 2, 3);
+    	GridLayoutFactory.swtDefaults().numColumns(1).applyTo(miscOptionsGroup);
+    	GridDataFactory.swtDefaults().span(3,  1).applyTo(miscOptionsGroup);
         allowCreateTempTablesCheckBox = WidgetFactory.createCheckBox(miscOptionsGroup,
                                                                      getString("allowCreateTempTablesCheckBox.label"), GridData.FILL_HORIZONTAL, 1, anyAuthentication); //$NON-NLS-1$
         allowCreateTempTablesCheckBox.addSelectionListener(new SelectionAdapter() {

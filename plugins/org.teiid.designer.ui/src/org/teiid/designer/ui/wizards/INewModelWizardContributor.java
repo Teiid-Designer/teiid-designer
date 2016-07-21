@@ -94,4 +94,8 @@ public interface INewModelWizardContributor {
       * @author PForhan
       */
     void currentPageChanged(IWizardPage page);
+    
+    ModelResource getSelectedModelResource();
+    
+    boolean copyAllDescriptions();
 }

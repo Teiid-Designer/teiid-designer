@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.teiid.designer.jdbc.JdbcException;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
 import org.teiid.designer.jdbc.metadata.JdbcTable;
+import org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants.Processors;
 import org.teiid.designer.jdbc.relational.impl.Context;
 import org.teiid.designer.jdbc.relational.impl.JdbcModelStructure;
 import org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl;
@@ -117,5 +118,10 @@ public class ModeShapeModelProcessor extends RelationalModelProcessorImpl {
             column.setSelectable(false);
         }
     }
+    
+	@Override
+	public String getType() {
+		return Processors.MODESHAPE;
+	}
 
 }

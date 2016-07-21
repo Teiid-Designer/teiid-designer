@@ -222,6 +222,8 @@ public class Messages extends org.teiid.designer.relational.ui.Messages {
     public static String ExportTeiidDdlModelSelectionPage_ddlExportOptions;
     public static String ExportTeiidDdlModelSelectionPage_nameInSourceOption;
     public static String ExportTeiidDdlModelSelectionPage_nativeTypeOption;
+    public static String ExportTeiidDdlModelSelectionPage_selectModelDialogTitle;
+    public static String ExportTeiidDdlModelSelectionPage_selectModelDialogMessage;
     
     static {
         NLS.initializeMessages("org.teiid.designer.transformation.ui.messages", Messages.class); //$NON-NLS-1$

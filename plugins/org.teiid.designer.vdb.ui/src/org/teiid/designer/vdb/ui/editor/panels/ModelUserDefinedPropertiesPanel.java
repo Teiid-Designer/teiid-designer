@@ -103,7 +103,8 @@ public class ModelUserDefinedPropertiesPanel extends Composite {
 	                    ModelElement.MODEL_CLASS.equals(keyStr) ||
 	                    ModelElement.MODEL_UUID.equals(keyStr) ||
 	                    ModelElement.IMPORT_VDB_REFERENCE.equals(keyStr) ||
-	                    ModelElement.SUPPORTS_MULTI_SOURCE.equals(keyStr) ||
+	                    ModelElement.SUPPORTS_MULTI_SOURCE.equals(keyStr) || 
+	                    ModelElement.MULTI_SOURCE.equals(keyStr) ||
 	                    ModelElement.MULTI_SOURCE_ADD_COLUMN.equals(keyStr) ||
 	                    ModelElement.MULTI_SOURCE_COLUMN_ALIAS.equals(keyStr) ||
 	                    EntryElement.CHECKSUM.equals(keyStr)||

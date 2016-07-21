@@ -331,4 +331,14 @@ public final class WebServiceModelContributor implements INewModelWizardContribu
         }
         return Arrays.asList(getPages()).get(ndx - 1);
     }
+
+	@Override
+	public ModelResource getSelectedModelResource() {
+		return null;
+	}
+	
+	@Override
+    public boolean copyAllDescriptions() { 
+		return false;
+	}
 }

@@ -178,7 +178,7 @@ public class DelimiterOptionsDialog  extends TitleAreaDialog {
     		setErrorMessage(null);
         	if( this.otherDelimiterRB.getSelection() ) {
 	        	if( !this.otherDelimiterText.getText().isEmpty()) {
-		    		this.fileInfo.setDelimiter(this.otherDelimiterText.getText().substring(0, 1));
+		    		this.fileInfo.setDelimiter(this.otherDelimiterText.getText().trim());
 		    	} else {
 		    		setErrorMessage(getString("delimiterCannotBeNull")); //$NON-NLS-1$
 		    		return;
@@ -197,7 +197,7 @@ public class DelimiterOptionsDialog  extends TitleAreaDialog {
         		fileInfo.setDelimiter(ITeiidMetadataFileInfo.BAR);
         	} else {
         		if( !this.otherDelimiterText.getText().isEmpty()) {
-    	    		this.fileInfo.setDelimiter(this.otherDelimiterText.getText().substring(0, 1));
+    	    		this.fileInfo.setDelimiter(this.otherDelimiterText.getText().trim());
     	    	}
         	}
     	}

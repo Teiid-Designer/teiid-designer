@@ -52,7 +52,7 @@ public class FloatAsIntPropertyEditorFactory implements IPropertyEditorFactory {
                 }
 
                 final float floatValue = Float.intBitsToFloat(value & 0x7fffffff);
-                return String.format("%.0f", floatValue); //$NON-NLS-1$
+                return String.valueOf(floatValue);
             }
 
             return super.getText(element);

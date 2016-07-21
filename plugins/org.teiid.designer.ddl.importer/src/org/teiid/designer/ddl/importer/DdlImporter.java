@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.modeshape.common.text.ParsingException;
 import org.modeshape.common.text.Position;
-import org.modeshape.sequencer.ddl.DdlParserScorer;
 import org.modeshape.sequencer.ddl.DdlParsers;
 import org.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
@@ -59,13 +58,14 @@ import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.metamodels.relational.RelationalPlugin;
 import org.teiid.designer.metamodels.relational.View;
 import org.teiid.designer.metamodels.relational.extension.RestModelExtensionAssistant;
+import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.compare.DifferenceGenerator;
 import org.teiid.designer.relational.compare.DifferenceReport;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
-import org.teiid.modeshape.sequencer.ddl.TeiidDdlParser;
 
 /**
  * DdlImporter parses the provided DDL and generates a model containing the parsed entities
@@ -485,6 +485,12 @@ public class DdlImporter {
                 for (Object nextObj : model.getEObjects()) {
                     if (nextObj instanceof Procedure || nextObj instanceof BaseTable || nextObj instanceof View) {
                         try {
+                        	if( nextObj instanceof BaseTable ) {
+                        		String value = RelationalPlugin.getExtensionProperty((EObject)nextObj, RelationalConstants.BASE_TABLE_EXT_PROPERTIES.VIEW_TABLE_GLOBAL_TEMP_TABLE);
+                        		if( value != null && value.equalsIgnoreCase(Boolean.TRUE.toString()) ) {
+                        			props.put("validate", value); //$NON-NLS-1$
+                        		}
+                        	}
                             NewModelObjectHelperManager.helpCreate(nextObj, props);
                             targets.add((EObject)nextObj);
                         } catch (ModelerCoreException err) {

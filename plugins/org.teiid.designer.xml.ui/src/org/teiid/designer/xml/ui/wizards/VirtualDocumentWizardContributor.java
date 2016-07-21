@@ -183,4 +183,13 @@ public class VirtualDocumentWizardContributor implements INewModelWizardContribu
         }
     }
 
+	@Override
+	public ModelResource getSelectedModelResource() {
+		return null;
+	}
+	
+	@Override
+    public boolean copyAllDescriptions() { 
+		return false;
+	}
 }

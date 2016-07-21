@@ -12,6 +12,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.jdbc.metadata.JdbcTable;
+import org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants.Processors;
 import org.teiid.designer.jdbc.relational.impl.Context;
 import org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl;
 import org.teiid.designer.metamodels.relational.Column;
@@ -150,6 +151,11 @@ public class PostgresModelProcessor extends RelationalModelProcessorImpl {
         }
         		
     }
+    
+	@Override
+	public String getType() {
+		return Processors.POSTGRES;
+	}
     
     /*
 		The following is a DDL statement that can be used to create a table containing columns of every datatype

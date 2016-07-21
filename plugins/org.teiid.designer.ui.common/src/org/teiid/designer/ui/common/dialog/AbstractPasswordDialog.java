@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.ui.common.dialog;
 
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -16,6 +17,7 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Dialog;
+import org.teiid.designer.ui.common.widget.Label;
 
 
 /**<p>
@@ -89,7 +91,9 @@ public abstract class AbstractPasswordDialog extends Dialog implements InternalU
     protected Control createDialogArea(final Composite parent) {
         final Composite dlgPanel = (Composite)super.createDialogArea(parent);
         ((GridLayout)dlgPanel.getLayout()).numColumns = COLUMN_COUNT;
-        WidgetFactory.createLabel(dlgPanel, passwordLabel);
+        ((GridData)dlgPanel.getLayoutData()).minimumWidth = 320;
+        Label label = WidgetFactory.createLabel(dlgPanel, passwordLabel);
+        ((GridData)label.getLayoutData()).verticalAlignment = GridData.VERTICAL_ALIGN_CENTER;
         this.pwdFld = WidgetFactory.createPasswordField(dlgPanel);
         return dlgPanel;
     }

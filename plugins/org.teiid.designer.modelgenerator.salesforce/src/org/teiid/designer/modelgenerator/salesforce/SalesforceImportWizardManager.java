@@ -9,6 +9,8 @@ package org.teiid.designer.modelgenerator.salesforce;
 
 import static org.teiid.designer.modelgenerator.salesforce.SalesforceConstants.NAMESPACE_PROVIDER;
 
+import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -18,6 +20,7 @@ import org.eclipse.datatools.connectivity.IConnection;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.compare.DifferenceProcessor;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.MergeProcessor;
@@ -26,6 +29,7 @@ import org.teiid.designer.compare.util.CompareUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
@@ -34,6 +38,7 @@ import org.teiid.designer.modelgenerator.salesforce.model.DataModel;
 import org.teiid.designer.modelgenerator.salesforce.model.impl.DataModelImpl;
 import org.teiid.designer.modelgenerator.salesforce.util.ModelBuildingException;
 import org.teiid.designer.modelgenerator.salesforce.util.SalesForceConnectionInfoProvider;
+import org.teiid.designer.runtime.spi.ITeiidServer;
 
 
 /**
@@ -65,6 +70,8 @@ public class SalesforceImportWizardManager {
     private boolean setNameAsNameInSource;
     private boolean generateUpdated;
     private boolean generateDeleted;
+	private String jbossJndiName;
+	private boolean autoCreateDataSource = true;
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTOR
@@ -203,6 +210,13 @@ public class SalesforceImportWizardManager {
                 monitor.subTask(Messages.getString("SalesforceImportWizardManager.binding")); //$NON-NLS-1$
                 SalesForceConnectionInfoProvider helper = new SalesForceConnectionInfoProvider();
                 helper.setConnectionInfo(modelResource, connectionProfile);
+          		String jndiName = getJBossJndiName();
+          		if( !StringUtilities.isEmpty(jndiName) ) {
+          			helper.setJNDIName(modelResource, jndiName);
+          		}
+                  
+                handleCreateDataSource(modelResource);
+                
                 try {
                     monitor.subTask(Messages.getString("SalesforceImportWizardManager.saving.model")); //$NON-NLS-1$
                     modelResource.save(monitor, false);
@@ -327,5 +341,57 @@ public class SalesforceImportWizardManager {
 
     public boolean isGenerateDeleted() {
         return generateDeleted;
+    }
+    
+	/**
+	 * 
+	 * @return sourceModelName the source relational model name
+	 */
+	public String getJBossJndiName() {
+        return this.jbossJndiName;
+	}
+	
+	/**
+	 * 
+	 * @param sourceModelName (never <code>null</code> or empty).
+	 */
+	public void setJBossJndiNameName(String jndiName) {
+		this.jbossJndiName = jndiName;
+	}
+	
+	/**
+	 * 
+	 * @return sourceModelName the source relational model name
+	 */
+	public boolean doCreateDataSource() {
+        return this.autoCreateDataSource;
+	}
+	
+	/**
+	 * 
+	 * @param sourceModelName (never <code>null</code> or empty).
+	 */
+	public void setCreateDataSource(boolean value) {
+		this.autoCreateDataSource = value;
+	}
+	
+    protected void handleCreateDataSource(ModelResource model) {
+    	if( doCreateDataSource() && DataSourceConnectionHelper.isServerConnected() ) {
+            ITeiidServer teiidServer = DataSourceConnectionHelper.getServer();
+            
+    		String dsName = getJBossJndiName();
+    		String jndiName = getJBossJndiName();
+    		DataSourceConnectionHelper helper = new DataSourceConnectionHelper(model, getConnectionProfile());
+    		
+        	Properties connProps = helper.getModelConnectionProperties();
+        	
+        	String dsType = helper.getDataSourceType();
+    		try {
+				teiidServer.getOrCreateDataSource(dsName, jndiName, dsType, connProps);
+			} catch (Exception e) {
+	            IStatus status = new org.eclipse.core.runtime.Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage());
+	            Activator.getDefault().getLog().log(status);
+			}
+    	}
     }
 }

@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -53,6 +55,8 @@ import org.teiid.designer.core.workspace.ModelProject;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
+import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.modelgenerator.salesforce.SalesforceImportWizardManager;
@@ -103,6 +107,12 @@ public class ModelSelectionPage extends AbstractWizardPage
     private Button generateUpdatedCheckBox;
 
     private Button generateDeletedCheckBox;
+    
+    private Text jndiNameField;
+    private String jndiName;
+    private Button autoCreateDataSource;
+
+    private IConnectionInfoHelper connectionInfoHelper;
 
     public ModelSelectionPage( SalesforceImportWizardManager importManager ) {
         super(ModelSelectionPage.class.getSimpleName(), getString("title")); //$NON-NLS-1$
@@ -125,24 +135,26 @@ public class ModelSelectionPage extends AbstractWizardPage
 
     private void createTargetModelControls( Composite pnl ) {
         // target model group
-        Group optionsGroup = WidgetFactory.createGroup(pnl, null, SWT.FILL, 1, 3);
-        optionsGroup.setText(getString("targetModelGroup.text")); //$NON-NLS-1$
+        Group modelGroup = WidgetFactory.createGroup(pnl, null, SWT.FILL, 1, 3);
+        GridLayoutFactory.swtDefaults().numColumns(3).applyTo(modelGroup);
+        modelGroup.setText(getString("targetModelGroup.text")); //$NON-NLS-1$
 
         GridData gData = new GridData(GridData.FILL_HORIZONTAL);
-        optionsGroup.setLayoutData(gData);
+        modelGroup.setLayoutData(gData);    
+//        GridDataFactory.swtDefaults().span(1,  1).grab(true,  false).applyTo(optionsGroup);
 
         // --------------------------------------------
         // Composite for Model Selection
         // --------------------------------------------
         // Select Model Label
-        CLabel theLabel = new CLabel(optionsGroup, SWT.NONE);
+        CLabel theLabel = new CLabel(modelGroup, SWT.NONE);
         theLabel.setText(getString("targetModelLabel.text")); //$NON-NLS-1$
         final GridData gridData = new GridData(SWT.NONE);
         gridData.horizontalSpan = 1;
         theLabel.setLayoutData(gridData);
 
         // target model name textfield
-        textFieldTargetModelName = WidgetFactory.createTextField(optionsGroup, GridData.FILL_HORIZONTAL);
+        textFieldTargetModelName = WidgetFactory.createTextField(modelGroup, GridData.FILL_HORIZONTAL);
         String text = getString("targetModelTextField.tooltip"); //$NON-NLS-1$
         textFieldTargetModelName.setToolTipText(text);
         if (null != importManager.getTargetModelName()) {
@@ -156,7 +168,7 @@ public class ModelSelectionPage extends AbstractWizardPage
         });
 
         // target model Browse Button
-        buttonSelectTargetModel = WidgetFactory.createButton(optionsGroup,
+        buttonSelectTargetModel = WidgetFactory.createButton(modelGroup,
                                                              getString("targetModelBrowseButton.text"), GridData.FILL); //$NON-NLS-1$
         buttonSelectTargetModel.setToolTipText(getString("targetModelBrowseButton.tooltip")); //$NON-NLS-1$
 
@@ -166,7 +178,7 @@ public class ModelSelectionPage extends AbstractWizardPage
         // Select Target Location Label
         // WidgetFactory.createLabel( optionsGroup,
         // getString("targetModelLocationLabel.text")); //$NON-NLS-1$
-        CLabel theLabel2 = new CLabel(optionsGroup, SWT.NONE);
+        CLabel theLabel2 = new CLabel(modelGroup, SWT.NONE);
         theLabel2.setText(getString("targetModelLocationLabel.text")); //$NON-NLS-1$
         final GridData gridData2 = new GridData(SWT.NONE);
         gridData2.horizontalSpan = 1;
@@ -176,7 +188,7 @@ public class ModelSelectionPage extends AbstractWizardPage
         final String name = (location == null ? null : location.getFullPath().makeRelative().toString());
 
         // FileSystem textfield
-        textFieldTargetModelLocation = WidgetFactory.createTextField(optionsGroup, GridData.FILL_HORIZONTAL);
+        textFieldTargetModelLocation = WidgetFactory.createTextField(modelGroup, GridData.FILL_HORIZONTAL);
         text = getString("targetModelLocationTextField.tooltip"); //$NON-NLS-1$
         textFieldTargetModelLocation.setToolTipText(text);
 
@@ -210,7 +222,7 @@ public class ModelSelectionPage extends AbstractWizardPage
 
         // Model Location Browse Button
         if (!usesHiddenProject) {
-            buttonSelectTargetModelLocation = WidgetFactory.createButton(optionsGroup,
+            buttonSelectTargetModelLocation = WidgetFactory.createButton(modelGroup,
                                                                          getString("targetModelLocationBrowseButton.text"), GridData.FILL); //$NON-NLS-1$
             buttonSelectTargetModelLocation.setToolTipText(getString("targetModelLocationBrowseButton.tooltip")); //$NON-NLS-1$
             buttonSelectTargetModelLocation.addListener(SWT.Selection, this);
@@ -220,12 +232,100 @@ public class ModelSelectionPage extends AbstractWizardPage
         // Add Listener to handle selection events
         // --------------------------------------------
         buttonSelectTargetModel.addListener(SWT.Selection, this);
+        addJndiNamePanel(modelGroup);
+    }
+    
+    private void addJndiNamePanel(Composite parent) {
+        
+    		// Add widgets to page
+        	Group theGroup = WidgetFactory.createGroup(parent, getString("jndiGroup"), SWT.NONE, 3, 3); //$NON-NLS-1$
+        	GridLayoutFactory.fillDefaults().numColumns(2).margins(10,  10).applyTo(theGroup);
+        	GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(theGroup);
+
+            Label nameLabel = new Label(theGroup, SWT.NULL);
+            nameLabel.setText(getString("jndiLabel")); //$NON-NLS-1$
+            nameLabel.setToolTipText(getString("jndiToolTip")); //$NON-NLS-1$
+            GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(nameLabel);
+            
+            // Check to see if server is available and connected
+            boolean serverDefined = DataSourceConnectionHelper.isServerDefined();
+            boolean serverActive = DataSourceConnectionHelper.isServerConnected();
+            
+            this.jndiNameField = WidgetFactory.createTextField(theGroup);
+            this.jndiNameField.setToolTipText(getString("jndiToolTip")); //$NON-NLS-1$
+            this.jndiName = importManager.getJBossJndiName();
+            if( this.jndiName != null && this.jndiName.length() > 0 ) {
+            	this.jndiNameField.setText(this.jndiName);
+            }
+            
+            this.jndiNameField.addModifyListener(new ModifyListener() {
+    			
+    			@Override
+    			public void modifyText(ModifyEvent e) {
+    				
+    				if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
+    					jndiName = jndiNameField.getText();
+    					importManager.setJBossJndiNameName(jndiName);
+    				} else {
+    					jndiName = ""; //$NON-NLS-1$
+    					importManager.setJBossJndiNameName(null);
+    				}
+    				
+    			}
+    		});
+    	        
+            GridDataFactory.fillDefaults().grab(true,  false).applyTo(jndiNameField);
+            
+            this.autoCreateDataSource = WidgetFactory.createCheckBox(theGroup, "Auto-create Data Source");
+            GridDataFactory.fillDefaults().span(2,  1).grab(true,  false).applyTo(autoCreateDataSource);
+            this.autoCreateDataSource.setSelection(importManager.doCreateDataSource());
+            
+            if( serverActive ) {
+    	        this.autoCreateDataSource.addSelectionListener(new SelectionListener() {
+    				
+    				@Override
+    				public void widgetSelected(SelectionEvent e) {
+    					importManager.setCreateDataSource(autoCreateDataSource.getSelection());
+    				}
+    				
+    				@Override
+    				public void widgetDefaultSelected(SelectionEvent e) {
+    					// NOTHING
+    				}
+    			});
+            }
+            
+            this.autoCreateDataSource.setEnabled(serverActive);
+            
+            
+            if( !serverActive ) {
+            	// if server still exists and NOT connected display message of NOT CONNECTED/STARTED
+            	Group serverMessageGroup = WidgetFactory.createGroup(theGroup, getString("serverUnavailableGroup"), SWT.NONE, 2, 3); //$NON-NLS-1$
+            	serverMessageGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+                
+           	
+            	Text msgText = new Text(serverMessageGroup, SWT.WRAP | SWT.READ_ONLY);
+            	msgText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+            	msgText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+            	GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).hint(0,  55).applyTo(serverMessageGroup);
+
+                if( !serverDefined ) {  
+                	msgText.setText(getString("noServerDefined")); //$NON-NLS-1$
+                } else {
+                	
+                	msgText.setText(getString("serverNotStarted")); //$NON-NLS-1$
+                }
+
+            	
+            	// if server == null, then display message of NO DEFAULT SERVER DEFINED
+            }
     }
 
     private void createImportOptionsControls( Composite pnl ) {
     	Group optionsGroup = WidgetFactory.createGroup(pnl, SWT.FILL);
         optionsGroup.setText(getString("importOptionsGroup.text")); //$NON-NLS-1$
         GridData gData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gData.heightHint = 200;
         optionsGroup.setLayoutData(gData);
 
         final ScrolledComposite c1 = new ScrolledComposite(optionsGroup, SWT.H_SCROLL | SWT.V_SCROLL | SWT.FILL);
@@ -358,6 +458,10 @@ public class ModelSelectionPage extends AbstractWizardPage
      */
     private static String getString( String theKey ) {
         return UTIL.getString(new StringBuffer().append(PREFIX).append(theKey).toString());
+    }
+    
+    private String getString(String theKey, Object... properties) {
+    	return UTIL.getString(new StringBuffer().append(PREFIX).append(theKey).toString(), properties); //$NON-NLS-1$
     }
 
     /**

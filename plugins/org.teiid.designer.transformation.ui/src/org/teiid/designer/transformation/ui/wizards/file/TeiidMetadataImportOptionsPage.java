@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -336,6 +337,9 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
         bpGL.marginHeight = 1;
         bottomPanel.setLayout(bpGL);
       
+        
+        createDelimitedColumnsOptionsGroup(bottomPanel);
+        
         createDelimitedColumnInfoGroup(bottomPanel);
 
     }
@@ -577,40 +581,22 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	//LayoutDebugger.debugLayout(fileContentsGroup);
     }
     
-    private void createDelimitedColumnInfoGroup(Composite parent) {
-    	Group theGroup = WidgetFactory.createGroup(parent, getString("columnInfoGroup"), SWT.NONE, 2, 4); //$NON-NLS-1$
-    	GridData groupGD = new GridData(GridData.FILL_BOTH);
-    	groupGD.heightHint = 140;
-    	theGroup.setLayoutData(groupGD);
-    	
-    	this.delimitedColumnsViewer = new TableViewerBuilder(theGroup, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-    	GridDataFactory.fillDefaults().grab(true, true).span(4, SWT.DEFAULT).applyTo(delimitedColumnsViewer.getTableComposite());
-
-        // create columns
-        TableViewerColumn column = delimitedColumnsViewer.createColumn(SWT.LEFT, 50, 40, true);
-        column.getColumn().setText(getString("columnName") + getSpaces(36)); //$NON-NLS-1$
-        column.setEditingSupport(new ColumnNameEditingSupport(this.delimitedColumnsViewer.getTableViewer()));
-        column.setLabelProvider(new ColumnDataLabelProvider(0));
-
-        column = delimitedColumnsViewer.createColumn(SWT.LEFT, 50, 40, true);
-        column.getColumn().setText(getString("datatype") + getSpaces(12)); //$NON-NLS-1$ 
-        column.setLabelProvider(new ColumnDataLabelProvider(1));
-        column.setEditingSupport(new DatatypeEditingSupport(this.delimitedColumnsViewer.getTableViewer()));
-
-        if( this.dataFileInfo != null ) {
-	        for( ITeiidColumnInfo row : this.dataFileInfo.getColumnInfoList() ) {
-	        	this.delimitedColumnsViewer.add(row);
-	        }
-        }
-       
-    	addColumnDelimitedButton = new Button(theGroup, SWT.PUSH);
-    	addColumnDelimitedButton.setText(getString("addLabel")); //$NON-NLS-1$
-    	addColumnDelimitedButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    	addColumnDelimitedButton.addSelectionListener(new SelectionAdapter() {
+    private void createDelimitedColumnsOptionsGroup(Composite parent) {
+	  	
+	  	Group theGroup = WidgetFactory.createGroup(parent, getString("columnOptionsGroup"), SWT.NONE, 1, 1); //$NON-NLS-1$
+	  	GridData groupGD = new GridData();
+	  	groupGD.heightHint=GROUP_HEIGHT_160;
+	  	theGroup.setLayoutData(groupGD);
+	  	
+	  	addColumnDelimitedButton = new Button(theGroup, SWT.PUSH);
+	  	addColumnDelimitedButton.setText(getString("addLabel")); //$NON-NLS-1$
+	  	addColumnDelimitedButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	  	addColumnDelimitedButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				createColumn();
+	    		createColumn();
+				handleInfoChanged(false);
 			}
     		
 		});
@@ -698,6 +684,34 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 			}
     		
 		});
+    }
+    
+    private void createDelimitedColumnInfoGroup(Composite parent) {
+    	Group theGroup = WidgetFactory.createGroup(parent, getString("columnInfoGroup"), SWT.NONE, 1, 1); //$NON-NLS-1$
+    	GridLayoutFactory.swtDefaults().margins(5,  1).numColumns(1).applyTo(theGroup);
+    	GridData gd = new GridData(GridData.FILL_BOTH);
+    	gd.heightHint = GROUP_HEIGHT_160;
+    	theGroup.setLayoutData(gd);
+    	
+    	this.delimitedColumnsViewer = new TableViewerBuilder(theGroup, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+    	GridDataFactory.fillDefaults().grab(true, true).span(4, SWT.DEFAULT).applyTo(delimitedColumnsViewer.getTableComposite());
+
+        // create columns
+        TableViewerColumn column = delimitedColumnsViewer.createColumn(SWT.LEFT, 50, 40, true);
+        column.getColumn().setText(getString("columnName") + getSpaces(36)); //$NON-NLS-1$
+        column.setEditingSupport(new ColumnNameEditingSupport(this.delimitedColumnsViewer.getTableViewer()));
+        column.setLabelProvider(new ColumnDataLabelProvider(0));
+
+        column = delimitedColumnsViewer.createColumn(SWT.LEFT, 50, 40, true);
+        column.getColumn().setText(getString("datatype") + getSpaces(12)); //$NON-NLS-1$ 
+        column.setLabelProvider(new ColumnDataLabelProvider(1));
+        column.setEditingSupport(new DatatypeEditingSupport(this.delimitedColumnsViewer.getTableViewer()));
+
+        if( this.dataFileInfo != null ) {
+	        for( ITeiidColumnInfo row : this.dataFileInfo.getColumnInfoList() ) {
+	        	this.delimitedColumnsViewer.add(row);
+	        }
+        }
         
     	this.delimitedColumnsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			
@@ -984,6 +998,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     
     private void createFixedColumnInfoGroup(Composite parent) {
     	Group columnInfoGroup = WidgetFactory.createGroup(parent, getString("columnInfoGroup"), SWT.NONE, 1, 1); //$NON-NLS-1$
+    	GridLayoutFactory.swtDefaults().margins(5,  1).numColumns(1).applyTo(columnInfoGroup);
     	GridData gd = new GridData(GridData.FILL_BOTH);
     	gd.heightHint = GROUP_HEIGHT_160;
     	columnInfoGroup.setLayoutData(gd);

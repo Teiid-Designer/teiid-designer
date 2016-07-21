@@ -190,10 +190,7 @@ public class DisplayNodeFactory {
         } else {
             String unknownText = UNDEFINED;
             if (obj != null) {
-                String objText = obj.toString();
-                if (objText.trim().length() > 0) {
-                    unknownText = objText;
-                }
+            	unknownText = obj.toString();
             }
             UnknownDisplayNode node = new UnknownDisplayNode(parentNode, unknownText);
             return (T) node;

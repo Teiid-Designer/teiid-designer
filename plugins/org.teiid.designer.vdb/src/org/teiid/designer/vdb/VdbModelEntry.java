@@ -9,17 +9,21 @@ package org.teiid.designer.vdb;
 
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipOutputStream;
-import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -51,6 +55,8 @@ import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.SourceElement;
+
+import net.jcip.annotations.ThreadSafe;
 
 
 /**
@@ -256,7 +262,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
             else if (ModelElement.MODEL_UUID.equals(name)) modelUuid = property.getValue();
             else if (ModelElement.IMPORT_VDB_REFERENCE.equals(name)) {
             	importVdbNames.add(property.getValue());
-            } else if( ModelElement.SUPPORTS_MULTI_SOURCE.equals(name)) {
+            } else if( ModelElement.SUPPORTS_MULTI_SOURCE.equals(name) || ModelElement.MULTI_SOURCE.equals(name) ) {
             	sourceInfo.setIsMultiSource(Boolean.parseBoolean(property.getValue()));
             } else if( ModelElement.MULTI_SOURCE_ADD_COLUMN.equals(name)) {
             	sourceInfo.setAddColumn(Boolean.parseBoolean(property.getValue()));
@@ -268,8 +274,6 @@ public class VdbModelEntry extends VdbIndexedEntry {
         }
         this.builtIn = builtIn;
         this.modelClass = modelClass;
-        
-        getVdb().registerImportVdbs(importVdbNames, this.getPath().toString());
         
         getVdb().synchronizeUdfJars(udfJars);
     }
@@ -649,7 +653,13 @@ public class VdbModelEntry extends VdbIndexedEntry {
         if (!getVdb().isPreview()) {
             importVdbNames.clear();
             Resource[] refs = getFinder().findReferencesFrom(model, true, false);
+        	
+            Collection<VdbImportInfo> vdbImports = new ArrayList<VdbImportInfo>();
+        	
             if (refs != null) {
+            	// Need to look in each imported model.. if it's a "view" model, then we can ignore it
+            	// If it's a "source" model, then we need to look for the properties in the model
+            	
                 for (final Resource importedModel : refs) {
                     java.net.URI uri = java.net.URI.create(importedModel.getURI().toString());
                     IFile[] modelFiles = ModelerCore.getWorkspace().getRoot().findFilesForLocationURI(uri);
@@ -658,8 +668,24 @@ public class VdbModelEntry extends VdbIndexedEntry {
                     // Check Model File to see if it contains a vdb name property
                     final String importVdbName = ModelUtil.getModelAnnotationPropertyValue(modelFiles[0],
                                                                                            VdbConstants.VDB_NAME_KEY);
+
                     if (importVdbName != null) {
+                        String versionStr = ModelUtil.getModelAnnotationPropertyValue(modelFiles[0],
+								VdbConstants.VDB_VERSION_KEY);
+                        
+                        int vdbVersion = 1;
+                        if( ! StringUtilities.isEmpty(versionStr) ) {
+        					try {
+        	                    int versionValue = Integer.parseInt(versionStr);
+        	                    if (versionValue > 0) {
+        	                    	vdbVersion = versionValue;
+        						}
+        					} catch (NumberFormatException ex) {
+        						VdbPlugin.UTIL.log(ex);
+        					}
+                        }
                         importVdbNames.add(importVdbName);
+                        vdbImports.add(new VdbImportInfo(importVdbName, vdbVersion));
                     } else {
                         VdbEntry importedEntry = null;
 
@@ -682,7 +708,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
 
             // Process for any import VDBs
             // if list is empty, then there may be import VDB's that need to get removed from the VDB
-            getVdb().registerImportVdbs(importVdbNames, this.getPath().toString());
+            getVdb().registerImportVdbs(vdbImports, this.getPath().toString());
 
             getVdb().synchronizeUdfJars(udfJars);
         }

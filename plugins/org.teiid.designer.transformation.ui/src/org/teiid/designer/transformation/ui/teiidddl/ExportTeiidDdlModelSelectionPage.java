@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -43,17 +42,11 @@ import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
  * 
  *
  */
-public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage implements UiConstants {
-	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExportTeiidDdlModelSelectionPage.class);
-	
+public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage implements UiConstants {	
 	private static final String TITLE = Messages.ExportTeiidDdlModelSelectionPage_title;
 	private static final String OPTIONS_GROUP = Messages.ExportTeiidDdlModelSelectionPage_ddlExportOptions;
 	private static final String USE_NAMES_IN_SOURCE_CHECKBOX = Messages.ExportTeiidDdlModelSelectionPage_nameInSourceOption;
 	private static final String USE_NATIVE_TYPE_CHECKBOX = Messages.ExportTeiidDdlModelSelectionPage_nativeTypeOption;
-
-	private static String getString(final String id) {
-		return Util.getString(I18N_PREFIX + id);
-	}
 
 	private final TeiidDdlExporter exporter;
 	
@@ -157,8 +150,8 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 	void handleModelBrowse() {
 		final Object[] selections = WidgetUtil
 				.showWorkspaceObjectSelectionDialog(
-						getString("selectViewModelTitle"), //$NON-NLS-1$
-						getString("selectViewModelMessage"), //$NON-NLS-1$
+						Messages.ExportTeiidDdlModelSelectionPage_selectModelDialogTitle,
+						Messages.ExportTeiidDdlModelSelectionPage_selectModelDialogMessage,
 						false, null, modelFilter,
 						new ModelResourceSelectionValidator(false),
 						new ModelExplorerLabelProvider(),
@@ -184,7 +177,7 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 	private boolean validatePage() {
 		IStatus status = exporter.validate();
 		if( status.isOK()) {
-			setMessage(null);
+			setErrorMessage(null);
 			setPageComplete(true);
 			return true;
 		} else if( status.getSeverity() == IStatus.WARNING ){

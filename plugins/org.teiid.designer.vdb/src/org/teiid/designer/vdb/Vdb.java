@@ -689,10 +689,11 @@ public interface Vdb extends VdbConstants {
      * Add an import VDB attribute to this VDB.
      * 
      * @param importVdbName
+     * @param version 
      * 
      * @return the newly added import entry
      */
-    VdbImportVdbEntry addImport(String importVdbName);
+    VdbImportVdbEntry addImport(String importVdbName, int version);
 
     /**
      * @param model

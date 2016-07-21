@@ -20,6 +20,7 @@ import org.teiid.designer.jdbc.metadata.JdbcTable;
 import org.teiid.designer.jdbc.metadata.impl.GetAccessForeignKeysRequest;
 import org.teiid.designer.jdbc.metadata.impl.GetIndexesRequest;
 import org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants;
+import org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants.Processors;
 import org.teiid.designer.jdbc.relational.impl.Context;
 import org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl;
 import org.teiid.designer.metamodels.relational.BaseTable;
@@ -186,4 +187,9 @@ public class ExcelModelProcessor extends RelationalModelProcessorImpl {
             indexSpec.indexName = indexName;
         }
     }
+    
+	@Override
+	public String getType() {
+		return Processors.EXCEL;
+	}
 }

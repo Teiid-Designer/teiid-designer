@@ -122,7 +122,15 @@ public class TransformationCopyModelFeaturePopulator
 
         //Since we cannot modify the original list of children, we must make
         //a deep copy of the children.
-                
+
+    	// Copy model description
+        if( copyAllDescriptions ) {
+        	String desc = sourceModelResource.getDescription();
+        	if( desc != null ) {
+        		targetModelResource.getModelAnnotation().setDescription(desc);
+        	}
+        }
+
         List /*<EObject>*/ sourceFirstLevelChildren = sourceModelResource.getEObjects();
         
         // JIRA Issue JBEDSP-249 - Remove the JDBC Source object when copying from Source to Virtual model

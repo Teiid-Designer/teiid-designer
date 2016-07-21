@@ -195,8 +195,9 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	 * @see org.teiid.designer.vdb.Vdb#addImport(java.lang.String)
 	 */
 	@Override
-    public VdbImportVdbEntry addImport(String vdbName) {
+    public VdbImportVdbEntry addImport(String vdbName, int version) {
 		 VdbImportVdbEntry importVdbEntry = new VdbImportVdbEntry(this, vdbName);
+		 importVdbEntry.setVersion(version);
 		 importVdbs.add(importVdbEntry);
 		 setModified(this, Event.IMPORT_VDB_ENTRY_ADDED, null, importVdbEntry);
 		 return importVdbEntry;

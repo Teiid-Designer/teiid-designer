@@ -75,6 +75,7 @@ public class PreviewMissingPasswordDialog extends Dialog implements InternalUiCo
         Label msgLabel = WidgetFactory.createLabel(dlgPanel, this.message);
         GridData gd = new GridData();
         gd.horizontalSpan = 2;
+        gd.minimumWidth = 300;
         msgLabel.setLayoutData(gd);
         
         WidgetFactory.createLabel(dlgPanel, PASSWORD_LABEL);

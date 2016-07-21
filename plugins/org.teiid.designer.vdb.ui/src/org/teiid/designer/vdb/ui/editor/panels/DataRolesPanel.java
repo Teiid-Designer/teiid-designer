@@ -45,6 +45,7 @@ import org.teiid.designer.ui.common.table.TextColumnProvider;
 import org.teiid.designer.ui.common.widget.ButtonProvider;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.Vdb.Event;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiConstants.Images;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
@@ -181,7 +182,7 @@ public class DataRolesPanel {
                     // Get the Data Policy
                     DataRole dp = wizard.getFinalDataRole();
                     if (dp != null) {
-                    	if( !vdbEditor.getVdb().getDataRoles().contains(dp) ) {
+                    	if( vdbEditor.getVdb().getDataRoles().contains(dp) ) {
                         	dataRole.setName(dp.getName());
                         	dataRole.setAnyAuthenticated(dp.isAnyAuthenticated());
                         	dataRole.setAllowCreateTempTables(dp.isAllowCreateTempTables());
@@ -199,6 +200,7 @@ public class DataRolesPanel {
                             	dataRole.setRoleNames(dp.getRoleNames());
                             }
                             
+                            vdbEditor.getVdb().setModified(this, Event.DATA_POLICY_REMOVED, dataRole, dataRole);
                             refresh();
                     	}
                     }

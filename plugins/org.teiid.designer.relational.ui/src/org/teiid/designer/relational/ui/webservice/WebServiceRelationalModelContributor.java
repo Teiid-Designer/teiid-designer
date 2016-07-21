@@ -280,4 +280,14 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
 
 	}
 
+	@Override
+	public ModelResource getSelectedModelResource() {
+		return null;
+	}
+	
+	@Override
+    public boolean copyAllDescriptions() { 
+		return false;
+	}
+
 }

@@ -438,6 +438,22 @@ public class NewModelWizard extends AbstractWizard
                         originalModelAnotation.setPrimaryMetamodelUri(uri);
                         originalModelAnotation.setModelType(getModelType());
                         
+                        // For virtual model copies, we need to copy the description here.
+                        
+                        if( wizardPageContributor.copyAllDescriptions() ) {
+                        	ModelResource selectedResource = wizardPageContributor.getSelectedModelResource();
+                        	if( selectedResource != null ) {
+                            	try {
+		                        	String sourceModelDesc = selectedResource.getDescription();
+		                        	if( sourceModelDesc != null ) {
+		                        		modelResource.getModelAnnotation().setDescription(sourceModelDesc);
+		                        	}
+                            	} catch (Exception ex) {
+        	                        setExceptionOccurred(true);
+        	                        ModelerCore.Util.log(IStatus.ERROR, ex, ex.getMessage());
+        						}
+                        	}
+                        }
                         // Remove any unsupported MEDS
                     	try {
                     		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();

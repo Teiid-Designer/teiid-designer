@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.transformation.ddl;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -66,6 +67,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     private boolean includeTables = true;
 
     private boolean includeProcedures = true;
+    
+    private boolean includeFKs = true;
     
     private boolean isVirtual = false;
     
@@ -551,6 +554,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         //
         String defaultValue = col.getDefaultValue();
         if (!StringUtilities.isEmpty(defaultValue)) {
+        	if( !StringUtilities.isSingleQuoted(defaultValue ) ) {
+        		defaultValue = StringUtilities.getQuotedValue(defaultValue, QUOTE_MARK);
+        	}
             sb.append(TeiidSQLConstants.Reserved.DEFAULT).append(SPACE).append(defaultValue).append(SPACE);
         }
 
@@ -608,6 +614,34 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	options.add(SIGNED, Boolean.toString(col.isSigned()), Boolean.TRUE.toString());
     	options.add(CURRENCY, Boolean.toString(col.isCurrency()), Boolean.FALSE.toString());
     	options.add(FIXED_LENGTH, Boolean.toString(col.isFixedLength()), Boolean.FALSE.toString());
+    	
+    	// DISTINCT VALUE COUNT
+    	int distinctValueCt = col.getDistinctValueCount();
+
+		if( distinctValueCt > -1 ) {
+			options.add(DISTINCT_VALUES, Integer.toString(distinctValueCt), Integer.toString(0));
+		} else if( distinctValueCt < -1 ) {
+    		Integer obj = new Integer(distinctValueCt);
+    		final float floatValue = Float.intBitsToFloat(obj & 0x7fffffff);
+    		DecimalFormat myFormatter = new DecimalFormat("###");
+    		String output = myFormatter.format(floatValue);
+    		
+			options.add(DISTINCT_VALUES, output, Integer.toString(0));
+		}
+    	// NULL VALUE COUNT
+    	int nullValueCt = col.getNullValueCount();
+
+		if( nullValueCt > -1 ) {
+			options.add(NULL_VALUE_COUNT, Integer.toString(nullValueCt), Integer.toString(0));
+		} else if( distinctValueCt < -1 ) {
+    		Integer obj = new Integer(nullValueCt);
+    		final float floatValue = Float.intBitsToFloat(obj & 0x7fffffff);
+    		DecimalFormat myFormatter = new DecimalFormat("###");
+    		String output = myFormatter.format(floatValue);
+    		
+			options.add(NULL_VALUE_COUNT, output, Integer.toString(0));
+		}
+    	
     	String desc = getDescription(col);
     	if( !StringUtilities.isEmpty(desc) ) {
     		options.add(ANNOTATION, desc, EMPTY_STRING);
@@ -681,12 +715,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			}
 			sb.append(theSB.toString());
 			
-			if( hasFKs || hasUCs ) sb.append(COMMA);
+			if( (hasFKs && includeFKs) || hasUCs ) sb.append(COMMA);
 		}
 		
 		// FK
 		// CONSTRAINT CUSTOMER_ACCOUNT_FK FOREIGN KEY(CUSTID) REFERENCES ACCOUNT (CUSTID)
-		if( hasFKs ) {
+		if( hasFKs && includeFKs) {
 			int nFKs = table.getForeignKeys().size();
 			int countFK = 0;
 			for( Object obj : table.getForeignKeys()) {
@@ -778,8 +812,19 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	options.add(NAMEINSOURCE, table.getNameInSource(), null);
     	options.add(MATERIALIZED, Boolean.toString(table.isMaterialized()), Boolean.FALSE.toString());
     	options.add(UPDATABLE, Boolean.toString(table.isSupportsUpdate()), Boolean.TRUE.toString());
-    	if( table.getCardinality() > 0 ) {
-    		options.add(CARDINALITY, Integer.toString(table.getCardinality()), Integer.toString(0));
+    	if( table.getCardinality() != 0 ) {
+    		int cardValue = table.getCardinality();
+
+    		if( cardValue > -1 ) {
+    			options.add(CARDINALITY, Integer.toString(table.getCardinality()), Integer.toString(0));
+    		} else if( cardValue < -1) {
+        		Integer obj = new Integer(cardValue);
+        		final float floatValue = Float.intBitsToFloat(obj & 0x7fffffff);
+        		DecimalFormat myFormatter = new DecimalFormat("###");
+        		String output = myFormatter.format(floatValue);
+        		
+    			options.add(CARDINALITY, output, Integer.toString(0));
+    		}
     	}
     	if( table.getMaterializedTable() != null ) {
     		options.add(MATERIALIZED_TABLE, table.getMaterializedTable().getName(), null);
@@ -1152,7 +1197,20 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	issues.add(new Status(severity, TransformationPlugin.PLUGIN_ID, message, e));
     }
     
-    class OptionsStatement {
+
+    public void setIncludeTables(boolean includeTables) {
+		this.includeTables = includeTables;
+	}
+
+	public void setIncludeProcedures(boolean includeProcedures) {
+		this.includeProcedures = includeProcedures;
+	}
+
+	public void setIncludeFKs(boolean includeFKs) {
+		this.includeFKs = includeFKs;
+	}
+
+	class OptionsStatement {
     	boolean hasOptions;
     	StringBuilder sb;
     	

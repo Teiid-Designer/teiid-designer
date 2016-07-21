@@ -735,7 +735,7 @@ public class VdbUtil implements VdbConstants {
 					if( model.getSources() != null && model.getSources().size() > 1 ) {
 						boolean multiSourceIsFalse = true;
 						for( PropertyElement prop : model.getProperties() ) {
-							if( prop.getName().equals(ModelElement.SUPPORTS_MULTI_SOURCE) ) {
+							if( prop.getName().equals(ModelElement.SUPPORTS_MULTI_SOURCE) || prop.getName().equals(ModelElement.MULTI_SOURCE) ) {
 								// Check boolean property
 								if( Boolean.parseBoolean(prop.getValue()) ) {
 									multiSourceIsFalse = false;
@@ -1056,7 +1056,7 @@ public class VdbUtil implements VdbConstants {
                     String finalModelPath = projectFilePath + '/' + projectRelativeTargetFolder;
                     File entryFile = new File(finalModelPath);
                     if( !entryFile.getParentFile().exists() ) {
-                        entryFile.getParentFile().mkdir();
+                        entryFile.getParentFile().mkdirs();
                     }
 
                     FileOutputStream outstream = new FileOutputStream(finalModelPath);

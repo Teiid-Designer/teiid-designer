@@ -106,5 +106,11 @@ public interface RelationalModelProcessor {
      * @return 'true' if including incomplete FKs, 'false' if not.
      */
     boolean getIncludeIncompleteFKs();
+    
+    /**
+     * 
+     * @return the string jdbc processor type (i.e. jdbc, oracle, mysql, etc...)
+     */
+    String getType();
 
 }

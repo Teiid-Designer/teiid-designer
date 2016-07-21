@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.jdbc.JdbcException;
 import org.teiid.designer.jdbc.JdbcImportSettings;
@@ -266,21 +267,21 @@ public class SybaseModelProcessor extends RelationalModelProcessorImpl {
 						parentDatabase.getName(), null, name, null);
 
 				final StringBuffer sb = new StringBuffer();
-				String quoteString = databaseMetaData
-						.getIdentifierQuoteString();
 
 				if (tables.next()) {
-					sb.append(quoteString);
-					sb.append(tables.getString("TABLE_CAT")); //$NON-NLS-1$
-					sb.append(quoteString);
-					sb.append(databaseMetaData.getCatalogSeparator());
-					sb.append(quoteString);
-					sb.append(tables.getString("TABLE_SCHEM")); //$NON-NLS-1$
-					sb.append(quoteString);
-					sb.append(databaseMetaData.getCatalogSeparator());
-					sb.append(quoteString);
-					sb.append(tables.getString("TABLE_NAME")); //$NON-NLS-1$
-					sb.append(quoteString);
+					String category = tables.getString("TABLE_CAT"); //$NON-NLS-1$
+					String schema = tables.getString("TABLE_SCHEM"); //$NON-NLS-1$
+					String table = tables.getString("TABLE_NAME"); //$NON-NLS-1$
+					
+					if( !StringUtilities.isEmpty(category)) {
+						sb.append(category);
+						sb.append(databaseMetaData.getCatalogSeparator());
+					}
+					if( !StringUtilities.isEmpty(schema)) {
+						sb.append(schema);
+						sb.append(databaseMetaData.getCatalogSeparator());
+					}
+					sb.append(table);
 				}
 
 				if (tables.next()) {
@@ -296,8 +297,7 @@ public class SybaseModelProcessor extends RelationalModelProcessorImpl {
 				addNameInSourceWarning(name, context, problems, ex);
 			}
 		}
-		return super.computeNameInSource(object, name, node, context, forced,
-				problems);
+		return super.computeNameInSource(object, name, node, context, forced,problems);
 	}
 
 	/**
@@ -318,5 +318,9 @@ public class SybaseModelProcessor extends RelationalModelProcessorImpl {
 				0, msg, ex);
 		problems.add(status);
 	}
-    
+
+	@Override
+	public String getType() {
+		return Processors.SYBASE;
+	}
 }

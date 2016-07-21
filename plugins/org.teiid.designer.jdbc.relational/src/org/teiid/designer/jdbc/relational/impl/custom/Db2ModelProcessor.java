@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.teiid.designer.jdbc.metadata.JdbcDatabase;
+import org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants.Processors;
 import org.teiid.designer.jdbc.relational.impl.Context;
 import org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
@@ -89,4 +90,9 @@ public class Db2ModelProcessor extends RelationalModelProcessorImpl {
     protected boolean checkExportedForeignKeysIfNoImportedForeignKeysFound() {
         return false;
     }
+    
+	@Override
+	public String getType() {
+		return Processors.DB2;
+	}
 }

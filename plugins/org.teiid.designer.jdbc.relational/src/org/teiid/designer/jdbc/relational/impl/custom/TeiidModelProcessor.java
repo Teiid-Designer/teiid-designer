@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.types.DatatypeConstants;
+import org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants.Processors;
 import org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
@@ -67,4 +68,9 @@ public class TeiidModelProcessor extends RelationalModelProcessorImpl {
 
         return super.findType(jdbcType, typeName, length, precision, scale, problems);
     }
+    
+	@Override
+	public String getType() {
+		return Processors.TEIID;
+	}
 }
