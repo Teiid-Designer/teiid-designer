@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -59,7 +60,6 @@ import org.eclipse.ui.ide.IDE;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
@@ -87,6 +87,7 @@ import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
+import org.teiid.designer.vdb.ui.util.VdbNameValidator;
 
 
 /**
@@ -117,9 +118,8 @@ public final class NewVdbWizard extends AbstractWizard
     static final String ADD_FILE_DIALOG_VDB_SOURCE_MODEL_SELECTED_MESSAGE = VdbUiConstants.Util.getString("addFileDialogVdbSourceModelSelectedMessage");  //$NON-NLS-1$
     static final String SELECTED_MODELS_CONTAIN_DUPLICATE_NAMES = VdbUiConstants.Util.getString("selectedModelsAndDependenciesContainDuplicateNamesMessage"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_MODELS_IN_DIFFERENT_PROJECTS_MESSAGE = VdbUiConstants.Util.getString("selectedModelsAreInDifferentProjectsMessage"); //$NON-NLS-1$
-    private static final StringNameValidator nameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
-                                                                                     StringNameValidator.DEFAULT_MAXIMUM_LENGTH,
-                                                                                     new char[] {'_', '-', '.'});
+    
+    private static final VdbNameValidator nameValidator = new VdbNameValidator();
 
     static String getString( final String id ) {
         return VdbUiConstants.Util.getString(I18N_PREFIX + id);
@@ -230,13 +230,7 @@ public final class NewVdbWizard extends AbstractWizard
                     String fullVdbName = newVdb.getName();
     				int firstIndex = fullVdbName.indexOf('.');
                     String versionStr = fullVdbName.substring(firstIndex + 1);
-					int version = 1;
-					try {
-						version = Integer.parseInt(versionStr);
-					} catch (NumberFormatException e) {
-						// Do nothing.. shouldn't get here and swallow anyway cause version == 1 is back-up
-					}
-					newVdb.setVersion(version);
+					newVdb.setVersion(versionStr);
             		
                     newVdb.save();
                     NewVdbWizard.this.folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
@@ -683,6 +677,7 @@ public final class NewVdbWizard extends AbstractWizard
 
             IStatus status = projectValidator.validate(new Object[] {folder});
             String proposedName = this.nameText.getText();
+            IStatus nameStatus = nameValidator.isValidVdbFileName(proposedName, ModelerCore.getTeiidServerVersion());
 
             if (!status.isOK()) {
                 // only update the message if the vFolder is non-null;
@@ -693,45 +688,19 @@ public final class NewVdbWizard extends AbstractWizard
                     this.mainPage.setErrorMessage(status.getMessage());
                     this.mainPage.setPageComplete(false);
                 } // endif
-            } else if (!nameValidator.isValidName(proposedName)) {
-                this.mainPage.setErrorMessage(VDB_NAME_ERROR);
-                this.mainPage.setPageComplete(false);
+            } else if (!nameStatus.isOK() && nameStatus.getSeverity() == IStatus.ERROR) {
+	            this.mainPage.setErrorMessage(VDB_NAME_ERROR);
+	            this.mainPage.setPageComplete(false);
             } else if (ModelUtilities.vdbNameReservedValidation(proposedName) != null) {
                 this.mainPage.setErrorMessage(ModelUtilities.vdbNameReservedValidation(proposedName));
                 this.mainPage.setPageComplete(false);
-			} else if (proposedName.indexOf('.') > -1) {
-				// VDB name can contain an integer value
-				// EXAMPLE: Customers.2.vdb
-				//
-				// make sure there is only 1 '.'
-				int firstIndex = proposedName.indexOf('.');
-				int lastIndex = proposedName.lastIndexOf('.');
-				if (lastIndex != -1 && firstIndex != lastIndex) {
-					String error = VdbUiConstants.Util.getString(I18N_PREFIX + "vdbNameContainsTooManyDotsErrorMessage", proposedName); //$NON-NLS-1$)
-					this.mainPage.setErrorMessage(error);
-					this.mainPage.setPageComplete(false);
-				} else {
-					// Check for integer
-					String versionStr = proposedName.substring(firstIndex + 1);
-					boolean succeeded = false;
-					try {
-						Integer.parseInt(versionStr);
-						succeeded = true;
-					} catch (NumberFormatException e) {
-						this.mainPage.setErrorMessage(
-								VdbUiConstants.Util.getString(I18N_PREFIX
-														+ "vdbNameErrorVersionNotAnInteger", versionStr)); //$NON-NLS-1$);
-						this.mainPage.setPageComplete(false);
-						succeeded = false;
-					}
-					if (succeeded) {
-						this.mainPage.setErrorMessage(null);
-						this.mainPage.setPageComplete(true);
-					}
-				}
-            } else {
+			} else {
                 this.mainPage.setErrorMessage(null);
                 this.mainPage.setPageComplete(true);
+        		if( nameStatus.getSeverity() == IStatus.WARNING ) {
+                this.mainPage.setMessage(nameStatus.getMessage(), IStatus.WARNING);
+                this.mainPage.setPageComplete(true);
+        		}
             }
 
             if (this.mainPage.isPageComplete()) {

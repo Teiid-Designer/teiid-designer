@@ -18,7 +18,7 @@ import org.teiid.designer.vdb.manifest.ImportVdbElement;
 */
 public class VdbImportVdbEntry extends VdbUnit {
 	
-	final AtomicReference<Integer> version = new AtomicReference<Integer>();
+	final AtomicReference<String> version = new AtomicReference<String>();
 	
 	final AtomicReference<Boolean> importDataPolicies = new AtomicReference<Boolean>();
 	
@@ -29,7 +29,7 @@ public class VdbImportVdbEntry extends VdbUnit {
 	public VdbImportVdbEntry(Vdb vdb, String importVdbName) {
 		setVdb(vdb);
         setName(importVdbName);
-        this.version.set(1);
+        this.version.set("1");
         this.importDataPolicies.set(false);
 	}
 	
@@ -46,7 +46,7 @@ public class VdbImportVdbEntry extends VdbUnit {
 	/**
 	 * @return return the version
 	 */
-	public int getVersion() {
+	public String getVersion() {
 		return version.get();
 	}
 	
@@ -55,9 +55,9 @@ public class VdbImportVdbEntry extends VdbUnit {
 	 * 
 	 * @param version
 	 */
-	public void setVersion(int version) {
-		final int oldVersion = this.version.get();
-        if (version == oldVersion) return;
+	public void setVersion(String version) {
+		final String oldVersion = this.version.get();
+        if (version.equals(oldVersion)) return;
         this.version.set(version);
 		setModified(this, Event.IMPORT_VDB_ENTRY_VERSION, oldVersion, version);
 	}

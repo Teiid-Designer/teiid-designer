@@ -455,7 +455,7 @@ public class VdbManifestGenerator implements StringConstants {
         } else {
 //	        if( isVirtual ) {
 				try {
-					String ddl = teiidServer.getSchema(vdb.getName(), vdb.getVersion(), model.getName());
+					String ddl = teiidServer.getSchema(vdb.getName(), Integer.toString(vdb.getVersion()), model.getName());
 					if( ddl != null ) {
 						writeTab(ElementTabValue.MODEL_METADATA);
 					    writeStartElement(VdbLexicon.ManifestIds.METADATA);

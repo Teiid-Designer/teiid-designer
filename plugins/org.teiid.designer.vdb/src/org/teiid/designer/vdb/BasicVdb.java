@@ -79,7 +79,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	 	<xs:attribute name="name" type="xs:string" use="required"/>
 	 	<xs:attribute name="version" type="xs:int" use="required"/>
 	 */
-	private int version = 1;
+	private String version = "1";
 	
 	/* Elements:
 		<xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -195,7 +195,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	 * @see org.teiid.designer.vdb.Vdb#addImport(java.lang.String)
 	 */
 	@Override
-    public VdbImportVdbEntry addImport(String vdbName, int version) {
+    public VdbImportVdbEntry addImport(String vdbName, String version) {
 		 VdbImportVdbEntry importVdbEntry = new VdbImportVdbEntry(this, vdbName);
 		 importVdbEntry.setVersion(version);
 		 importVdbs.add(importVdbEntry);
@@ -315,7 +315,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	 * @see org.teiid.designer.vdb.Vdb#getVersion()
 	 */
 	@Override
-	public int getVersion() {
+	public String getVersion() {
 		return version;
 	}
 
@@ -428,9 +428,9 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
      * @param intVersion version of vdb
      */
     @Override
-    public void setVersion( int intVersion ) {
-        final int oldVersion = this.version;
-        if( oldVersion == intVersion ) return;
+    public void setVersion( String intVersion ) {
+        final String oldVersion = this.version;
+        if( oldVersion.equals(intVersion) ) return;
         this.version = intVersion;
         setModified(this, Event.VERSION, oldVersion, intVersion);
     }

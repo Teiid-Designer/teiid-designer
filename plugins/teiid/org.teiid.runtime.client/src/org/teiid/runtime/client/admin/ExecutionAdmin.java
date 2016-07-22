@@ -168,11 +168,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     @Override
     public void deployVdb( IFile vdbFile ) throws Exception {
-        deployVdb(vdbFile, 1);
+        deployVdb(vdbFile, "1");
     }
 
     @Override
-    public void deployVdb( IFile vdbFile, int version) throws Exception {
+    public void deployVdb( IFile vdbFile, String version) throws Exception {
         ArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
 
         String vdbDeploymentName = vdbFile.getFullPath().lastSegment();
@@ -183,8 +183,8 @@ public class ExecutionAdmin implements IExecutionAdmin {
     		undeployVdb(vdbName);
     	}
     	
-    	int vdbVersion = 1;
-    	if( version > 1 ) {
+    	String vdbVersion = "1";
+    	if( version != null) {
     		vdbVersion = version;
     	}
         
@@ -211,10 +211,10 @@ public class ExecutionAdmin implements IExecutionAdmin {
     	
         // Deploy the VDB
         // TODO: Dont assume vdbVersion
-        doDeployVdb(deploymentName,vdbName,1,inStream);
+        doDeployVdb(deploymentName,vdbName,"1",inStream);
     }
     
-    private void doDeployVdb(String deploymentName, String vdbName, int vdbVersion, InputStream inStream) throws Exception {
+    private void doDeployVdb(String deploymentName, String vdbName, String vdbVersion, InputStream inStream) throws Exception {
         adminSpec.deploy(admin, deploymentName, inStream);
         // Give a 0.5 sec pause for the VDB to finish loading metadata.
         try {
@@ -264,12 +264,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
 	}
     
     @Override
-    public String getSchema(String vdbName, int vdbVersion, String modelName) throws Exception {
-        if (isLessThanTeiidEight()) {
-            // Limited schema support in 77x, just return empty string here
-            return ""; //$NON-NLS-1$
-        }
-
+    public String getSchema(String vdbName, String vdbVersion, String modelName) throws Exception {
         return admin.getSchema(vdbName, vdbVersion, modelName, null, null);
     }
         
@@ -894,7 +889,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @param vdbVersion the vdb version
      * @throws Exception if undeploying vdb fails
      */
-    public void undeployVdb( String vdbName, int vdbVersion ) throws Exception {
+    public void undeployVdb( String vdbName, String vdbVersion ) throws Exception {
         adminSpec.undeploy(admin, appendVdbExtension(vdbName), vdbVersion);
         ITeiidVdb vdb = getVdb(vdbName);
 
@@ -986,7 +981,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 String msg = Messages.getString(Messages.ExecutionAdmin.serverDeployUndeployProblemPingingTeiidJdbc, url);
                 return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
             } finally {
-                adminSpec.undeploy(admin, PING_VDB, 1);
+                adminSpec.undeploy(admin, PING_VDB, "1");
                 
                 if( teiidJdbcConnection != null ) {
                     teiidJdbcConnection.close();

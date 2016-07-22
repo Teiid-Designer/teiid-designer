@@ -1,0 +1,483 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ * See the COPYRIGHT.txt file distributed with this work for information
+ * regarding copyright ownership.  Some portions may be licensed
+ * to Red Hat, Inc. under one or more contributor license agreements.
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
+
+package org.teiid.query.function;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import org.eclipse.core.runtime.IStatus;
+import org.teiid.UserDefinedAggregate;
+import org.teiid.core.CoreConstants;
+import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
+import org.teiid.core.util.ReflectionHelper;
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.metadata.AbstractMetadataRecord;
+import org.teiid.metadata.FunctionMethod;
+import org.teiid.metadata.FunctionMethod.PushDown;
+import org.teiid.metadata.FunctionParameter;
+import org.teiid.metadata.MetadataFactory;
+import org.teiid.metadata.Procedure;
+import org.teiid.metadata.Schema;
+import org.teiid.query.function.metadata.FunctionCategoryConstants;
+import org.teiid.query.parser.AbstractTeiidParser;
+import org.teiid.query.util.CommandContext;
+import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.TeiidClientException;
+import org.teiid.runtime.client.TeiidRuntimePlugin;
+
+
+/**
+ * Data structure used to store function signature information. There are multiple uses
+ * of this signature information so there are multiple data structures within the FunctionTree
+ * for handling each.  One type of information is the function metadata required by users of
+ * this class for data driving GUIs or function selection.  The other type of information is that
+ * needed to quickly find and/or invoke the functions at execution time.  In general all methods
+ * are concerned with function metadata EXCEPT {@link #getFunction} which is used to find a function
+ * for execution.
+ */
+public class FunctionTree {
+
+    private final ITeiidServerVersion teiidVersion;
+
+    // Constant used to look up the special descriptor key in a node map
+    private static final Integer DESCRIPTOR_KEY = -1;
+
+    private Map<String, Set<FunctionMethod>> categories = new TreeMap<String, Set<FunctionMethod>>();
+
+    private Map<String, List<FunctionMethod>> functionsByName = new TreeMap<String, List<FunctionMethod>>(String.CASE_INSENSITIVE_ORDER);
+
+    @Since(Version.TEIID_8_9)
+    private Map<String, FunctionMethod> functionsByUuid = new TreeMap<String, FunctionMethod>(String.CASE_INSENSITIVE_ORDER);
+
+    @Since(Version.TEIID_8_9)
+    private String schemaName;
+
+    private Set<FunctionMethod> allFunctions = new HashSet<FunctionMethod>();
+
+    @Since(Version.TEIID_8_9)
+    private int idCount;
+
+	/**
+	 * Function lookup and invocation use: Function name (uppercase) to Map (recursive tree)
+	 */
+    private Map<String, Map<Object, Object>> treeRoot = new TreeMap<String, Map<Object, Object>>(String.CASE_INSENSITIVE_ORDER);
+    private boolean validateClass;
+
+    private DataTypeManagerService dataTypeManager;
+
+    /**
+     * Construct a new tree with the given source of function metadata.
+     * @param teiidVersion
+     * @param name name
+     * @param source The metadata source
+     */
+    public FunctionTree(ITeiidServerVersion teiidVersion, String name, FunctionMetadataSource source) {
+    	this(teiidVersion, name, source, false);
+    }
+    
+    /**
+     * Construct a new tree with the given source of function metadata.
+     * @param teiidVersion teiid version
+     * @param name name
+     * @param source The metadata source
+     * @param validateClass validating class 
+     */
+    public FunctionTree(ITeiidServerVersion teiidVersion, String name, FunctionMetadataSource source, boolean validateClass) {
+        this.teiidVersion = teiidVersion;
+        this.schemaName = name;
+        // Load data structures
+    	this.validateClass = validateClass;
+    	boolean system = CoreConstants.SYSTEM_MODEL.equalsIgnoreCase(name) || CoreConstants.SYSTEM_ADMIN_MODEL.equalsIgnoreCase(name);
+        Collection<FunctionMethod> functions = source.getFunctionMethods(teiidVersion);
+    	for (FunctionMethod method : functions) {
+			if (!containsIndistinguishableFunction(method)){
+                // Add to tree
+                addFunction(name, source, method, system);
+			} else if (!CoreConstants.SYSTEM_MODEL.equalsIgnoreCase(name)) {
+			    TeiidRuntimePlugin.log(IStatus.WARNING, null, Messages.gs(Messages.TEIID.TEIID30011, method));
+			}
+        }
+    }
+
+    public DataTypeManagerService getDataTypeManager() {
+        if (dataTypeManager == null)
+            dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
+
+        return dataTypeManager;
+    }
+
+    @Since(Version.TEIID_8_9)
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    @Since(Version.TEIID_8_9)
+    public Map<String, FunctionMethod> getFunctionsByUuid() {
+        return functionsByUuid;
+    }
+
+	// ---------------------- FUNCTION SELECTION USE METHODS ----------------------
+
+	/*
+	 * Per defect 4612 -
+	 * Because of the fix for defect 4264, it is possible in the modeler to
+	 * define two functions with different implementations, but having the
+	 * same name (using the "alias") and the same parameter types, making the
+	 * two FunctionMethod objects indistinguishable by their equals method.
+	 * This method will check if any indistinguishable functions are already
+	 * present in this FunctionTree.  If so, it will be logged and any
+	 * newer indistinguishable functions will just not be added.
+	 */
+	private boolean containsIndistinguishableFunction(FunctionMethod method){
+        return allFunctions.contains(method);
+	}
+
+    /**
+     * Get collection of category names.
+     * @return Category names
+     */
+    Collection<String> getCategories() {
+        return categories.keySet();
+    }
+
+    Set<FunctionMethod> getFunctionsInCategory(String name) {
+        Set<FunctionMethod> names = categories.get(name);
+        if (names == null) {
+            return Collections.emptySet();
+        }
+        return names;
+    }
+    
+    /**
+     * Find all function methods with the given name and arg length
+     * @param name Function name, case insensitive
+     * @param args Number of arguments
+     * @return Corresponding form or null if not found
+     */
+    List<FunctionMethod> findFunctionMethods(String name, int args) {
+        final List<FunctionMethod> allMatches = new ArrayList<FunctionMethod>();
+        List<FunctionMethod> methods = functionsByName.get(name);
+        if(methods == null || methods.size() == 0) {
+            return allMatches;
+        }
+
+        for (FunctionMethod functionMethod : methods) {
+            if(functionMethod.getInputParameterCount() == args || functionMethod.isVarArgs() && args >= functionMethod.getInputParameterCount() - 1) {
+                allMatches.add(functionMethod);
+            }
+        }
+
+        return allMatches;
+    }    
+
+	// ---------------------- FUNCTION INVOCATION USE METHODS ----------------------
+
+    /**
+     * Store the method for function resolution and invocation.
+     * @param source The function metadata source, which knows how to obtain the invocation class
+     * @param method The function metadata for a particular method signature
+     */
+    public FunctionDescriptor addFunction(String schema, FunctionMetadataSource source, FunctionMethod method, boolean system) {
+    	String categoryKey = method.getCategory();
+    	if (categoryKey == null) {
+    		method.setCategory(FunctionCategoryConstants.MISCELLANEOUS);
+    		categoryKey = FunctionCategoryConstants.MISCELLANEOUS;
+    	}
+
+        setUuid(method);
+
+    	// Look up function map (create if necessary)
+    	Set<FunctionMethod> functions = categories.get(categoryKey);
+        if (functions == null) {
+            functions = new HashSet<FunctionMethod>();
+            categories.put(categoryKey, functions);
+        }
+        
+        // Get method name
+        String methodName = schema + AbstractMetadataRecord.NAME_DELIM_CHAR + method.getName();
+
+        // Get input types for path
+        List<FunctionParameter> inputParams = method.getInputParameters();
+        Class<?>[] types = null;
+        if(inputParams != null) {
+        	types = new Class<?>[inputParams.size()];
+            for(int i=0; i<inputParams.size(); i++) {
+                String typeName = inputParams.get(i).getType();
+                Class<?> clazz = getDataTypeManager().getDataTypeClass(typeName);
+                types[i] = clazz;
+                setUuid(inputParams.get(i));
+            }
+        } else {
+        	types = new Class<?>[0];
+        }
+
+        setUuid(method.getOutputParameter());
+
+        FunctionDescriptor descriptor = createFunctionDescriptor(source, method, types, system);
+        descriptor.setSchema(schema);
+        // Store this path in the function tree
+        // Look up function in function map
+        functions.add(method);
+        functionsByUuid.put(method.getUUID(), method);
+
+        while(true) {
+	        // Add method to list by function name
+            List<FunctionMethod> knownMethods = functionsByName.get(methodName);
+            if(knownMethods == null) {
+                knownMethods = new ArrayList<FunctionMethod>();
+                functionsByName.put(methodName, knownMethods);
+            }
+	        knownMethods.add(method);
+
+        	Map<Object, Object> node = treeRoot.get(methodName);
+        	if (node == null) {
+        		node = new HashMap<Object, Object>(2);
+        		treeRoot.put(methodName, node);
+        	}
+	        for(int pathIndex = 0; pathIndex < types.length; pathIndex++) {
+	            Class<?> pathPart = types[pathIndex];
+	            Map<Object, Object> children = (Map<Object, Object>) node.get(pathPart);
+	            if(children == null) {
+	                children = new HashMap<Object, Object>(2);
+	                node.put(pathPart, children);
+	            }
+	            if (method.isVarArgs() && pathIndex == types.length - 1) {
+	        		node.put(DESCRIPTOR_KEY, descriptor);
+	                Map<Object, Object> alternate = new HashMap<Object, Object>(2);
+	                alternate.put(DESCRIPTOR_KEY, descriptor);
+	                DefaultDataTypes dataType = getDataTypeManager().getDataType(pathPart);
+	                node.put(dataType.getTypeArrayClass(), alternate);
+	            }
+	            node = children;
+	        }
+	
+	        if (method.isVarArgs()) {
+	        	node.put(types[types.length - 1], node);
+	        }
+	        // Store the leaf descriptor in the tree
+	        node.put(DESCRIPTOR_KEY, descriptor);
+	        
+	        int index = methodName.indexOf(AbstractMetadataRecord.NAME_DELIM_CHAR);
+	        if (index == -1) {
+	        	break;
+	        }
+	        methodName = methodName.substring(index+1);
+        }
+        
+        allFunctions.add(method);
+        return descriptor;
+    }
+
+    /**
+     * Adapted from {@link MetadataFactory#setUUID}
+     * @param method
+     */
+    private void setUuid(AbstractMetadataRecord method) {
+        if (!method.isUUIDSet()) {
+            int lsb = 0;
+            if (method.getParent() != null) {
+                lsb  = method.getParent().getUUID().hashCode();
+            } else {
+                lsb = CoreConstants.SYSTEM_MODEL.hashCode();
+            }
+            lsb = 31*lsb + method.getName().hashCode();
+            String uuid = "tsid:" + MetadataFactory.hex(lsb, 16) + "-" + MetadataFactory.hex(idCount++, 8); //$NON-NLS-1$ //$NON-NLS-2$
+            method.setUUID(uuid);
+        }
+    }
+
+    private FunctionDescriptor createFunctionDescriptor(FunctionMetadataSource source, FunctionMethod method, Class<?>[] types, boolean system) {
+        try {
+            // Get return type
+            FunctionParameter outputParam = method.getOutputParameter();
+            Class<?> outputType = null;
+            if (outputParam != null) {
+                outputType = getDataTypeManager().getDataTypeClass(outputParam.getType());
+            }
+            List<Class<?>> inputTypes = new ArrayList<Class<?>>(Arrays.asList(types));
+            boolean hasWrappedArg = false;
+            if (!system) {
+                for (int i = 0; i < types.length; i++) {
+                    if (types[i] == DataTypeManagerService.DefaultDataTypes.VARBINARY.getTypeClass()) {
+                        hasWrappedArg = true;
+                        inputTypes.set(i, byte[].class);
+                    }
+                }
+            }
+            if (method.isVarArgs()) {
+                Class<?> klazz = inputTypes.get(inputTypes.size() - 1);
+                DefaultDataTypes dataType = getDataTypeManager().getDataType(klazz);
+                inputTypes.set(inputTypes.size() - 1, dataType.getTypeArrayClass());
+            }
+
+            Method invocationMethod = method.getMethod();
+            boolean requiresContext = false;
+            // Defect 20007 - Ignore the invocation method if pushdown is not required.
+            if (validateClass
+                && (method.getPushdown() == PushDown.CAN_PUSHDOWN || method.getPushdown() == PushDown.CANNOT_PUSHDOWN)) {
+                if (invocationMethod == null) {
+                    if (method.getInvocationClass() == null || method.getInvocationMethod() == null) {
+                        throw new Exception(Messages.gs(Messages.TEIID.TEIID31123, method.getName()));
+                    }
+                    try {
+                        Class<?> methodClass = source.getInvocationClass(method.getInvocationClass());
+                        ReflectionHelper helper = new ReflectionHelper(methodClass);
+                        try {
+                            invocationMethod = helper.findBestMethodWithSignature(method.getInvocationMethod(), inputTypes);
+                        } catch (NoSuchMethodException e) {
+                            inputTypes.add(0, CommandContext.class);
+                            invocationMethod = helper.findBestMethodWithSignature(method.getInvocationMethod(), inputTypes);
+                            requiresContext = true;
+                        }
+                    } catch (ClassNotFoundException e) {
+                        throw new TeiidClientException(e, Messages.gs(Messages.TEIID.TEIID30387,
+                                                                      method.getName(),
+                                                                      method.getInvocationClass()));
+                    } catch (NoSuchMethodException e) {
+                        throw new TeiidClientException(e, Messages.gs(Messages.TEIID.TEIID30388,
+                                                                      method,
+                                                                      method.getInvocationClass(),
+                                                                      method.getInvocationMethod()));
+                    } catch (Exception e) {
+                        throw new TeiidClientException(e, Messages.gs(Messages.TEIID.TEIID30389,
+                                                                      method,
+                                                                      method.getInvocationClass(),
+                                                                      method.getInvocationMethod()));
+                    }
+                } else {
+                    requiresContext = (invocationMethod.getParameterTypes().length > 0 && org.teiid.CommandContext.class.isAssignableFrom(invocationMethod.getParameterTypes()[0]));
+                }
+                if (invocationMethod != null) {
+                    // Check return type is non void
+                    Class<?> methodReturn = invocationMethod.getReturnType();
+                    if (method.getAggregateAttributes() == null && methodReturn.equals(Void.TYPE)) {
+                        throw new Exception(Messages.gs(Messages.TEIID.TEIID30390, method.getName(), invocationMethod));
+                    }
+
+                    // Check that method is public
+                    int modifiers = invocationMethod.getModifiers();
+                    if (!Modifier.isPublic(modifiers)) {
+                        throw new Exception(Messages.gs(Messages.TEIID.TEIID30391, method.getName(), invocationMethod));
+                    }
+
+                    // Check that method is static
+                    if (!Modifier.isStatic(modifiers)) {
+                        if (method.getAggregateAttributes() == null) {
+                            throw new Exception(Messages.gs(Messages.TEIID.TEIID30392, method.getName(), invocationMethod));
+                        }
+                    } else if (method.getAggregateAttributes() != null) {
+                        throw new Exception(Messages.gs(Messages.TEIID.TEIID30600, method.getName(), invocationMethod));
+                    }
+
+                    if (method.getAggregateAttributes() != null
+                        && !(UserDefinedAggregate.class.isAssignableFrom(invocationMethod.getDeclaringClass()))) {
+                        throw new Exception(Messages.gs(Messages.TEIID.TEIID30601,
+                                                        method.getName(),
+                                                        method.getInvocationClass(),
+                                                        UserDefinedAggregate.class.getName()));
+                    }
+                    method.setMethod(invocationMethod);
+                }
+            }
+
+            FunctionDescriptor result = new FunctionDescriptor(teiidVersion, method, types, outputType,
+                                                               invocationMethod, requiresContext, source.getClassLoader());
+
+            boolean validateClassResult =  teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_12_4) ? validateClass : true;
+
+            if (validateClassResult && method.getAggregateAttributes() != null
+                && (method.getPushdown() == PushDown.CAN_PUSHDOWN || method.getPushdown() == PushDown.CANNOT_PUSHDOWN)) {
+                result.newInstance();
+            }
+
+            result.setHasWrappedArgs(hasWrappedArg);
+            return result;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+	}
+    
+    /**
+     * Look up a function descriptor by signature in the tree.  If none is
+     * found, null is returned.
+     * @param name Name of the function, case is not important
+     * @param argTypes Types of each argument in the function
+     * @return Descriptor which can be used to invoke the function
+     */
+    FunctionDescriptor getFunction(String name, Class<?>[] argTypes) {
+        // Walk path in tree
+        Map<Object, Object> node = treeRoot.get(name);
+        if (node == null) {
+        	return null;
+        }
+        for(int i=0; i<argTypes.length; i++) {
+        	Map<Object, Object> nextNode = (Map<Object, Object>)node.get(argTypes[i]);
+        	if (nextNode == null) {
+        		if (argTypes[i].isArray()) {
+        			//array types are not yet considered in the function typing logic
+        			nextNode = (Map<Object, Object>) node.get(DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass());
+        		}
+        		if (nextNode == null) {
+        			return null;
+        		}
+            }
+        	node = nextNode;
+        }
+
+        // Look for key at the end
+        if(node.containsKey(DESCRIPTOR_KEY)) {
+            // This is the end - return descriptor
+            return (FunctionDescriptor) node.get(DESCRIPTOR_KEY);
+        }
+        // No descriptor at this location in tree
+        return null;
+    }
+
+    public static FunctionTree getFunctionProcedures(ITeiidServerVersion teiidVersion, Schema schema) {
+        UDFSource dummySource = new UDFSource(Collections.EMPTY_LIST, FunctionTree.class.getClassLoader());
+        FunctionTree ft = null;
+        for (Procedure p : schema.getProcedures().values()) {
+            if (p.isFunction() && p.getQueryPlan() != null) {
+                if (ft == null) {
+                    ft = new FunctionTree(teiidVersion, schema.getName(), dummySource, false);
+                }
+                FunctionMethod fm = AbstractTeiidParser.createFunctionMethod(teiidVersion, p);
+                FunctionDescriptor fd = ft.addFunction(schema.getName(), dummySource, fm, false);
+                fd.setProcedure(p);
+            }
+        }
+        return ft;
+    }
+}

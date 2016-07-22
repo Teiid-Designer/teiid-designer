@@ -46,6 +46,8 @@ import org.teiid.designer.ui.actions.ISelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.VdbVersionUtil;
 import org.teiid.designer.vdb.XmiVdb;
 
 
@@ -143,6 +145,10 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
             if( doDeploy ) {
             	doDeploy = VdbAgeChecker.doDeploy(nextVDB, teiidServer.getServerVersion());
             }
+            
+//            if( doDeploy ) {
+//            	IStatus status = VdbVersionUtil.isVdbVersionValid(teiidServer.getServerVersion(), VdbUtil.getVdbVersion(nextVDB));
+//            }
             
             if (doDeploy) {
             	boolean deploySuccess = deployVdb(teiidServer, nextVDB);

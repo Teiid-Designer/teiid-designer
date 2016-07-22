@@ -83,5 +83,5 @@ public abstract class AdminSpec {
      * @param version
      * @throws AdminException 
      */
-    public abstract void undeploy(Admin admin, String vdbName, int version) throws AdminException;
+    public abstract void undeploy(Admin admin, String vdbName, String version) throws AdminException;
 }

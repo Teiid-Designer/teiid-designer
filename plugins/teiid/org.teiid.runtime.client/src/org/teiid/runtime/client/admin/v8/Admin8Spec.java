@@ -69,7 +69,7 @@ public class Admin8Spec extends AdminSpec {
     }
 
     @Override
-    public void undeploy(Admin admin, String vdbName, int version) throws AdminException {
+    public void undeploy(Admin admin, String vdbName, String version) throws AdminException {
         admin.undeploy(vdbName);
     }
 }

@@ -673,11 +673,11 @@ public class VdbModelEntry extends VdbIndexedEntry {
                         String versionStr = ModelUtil.getModelAnnotationPropertyValue(modelFiles[0],
 								VdbConstants.VDB_VERSION_KEY);
                         
-                        int vdbVersion = 1;
+                        String vdbVersion = "1";
                         if( ! StringUtilities.isEmpty(versionStr) ) {
         					try {
-        	                    int versionValue = Integer.parseInt(versionStr);
-        	                    if (versionValue > 0) {
+        	                    String versionValue = versionStr;
+        	                    if (StringUtilities.isNotEmpty(versionValue)) {
         	                    	vdbVersion = versionValue;
         						}
         					} catch (NumberFormatException ex) {

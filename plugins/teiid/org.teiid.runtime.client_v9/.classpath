@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="lib/netty-all.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/wildfly-security-manager.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/proj4j.jar" sourcepath="libsrc/proj4j-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jts.jar" sourcepath="libsrc/jts-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jts2geojson.jar" sourcepath="libsrc/jts2geojson-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/connector-api.jar" sourcepath="libsrc/connector-api-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/wildfly-cli.jar" sourcepath="libsrc/wildfly-cli-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/wildfly-controller.jar" sourcepath="libsrc/wildfly-controller-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/wildfly-controller-client.jar" sourcepath="libsrc/wildfly-controller-client-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/wildfly-protocol.jar" sourcepath="libsrc/wildfly-protocol-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-logging.jar" sourcepath="libsrc/jboss-logging-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-marshalling-river.jar" sourcepath="libsrc/jboss-marshalling-river-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-marshalling.jar" sourcepath="libsrc/jboss-marshalling-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-modules.jar" sourcepath="libsrc/jboss-modules-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-remoting.jar" sourcepath="libsrc/jboss-remoting-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-sasl.jar" sourcepath="libsrc/jboss-sasl-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jgroups.jar" sourcepath="libsrc/jgroups-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/json-simple.jar" sourcepath="libsrc/json-simple-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jta.jar" sourcepath="libsrc/jta-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-threads.jar" sourcepath="libsrc/jboss-threads-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-dmr.jar" sourcepath="libsrc/jboss-dmr-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/nux.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xom.jar" sourcepath="libsrc/xom-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-vfs.jar" sourcepath="libsrc/jboss-vfs-sources.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="engine">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="api">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="common-core">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="admin">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="client">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="jboss-admin">
+		<attributes>
+			<attribute name="ignore_optional_problems" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

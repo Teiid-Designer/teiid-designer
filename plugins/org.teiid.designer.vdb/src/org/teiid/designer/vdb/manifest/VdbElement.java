@@ -49,7 +49,7 @@ public class VdbElement implements Serializable {
     private String name;
 
     @XmlAttribute( name = "version", required = true )
-    private int version;
+    private String version;
 
     @XmlElement( name = "description" )
     private String description;
@@ -242,7 +242,7 @@ public class VdbElement implements Serializable {
     /**
      * @return version
      */
-    public int getVersion() {
+    public String getVersion() {
         return version;
     }
 

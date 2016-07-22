@@ -13,6 +13,7 @@
 		<version>0.0.4-SNAPSHOT</version>
 		<packaging>pom</packaging>
 		<modules>
-      <module>org.teiid.runtime.client</module>
+	<module>org.teiid.runtime.client</module>
+	<module>org.teiid.runtime.client_v9</module>
 	</modules>
 </project>

@@ -105,7 +105,7 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
 
             Label vdbVersion = new Label(summaryGroup, SWT.NONE);
             GridDataFactory.fillDefaults().grab(true, false).applyTo(vdbVersion);
-            vdbVersion.setText(Integer.toString(vdbManager.getArchiveVdb().getVersion()));
+            vdbVersion.setText(vdbManager.getArchiveVdb().getVersion());
             vdbVersion.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
             
             ((GridData)summaryGroup.getLayoutData()).widthHint = 400;

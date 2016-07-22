@@ -141,7 +141,7 @@ public class ShowImportVdbsDialog extends Dialog {
 						return ((VdbImportVdbEntry)element).getName();
 					}
 					case 1: {
-						return Integer.toString(((VdbImportVdbEntry)element).getVersion());
+						return ((VdbImportVdbEntry)element).getVersion();
 					}
 					case 2: {
 						return Boolean.toString(((VdbImportVdbEntry)element).isImportDataPolicies());
@@ -222,7 +222,7 @@ public class ShowImportVdbsDialog extends Dialog {
 		@Override
 		protected Object getValue(Object element) {
 			if( element instanceof VdbImportVdbEntry ) {
-				return Integer.toString(((VdbImportVdbEntry)element).getVersion());
+				return ((VdbImportVdbEntry)element).getVersion();
 			}
 			return 0;
 		}
@@ -236,14 +236,11 @@ public class ShowImportVdbsDialog extends Dialog {
 		@Override
 		protected void setValue(Object element, Object value) {
 			if( element instanceof VdbImportVdbEntry ) {
-				int oldValue = ((VdbImportVdbEntry)element).getVersion();
-				int newValue = oldValue;
-				try {
-					newValue = Integer.parseInt((String)value);
-				} catch (NumberFormatException ex) {
-					return;
-				}
-				if( newValue != oldValue ) {
+				String oldValue = ((VdbImportVdbEntry)element).getVersion();
+				String newValue = oldValue;
+				newValue = (String)value;
+
+				if( !newValue.equals(oldValue) ) {
 					((VdbImportVdbEntry)element).setVersion(newValue);
 					importVdbViewer.refresh(element);
 				}

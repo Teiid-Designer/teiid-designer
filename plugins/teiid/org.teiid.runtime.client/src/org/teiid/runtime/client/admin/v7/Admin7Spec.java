@@ -70,7 +70,7 @@ public class Admin7Spec extends AdminSpec {
     }
 
     @Override
-    public void undeploy(Admin admin, String vdbName, int version) {
+    public void undeploy(Admin admin, String vdbName, String version) {
         if (IExecutionAdmin.PING_VDB.equals(vdbName)) {
             /* Teiid 7 uses the name attribute of the vdb */
             vdbName = "ping"; //$NON-NLS-1$

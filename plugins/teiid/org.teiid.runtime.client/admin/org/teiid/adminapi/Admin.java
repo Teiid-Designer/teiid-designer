@@ -140,7 +140,7 @@ public interface Admin {
      * @param version
      */
     @Removed(Version.TEIID_8_0)
-    void deleteVDB(String vdbName, int version);
+    void deleteVDB(String vdbName, String version);
 
     /**
      * Get the VDBs that currently deployed in the system
@@ -158,7 +158,7 @@ public interface Admin {
      * @throws AdminException
      * @return
      */
-    VDB getVDB(String vdbName, int vdbVersion) throws AdminException;
+    VDB getVDB(String vdbName, String vdbVersion) throws AdminException;
 
     /**
      * Restart the VDB. This issues reload of the metadata.
@@ -168,7 +168,7 @@ public interface Admin {
      * @throws AdminException
      * @return
      */
-    void restartVDB(String vdbName, int vdbVersion, String... models) throws AdminException;
+    void restartVDB(String vdbName, String vdbVersion, String... models) throws AdminException;
 
     /**
      * Get the translators that are available in the configuration
@@ -274,7 +274,7 @@ public interface Admin {
      * @param vdbVersion - VDB version
      * @throws AdminException
      */
-    void clearCache(String cacheType, String vdbName, int vdbVersion) throws AdminException;
+    void clearCache(String cacheType, String vdbName, String vdbVersion) throws AdminException;
 
 
     /**
@@ -418,7 +418,7 @@ public interface Admin {
      * @param EnumSet<SchemaObjectType> Type of schema objects to retrieve, null means ALL the schema object types
      * @param typeNamePattern RegEx pattern to filter to names of tables, procedures that are being read. Null means no filter.
      */
-    String getSchema(String vdbName, int vdbVersion, String modelName, EnumSet<SchemaObjectType> allowedTypes, String typeNamePattern) throws AdminException;
+    String getSchema(String vdbName, String vdbVersion, String modelName, EnumSet<SchemaObjectType> allowedTypes, String typeNamePattern) throws AdminException;
 
     /**
      * Get the Query Plan for the given session with provided execution id.

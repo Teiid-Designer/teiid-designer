@@ -88,4 +88,9 @@ public interface VdbConstants extends StringConstants {
      * Preference indicating that a vdb conversion is in progress
      */
     String CONVERSION_IN_PROGRESS = "conversion-in-progress"; //$NON-NLS-1$
+    
+    /**
+     * The prefix used before the workspace identifier when creating a Preview VDB name.
+     */
+    String DOT_VDB = ".vdb"; //$NON-NLS-1$
 }

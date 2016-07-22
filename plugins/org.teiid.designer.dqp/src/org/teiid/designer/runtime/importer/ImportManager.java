@@ -255,7 +255,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
      * @throws Exception the exception
      */
     public String getSchema(String vdbName) throws Exception {
-        return getImportServer().getSchema(vdbName, 1, vdbName+IMPORT_SRC_MODEL);
+        return getImportServer().getSchema(vdbName, "1", vdbName+IMPORT_SRC_MODEL);
     }
     
     /**
@@ -426,7 +426,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
      * @throws Exception the exception
      */
     public String getSchema(String vdbName,
-                            int vdbVersion,
+                            String vdbVersion,
                             String modelName) throws Exception {
         return getImportServer().getSchema(vdbName, vdbVersion, modelName);
     }

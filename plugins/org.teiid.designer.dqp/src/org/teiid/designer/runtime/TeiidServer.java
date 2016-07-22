@@ -621,7 +621,7 @@ public class TeiidServer implements ITeiidServer {
     }
     
     @Override
-    public void deployVdb(IFile vdbFile, int version) throws Exception {
+    public void deployVdb(IFile vdbFile, String version) throws Exception {
     	connect();
     	admin.deployVdb(vdbFile, version);
     }
@@ -794,7 +794,7 @@ public class TeiidServer implements ITeiidServer {
      */
     @Override
     public String getSchema(String vdbName,
-                            int vdbVersion,
+                            String vdbVersion,
                             String modelName) throws Exception {
         connect();
         return admin.getSchema(vdbName, vdbVersion, modelName);

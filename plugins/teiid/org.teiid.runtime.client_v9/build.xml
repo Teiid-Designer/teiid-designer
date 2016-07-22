@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+==
+== Script to resolve the plugin's lib directory dependencies
+== and generate the SQLParser sources using javacc
+==
+== Note. This has to build both the target platform and the
+==       spi plugin in order to satisfy the dependencies of
+==       this plugin (even though we are not actually
+==       compiling it!)
+==
+-->
+
+<project name="generate-libs" default="generate">
+
+	<property name="GIT-HOME" location="../../.." />
+
+	<import file="${GIT-HOME}/scripts/build-common.xml" />
+
+	<!-- Comma-separated list of required libraries -->
+	<property name="libs" value="connector-api.jar,
+                                 wildfly-cli.jar,
+                                 wildfly-controller.jar,
+                                 jboss-dmr.jar,
+                                 jboss-logging.jar,
+                                 jboss-marshalling-river.jar,
+                                 jboss-marshalling.jar,
+                                 jboss-modules.jar,
+                                 jboss-remoting.jar,
+                                 jboss-sasl.jar,
+                                 jboss-threads.jar,
+                                 jboss-vfs.jar,
+                                 jgroups.jar,
+                                 json-simple.jar,
+                                 jta.jar,
+                                 netty.jar,
+                                 nux.jar,
+                                 xnio-api.jar,
+                                 xnio-nio.jar,
+                                 xom.jar,
+                                 jts.jar,
+                                 jts2geojson.jar,
+                                 proj4j.jar"/>
+
+	<!-- Location of the generated SQLParser class -->
+	<property name="parsers" value="v9/Teiid9Parser.java" />
+
+	<!--
+	   Test whether all the required libraries are present
+	-->
+	<target name="check-libs" depends="init-ant-contrib">
+		<!-- correct any extra whitespace created from formatting -->
+		<removeWhitespace arg="${libs}"/>
+
+		<filelist id="my.libs" dir="lib" files="${rwsResult}" />
+		<restrict id="missing.libs">
+			<filelist refid="my.libs" />
+			<not>
+				<exists />
+			</not>
+		</restrict>
+
+		<property name="missing.libs" refid="missing.libs" />
+		<condition property="libs-present" value="true">
+			<length string="${missing.libs}" length="0" />
+		</condition>
+	</target>
+
+	<!--
+	   Test for existence of the generated sql parser class
+	-->
+	<target name="check-parsers" depends="init-ant-contrib">
+		<!-- correct any extra whitespace created from formatting -->
+		<removeWhitespace arg="${parsers}"/>
+
+		<filelist id="my.parsers" dir="engine/org/teiid/query/parser" files="${rwsResult}" />
+		<restrict id="missing.parsers">
+			<filelist refid="my.parsers" />
+			<not>
+				<exists />
+			</not>
+		</restrict>
+
+		<property name="missing.parsers" refid="missing.parsers" />
+		<condition property="parsers-present" value="true">
+			<length string="${missing.parsers}" length="0" />
+		</condition>
+	</target>
+
+	<!--
+	   Check whether the libraries have already been downloaded and whether the
+	   parser classes have beeen generated. If either is not present then the
+	   'should-generate' property be set to the 'true'
+	-->
+	<target name="check-work" depends="check-libs, check-parsers">
+		<condition property="should-generate" value="true">
+			<or>
+				<isfalse value="${libs-present}" />
+				<isfalse value="${parsers-present}" />
+			</or>
+		</condition>
+	</target>
+
+	<target name="nothing-todo" unless="should-generate">
+		<echo message="Project source generation is up-to-date" />
+	</target>
+
+	<target name="dependencies" depends="init-ant-contrib" if="should-generate">
+
+		<!-- Executes maven from the root directory, installing
+		     the project dependencies.
+		-->
+		<mvn dir="${GIT-HOME}"
+			 args="-pl target-platform,
+			           plugins/org.teiid.designer.spi,
+			           plugins/org.teiid.datatools.connectivity.model,
+			           plugins/org.teiid.datatools.connectivity,
+			           plugins/org.teiid.datatools.connectivity.ui
+			       install"/>
+	</target>
+
+	<target name="clean-internal" if="should-generate">
+
+		<echo message="Removing generated files ..." />
+		<delete>
+			<fileset dir="engine/org/teiid/query/parser">
+				<include name="**/v*/Teiid*Parser.java"/>
+				<include name="**/v*/Teiid*ParserConstants.java"/>
+				<include name="**/v*/Teiid*ParserTokenManager.java"/>
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="clean">
+		<property name="should-generate" value="true"/>
+		<antcall target="clean-internal"/>
+	</target>
+
+	<target name="generate" depends="init-ant-contrib, check-work, nothing-todo, clean-internal, dependencies" if="should-generate">
+		<echo message="Generating from maven ..." />
+
+		<!-- Call the process sources goal and generate using javacc -->
+		<echo message="=== Generating parser ===" />
+		<mvn dir="." args="-P download-sources process-sources" />
+
+	</target>
+</project>

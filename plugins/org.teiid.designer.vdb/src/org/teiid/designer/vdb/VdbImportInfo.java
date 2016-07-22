@@ -15,13 +15,13 @@ package org.teiid.designer.vdb;
 public class VdbImportInfo {
 
 	String name;
-	int version;
+	String version;
 	
 	/**
 	 * @param name
 	 * @param version
 	 */
-	public VdbImportInfo(String name, int version) {
+	public VdbImportInfo(String name, String version) {
 		super();
 		this.name = name;
 		this.version = version;
@@ -37,7 +37,7 @@ public class VdbImportInfo {
 	/**
 	 * @return
 	 */
-	public int getVersion() {
+	public String getVersion() {
 		return version;
 	}
 

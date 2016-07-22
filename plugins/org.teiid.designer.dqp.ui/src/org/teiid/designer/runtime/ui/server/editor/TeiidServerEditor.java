@@ -61,6 +61,7 @@ import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.IServersProvider;
 import org.teiid.designer.runtime.TeiidServerFactory;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
+import org.teiid.designer.runtime.TeiidServerManager;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
@@ -719,9 +720,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         if( invalidMessage != null ) {
         	MessageDialog.openError(getSite().getShell(), "Teiid Server Configuration Errors", invalidMessage);
         	return;
-        }
-
-        ITeiidServerVersion newTeiidServerVersion = teiidServer.getServerVersion();
+        }    
 
         // =========================================================================
         // Make sure that the latest override value is saved to the server manager
@@ -731,12 +730,39 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         
         // =========================================================================
         
-        if (versionValueCombo.getText() != null)
-            newTeiidServerVersion = new TeiidServerVersion(versionValueCombo.getText());
+        ITeiidServerVersion newTeiidServerVersion = null;
+        
+        if (versionValueCombo.getText() != null && !this.teiidServer.isConnected()) {
+        	newTeiidServerVersion = new TeiidServerVersion(versionValueCombo.getText());
+        	if( !newTeiidServerVersion.equals(this.teiidServer.getServerVersion()) ) {
+        		try{
+        			TeiidServerManager manager = (TeiidServerManager)DqpPlugin.getInstance().getServerManager();
+        			TeiidServerFactory teiidServerFactory = new TeiidServerFactory();
+        			
+        			String host = this.teiidServer.getHost();
+        			ITeiidAdminInfo adminInfo = this.teiidServer.getTeiidAdminInfo();
+        			ITeiidJdbcInfo jdbcInfo = this.teiidServer.getTeiidJdbcInfo();
+        			
+        			manager.removeServer(this.teiidServer);
+        			
+        			this.teiidServer = teiidServerFactory.createTeiidServer(
+        					newTeiidServerVersion,
+        					host,
+        					adminInfo,
+        					jdbcInfo,
+        					manager,
+        					parentServer,
+        					ServerOptions.NO_CHECK_CONNECTION,
+        					ServerOptions.ADD_TO_REGISTRY,
+        					ServerOptions.NO_CHECK_SERVER_REGISTRY);        			
+        		} catch (Exception ex) {
+        			ex.printStackTrace();
+        		}
+        	}
+        }
 
         // Overwrite the properties of the Teiid Instance
 
-        TeiidServerFactory teiidServerFactory = new TeiidServerFactory();
 
         List<ServerOptions> serverOptions = new ArrayList<ServerOptions>();
         if (adminSSLCheckbox != null && adminSSLCheckbox.getSelection())

@@ -381,12 +381,9 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
         }
 
         // Check Version # is an integer
-        try {
-            Integer.parseInt(getVersion());
-        } catch (NumberFormatException nfe) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID,
-                                 NLS.bind(Messages.GenerateVdbWizard_validation_versionNotInteger, getVersion())));
-            return;
+        String version = getVersion();
+        if( version == null ) {
+        	// TODO: Status message (cannot be null)
         }
 
         // output location can't be null

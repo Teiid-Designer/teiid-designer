@@ -41,6 +41,8 @@ public class TeiidPropertyDefinitionConvertor implements MxdConstants {
                 metaclassType.setName(TargetObjectMappings.PROCEDURE.getDesignerClass());
             else if (TargetObjectMappings.COLUMN.getTeiidClass().equals(name))
                 metaclassType.setName(TargetObjectMappings.COLUMN.getDesignerClass());
+            else if (TargetObjectMappings.PROCEDUREPARAMETER.getTeiidClass().equalsIgnoreCase(name))
+            	metaclassType.setName(TargetObjectMappings.PROCEDUREPARAMETER.getDesignerClass());
             else
                 throw new IllegalStateException("Unsupported MetaclassType " + name); //$NON-NLS-1$
 

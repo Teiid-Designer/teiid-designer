@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.teiid.designer.spi.teiidRuntimeClient">
+      <runtimeFactory
+            class="org.teiid.runtime.client.admin.ExecutionAdminFactory">
+      </runtimeFactory>
+   </extension>
+
+   <extension
+         point="org.eclipse.datatools.connectivity.driverExtension">
+      <driverTemplate
+            createDefault="true"
+            defaultDefinitionName="%TEIID_DRIVER_DEFAULT_INSTANCE_NAME"
+            description="%TEIID_DRIVER_TEMPLATE_DESCRIPTION"
+            emptyJarListIsOK="false"
+            id="org.teiid.runtime.client.driver.serverDriverTemplate"
+            jarList="TEIID_HOME/client/teiid-client.jar"
+            name="%TEIID_DRIVER_TEMPLATE_NAME"
+            parentCategory="org.teiid.datatools.connectivity.driver.teiidCategory"
+            valuesProvider="org.teiid.runtime.client_v9.driver.provider.TeiidDriverValuesProvider">
+            <properties>
+                <property
+                    generated="false"
+                    id="org.eclipse.datatools.connectivity.db.driverClass"
+                    name="%DRIVER_CLASS_PROPERTY_NAME"
+                    value="org.teiid.jdbc.TeiidDriver"
+                    required="true"
+                    visible="true"/>
+                <property
+                    generated="false"
+                    id="org.eclipse.datatools.connectivity.db.vendor"
+                    name="%VENDOR_PROPERTY_NAME"
+                    value="Teiid"
+                    required="true"
+                    visible="false"/>
+                <property
+                    generated="false"
+                    id="org.eclipse.datatools.connectivity.db.version"
+                    name="%VERSION_PROPERTY_NAME"
+                    value="x.x.x"
+                    required="true"
+                    visible="false"/>
+                <property
+                    generated="false"
+                    id="org.eclipse.datatools.connectivity.db.URL"
+                    name="%CONNECTION_URL_PROPERTY_NAME"
+                    value="jdbc:teiid:SAMPLE-VDB@mm://localhost:31000"
+                    required="false"
+                    visible="true"/>
+                <property
+                    generated="false"
+                    id="org.eclipse.datatools.connectivity.db.username"
+                    name="%USER_ID_PROPERTY_NAME"
+                    value="user"
+                    required="false"
+                    visible="true"/>
+                <property
+                    generated="false"
+                    id="org.eclipse.datatools.connectivity.db.password"
+                    name="%PASSWORD_PROPERTY_NAME"
+                    value="user"
+                    required="false"
+                    visible="true"/>
+            </properties>
+      </driverTemplate>
+   </extension>
+
+   <extension
+       point="org.eclipse.datatools.connectivity.sqm.core.databaseDefinition">
+      <definition
+          allowsConnections="true"
+          description="Definition of the Teiid Database"
+          file="teiidDB.xmi"
+          product="Teiid"
+          productDisplayString="%PRODUCT_DISPLAY_STRING"
+          version="x.x.x"
+          versionDisplayString="%VERSION_DISPLAY_STRING">
+      </definition>
+   </extension>
+
+   <extension
+         point="org.eclipse.datatools.connectivity.sqm.core.catalog">
+      <overrideLoader
+            provider="org.teiid.datatools.connectivity.sql.TeiidSchemaLoader"
+            eclass="org.eclipse.datatools.modelbase.sql.schema.Schema"
+            product="Teiid"
+            version="x.x.x"/>
+   </extension>
+   <extension point="org.eclipse.datatools.connectivity.ui.driverUIContributor">
+      <driverUIContributor
+            class="org.teiid.datatools.connectivity.ui.TeiidDriverUIContributor"
+            driverTemplateID="org.teiid.runtime.client.driver.serverDriverTemplate"
+            id="org.teiid.datatools.connectivity.ui.TeiidDriverUIContributor">
+      </driverUIContributor>
+   </extension>
+
+   <extension point="org.eclipse.datatools.connectivity.ui.driverPropertyEditor">
+      <propertyEditor
+            customPropertyDescriptor="org.eclipse.datatools.connectivity.ui.PasswordTextPropertyDescriptor"
+            driverPropertyID="org.eclipse.datatools.connectivity.db.password"
+            driverTemplateID="org.teiid.runtime.client.driver.serverDriverTemplate"
+            id="org.eclipse.datatools.connectivity.teiid.ui.propertyEditor.password">
+      </propertyEditor>
+   </extension>
+
+   <extension
+         point="org.eclipse.datatools.sqltools.editor.core.ui.dbUIConfigurations">
+      <dbUIConfiguration
+            configurationClass="org.teiid.datatools.connectivity.ui.TeiidDBUIConfiguration"
+            default="false"
+            product="Teiid"
+            version="x.x.x">
+      </dbUIConfiguration>
+   </extension>
+
+   <extension
+         point="org.eclipse.datatools.sqltools.editor.core.dbConfigurations">
+      <dbConfiguration
+            configurationClass="org.teiid.datatools.connectivity.ui.TeiidDBConfiguration"
+            default="false"
+            product="Teiid"
+            supportsDebugging="false"
+            version="9.0+">
+      </dbConfiguration>
+   </extension>
+
+</plugin>

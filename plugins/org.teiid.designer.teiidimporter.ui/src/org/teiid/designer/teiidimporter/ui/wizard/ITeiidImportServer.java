@@ -54,7 +54,7 @@ public interface ITeiidImportServer {
       * @return the Schema DDL for the model
       * @throws Exception if deployment fails
       */
-     String getSchema(String vdbName, int vdbVersion, String modelName) throws Exception;
+     String getSchema(String vdbName, String vdbVersion, String modelName) throws Exception;
 
      /**
       * Returns all teiid data source object if any on this server

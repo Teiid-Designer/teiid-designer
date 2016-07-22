@@ -291,7 +291,7 @@ public class VdbTest implements VdbConstants {
     public void testAddingAndRemovingImportVdbEntry() throws Exception {
     	String entryName = "testImportVdbEntry";
     	
-    	vdb.addImport(entryName, 1);
+    	vdb.addImport(entryName, "1");
     	
     	Collection<VdbImportVdbEntry> entries = vdb.getImports();
     	assertEquals(1, entries.size());

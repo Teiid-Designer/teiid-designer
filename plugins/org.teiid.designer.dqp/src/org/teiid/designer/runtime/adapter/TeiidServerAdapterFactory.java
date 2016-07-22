@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.core.server.internal.JBossServer;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
+import org.jboss.ide.eclipse.as.core.server.internal.v7.Wildfly8Server;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidServerFactory;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
@@ -78,8 +79,11 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
             return null;
 
         JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
+        Wildfly8Server wf8 = (Wildfly8Server) server.loadAdapter(Wildfly8Server.class, null);
         if (jb7 != null) {
             return adaptJBoss7Server(server, jb7, options);
+        } else if( wf8 != null ) {
+        	return adaptJBoss8Server(server, wf8, options);
         } else {
             JBossServer jb = (JBossServer) server.loadAdapter(JBossServer.class, null);
             if (jb != null)
@@ -189,6 +193,59 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
             
             if (teiidServer == null)
                 teiidServer = createJboss7TeiidServer(parentServer, jboss7Server, options);
+        
+            return teiidServer;
+        }
+    }
+    
+    /**
+     * Adapt the JBoss 7 server to an {@link ITeiidServer} only if
+     * JB is started and contains a Teiid Instance.
+     * 
+     * @param parentServer
+     * @param jboss7Server
+     * @param options
+     * 
+     * @throws Exception
+     * @return
+     */
+    private ITeiidServer adaptJBoss8Server(IServer parentServer, Wildfly8Server jboss8Server, ServerOptions... options) throws Exception {
+        ITeiidServer teiidServer = null;
+        
+        List<ServerOptions> optionList = Collections.emptyList(); 
+        if (options != null)
+            optionList = Arrays.asList(options);
+        
+        /* 
+         * In some cases we want to return a new Teiid Instance even if its in the registry
+         * Such Teiid Instances should be disposed of and not kept around.
+         */
+        if (! optionList.contains(ServerOptions.NO_CHECK_SERVER_REGISTRY)) {
+            // No specific option specifying we should not check the registry so check
+            // and return any Teiid Instance found that fits the url
+         
+            
+            teiidServer = getTeiidServerManager().getServer(parentServer);
+            if (teiidServer != null)
+                return teiidServer;
+        }
+        
+        synchronized (lock) {
+            if (! optionList.contains(ServerOptions.NO_CHECK_CONNECTION)) {
+                if (! JBoss7ServerUtil.isJBossServerConnected(parentServer, jboss8Server))
+                    return null;
+            
+                if (! JBoss7ServerUtil.isTeiidServer(parentServer, jboss8Server))
+                    return null;
+            }
+
+            // Check again in case the thread had to wait for the lock
+            if (! optionList.contains(ServerOptions.NO_CHECK_SERVER_REGISTRY)) {
+                teiidServer = getTeiidServerManager().getServer(parentServer);
+            }
+            
+            if (teiidServer == null)
+                teiidServer = createJboss7TeiidServer(parentServer, jboss8Server, options);
         
             return teiidServer;
         }

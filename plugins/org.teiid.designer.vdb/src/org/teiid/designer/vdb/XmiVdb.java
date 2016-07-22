@@ -192,7 +192,7 @@ public final class XmiVdb extends BasicVdb {
         setSourceFile(file);
 
         final boolean[] previewable = new boolean[1];
-        final int[] vdbVersion = new int[1];
+        final String[] vdbVersion = new String[1];
         final int[] queryTimeout = new int[1];
         final String[] valDateTime = new String[1];
         final String[] valVersion = new String[1];

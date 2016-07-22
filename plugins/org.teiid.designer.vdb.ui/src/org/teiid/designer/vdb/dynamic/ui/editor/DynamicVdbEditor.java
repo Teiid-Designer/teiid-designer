@@ -272,21 +272,18 @@ public class DynamicVdbEditor extends EditorPart implements IResourceChangeListe
 				
 				@Override
 				public void modifyText(ModifyEvent e) {
-					try {
-	                    int versionValue = Integer.parseInt(vdbVersionText.getText());
-	                    if (versionValue > -1) {
-	                        getVdb().setVersion(versionValue);
-						}
-					} catch (NumberFormatException ex) {
+	                String versionValue = vdbVersionText.getText();
+	                if (versionValue != null) {
+	                    getVdb().setVersion(versionValue);
+					} else {
 						MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
 	                            INVALID_INTEGER_INPUT_TITLE,
 	                            INVALID_INTEGER_INPUT_MESSAGE);
-						vdbVersionText.setText(Integer.toString(getVdb().getVersion()));
+						vdbVersionText.setText(getVdb().getVersion());
 					}
-					
 				}
 			});
-	    	vdbVersionText.setText(Integer.toString(getVdb().getVersion()));
+	    	vdbVersionText.setText(getVdb().getVersion());
         }
 
         

@@ -67,6 +67,8 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
 	public static final String DUPLICATE_MODEL_NAMES = "duplicateModelNames"; //$NON-NLS-1$
 	@SuppressWarnings("javadoc")
 	public static final String SINGLE_AUTHENTICATION_TYPE_IGNORED = "singleAuthenticationTypeIgnored"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String ONLY_INTEGER_VDB_VERSIONS_SUPPORTED_PRIOR_TO_TEIID_9 = "onlyIntegerVdbVersionsSupportedPriorToTeiid9"; //$NON-NLS-1$
 	
     private enum MarkerType {
     	DEFAULT,
@@ -83,7 +85,8 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
     	MISSING_JNDI_NAME,
     	MODEL_WITH_ERRORS,
     	DUPLICATE_MODEL_NAMES,
-    	SINGLE_AUTHENTICATION_TYPE_IGNORED;
+    	SINGLE_AUTHENTICATION_TYPE_IGNORED,
+    	ONLY_INTEGER_VDB_VERSIONS_SUPPORTED_PRIOR_TO_TEIID_9;
     }
     
     /**
@@ -199,6 +202,9 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     				}
     				if( iStatus.getMessage().indexOf("single authentication type") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.SINGLE_AUTHENTICATION_TYPE_IGNORED);
+    				}
+    				if( iStatus.getMessage().indexOf("9.0 only supported integer") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.ONLY_INTEGER_VDB_VERSIONS_SUPPORTED_PRIOR_TO_TEIID_9);
     				}
     				
     			} break;

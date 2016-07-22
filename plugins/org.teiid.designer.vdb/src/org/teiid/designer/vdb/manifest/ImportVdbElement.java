@@ -30,7 +30,7 @@ public class ImportVdbElement implements Serializable {
     private String name;
 
     @XmlAttribute( name = "version", required = true )
-    private int version = 1;
+    private String version = "1";
 
     @XmlAttribute( name = "import-data-policies" )
     private boolean importDataPolicies = true;
@@ -64,7 +64,7 @@ public class ImportVdbElement implements Serializable {
     /**
      * @return version
      */
-    public int getVersion() {
+    public String getVersion() {
     	return version;
     }
 

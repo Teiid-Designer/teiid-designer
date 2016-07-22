@@ -310,9 +310,9 @@ public class VdbDeployer {
              //
              // EXAMPLE: Customers.2.vdb
              //
-                int version = vdb.getVersion(); // Manifest version
-                int versionInName = getVdbVersion(getVdbName()); // version in name
-                if (versionInName > 0) { // If version in name, then use it (i.e. ignore manifest version)
+                String version = vdb.getVersion(); // Manifest version
+                String versionInName = getVdbVersion(getVdbName()); // version in name
+                if (versionInName != null) { // If version in name, then use it (i.e. ignore manifest version)
                     version = versionInName;
                 }
 
@@ -334,7 +334,7 @@ public class VdbDeployer {
         return null;
     }
     
-    private int getVdbVersion(String originalVdbName) throws Exception {
+    private String getVdbVersion(String originalVdbName) throws Exception {
     	String vdbName = originalVdbName;
     	String vdbVersionStr = null;
     	int firstIndex = vdbName.indexOf('.');
@@ -345,9 +345,9 @@ public class VdbDeployer {
     	throw new Exception(UTIL.getString(PREFIX + "vdbNameContainsTooManyDotsErrorMessage", originalVdbName)); //$NON-NLS-1$"VBD Version contains more than one '.'"); //Messages.getString(Messages.ExecutionAdmin.invalidVdbName, originalVdbName));
     	}
     	vdbVersionStr = vdbName.substring(firstIndex+1);
-    	return Integer.parseInt(vdbVersionStr);
+    	return vdbVersionStr;
     	}
-    	return -1;
+    	return null;
     	}
     
     /*

@@ -87,6 +87,7 @@ import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
 
@@ -128,7 +129,11 @@ public class Admin8Factory {
         }
 
         if(port < 0) {
-            port = 9999;
+        	if( teiidVersion.isGreaterThan(Version.TEIID_8_12_4)) {
+        		port = 9990;
+        	} else {
+        		port = 9999;
+        	}
         }
 
         try {
@@ -274,7 +279,7 @@ public class Admin8Factory {
 		}
 
 		@Override
-		public void clearCache(String cacheType, String vdbName, int vdbVersion) throws AdminException {
+		public void clearCache(String cacheType, String vdbName, String vdbVersion) throws AdminException {
 			cliCall("clear-cache",
 					new String[] { "subsystem", "teiid" },
 					new String[] { "cache-type", cacheType, "vdb-name",vdbName, "vdb-version", String.valueOf(vdbVersion) },
@@ -1786,7 +1791,7 @@ public class Admin8Factory {
 
 
 		@Override
-		public VDB getVDB(String vdbName, int vdbVersion) throws AdminException {
+		public VDB getVDB(String vdbName, String vdbVersion) throws AdminException {
 			final ModelNode request = buildRequest("teiid", "get-vdb", "vdb-name", vdbName, "vdb-version", String.valueOf(vdbVersion));//$NON-NLS-1$
 			if (request == null) {
 				return null;
@@ -1993,7 +1998,7 @@ public class Admin8Factory {
 	    }
 
 		@Override
-		public void restartVDB(String vdbName, int vdbVersion, String... models) throws AdminException {
+		public void restartVDB(String vdbName, String vdbVersion, String... models) throws AdminException {
 			ModelNode request = null;
 			String modelNames = null;
 
@@ -2029,7 +2034,7 @@ public class Admin8Factory {
 		}
 
 		@Override
-		public String getSchema(String vdbName, int vdbVersion,
+		public String getSchema(String vdbName, String vdbVersion,
 				String modelName, EnumSet<SchemaObjectType> allowedTypes,
 				String typeNamePattern) throws AdminException {
 			ModelNode request = null;
@@ -2112,7 +2117,7 @@ public class Admin8Factory {
 
         @Override
         @Removed(Version.TEIID_8_0)
-        public void deleteVDB(String vdbName, int version) {
+        public void deleteVDB(String vdbName, String version) {
             throw new UnsupportedOperationException();
         }
 

@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.dmr.ModelNode;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
+import org.jboss.ide.eclipse.as.core.server.internal.v7.Wildfly8Server;
 import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
 import org.jboss.ide.eclipse.as.management.core.IAS7ManagementDetails;
 import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
@@ -96,6 +97,7 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
         try {
             socket = new Socket();
             socket.connect(endPoint, 1024);
+            socket.setSoTimeout(10 * 1000);
 
             /*
              * This may not seem necessary since a socket connection
@@ -105,7 +107,7 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
              */
             InputStream socketReader = socket.getInputStream();
 
-            final char[] buffer = new char[100];
+            final char[] buffer = new char[1];
             in = new InputStreamReader(socketReader);
             int rsz = in.read(buffer, 0, buffer.length);
             if (rsz == -1) {
@@ -179,6 +181,10 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
         
         String host = jboss7Server.getHost();
         int port = jboss7Server.getManagementPort();
+        
+        if( jboss7Server instanceof Wildfly8Server ) {
+        	return JBossServerUtil.isHostConnected(host, port);
+        }
 
         return isHostConnected(host, port);
     }

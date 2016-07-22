@@ -88,10 +88,9 @@ public class TestDisplayNodeFactory extends TestCase {
                                                         Version.TEIID_8_9,
                                                         Version.TEIID_8_10,
                                                         Version.TEIID_8_11,
-                                                        Version.TEIID_8_12_4
-//                                                        ,
-//                                                        Version.TEIID_8_13_5,
-//                                                        Version.TEIID_9_0
+                                                        Version.TEIID_8_12_4,
+                                                        Version.TEIID_8_13_5,
+                                                        Version.TEIID_9_0
                                                         };
 
     private IQueryFactory factory;

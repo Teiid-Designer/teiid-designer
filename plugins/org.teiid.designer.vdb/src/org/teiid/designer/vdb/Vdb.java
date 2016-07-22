@@ -226,7 +226,7 @@ public interface Vdb extends VdbConstants {
     /**
      * @return the VDB version
      */
-    int getVersion();
+    String getVersion();
 
     /**
      * @return the query timeout value for this VDB (in seconds)
@@ -376,7 +376,7 @@ public interface Vdb extends VdbConstants {
     /**
      * @param intVersion version of vdb
      */
-    void setVersion(int intVersion);
+    void setVersion(String intVersion);
 
     /**
      * @param valVersion Sets validatationVersion to the specified value.
@@ -693,7 +693,7 @@ public interface Vdb extends VdbConstants {
      * 
      * @return the newly added import entry
      */
-    VdbImportVdbEntry addImport(String importVdbName, int version);
+    VdbImportVdbEntry addImport(String importVdbName, String version);
 
     /**
      * @param model

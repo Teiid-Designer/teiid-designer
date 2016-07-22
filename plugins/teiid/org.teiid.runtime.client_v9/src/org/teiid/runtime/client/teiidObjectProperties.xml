@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<teiid-objects>
+	<vdb>
+		<teiid-property name="cache-metadata" type="boolean"
+			allowed-values="true, false" default-value="true">
+			<description>Can be true or false. defaults to false for -vdb.xml
+				deployments otherwise true.
+				If false, Teiid will obtain metadata once for every launch of the vdb.
+				true will save a file containing the metadata into the
+				PROFILE/data/teiid director
+			</description>
+		</teiid-property>
+		<teiid-property name="query-timeout" type="integer">
+			<description>Sets the default query timeout in milliseconds for queries executed against this VDB. 0 indicates that the server default query timeout should be used. Defaults to 0. Will have no effect if the server default query timeout is set to a lesser value. N
+			</description>
+		</teiid-property>
+		<teiid-property name="lib" type="string">
+			<description>Set to a list of modules for the vdb classpath for user defined function loading. See also Support for User-Defined Functions (Non-Pushdown).
+			</description>
+		</teiid-property>
+		<teiid-property name="security-domain" type="string">
+			<description>Can be true or false. defaults to false for -vdb.xml
+				deployments otherwise true.
+				If false, Teiid will obtain metadata once for every launch of the vdb.
+				true will save a file containing the metadata into the
+				PROFILE/data/teiid director
+			</description>
+		</teiid-property>
+		<teiid-property name="connection.xxx" type="string"
+			allowed-values="true, false" default-value="true">
+			<description>Can be true or false. defaults to false for -vdb.xml
+				deployments otherwise true.
+				If false, Teiid will obtain metadata once for every launch of the vdb.
+				true will save a file containing the metadata into the
+				PROFILE/data/teiid director
+			</description>
+		</teiid-property>
+		<teiid-property name="authentication-type" type="string"
+			allowed-values="true, false" default-value="true">
+			<description>Can be true or false. defaults to false for -vdb.xml
+				deployments otherwise true.
+				If false, Teiid will obtain metadata once for every launch of the vdb.
+				true will save a file containing the metadata into the
+				PROFILE/data/teiid director
+			</description>
+		</teiid-property>
+		<teiid-property name="password-pattern" type="string"
+			allowed-values="true, false" default-value="true">
+			<description>Can be true or false. defaults to false for -vdb.xml
+				deployments otherwise true.
+				If false, Teiid will obtain metadata once for every launch of the vdb.
+				true will save a file containing the metadata into the
+				PROFILE/data/teiid director
+			</description>
+		</teiid-property>
+		<teiid-property name="gss-pattern" type="string"
+			allowed-values="true, false" default-value="true">
+			<description>Can be true or false. defaults to false for -vdb.xml
+				deployments otherwise true.
+				If false, Teiid will obtain metadata once for every launch of the vdb.
+				true will save a file containing the metadata into the
+				PROFILE/data/teiid director
+			</description>
+		</teiid-property>
+		<teiid-property name="model.visible" type="string"
+			allowed-values="true, false" default-value="true">
+			<description>Can be true or false. defaults to false for -vdb.xml
+				deployments otherwise true.
+				If false, Teiid will obtain metadata once for every launch of the vdb.
+				true will save a file containing the metadata into the
+				PROFILE/data/teiid director
+			</description>
+		</teiid-property>
+		<teiid-property name="include-pg-metadata" type="string"
+			allowed-values="true, false" default-value="true">
+			<description>Can be true or false. defaults to false for -vdb.xml
+				deployments otherwise true.
+				If false, Teiid will obtain metadata once for every launch of the vdb.
+				true will save a file containing the metadata into the
+				PROFILE/data/teiid director
+			</description>
+		</teiid-property>
+		<teiid-property name="lazy-invalidate" type="string"
+			allowed-values="true, false" default-value="true">
+			<description>Can be true or false. defaults to false for -vdb.xml
+				deployments otherwise true.
+				If false, Teiid will obtain metadata once for every launch of the vdb.
+				true will save a file containing the metadata into the
+				PROFILE/data/teiid directory
+			</description>
+		</teiid-property>
+	</vdb>
+
+</teiid-objects>

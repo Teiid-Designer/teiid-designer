@@ -1,0 +1,106 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ * See the COPYRIGHT.txt file distributed with this work for information
+ * regarding copyright ownership.  Some portions may be licensed
+ * to Red Hat, Inc. under one or more contributor license agreements.
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301 USA.
+ */
+
+package org.teiid.api.exception.query;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.teiid.runtime.client.TeiidClientException;
+
+/**
+ * This exception represents the case where the query submitted could not resolved
+ * when it is checked against the metadata
+ */
+public class QueryValidatorException extends TeiidClientException {
+
+	private static final long serialVersionUID = 752912934870580744L;
+	private transient List problems;
+
+    /**
+     * No-arg constructor required by Externalizable semantics.
+     */
+    public QueryValidatorException() {
+        super();
+    }
+    
+    /**
+     * Construct an instance with the message specified.
+     *
+     * @param message A message describing the exception
+     */
+    public QueryValidatorException( String message ) {
+        super( message );
+    }
+
+    /**
+     * Construct an instance from the given exception
+     *
+     * @param e
+     */
+    public QueryValidatorException(Throwable e) {
+        super(e);
+    }
+    
+    /**
+     * Construct an instance from a message and an exception to chain to this one.
+     *
+     * @param message A message describing the exception
+     * @param e An exception to nest within this one
+     */
+    public QueryValidatorException( Throwable e, String message ) {
+        super( e, message );
+    }
+
+    @Override
+    public String getMessage() {
+        String msg = super.getMessage();
+        msg = msg.replaceAll(this.getClass().getName() + ": ", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        return msg;
+    }
+
+	/**
+	 * Set the list of unresolved symbols during QueryResolution
+	 * @param unresolvedSymbols List of <UnresolvedSymbolDescription> objects
+	 */
+	public void setUnresolvedSymbols(List unresolvedSymbols) {
+		this.problems = unresolvedSymbols;
+	}
+
+    /**
+     * Add an UnresolvedSymbolDescription to the list of unresolved symbols
+     * @param symbolDesc Single description 
+     */
+    public void addUnresolvedSymbol(UnresolvedSymbolDescription symbolDesc) { 
+        if(this.problems == null) { 
+            this.problems = new ArrayList();
+        }
+        this.problems.add(symbolDesc);
+    }
+        
+	/**
+	 * Set the list of unresolved symbols during QueryResolution
+	 * @return List of {@link UnresolvedSymbolDescription} objects
+	 */
+	public List getUnresolvedSymbols() {
+		return this.problems;
+	}
+}

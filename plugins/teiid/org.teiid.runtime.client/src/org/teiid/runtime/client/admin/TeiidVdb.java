@@ -104,8 +104,8 @@ public class TeiidVdb implements ITeiidVdb, Comparable<TeiidVdb> {
      * @see org.teiid.designer.runtime.impl.ITeiidVdb#getVersion()
      */
     @Override
-    public int getVersion() {
-        return this.vdb.getVersion();
+    public String getVersion() {
+        return Integer.toString(this.vdb.getVersion());
     }
 
     /* (non-Javadoc)

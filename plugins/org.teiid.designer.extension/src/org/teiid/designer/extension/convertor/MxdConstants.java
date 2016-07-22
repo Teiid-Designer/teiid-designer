@@ -100,12 +100,22 @@ public interface MxdConstants extends StringConstants {
         /**
          *
          */
-        COLUMN;
+        COLUMN,
+    	
+    	/**
+        *
+        */
+    	PROCEDUREPARAMETER;
 
         private final String className;
 
         private TargetObjectMappings() {
-            this.className = StringUtilities.upperCaseFirstChar(name().toLowerCase());
+        	String name = name();
+        	if( name.toUpperCase().endsWith("PROCEDUREPARAMETER")) {
+        		this.className = "ProcedureParameter"; //$NON-NLS-1$
+        	} else {
+        		this.className = StringUtilities.upperCaseFirstChar(name().toLowerCase());
+        	}
         }
 
         public String getDesignerClass() {

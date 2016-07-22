@@ -438,19 +438,22 @@ public class VdbUtil implements VdbConstants {
 
     /**
      * @param file
-     * @return version the vdb version number
-     * @throws Exception 
+     * @return version the vdb version string may return null 
      */
-    public static int getVdbVersion( final IFile file ) throws Exception {
+    public static String getVdbVersion( final IFile file ) {
 
-        if (file.exists()) {
-            VdbElement manifest = VdbUtil.getVdbManifest(file);
-            if (manifest != null) {
-                return manifest.getVersion();
-            }
-        }
+        try {
+			if (file.exists()) {
+			    VdbElement manifest = VdbUtil.getVdbManifest(file);
+			    if (manifest != null) {
+			        return manifest.getVersion();
+			    }
+			}
+		} catch (Exception ex) {
+			VdbPlugin.UTIL.log(ex);
+		}
 
-        return 0;
+        return "0";
     }
 
     /**
@@ -577,7 +580,7 @@ public class VdbUtil implements VdbConstants {
 		return false;
 	}
 
-    private static void validateVdbVersion(final IFile theVdbFile, Collection<IStatus> statuses) {
+    private static ITeiidServerVersion validateVdbVersion(final IFile theVdbFile, Collection<IStatus> statuses) {
         ITeiidServerVersion defaultTeiidVersion = ModelerCore.getTeiidServerVersion();
         ITeiidServerVersion maxDesignerVersion = Version.TEIID_DEFAULT.get();
 
@@ -590,7 +593,7 @@ public class VdbUtil implements VdbConstants {
             /* No Validation version so probably pre-8.2 */
             statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
                                      VdbPlugin.UTIL.getString("vdbValidationWarning_noValidationVersionInVdb")) ); //$NON-NLS-1$
-            return;
+            return null;
         }
 
         if (! validationVersion.compareTo(defaultTeiidVersion) && (validationVersion.isGreaterThan(defaultTeiidVersion) || validationVersion.isLessThan(defaultTeiidVersion)))
@@ -603,6 +606,9 @@ public class VdbUtil implements VdbConstants {
             /* Vdb version is greater than the tested Designer Teiid Version which means all bets are off! */
             statuses.add( new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID,
                                      VdbPlugin.UTIL.getString("vdbValidationError_validationVersionUnsupported")) ); //$NON-NLS-1$
+        
+        return validationVersion;
+        
     }
 	
 	/**
@@ -618,18 +624,35 @@ public class VdbUtil implements VdbConstants {
 		
 		if (theVdbFile.exists()) {
 
-		    validateVdbVersion(theVdbFile, statuses);
+			ITeiidServerVersion validationVersion = validateVdbVersion(theVdbFile, statuses);
 
             Vdb theVdb = null;
             VdbElement manifest = null;
+
             try {
                 theVdb = new XmiVdb(theVdbFile);
                 manifest = VdbUtil.getVdbManifest(theVdbFile);
+
             } catch (Exception ex) {
                 statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID, ex.getLocalizedMessage(), ex));
             }
 
 			if (theVdb != null && manifest != null) {
+				
+				// Prior to 9.0, VDB version had to be an integer value
+				// for 9.0, the version was changed to a string value
+				// so need to look for older runtime, then do an integer check and log a warning if it's a non-integer
+				if(validationVersion != null && validationVersion.isLessThan(Version.TEIID_9_0)) {
+					String vdbVersion = manifest.getVersion();
+					Integer intValue = Integer.getInteger(vdbVersion);
+					if( intValue == null ) {
+						statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, 
+								VdbPlugin.UTIL.getString("vdbValidationWarning_onlyIntegerVdbVersionsSupportedPriorToTeiid9")) ); //$NON-NLS-1$
+					}
+
+				}
+				
+				
 				// Check Security settings
 				String securityDomain = theVdb.getSecurityDomain();
 				if( securityDomain != null ) {
@@ -1330,4 +1353,38 @@ public class VdbUtil implements VdbConstants {
     	
     	return names;
     }
+    
+//    /**
+//     * Determines if a the provided VDB will successfully deploy based on the target server version and the
+//     * VDB's version value
+//     * 
+//     * @param serverVersion
+//     * @param vdbFile
+//     * @return true if invalid VDB version for target server. false if not
+//     */
+//    public static boolean vdbHasInvalidVersionForServer(ITeiidServerVersion serverVersion, IFile vdbFile) {
+//    	VdbElement manifest = null;
+//    	
+//        try {
+//
+//            manifest = VdbUtil.getVdbManifest(vdbFile);
+//
+//        } catch (Exception ex) {
+//        	ex.printStackTrace();
+//        	return false;
+//        }
+//
+//        if( manifest != null ) {
+//			String vdbVersion = manifest.getVersion();
+//			try {
+//				Integer intValue = Integer.valueOf(vdbVersion);
+//				return false;
+//			} catch (NumberFormatException e) {
+//				return true;
+//			}
+//        }
+//        
+//        return false;
+//    }
+    
 }

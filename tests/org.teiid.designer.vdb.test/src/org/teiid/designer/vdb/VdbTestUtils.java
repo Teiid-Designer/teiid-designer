@@ -275,7 +275,7 @@ public class VdbTestUtils implements StringConstants {
         DynamicVdb vdb = new DynamicVdb();
         vdb.setSourceFile(portfolio.getResourceFile());
         vdb.setName("Portfolio");
-        vdb.setVersion(1);
+        vdb.setVersion("1");
         vdb.setDescription("The Portfolio Dynamic VDB");
 
         vdb.setProperty("UseConnectorMetadata", "true");

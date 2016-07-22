@@ -104,7 +104,11 @@ public interface ITeiidServerVersion {
 
         TEIID_8_11(EIGHT + DOT + ONE + ONE + DOT + ZERO),
 
-        TEIID_8_12_4(EIGHT + DOT + ONE + TWO + DOT + FOUR);
+        TEIID_8_12_4(EIGHT + DOT + ONE + TWO + DOT + FOUR),
+    	
+    	TEIID_8_13_5(EIGHT + DOT + ONE + THREE + DOT + FIVE),
+    	
+    	TEIID_9_0(NINE + DOT + ZERO + DOT + ZERO);
 
         private final String id;
 

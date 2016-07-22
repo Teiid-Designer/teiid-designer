@@ -660,7 +660,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
      */
     @Override
     public String getSchema(String vdbName,
-                            int vdbVersion,
+                            String vdbVersion,
                             String modelName) throws Exception {
         return getServerImportManager().getSchema(vdbName, vdbVersion, modelName);
     }

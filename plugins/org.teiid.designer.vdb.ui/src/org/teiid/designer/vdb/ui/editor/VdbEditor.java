@@ -1671,26 +1671,24 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     	
     	final Text vdbVersionText = WidgetFactory.createTextField(extraButtonPanel);
     	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(vdbVersionText);
-    	((GridData)vdbVersionText.getLayoutData()).widthHint = 30;
+    	((GridData)vdbVersionText.getLayoutData()).widthHint = 100;
     	vdbVersionText.addModifyListener(new ModifyListener() {
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
-				try {
-                    int versionValue = Integer.parseInt(vdbVersionText.getText());
-                    if (versionValue > -1) {
-                        getVdb().setVersion(versionValue);
-					}
-				} catch (NumberFormatException ex) {
+                String versionValue = vdbVersionText.getText();
+                if (versionValue != null) {
+                    getVdb().setVersion(versionValue);
+				} else {
 					MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
                             INVALID_INTEGER_INPUT_TITLE,
                             INVALID_INTEGER_INPUT_MESSAGE);
-					vdbVersionText.setText(Integer.toString(getVdb().getVersion()));
+					vdbVersionText.setText(getVdb().getVersion());
 				}
 				
 			}
 		});
-    	vdbVersionText.setText(Integer.toString(getVdb().getVersion()));
+    	vdbVersionText.setText(getVdb().getVersion());
         	
         synchronizeAllButton = WidgetFactory.createButton(extraButtonPanel, i18n("synchronizeAllButton"), //$NON-NLS-1$
                                                           GridData.HORIZONTAL_ALIGN_BEGINNING);

@@ -134,7 +134,7 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
         GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(vdbVersionLabel);
 
         final Text vdbVersionText = WidgetFactory.createTextField(vdbInfoGroup);
-        vdbVersionText.setText(Integer.toString(vdbManager.getDynamicVdb().getVersion()));
+        vdbVersionText.setText(vdbManager.getDynamicVdb().getVersion());
         GridDataFactory.fillDefaults().span(2, 1).align(SWT.LEFT, SWT.CENTER).applyTo(vdbVersionText);
         ((GridData)vdbVersionText.getLayoutData()).widthHint = 40;
 
