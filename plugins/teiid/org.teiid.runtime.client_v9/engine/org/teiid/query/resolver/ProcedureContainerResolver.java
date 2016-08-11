@@ -167,7 +167,7 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 		if (info == null) {
 			return null;
 		}
-    	if (validate || group.getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
+    	if (validate) {
     		String error = validateUpdateInfo(group, type, info);
     		if (error != null) {
     			throw new QueryResolverException(error);
@@ -278,32 +278,6 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 		    if (type == ICommand.TYPE_UPDATE || type == ICommand.TYPE_DELETE) {
 		    	addScalarGroup(parser, SQLConstants.Reserved.OLD, tma.getMetadataStore(), externalGroups, viewElements, false);
 		    }
-		} else if (currentCommand instanceof CreateUpdateProcedureCommand) {
-            CreateUpdateProcedureCommand cupc = (CreateUpdateProcedureCommand)currentCommand;
-            cupc.setVirtualGroup(container);
-
-            if (type == ICommand.TYPE_STORED_PROCEDURE) {
-                IStoredProcedureInfo<ISPParameter, IQueryNode> info = metadata.getStoredProcedureInfoForProcedure(container.getCanonicalName());
-                // Create temporary metadata that defines a group based on either the stored proc
-                // name or the stored query name - this will be used later during planning
-                String procName = info.getProcedureCallableName();
-                
-                // Look through parameters to find input elements - these become child metadata
-                List<ElementSymbol> tempElements = new ArrayList<ElementSymbol>(info.getParameters().size());
-                boolean[] updatable = new boolean[info.getParameters().size()];
-                int i = 0;
-                for (ISPParameter param : info.getParameters()) {
-                    if(param.getParameterType() != ISPParameter.ParameterInfo.RESULT_SET.index()) {
-                        ElementSymbol symbol = (ElementSymbol) param.getParameterSymbol();
-                        tempElements.add(symbol);
-                        updatable[i++] = param.getParameterType() != ISPParameter.ParameterInfo.IN.index();
-                    }
-                }
-
-                addScalarGroup(parser, procName, childMetadata, externalGroups, tempElements, updatable);
-            } else if (type != ICommand.TYPE_DELETE) {
-                createInputChangingMetadata(parser, childMetadata, tma, container, externalGroups);
-            }
 		} else if (currentCommand instanceof CreateProcedureCommand) {
 			CreateProcedureCommand cupc = (CreateProcedureCommand)currentCommand;
 			cupc.setVirtualGroup(container);
@@ -350,24 +324,4 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 	    queryResolver.setChildMetadata(currentCommand, childMetadata, externalGroups);
 	}
 
-	@Removed(Version.TEIID_8_0)
-    private static void createInputChangingMetadata(TeiidParser teiidParser, TempMetadataStore discoveredMetadata, IQueryMetadataInterface metadata, GroupSymbol group, GroupContext externalGroups)
-        throws Exception {
-        //Look up elements for the virtual group
-        List<ElementSymbol> elements = ResolverUtil.resolveElementsInGroup(group, metadata);
-
-        // Create the INPUT variables
-        List<ElementSymbol> inputElments = new ArrayList<ElementSymbol>(elements.size());
-        for (int i = 0; i < elements.size(); i++) {
-            ElementSymbol virtualElmnt = elements.get(i);
-            ElementSymbol inputElement = virtualElmnt.clone();
-            inputElments.add(inputElement);
-        }
-
-        addScalarGroup(teiidParser, ProcedureReservedWords.INPUT, discoveredMetadata, externalGroups, inputElments, false);
-        addScalarGroup(teiidParser, ProcedureReservedWords.INPUTS, discoveredMetadata, externalGroups, inputElments, false);
-
-        // Switch type to be boolean for all CHANGING variables
-        addChanging(teiidParser, discoveredMetadata, externalGroups, elements);
-    }
 }

@@ -2,7 +2,6 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang;
 
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.ITextColumn;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
@@ -21,10 +20,8 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
 
     private Integer position;
 
-    @Since(Version.TEIID_8_7)
     private boolean ordinal;
 
-    @Since(Version.TEIID_8_11)
     private String header;
 
     /**
@@ -63,19 +60,11 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
         this.noTrim = noTrim;
     }
 
-    @Since(Version.TEIID_8_11)
     public String getHeader() {
-        if (isLessThanTeiidVersion(Version.TEIID_8_11))
-            return null;
-
         return header;
     }
 
-    @Since(Version.TEIID_8_11)
     public void setHeader(String header) {
-        if (isLessThanTeiidVersion(Version.TEIID_8_11))
-            return;
-
         this.header = header;
     }
 
@@ -110,21 +99,15 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
     /**
      * @return ordinal
      */
-    @Since(Version.TEIID_8_7)
     public boolean isOrdinal() {
-        if (isTeiid87OrGreater())
-            return ordinal;
-
-        return false;
+        return ordinal;
     }
 
     /**
      * @param ordinal the ordinal to set
      */
-    @Since(Version.TEIID_8_7)
     public void setOrdinal(boolean ordinal) {
-        if (isTeiid87OrGreater())
-            this.ordinal = ordinal;
+        this.ordinal = ordinal;
     }
  
     @Override

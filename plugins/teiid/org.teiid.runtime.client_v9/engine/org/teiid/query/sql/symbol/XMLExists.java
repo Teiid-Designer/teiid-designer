@@ -22,7 +22,6 @@
 
 package org.teiid.query.sql.symbol;
 
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.symbol.IXMLExists;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
@@ -32,7 +31,6 @@ import org.teiid.query.sql.lang.Criteria;
 /**
  * XMLExists
  */
-@Since(Version.TEIID_8_10)
 public class XMLExists extends Criteria implements IXMLExists<LanguageVisitor> {
 	
 	private XMLQuery xmlQuery;

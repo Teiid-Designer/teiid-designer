@@ -29,6 +29,7 @@ public class TranslateCriteria extends Criteria implements PredicateCriteria, IT
      */
     public TranslateCriteria(TeiidParser p, int id) {
         super(p, id);
+        throw new UnsupportedOperationException();
     }
 
     /**

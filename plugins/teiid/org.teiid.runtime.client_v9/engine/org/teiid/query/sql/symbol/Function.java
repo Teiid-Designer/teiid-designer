@@ -3,7 +3,6 @@
 package org.teiid.query.sql.symbol;
 
 import java.util.Arrays;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.function.FunctionDescriptor;
@@ -27,7 +26,6 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
 
     private FunctionDescriptor descriptor;
 
-    @Since(Version.TEIID_8_5)
     private boolean eval = true;
 
     /**
@@ -173,15 +171,11 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
     }
 
     public boolean isEval() {
-        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
-            return eval;
-
-        return false;
+        return eval;
     }
     
     public void setEval(boolean eval) {
-        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
-            this.eval = eval;
+        this.eval = eval;
     }
 
     @Override

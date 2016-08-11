@@ -3,7 +3,6 @@
 package org.teiid.query.sql.lang;
 
 import java.util.List;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IWithQueryCommand;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
@@ -16,6 +15,9 @@ import org.teiid.query.sql.symbol.GroupSymbol;
  */
 public class WithQueryCommand extends SimpleNode
     implements SubqueryContainer<QueryCommand>, IWithQueryCommand<LanguageVisitor, QueryCommand> {
+	
+	public static final String NO_INLINE = "no_inline"; //$NON-NLS-1$
+	
 
     private GroupSymbol groupSymbol;
 
@@ -23,8 +25,9 @@ public class WithQueryCommand extends SimpleNode
 
     private QueryCommand queryExpression;
 
-    @Since(Version.TEIID_8_10)
     private boolean recursive;
+    
+	private boolean noInline;
 
     /**
      * @param p
@@ -86,12 +89,10 @@ public class WithQueryCommand extends SimpleNode
         setQueryExpression(command);
     }
 
-    @Since(Version.TEIID_8_10)
     public boolean isRecursive() {
         return recursive;
     }
 
-    @Since(Version.TEIID_8_10)
     public void setRecursive(boolean recursive) {
         this.recursive = recursive;
     }
@@ -121,7 +122,12 @@ public class WithQueryCommand extends SimpleNode
         if (this.queryExpression == null) {
             if (other.queryExpression != null) return false;
         } else if (!this.queryExpression.equals(other.queryExpression)) return false;
-        return true;
+        
+		if( noInline == other.noInline &&
+		recursive == other.recursive ) {
+			return true;
+		}
+        return false;
     }
 
     /** Accept the visitor. **/
@@ -142,9 +148,19 @@ public class WithQueryCommand extends SimpleNode
             clone.setQueryExpression(getQueryExpression().clone());
 
         clone.setRecursive(clone.isRecursive());
-
+        
+		clone.noInline = noInline;
+		
         return clone;
     }
+
+	public boolean isNoInline() {
+		return noInline;
+	}
+	
+	public void setNoInline(boolean noUnnest) {
+		this.noInline = noUnnest;
+	}
 
 }
 /* JavaCC - OriginalChecksum=78388b507c1605f75762901f62007b34 (do not edit this line) */

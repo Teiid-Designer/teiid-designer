@@ -169,14 +169,6 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
         return minVersion.equals(teiidVersion.get()) || minVersion.isGreaterThan(teiidVersion.get());
     }
 
-    protected boolean isTeiid8OrGreater() {
-        return isTeiidVersionOrGreater(Version.TEIID_8_0);
-    }
-
-    protected boolean isTeiid87OrGreater() {
-        return isTeiidVersionOrGreater(Version.TEIID_8_7);
-    }
-
     public Command expandCommand(ProcedureContainer proc, IQueryMetadataInterface metadata) throws Exception {
         ProcedureContainerResolver cr = (ProcedureContainerResolver)chooseResolver(proc, metadata);
         Command command = cr.expandCommand(proc, metadata);
@@ -185,13 +177,7 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
         }
 
         if (command instanceof CreateUpdateProcedureCommand) {
-            CreateUpdateProcedureCommand cupCommand = (CreateUpdateProcedureCommand)command;
-            cupCommand.setUserCommand(proc);
-            //if the subcommand is virtual stored procedure, it must have the same
-            //projected symbol as its parent.
-            if(!cupCommand.isUpdateProcedure()){
-                cupCommand.setProjectedSymbols(proc.getProjectedSymbols());
-            } 
+        	throw new UnsupportedOperationException();
         }
 
         resolveCommand(command, proc.getGroup(), proc.getType(), metadata.getDesignTimeMetadata(), false);
@@ -252,19 +238,7 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
                                    IQueryMetadataInterface metadata, List<Expression> projectedSymbols) {
 
         if (command instanceof CreateUpdateProcedureCommand) {
-
-            /**
-             * This was added to designer to avoid a validation failure, see TEIIDDES-624
-             */
-            CreateUpdateProcedureCommand updateCommand = (CreateUpdateProcedureCommand) command;
-
-            if (updateCommand.getResultsCommand() instanceof DynamicCommand) {
-                DynamicCommand dynamicCommand = (DynamicCommand) updateCommand.getResultsCommand();
-
-                if (dynamicCommand.isAsClauseSet()) {
-                    updateCommand.setProjectedSymbols(projectedSymbols);
-                }
-            }
+        	throw new UnsupportedOperationException();
         }
     }
 
@@ -304,12 +278,10 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
 		    	visitor.resolveLanguageObject(elementSymbol, metadata);
 		    	elementSymbol.setIsExternalReference(true);
 		    	if (!positional) {
-		    	    if (isTeiid87OrGreater()) {
-		    	        ElementSymbol inputSymbol = teiidParser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
-		    	        inputSymbol.setName("INPUT" + Symbol.SEPARATOR + name); //$NON-NLS-1$
-		    	        inputSymbol.setType(elementSymbol.getType());
-		    	        symbolMap.put(inputSymbol, elementSymbol.clone());
-		    	    }
+	    	        ElementSymbol inputSymbol = teiidParser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+	    	        inputSymbol.setName("INPUT" + Symbol.SEPARATOR + name); //$NON-NLS-1$
+	    	        inputSymbol.setType(elementSymbol.getType());
+	    	        symbolMap.put(inputSymbol, elementSymbol.clone());
 		    	    
 		    	    ElementSymbol keySymbol = teiidParser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
 		    	    keySymbol.setName(BINDING_GROUP + Symbol.SEPARATOR + name);
@@ -400,8 +372,16 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
                 //make sure that the group is resolved and that it is pointing to the appropriate temp group
                 //TODO: this is mainly for XML resolving since it sends external groups in unresolved
                 if (metadataID == null || (!(extGroup.getMetadataID() instanceof TempMetadataID) && discoveredMetadata.getTempGroupID(extGroup.getName()) != null)) {
+                	boolean missing = metadataID == null;
                     metadataID = resolverMetadata.getGroupID(extGroup.getName());
-                    extGroup.setMetadataID(metadataID);
+                    if (missing) {
+                    	extGroup.setMetadataID(metadataID);
+                    } else {
+                    	//we shouldn't modify the existing, just add a shadow group
+                    	GroupSymbol gs = extGroup.clone();
+                    	gs.setMetadataID(metadataID);
+                    	currentCommand.getExternalGroupContexts().addGroup(gs);
+                    }
                 }
             }
 

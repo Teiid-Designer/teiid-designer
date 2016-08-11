@@ -117,22 +117,19 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
     }
 
     /**
+     * REMOVED IN TEIID 8.0
      * @return the canonicalShortName
      */
-    @Removed(Version.TEIID_8_0)
     public String getShortCanonicalName() {
-        if (canonicalShortName == null && shortName != null) {
-            canonicalShortName = shortName.toUpperCase();
-        }
-        return this.canonicalShortName;
+        throw new UnsupportedOperationException();
     }
 
     /**
+     * REMOVED IN TEIID 8.0
      * @param canonicalShortName the canonicalShortName to set
      */
-    @Removed(Version.TEIID_8_0)
     public void setShortCanonicalName(String canonicalShortName) {
-        this.canonicalShortName = canonicalShortName;
+    	throw new UnsupportedOperationException();
     }
 
     @Override
@@ -149,10 +146,8 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_0))
-            result = prime * result + ((this.getShortCanonicalName() == null) ? 0 : this.getShortCanonicalName().hashCode());
-        else
-            result = prime * result + ((this.getShortName() == null) ? 0 : this.getShortName().hashCode());
+
+        result = prime * result + ((this.getShortName() == null) ? 0 : this.getShortName().hashCode());
 
         return result;
     }
@@ -163,9 +158,9 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
         if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         Symbol other = (Symbol)obj;
-        if (this.getShortCanonicalName() == null) {
-            if (other.getShortCanonicalName() != null) return false;
-        } else if (!this.getShortCanonicalName().equalsIgnoreCase(other.getShortCanonicalName())) return false;
+//        if (this.getShortCanonicalName() == null) {
+//            if (other.getShortCanonicalName() != null) return false;
+//        } else if (!this.getShortCanonicalName().equalsIgnoreCase(other.getShortCanonicalName())) return false;
         if (this.getName() == null) {
             if (other.getName() != null) return false;
         } else if (!this.getName().equalsIgnoreCase(other.getName())) return false;
@@ -182,8 +177,8 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
     public Symbol clone() {
         Symbol clone = new Symbol(this.parser, this.id);
 
-        if(getShortCanonicalName() != null)
-            clone.setShortCanonicalName(getShortCanonicalName());
+//        if(getShortCanonicalName() != null)
+//            clone.setShortCanonicalName(getShortCanonicalName());
         if(outputName != null)
             clone.outputName = outputName;
         if(getShortName() != null)
@@ -193,5 +188,19 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
 
         return clone;
     }
+    
+	public static String getName(Expression ex) {
+		if (ex instanceof Symbol) {
+			return ((Symbol)ex).getName();
+		}
+		return "expr"; //$NON-NLS-1$
+	}
+	
+	public static String getOutputName(Expression ex) {
+		if (ex instanceof Symbol) {
+			return ((Symbol)ex).getOutputName();
+		}
+		return "expr"; //$NON-NLS-1$
+	}
 
 }

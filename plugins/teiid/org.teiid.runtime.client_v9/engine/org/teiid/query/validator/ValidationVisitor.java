@@ -42,7 +42,6 @@ import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstants;
 import org.teiid.designer.query.metadata.IQueryNode;
@@ -217,8 +216,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         this.isXML = false;
         this.inQuery = false;
 
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0))
-            this.createProc = null;
+        this.createProc = null;
     }
 
     // ############### Visitor methods for language objects ##################
@@ -321,7 +319,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     public void visit(OrderByItem obj) {
     	validateSortable(obj.getSymbol());
 
-    	if (obj.getExpressionPosition() < 0 && isTeiid89OrGreater()) { // Added for Teiid 8.9
+    	if (obj.getExpressionPosition() < 0 ) {
             for (SubqueryContainer subquery : ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(obj)) {
                 for (ElementSymbol es : ElementCollectorVisitor.getElements(obj, true, true)) {
                     if (es.isExternalReference()) {
@@ -505,22 +503,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     
     @Override
     public void visit(CommandStatement obj) {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_0))
-            visit7(obj);
-        else
-            visit8(obj);
-    }
-    
-    private void visit7(CommandStatement obj) {
-    	if (obj.getCommand() instanceof StoredProcedure) {
-    		StoredProcedure proc = (StoredProcedure)obj.getCommand();
-    		for (SPParameter param : proc.getParameters()) {
-				if ((param.getParameterType() == SPParameter.RETURN_VALUE 
-						|| param.getParameterType() == SPParameter.OUT) && param.getExpression() instanceof ElementSymbol) {
-					validateAssignment(obj, (ElementSymbol)param.getExpression());
-				}
-			}
-    	}
+        visit9(obj);
     }
     
     @Override
@@ -553,7 +536,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 
 	private void validateAssignment(LanguageObject obj,
 			ElementSymbol variable) {
-		String groupName = variable.getGroupSymbol().getCanonicalName();
+		String groupName = variable.getGroupSymbol().getName();
 		//This will actually get detected by the resolver, since we inject an automatic declaration.
     	if(groupName.equals(ProcedureReservedWords.CHANGING) || groupName.equals(ProcedureReservedWords.INPUTS)) {
 			handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0012, ProcedureReservedWords.INPUTS, ProcedureReservedWords.CHANGING), obj);
@@ -573,49 +556,19 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
 
     /**
+     * REMOVED IN TEIID 8.0
      * Validate that the command assigns a value to the ROWS_UPDATED variable 
      * @param obj
      * @since 4.2
      */
-    @Removed(Version.TEIID_8_0)
     protected void validateContainsRowsUpdatedVariable(CreateUpdateProcedureCommand obj) {
-        final Collection<ElementSymbol> assignVars = new ArrayList<ElementSymbol>();
-       // Use visitor to find assignment statements
-        LanguageVisitor visitor = new LanguageVisitor(getTeiidVersion()) {
-            @Override
-            public void visit(AssignmentStatement stmt) {
-                assignVars.add(stmt.getVariable());
-            }
-        };
-        PreOrderNavigator.doVisit(obj, visitor);
-        boolean foundVar = false;
-        for (ElementSymbol variable : assignVars) {
-            if(variable.getShortName().equalsIgnoreCase(ProcedureReservedWords.ROWS_UPDATED)) {
-                foundVar = true;
-                break;
-            }
-        }
-        if(!foundVar) {
-            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0016, ProcedureReservedWords.ROWS_UPDATED), obj);
-        }
+        throw new UnsupportedOperationException();
     }
 
+    // REMOVED IN TEIID 8.0
     @Override
-	@Removed(Version.TEIID_8_0)
     public void visit(CreateUpdateProcedureCommand obj) {
-        if(!obj.isUpdateProcedure()){
-            
-            //check that the procedure does not contain references to itself
-            if (GroupCollectorVisitor.getGroups(obj,true).contains(obj.getVirtualGroup())) {
-                handleValidationError(Messages.getString(Messages.ValidationVisitor.Procedure_has_group_self_reference),obj);
-            }
-            
-            return;
-        }
-
-        // set the state to validate this procedure
-        this.createProc = obj;
-        validateContainsRowsUpdatedVariable(obj);
+    	throw new UnsupportedOperationException();
     }
 
     @Override
@@ -639,43 +592,20 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         if (!(this.createProc instanceof CreateUpdateProcedureCommand))
             return false;
 
-        return ((CreateUpdateProcedureCommand) this.createProc).isUpdateProcedure();
+        throw new UnsupportedOperationException();
     }
 
+    // REMOVED IN TEIID 8.0
     @Override
-    @Removed(Version.TEIID_8_0)
     public void visit(HasCriteria obj) {
-        if (! isUpdateProcedure()) {
-            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0019), obj);
-        }
+    	throw new UnsupportedOperationException();
     }
     
+    
+    // REMOVED IN TEIID 8.0
     @Override
-    @Removed(Version.TEIID_8_0)
     public void visit(TranslateCriteria obj) {
-        if (! isUpdateProcedure()) {
-            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0019), obj);
-        }
-        if(obj.hasTranslations()) {
-            Collection selectElmnts = null;
-            if(obj.getSelector().hasElements()) {
-                selectElmnts = obj.getSelector().getElements();
-            }
-            Iterator critIter = obj.getTranslations().iterator();
-            while(critIter.hasNext()) {
-                CompareCriteria transCrit = (CompareCriteria) critIter.next();
-                Collection<ElementSymbol> leftElmnts = ElementCollectorVisitor.getElements(transCrit.getLeftExpression(), true);
-                // there is always only one element
-                ElementSymbol leftExpr = leftElmnts.iterator().next();
-
-                if(selectElmnts != null && !selectElmnts.contains(leftExpr)) {
-                    handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0021), leftExpr);
-                }
-            }
-        }
-
-        // additional validation checks
-        validateTranslateCriteria(obj);
+    	throw new UnsupportedOperationException();
     }
 
     @Override
@@ -718,88 +648,13 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     // ######################### Validation methods #########################
 
     /**
+     * REMOVED IN TEIID 8.0
      * A valid translated expression is not an <code>AggregateSymbol</code> and
      * does not include elements not present on the groups of the command using
      * the translated criteria.
      */
-    @Removed(Version.TEIID_8_0)
     protected void validateTranslateCriteria(TranslateCriteria obj) {
-        if(this.currentCommand == null) {
-            return;
-        }
-        if (! isUpdateProcedure()) {
-            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0019), obj);
-        }
-
-        CreateUpdateProcedureCommand updateProc = (CreateUpdateProcedureCommand) this.createProc;
-        Map<ElementSymbol, Expression> symbolMap = updateProc.getSymbolMap();
-        Command userCommand = updateProc.getUserCommand();
-        // modeler validation
-        if(userCommand == null) {
-            return;
-        }
-        Criteria userCrit = null;
-        int userCmdType = userCommand.getType();
-        switch(userCmdType) {
-            case ICommand.TYPE_DELETE:
-                userCrit = ((Delete)userCommand).getCriteria();
-                break;
-            case ICommand.TYPE_UPDATE:
-                userCrit = ((Update)userCommand).getCriteria();
-                break;
-            default:
-                break;
-        }
-        // nothing to validate if there is no user criteria
-        if(userCrit == null) {
-            return;
-        }
-
-        Collection<ElementSymbol> transleElmnts = ElementCollectorVisitor.getElements(obj, true);
-        Collection<GroupSymbol> groups = GroupCollectorVisitor.getGroups(this.currentCommand, true);
-        Operator selectType = obj.getSelector().getSelectorType();
-
-        for (Criteria predCrit : Criteria.separateCriteriaByAnd(userCrit)) {
-            if(selectType != Operator.NO_TYPE) {
-                if(predCrit instanceof CompareCriteria) {
-                    CompareCriteria ccCrit = (CompareCriteria) predCrit;
-                    if(selectType.getIndex() != ccCrit.getOperator()) {
-                        continue;
-                    }
-                } else if(predCrit instanceof MatchCriteria) {
-                    if(selectType != Operator.LIKE) {
-                        continue;
-                    }
-                } else if(predCrit instanceof IsNullCriteria) {
-                    if(selectType != Operator.IS_NULL) {
-                        continue;
-                    }
-                } else if(predCrit instanceof SetCriteria) {
-                    if(selectType != Operator.IN) {
-                        continue;
-                    }
-                } else if(predCrit instanceof BetweenCriteria) {
-                    if(selectType != Operator.BETWEEN) {
-                        continue;
-                    }
-                }
-            }
-            Iterator<ElementSymbol> critEmlntIter = ElementCollectorVisitor.getElements(predCrit, true).iterator();
-            // collect all elements elements on the criteria map to
-            while(critEmlntIter.hasNext()) {
-                ElementSymbol criteriaElement = critEmlntIter.next();
-                if(transleElmnts.contains(criteriaElement)) {
-                    Expression mappedExpr = symbolMap.get(criteriaElement);
-                    if(mappedExpr instanceof AggregateSymbol) {
-                        handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0022, criteriaElement), criteriaElement);
-                    }
-
-                    if (!groups.containsAll(GroupsUsedByElementsVisitor.getGroups(mappedExpr))) {
-                        handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0023, criteriaElement), criteriaElement);
-                    }
-                }
-            }
-        }
+    	throw new UnsupportedOperationException();
     }
 
     protected void validateSelectElements(Select obj) {
@@ -951,17 +806,17 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         	AggregateSymbolCollectorVisitor.getAggregates(having, aggs, invalid, null, invalidWindowFunctions, groupSymbols);
         	hasAgg = true;
         }
-        if (isTeiid810OrGreater()) {
-            if (groupBy != null && query.getOrderBy() != null) {
-                Set<Expression> exanded = new HashSet<Expression>(groupSymbols);
-                exanded.addAll(select.getProjectedSymbols());
-                for (OrderByItem item : query.getOrderBy().getOrderByItems()) {
-                    if (item.isUnrelated()) {
-                        AggregateSymbolCollectorVisitor.getAggregates(item.getSymbol(), aggs, invalid, null, invalidWindowFunctions, exanded);
-                    }
+
+        if (groupBy != null && query.getOrderBy() != null) {
+            Set<Expression> exanded = new HashSet<Expression>(groupSymbols);
+            exanded.addAll(select.getProjectedSymbols());
+            for (OrderByItem item : query.getOrderBy().getOrderByItems()) {
+                if (item.isUnrelated()) {
+                    AggregateSymbolCollectorVisitor.getAggregates(item.getSymbol(), aggs, invalid, null, invalidWindowFunctions, exanded);
                 }
             }
         }
+
         for (Expression symbol : select.getProjectedSymbols()) {
         	if (hasAgg || !aggs.isEmpty()) {
         		validateCorrelatedReferences(query, correlationGroups, groupSymbols, symbol, invalid);
@@ -1016,6 +871,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         Iterator valIter = values.iterator();
         GroupSymbol insertGroup = obj.getGroup();
         try {
+        	Set<ElementSymbol> seen = new HashSet<ElementSymbol>();
             boolean multiSource = getMetadata().isMultiSource(getMetadata().getModelID(insertGroup.getMetadataID()));
             // Validate that all elements in variable list are updatable
         	for (ElementSymbol insertElem : vars) {
@@ -1025,6 +881,9 @@ public class ValidationVisitor extends AbstractValidationVisitor {
                 if (multiSource && getMetadata().isMultiSourceElement(insertElem.getMetadataID())) {
                 	multiSource = false;
                 }
+            	if (!seen.add(insertElem)) {
+            		handleValidationError(Messages.getString(Messages.TEIID.TEIID31179, obj.getGroup(), insertElem), insertElem);
+            	}
             }
         	if (multiSource) {
         		validateMultisourceInsert(insertGroup);
@@ -1219,7 +1078,6 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
 
     @Override
-    @Since(Version.TEIID_8_12_4)
     public void visit(IsDistinctCriteria isDistinctCriteria) {
         try {
             IQueryMetadataInterface metadata = getMetadata();
@@ -1435,7 +1293,6 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
     
     @Override
-	@Since(Version.TEIID_8_0)
     public void visit(JSONObject obj) {
     	for (DerivedColumn dc : obj.getArgs()) {
     		validateJSONValue(obj, dc.getExpression());
@@ -1498,18 +1355,14 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	}
 
         Expression aggExp = null;
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
-            aggExp = obj.getExpression();
-            validateNoNestedAggs(aggExp, false);
-        } else {
-            Expression[] aggExps = obj.getArgs();
-            for (Expression expression : aggExps) {
-                boolean windowed = isLessThanTeiid8124() ? false : obj.isWindowed();
-                validateNoNestedAggs(expression, windowed);
-            }
-            if (aggExps.length > 0)
-                aggExp = aggExps[0];
+
+        Expression[] aggExps = obj.getArgs();
+        for (Expression expression : aggExps) {
+            boolean windowed = obj.isWindowed();
+            validateNoNestedAggs(expression, windowed);
         }
+        if (aggExps.length > 0)
+            aggExp = aggExps[0];
 
         validateNoNestedAggs(obj.getOrderBy(), false);
         validateNoNestedAggs(obj.getCondition(), false);
@@ -1543,7 +1396,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         		handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_distinct, new Object[] {aggregateFunction, obj}), obj);
         	}
         }
-        if (obj.isDistinct() && obj.getOrderBy() != null && isTeiid8124OrGreater()) {
+        if (obj.isDistinct() && obj.getOrderBy() != null ) {
             HashSet<Expression> args = new HashSet<Expression>(Arrays.asList(obj.getArgs()));
             for (OrderByItem item : obj.getOrderBy().getOrderByItems()) {
                 if (!args.contains(item.getSymbol())) {
@@ -1560,10 +1413,6 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     		validateDerivedColumnNames(obj, tl.getExpressions());
     	}
     	for (DerivedColumn dc : tl.getExpressions()) {
-    	    if (isLessThanTeiid8124()) {
-    	        validateXMLContentTypes(dc.getExpression(), obj);
-    	        continue;
-    	    }
 
 			Expression expression = dc.getExpression();
             if (expression.getType() == DefaultDataTypes.OBJECT.getTypeClass()
@@ -1584,7 +1433,6 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	}
     }
 
-	@Since(Version.TEIID_8_0)
 	private void validateJSONValue(LanguageObject obj, Expression expr) {
 		if (expr.getType() != DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()
 		    && !dataTypeManager.isTransformable(
@@ -1666,16 +1514,9 @@ public class ValidationVisitor extends AbstractValidationVisitor {
      * @param parent
      */
     public void validateXMLContentTypes(Expression expression, LanguageObject parent) {
-        if (isTeiid8124OrGreater()) {
-            if (expression.getType() == DefaultDataTypes.OBJECT.getTypeClass() || expression.getType() == null || expression.getType().isArray()) {
-                handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_content_type, expression), parent);
-            }
-            return;
+        if (expression.getType() == DefaultDataTypes.OBJECT.getTypeClass() || expression.getType() == null || expression.getType().isArray()) {
+            handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_content_type, expression), parent);
         }
-
-		if (expression.getType() == DefaultDataTypes.OBJECT.getTypeClass() || expression.getType() == DefaultDataTypes.BLOB.getTypeClass()) {
-			handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_content_type, expression), parent);
-		}
     }
     
     @Override
@@ -1704,7 +1545,6 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
     
     @Override
-	@Since(Version.TEIID_8_0)
     public void visit(ObjectTable obj) {
     	List<DerivedColumn> passing = obj.getPassing();
     	TreeSet<String> names = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
@@ -1747,13 +1587,11 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	validatePassing(obj, obj.getXQueryExpression(), obj.getPassing());
     }
 
-    @Since(Version.TEIID_8_10)
     @Override
     public void visit(XMLExists obj) {
         validatePassing(obj, obj.getXmlQuery().getXQueryExpression(), obj.getXmlQuery().getPassing());
     }
 
-    @Since(Version.TEIID_8_10)
     @Override
     public void visit(XMLCast obj) {
         if (obj.getExpression().getType() != DefaultDataTypes.XML.getTypeClass()
@@ -1892,10 +1730,8 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	if(obj.getExpression().getType() == DataTypeManagerService.DefaultDataTypes.BLOB.getTypeClass())
     	    return;
 
-    	if (isTeiid811OrGreater()) {
-    	    if(obj.getExpression().getType() == DataTypeManagerService.DefaultDataTypes.VARBINARY.getTypeClass())
-    	        return;
-    	}
+    	if(obj.getExpression().getType() == DataTypeManagerService.DefaultDataTypes.VARBINARY.getTypeClass())
+    	    return;
 
     	handleValidationError(Messages.getString(Messages.ValidationVisitor.xmlparse_type), obj);
     }
@@ -1960,9 +1796,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 	    	}
     	} catch (QueryValidatorException e) {
             Command command = obj.getDefinition();
-            if (command instanceof CreateUpdateProcedureCommand)
-                handleValidationError(e.getMessage(), ((CreateUpdateProcedureCommand) command).getBlock());
-            else if (command instanceof CreateProcedureCommand)
+            if (command instanceof CreateProcedureCommand)
                 handleValidationError(e.getMessage(), ((CreateProcedureCommand) command).getBlock());
         } catch (Exception e) {
             handleException(e);
@@ -1984,7 +1818,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 		}
     }
 
-    private void visit8(CommandStatement obj) {
+    private void visit9(CommandStatement obj) {
     	if (this.createProc == null || this.createProc.getResultSetColumns().isEmpty() || !obj.isReturnable() || !obj.getCommand().returnsResultSet()) {
     		return;
     	}

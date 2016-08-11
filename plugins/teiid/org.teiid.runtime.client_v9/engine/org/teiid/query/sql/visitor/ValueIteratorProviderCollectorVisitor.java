@@ -34,6 +34,7 @@ import org.teiid.query.sql.lang.ExistsCriteria;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.SubqueryCompareCriteria;
 import org.teiid.query.sql.lang.SubqueryContainer;
+import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.navigator.PreOrderNavigator;
 import org.teiid.query.sql.symbol.ScalarSubquery;
@@ -53,6 +54,7 @@ public class ValueIteratorProviderCollectorVisitor extends LanguageVisitor
     implements IValueIteratorProviderCollectorVisitor<LanguageObject, SubqueryContainer> {
 
     private List<SubqueryContainer> valueIteratorProviders;
+	private boolean collectLateral;
     
     /**
      * Construct a new visitor with the default collection type, which is a 
@@ -102,7 +104,9 @@ public class ValueIteratorProviderCollectorVisitor extends LanguageVisitor
      */
     @Override
     public void visit(SubqueryCompareCriteria obj) {
-        this.valueIteratorProviders.add(obj);
+    	if (obj.getCommand() != null) {
+    		this.valueIteratorProviders.add(obj);
+    	}
     }
 
     /**
@@ -124,6 +128,20 @@ public class ValueIteratorProviderCollectorVisitor extends LanguageVisitor
     public void visit(ScalarSubquery obj) {
         this.valueIteratorProviders.add(obj);
     }
+    
+    /**
+     * Visit a language object and collect symbols.  This method should <b>NOT</b> be 
+     * called directly.
+     * @param obj Language object
+     */
+    @Override
+    public void visit(SubqueryFromClause obj) {
+    	if (collectLateral && obj.isLateral()) {
+    		this.valueIteratorProviders.add(obj);
+    	}
+    }
+    
+
 
     @Override
     public List<SubqueryContainer> findValueIteratorProviders(LanguageObject obj) {
@@ -165,5 +183,9 @@ public class ValueIteratorProviderCollectorVisitor extends LanguageVisitor
             visitor.findValueIteratorProviders(obj);
         }
         return result;
-    }            
+    }           
+    
+	public void setCollectLateral(boolean b) {
+		this.collectLateral = true;
+	}     
 }

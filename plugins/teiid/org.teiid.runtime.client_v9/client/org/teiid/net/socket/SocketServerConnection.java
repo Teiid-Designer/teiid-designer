@@ -47,7 +47,6 @@ import org.teiid.client.security.LogonResult;
 import org.teiid.client.util.ExceptionUtil;
 import org.teiid.client.util.ResultsFuture;
 import org.teiid.core.util.PropertiesUtils;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.gss.MakeGSS;
 import org.teiid.net.CommunicationException;
@@ -204,7 +203,6 @@ public class SocketServerConnection implements ServerConnection {
 		this.connectionFactory.connected(instance, this.logonResult.getSessionToken());
 	}
 
-    @Since(Version.TEIID_8_7)
 	public static void updateConnectionProperties(Properties connectionProperties, InetAddress addr, boolean setMac) {
 		if (addr == null) {
 			return;

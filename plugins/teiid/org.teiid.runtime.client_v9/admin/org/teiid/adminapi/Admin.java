@@ -29,7 +29,6 @@ import java.util.Properties;
 import java.util.Set;
 import org.teiid.adminapi.VDB.ConnectionType;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 public interface Admin {
@@ -38,7 +37,6 @@ public interface Admin {
 
 	public enum SchemaObjectType {TABLES, PROCEDURES, FUNCTIONS};
 
-	@Since(Version.TEIID_8_11)
 	public enum TranlatorPropertyType{IMPORT, OVERRIDE, EXTENSION_METADATA, ALL};
 
     /**
@@ -151,7 +149,6 @@ public interface Admin {
      * @param content
      * @throws AdminException
      */
-    @Since(Version.TEIID_8_0)
     void deploy(String deployName, InputStream content) throws AdminException;
 
     /**
@@ -162,7 +159,6 @@ public interface Admin {
      *
      * @return the {@link VDB} representing the current property values and runtime state.
      */
-    @Removed(Version.TEIID_8_0)
     void deployVDB(String fileName, InputStream vdb) throws AdminException;
 
     /**
@@ -170,7 +166,6 @@ public interface Admin {
      * @param deployedName
      * @throws AdminException
      */
-    @Since(Version.TEIID_8_0)
     void undeploy(String deployedName) throws AdminException;
 
     /**
@@ -178,7 +173,6 @@ public interface Admin {
      * @param vdbName
      * @param version
      */
-    @Removed(Version.TEIID_8_0)
     void deleteVDB(String vdbName, int version);
 
     /**
@@ -307,7 +301,6 @@ public interface Admin {
      * @return translator property definitions
      * @throws AdminException
      */
-    @Since(Version.TEIID_8_7)
     Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type) throws AdminException;
     
 

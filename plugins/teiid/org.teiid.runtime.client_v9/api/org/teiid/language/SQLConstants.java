@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.teiid.designer.annotation.AnnotationUtils;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
@@ -72,9 +71,7 @@ public abstract class SQLConstants {
         String HEADER = "HEADER"; //$NON-NLS-1$
         String QUOTE = "QUOTE"; //$NON-NLS-1$
         String COLUMNS = "COLUMNS"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String SELECTOR = "SELECTOR"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String SKIP = "SKIP"; //$NON-NLS-1$
         //xmltable
         String ORDINALITY = "ORDINALITY"; //$NON-NLS-1$
@@ -117,35 +114,20 @@ public abstract class SQLConstants {
         String DISABLED = "DISABLED"; //$NON-NLS-1$
         
         String TRIM = "TRIM"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String RESULT = "RESULT"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String OBJECTTABLE = "OBJECTTABLE"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String VERSION = "VERSION"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String INCLUDING = "INCLUDING"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String EXCLUDING = "EXCLUDING"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String XMLDECLARATION = "XMLDECLARATION"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String VARIADIC = "VARIADIC"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String INDEX = "INDEX"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String EXCEPTION = "EXCEPTION"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String RAISE = "RAISE"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String CHAIN = "CHAIN"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String JSONOBJECT = "JSONOBJECT"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_7)
         String AUTO_INCREMENT = "AUTO_INCREMENT"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_10)
         String PRESERVE = "PRESERVE"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_10)
         String GEOMETRY = "GEOMETRY"; //$NON-NLS-1$
     }
     
@@ -161,7 +143,6 @@ public abstract class SQLConstants {
         String LONG = "LONG"; //$NON-NLS-1$
         String LOOP = "LOOP"; //$NON-NLS-1$
         String MAKEDEP = "MAKEDEP"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_12_4)
         String MAKEIND = "MAKEIND"; //$NON-NLS-1$
         String MAKENOTDEP = "MAKENOTDEP"; //$NON-NLS-1$
         String NOCACHE = "NOCACHE"; //$NON-NLS-1$
@@ -324,7 +305,6 @@ public abstract class SQLConstants {
         String OUTER = "OUTER"; //$NON-NLS-1$
         String OUTPUT = "OUTPUT"; //$NON-NLS-1$
         String OPTION = "OPTION"; //$NON-NLS-1$
-        @Since(Version.TEIID_8_0)
         String OPTIONS = "OPTIONS"; //$NON-NLS-1$
         String OVER = "OVER"; //$NON-NLS-1$
         String OVERLAPS = "OVERLAPS"; //$NON-NLS-1$
@@ -469,11 +449,11 @@ public abstract class SQLConstants {
 
             // If teiid version is less than the version listed in the since annotation
             // then word should not be included in the word sets
-            if (AnnotationUtils.hasAnnotation(field, Since.class)) {
-                Since since = AnnotationUtils.getAnnotation(field, Since.class);
-                if (! AnnotationUtils.isGreaterThanOrEqualTo(since, CACHED_TEIID_VERSION))
-                    continue;
-            }
+//            if (AnnotationUtils.hasAnnotation(field, Since.class)) {
+//                Since since = AnnotationUtils.getAnnotation(field, Since.class);
+//                if (! AnnotationUtils.isGreaterThanOrEqualTo(since, CACHED_TEIID_VERSION))
+//                    continue;
+//            }
 
             try {
                 if (!result.add((String)field.get(null))) {

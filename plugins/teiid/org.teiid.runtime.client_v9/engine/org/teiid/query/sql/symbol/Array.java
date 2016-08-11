@@ -112,6 +112,8 @@ public class Array extends SimpleNode implements Expression {
         this.implicit = implicit;
     }
 
+    // TODO: Teiid 9.0
+    // Ask Paul what he's doing here?
 	@Override
     public int hashCode() {
         final int prime = 31;

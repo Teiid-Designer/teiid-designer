@@ -23,7 +23,6 @@
 package org.teiid.query.mapping.xml;
 
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.xml.IMappingAttribute;
 import org.teiid.query.parser.TeiidParser;
@@ -193,12 +192,10 @@ public class MappingAttribute extends MappingNode implements IMappingAttribute {
         return super.getSourceNode();
     }
 
-    @Since(Version.TEIID_8_0)
     public String getType() {
         return (String)getProperty(MappingNodeConstants.Properties.BUILT_IN_TYPE);
     }
-
-    @Since(Version.TEIID_8_0)    
+ 
     public MappingAttribute setType(String type) {
         if (type != null) {
             setProperty(MappingNodeConstants.Properties.BUILT_IN_TYPE, type);

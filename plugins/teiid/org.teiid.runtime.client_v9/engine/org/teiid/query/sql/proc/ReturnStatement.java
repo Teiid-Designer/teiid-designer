@@ -2,7 +2,6 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.proc;
 
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.proc.IReturnStatement;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
@@ -12,7 +11,6 @@ import org.teiid.query.sql.symbol.Expression;
 /**
  *
  */
-@Since(Version.TEIID_8_0)
 public class ReturnStatement extends AssignmentStatement implements IReturnStatement<Expression, LanguageVisitor> {
 
     /**

@@ -7,7 +7,6 @@
 */
 package org.teiid.query.sql.lang;
 
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IIsDistinctCriteria;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
@@ -19,7 +18,6 @@ import org.teiid.query.sql.symbol.GroupSymbol;
  * However due to a lack of direct support for new/old groups as row values,
  * we reference group symbols here instead.
  */
-@Since( Version.TEIID_8_12_4 )
 public class IsDistinctCriteria extends Criteria
     implements PredicateCriteria, IIsDistinctCriteria<LanguageVisitor> {
 

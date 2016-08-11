@@ -15,7 +15,6 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 /**
  *
  */
-@Since(Version.TEIID_8_0)
 public interface IExceptionExpression<LV extends ILanguageVisitor> extends IExpression<LV> {
 
 }

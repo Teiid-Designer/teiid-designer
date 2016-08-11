@@ -83,8 +83,8 @@ public class ExpressionSymbol extends Symbol
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());
-        if(getShortCanonicalName() != null)
-            clone.setShortCanonicalName(getShortCanonicalName());
+//        if(getShortCanonicalName() != null)
+//            clone.setShortCanonicalName(getShortCanonicalName());
         if(getOutputName() != null)
             clone.setOutputName(getOutputName());
         if(getShortName() != null)

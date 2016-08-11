@@ -24,6 +24,8 @@ package org.teiid.query.validator;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+
 import org.teiid.designer.validator.IValidator.IValidatorFailure;
 import org.teiid.query.report.ReportItem;
 import org.teiid.query.sql.lang.LanguageObject;
@@ -39,6 +41,7 @@ public class ValidatorFailure extends ReportItem implements IValidatorFailure {
     public ValidatorFailure(String description) { 
         super(VALIDATOR_FAILURE);
         setMessage(description);
+        this.invalidObjects = Collections.emptyList();
     }
     
     public ValidatorFailure(String description, LanguageObject object) {
@@ -75,7 +78,7 @@ public class ValidatorFailure extends ReportItem implements IValidatorFailure {
     }   
     
     /**
-     * Get the objects that failed validation.  The collection may be null.
+     * Get the objects that failed validation.
      * @return Invalid objects, may be null
      */
     public Collection<LanguageObject> getInvalidObjects() { 

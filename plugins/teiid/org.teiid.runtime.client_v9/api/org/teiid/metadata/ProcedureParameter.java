@@ -22,7 +22,6 @@
 
 package org.teiid.metadata;
 
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
@@ -92,7 +91,6 @@ public class ProcedureParameter extends BaseColumn {
     }	
     
     @Override
-    @Since(Version.TEIID_8_7)
     public String getNativeType() {
     	String nativeType = super.getNativeType();
     	if (nativeType != null) {

@@ -26,7 +26,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashSet;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.IQueryParser;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -113,7 +112,6 @@ public class QueryParser implements IQueryParser {
 	 * @return command of sql
 	 * @throws Exception
 	 */
-	@Since(Version.TEIID_8_0)
 	public Command parseProcedure(String sql, boolean update) throws Exception {
         try{
 

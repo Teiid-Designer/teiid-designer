@@ -206,13 +206,9 @@ public class GroupCollectorVisitor extends LanguageVisitor
         GroupCollectorVisitor visitor = new GroupCollectorVisitor(obj.getTeiidVersion(), groups);
         visitor.setIgnoreInlineViewGroups(true);
 
-        if (visitor.isTeiid811OrGreater()) {
-            PreOrPostOrderNavigator nav = new PreOrPostOrderNavigator(visitor, PreOrPostOrderNavigator.PRE_ORDER, true);
-            nav.setSkipEvaluatable(true);
-            obj.acceptVisitor(nav);
-        } else {
-            DeepPreOrderNavigator.doVisit(obj, visitor);
-        }
+        PreOrPostOrderNavigator nav = new PreOrPostOrderNavigator(visitor, PreOrPostOrderNavigator.PRE_ORDER, true);
+        nav.setSkipEvaluatable(true);
+        obj.acceptVisitor(nav);
 
         if(visitor.getInlineViewGroups() != null) {
             groups.removeAll(visitor.getInlineViewGroups());

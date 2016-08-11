@@ -24,7 +24,7 @@ package org.teiid.adminapi;
 
 import java.util.List;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
+
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**

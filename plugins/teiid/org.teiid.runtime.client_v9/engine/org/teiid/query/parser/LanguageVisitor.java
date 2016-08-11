@@ -13,7 +13,6 @@ import java.util.Map;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.AbstractLanguageVisitor;
 import org.teiid.designer.query.sql.lang.IAlterProcedure;
 import org.teiid.designer.query.sql.lang.IAlterTrigger;
@@ -40,6 +39,7 @@ import org.teiid.designer.query.sql.lang.IJoinType;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.lang.ILimit;
 import org.teiid.designer.query.sql.lang.IMatchCriteria;
+import org.teiid.designer.query.sql.lang.INamedProcedureCall;
 import org.teiid.designer.query.sql.lang.INotCriteria;
 import org.teiid.designer.query.sql.lang.IObjectTable;
 import org.teiid.designer.query.sql.lang.IOption;
@@ -273,34 +273,6 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         return maxVersion.isLessThan(teiidVersion.get());
     }
 
-    protected boolean isLessThanTeiid8124() {
-        return isLessThanTeiidVersion(Version.TEIID_8_12_4);
-    }
-
-    protected boolean isTeiid8OrGreater() {
-        return isTeiidVersionOrGreater(Version.TEIID_8_0);
-    }
-
-    protected boolean isTeiid87OrGreater() {
-        return isTeiidVersionOrGreater(Version.TEIID_8_7);
-    }
-
-    protected boolean isTeiid89OrGreater() {
-        return isTeiidVersionOrGreater(Version.TEIID_8_9);
-    }
-
-    protected boolean isTeiid810OrGreater() {
-        return isTeiidVersionOrGreater(Version.TEIID_8_10);
-    }
-
-    protected boolean isTeiid811OrGreater() {
-        return isTeiidVersionOrGreater(Version.TEIID_8_11);
-    }
-
-    protected boolean isTeiid8124OrGreater() {
-        return isTeiidVersionOrGreater(Version.TEIID_8_12_4);
-    }
-
     /**
      * @return the parser
      */
@@ -378,12 +350,12 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
             }
         }
 
-        if (AnnotationUtils.hasAnnotation(method, Since.class)) {
-            Since since = AnnotationUtils.getAnnotation(method, Since.class);
-            if (!AnnotationUtils.isGreaterThanOrEqualTo(since, teiidVersion)) {
-                throw new RuntimeException(message);
-            }
-        }
+//        if (AnnotationUtils.hasAnnotation(method, Since.class)) {
+//            Since since = AnnotationUtils.getAnnotation(method, Since.class);
+//            if (!AnnotationUtils.isGreaterThanOrEqualTo(since, teiidVersion)) {
+//                throw new RuntimeException(message);
+//            }
+//        }
     }
 
     public void visit(LanguageObject node) {
@@ -418,17 +390,15 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Removed(Version.TEIID_8_0)
+    // REMOVED in TEIID 8.0
     public void visit(RaiseErrorStatement node) {
-        isApplicable(node);
+    	throw new UnsupportedOperationException();
     }
 
-    @Since(Version.TEIID_8_0)
     public void visit(RaiseStatement node) {
         isApplicable(node);
     }
 
-    @Since(Version.TEIID_8_0)
     public void visit(ExceptionExpression node) {
         isApplicable(node);
     }
@@ -441,7 +411,6 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Since(Version.TEIID_8_0)
     public void visit(ReturnStatement node) {
         isApplicable(node);
     }
@@ -466,14 +435,12 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Since(Version.TEIID_8_0)
     public void visit(CreateProcedureCommand node) {
         isApplicable(node);
     }
 
-    @Removed(Version.TEIID_8_0)
     public void visit(CreateUpdateProcedureCommand node) {
-        isApplicable(node);
+    	throw new UnsupportedOperationException();
     }
 
     public void visit(DynamicCommand node) {
@@ -580,7 +547,6 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Since(Version.TEIID_8_0)
     public void visit(ObjectTable node) {
         isApplicable(node);
     }
@@ -593,12 +559,10 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Since(Version.TEIID_8_10)
     public void visit(XMLCast node) {
         isApplicable(node);
     }
 
-    @Since(Version.TEIID_8_10)
     public void visit(XMLExists node) {
         isApplicable(node);
     }
@@ -691,7 +655,6 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Since(Version.TEIID_8_12_4)
     public void visit(IsDistinctCriteria node) {
         isApplicable(node);
     }
@@ -716,7 +679,6 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Since(Version.TEIID_8_0)
     public void visit(JSONObject node) {
         isApplicable(node);
     }
@@ -777,22 +739,22 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Removed(Version.TEIID_8_0)
+    
+    // REMOVED in TEIID 8.0
     public void visit(CriteriaSelector node) {
-        isApplicable(node);
+    	throw new UnsupportedOperationException();
     }
 
-    @Removed(Version.TEIID_8_0)
+    // REMOVED in TEIID 8.0
     public void visit(HasCriteria node) {
-        isApplicable(node);
+    	throw new UnsupportedOperationException();
     }
 
-    @Removed(Version.TEIID_8_0)
+    // REMOVED in TEIID 8.0
     public void visit(TranslateCriteria node) {
-        isApplicable(node);
+    	throw new UnsupportedOperationException();
     }
 
-    @Since(Version.TEIID_8_0)
     public void visit(Array node) {
         isApplicable(node);
     }
@@ -972,6 +934,11 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
     public void visit(IMultipleElementSymbol obj) {
         visit((MultipleElementSymbol) obj);
     }
+    
+    @Override
+    public void visit(INamedProcedureCall obj) {
+        visit((MultipleElementSymbol) obj);
+    }
 
     @Override
     public void visit(IConstant obj) {
@@ -1140,13 +1107,11 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         visit((XMLTable) obj);
     }
 
-    @Since(Version.TEIID_8_10)
     @Override
     public void visit(IXMLExists obj) {
         visit((XMLExists) obj);
     }
 
-    @Since(Version.TEIID_8_10)
     @Override
     public void visit(IXMLCast obj) {
         visit((XMLCast) obj);

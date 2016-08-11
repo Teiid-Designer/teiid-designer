@@ -117,10 +117,7 @@ public class TextLine extends SimpleNode implements Expression, ITextLine<Langua
 
     @Override
     public Class<?> getType() {
-        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
-            return String[].class;
-
-        return DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass();
+        return String[].class;
     }
 
     @Override
@@ -179,6 +176,9 @@ public class TextLine extends SimpleNode implements Expression, ITextLine<Langua
 
         return clone;
     }
+    
+    // TODO: Teiid 9.0
+    // There are runtime class changes that aren't in here. check with Paul
 
 }
 /* JavaCC - OriginalChecksum=e0b8f44a78e8c88a57ec4d4e5bf9c25f (do not edit this line) */

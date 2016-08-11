@@ -46,7 +46,6 @@ import org.teiid.core.types.basic.ObjectToAnyTransform;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.designer.annotation.AnnotationUtils;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.type.IDataTypeManagerService;
@@ -121,10 +120,8 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         XML ("xml", DataTypeName.XML, XMLType.class), //$NON-NLS-1$
 
-        @Since(Version.TEIID_8_0)
         VARBINARY ("varbinary", DataTypeName.VARBINARY, BinaryType.class), //$NON-NLS-1$
 
-        @Since(Version.TEIID_8_10)
         GEOMETRY ("geometry", DataTypeName.GEOMETRY, GeometryType.class); //$NON-NLS-1$
 
         private static Map<ITeiidServerVersion, List<DefaultDataTypes>> valueCache = new HashMap<ITeiidServerVersion, List<DefaultDataTypes>>();
@@ -454,18 +451,6 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         addTransform(new org.teiid.core.types.basic.SQLXMLToStringTransform(this));
 
-        if (teiidVersion.isLessThan(Version.TEIID_8_5)) {
-            for (Class<?> type : getAllDataTypeClasses()) {
-                if (type != DefaultDataTypes.OBJECT.getTypeClass()) {
-                    addTransform(new AnyToObjectTransform(this, type));
-                    addTransform(new ObjectToAnyTransform(this, type));
-                }
-                if (type != DefaultDataTypes.NULL.getTypeClass()) {
-                    addTransform(new NullToAnyTransform(this, type));
-                }
-            }
-        }
-
         addTransform(new AnyToStringTransform(this, DefaultDataTypes.OBJECT.getTypeClass()) {
             @Override
             public boolean isExplicit() {
@@ -638,7 +623,6 @@ public class DataTypeManagerService implements IDataTypeManagerService {
      * @param alias
      * @return the data type that is aliased by the given alias
      */
-    @Since(Version.TEIID_8_0)
     public DefaultDataTypes getDataType(DataTypeAliases alias) {
         ArgCheck.isNotNull(alias);
 

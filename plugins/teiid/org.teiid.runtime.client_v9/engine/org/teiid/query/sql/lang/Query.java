@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
@@ -50,7 +49,6 @@ public class Query extends QueryCommand
      * Added in Teiid 8.6 but backward-compatible with all
      * Teiid 8+ parsers.
      */
-    @Since(Version.TEIID_8_6)
     private boolean isRowConstructor;
     
     /**
@@ -220,9 +218,6 @@ public class Query extends QueryCommand
      * @return row constructor flag
      */
     public boolean isRowConstructor() {
-        if (isLessThanTeiidVersion(Version.TEIID_8_0))
-            return false;
-
         return isRowConstructor;
     }
     
@@ -230,9 +225,6 @@ public class Query extends QueryCommand
      * @param isRowConstructor
      */
     public void setRowConstructor(boolean isRowConstructor) {
-        if (isLessThanTeiidVersion(Version.TEIID_8_0))
-            return;
-
         this.isRowConstructor = isRowConstructor;
     }
 

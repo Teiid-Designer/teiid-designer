@@ -4,7 +4,6 @@ package org.teiid.query.sql.proc;
 
 import java.util.Collections;
 import java.util.List;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -18,7 +17,6 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 /**
  *
  */
-@Since(Version.TEIID_8_0)
 public class CreateProcedureCommand extends Command
     implements ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> {
 
@@ -69,12 +67,8 @@ public class CreateProcedureCommand extends Command
     }
 
     @Override
-    @Since(Version.TEIID_8_5)
     public boolean returnsResultSet() {
-        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
-            return this.resultSetColumns != null && !this.resultSetColumns.isEmpty();
-
-        return super.returnsResultSet();
+        return this.resultSetColumns != null && !this.resultSetColumns.isEmpty();
     }
 
     @Override
@@ -150,11 +144,8 @@ public class CreateProcedureCommand extends Command
      * @param type
      */
     public void setUpdateType(int type) {
-        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
-            //we select the count as the last operation
-            this.resultSetColumns = getUpdateCommandSymbol();
-        else
-            this.resultSetColumns = Collections.emptyList();
+        //we select the count as the last operation
+        this.resultSetColumns = getUpdateCommandSymbol();
 
         this.updateType = type;
     }

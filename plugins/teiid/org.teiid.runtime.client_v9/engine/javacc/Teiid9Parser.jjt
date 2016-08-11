@@ -139,34 +139,13 @@ public class Teiid9Parser extends AbstractTeiidParser {
         return hint;
     }
 
-    private void setFromClauseOptions811(Token groupID, FromClause fromClause){
-        String[] parts = getHintComment(groupID).split("\\s"); //$NON-NLS-1$
-
-        for (int i = 0; i < parts.length; i++) {
-            if (parts[i].equalsIgnoreCase(Option.OPTIONAL)) {
-                fromClause.setOptional(true);
-            } else if (parts[i].equalsIgnoreCase(Option.MAKEDEP)) {
-                fromClause.setMakeDep(true);
-            } else if (parts[i].equalsIgnoreCase(Option.MAKENOTDEP)) {
-                fromClause.setMakeNotDep(true);
-            } else if (parts[i].equalsIgnoreCase(FromClause.MAKEIND)) {
-                fromClause.setMakeInd(true);
-            } else if (parts[i].equalsIgnoreCase(SubqueryHint.NOUNNEST)) {
-                fromClause.setNoUnnest(true);
-            } else if (parts[i].equalsIgnoreCase(FromClause.PRESERVE)) {
-                fromClause.setPreserve(true);
-            }
-        }
-    }
-
-    private void setFromClauseOptions812(Token groupID, FromClause fromClause){
+    private void setFromClauseOptions(Token groupID, FromClause fromClause){
         String comment = getHintComment(groupID);
         if (comment == null || comment.isEmpty()) {
             return;
         }
         Matcher m = FROM_CLAUSE_HINT_PATTERN.matcher(comment);
         int start = 0;
-        boolean makedep = false;
         while (m.find(start)) {
             String hint = m.group(1);
             start = m.end();
@@ -191,6 +170,20 @@ public class Teiid9Parser extends AbstractTeiidParser {
             }
         }
     }
+    
+    boolean isNoInline(Token paren){
+    	String comment = getComment(paren);
+    	if (comment == null || comment.isEmpty()) {
+    		return false;
+    	}
+    	String[] parts = comment.split("\\s"); //$NON-NLS-1$
+    	for (String part : parts) {
+    		if (WithQueryCommand.NO_INLINE.equalsIgnoreCase(part)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
 
     //([max:val] [[no] join])
     private void parseOptions(Matcher m, Option.MakeDep option) {
@@ -206,13 +199,6 @@ public class Teiid9Parser extends AbstractTeiidParser {
         }
     }
 
-    private void setFromClauseOptions(Token groupID, FromClause fromClause) {
-        if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_12_4))
-            setFromClauseOptions812(groupID, fromClause);
-        else
-            setFromClauseOptions811(groupID, fromClause);
-    }
-
     @Override
     public ITeiidServerVersion getVersion() {
         if (version == null)
@@ -225,12 +211,6 @@ public class Teiid9Parser extends AbstractTeiidParser {
         if (!condition)
             throw new ParseException(Messages.getString(
                 Messages.TeiidParser.teiid_version_failure, getVersion().toString()));
-    }
-
-    private void requiresVersionAtLeast(Version version) throws ParseException {
-        if (! versionAtLeast(version))
-            throw new ParseException(Messages.getString(
-                Messages.TeiidParser.teiid_version_atleast_failure, version.get().toString(), getVersion().toString()));
     }
 
     @Override
@@ -571,9 +551,6 @@ MORE :
 SPECIAL_TOKEN:
 {
     <LINE_COMMENT: "--"(~["\r","\n"])*> {
-
-        if (parser.versionLessThan(Version.TEIID_8_10))
-            return;
 
         // Calculates the offset for these special tokens
         calculateOffset(matchedToken);
@@ -1045,12 +1022,13 @@ TOKEN :
 |   <SEMICOLON: ";">
 |   <COLON: ":">
 |	<CONCAT_OP: "||">
+|	<DOUBLE_AMP_OP: "&&">
 }
 
 /*
 name=string
 description=A string literal value.  Use '' to escape ' in the string.  
-example={code:sql}'a string'{code}\n{code:sql}'it''s a string'{code}
+example=[source,sql]\n----\n'a string'\n----\n\n[source,sql]\n----\n'it''s a string'\n----\n
 */
 String stringVal() :
 {
@@ -1086,7 +1064,7 @@ Token nonReserved() :
 /*
 name=identifier
 description=Partial or full name of a single entity.
-example={code:sql}tbl.col{code}\n{code:sql}"tbl"."col"{code}
+example=[source,sql]\n----\ntbl.col\n----\n\n[source,sql]\n----\n"tbl"."col"\n----\n
 */
 String id(Boolean nonAlias) :
 {
@@ -1147,7 +1125,7 @@ Command designerCommand(ParseInfo info) :
 /*
 name=create trigger
 description=Creates a trigger action on the given target.
-example={code:sql}CREATE TRIGGER ON vw INSTEAD OF INSERT AS FOR EACH ROW BEGIN ATOMIC ... END{code}
+example=[source,sql]\n----\nCREATE TRIGGER ON vw INSTEAD OF INSERT AS FOR EACH ROW BEGIN ATOMIC ... END\n----\n
 */
 Command createTrigger(ParseInfo info) :
 {
@@ -1172,7 +1150,7 @@ Command createTrigger(ParseInfo info) :
 /*
 name=alter
 description=Alter the given target.
-example={code:sql}ALTER VIEW vw AS SELECT col FROM tbl{code}
+example=[source,sql]\n----\nALTER VIEW vw AS SELECT col FROM tbl\n----\n
 */
 Command alter(ParseInfo info) :
 {
@@ -1233,7 +1211,7 @@ Command alter(ParseInfo info) :
 /*
 name=for each row trigger action
 description=Defines an action to perform on each row.
-example={code:sql}FOR EACH ROW BEGIN ATOMIC ... END{code}
+example=[source,sql]\n----\nFOR EACH ROW BEGIN ATOMIC ... END\n----\n
 */
 TriggerAction forEachRowTriggerAction(ParseInfo info) #TriggerAction :
 {
@@ -1269,7 +1247,7 @@ TriggerAction forEachRowTriggerAction(ParseInfo info) #TriggerAction :
 /*
 name=directly executable statement
 description=A statement that can be executed at runtime.
-example={code:sql}SELECT * FROM tbl{code}
+example=[source,sql]\n----\nSELECT * FROM tbl\n----\n
 index=true
 */
 Command userCommand(ParseInfo info) :
@@ -1279,31 +1257,17 @@ Command userCommand(ParseInfo info) :
 	Block block = null;
 }
 {
-    {
-      if (versionLessThan(Version.TEIID_8_4)) {
-        int index = 1;
-        Token t = null;
-        do
-          t = getToken(index++);
-        while (t != null && t.kind == LPAREN);
-        t = getToken(index);
-        if (t != null)
-          sourceHint = getSourceHint(t);
-      }
-    }
 	(command = queryExpression(info) |
 	command = storedProcedure(info, 1) |
-    { if (versionAtLeast(Version.TEIID_8_4)) sourceHint = getSourceHint(this); } command = insert(info) |
-    { if (versionAtLeast(Version.TEIID_8_4)) sourceHint = getSourceHint(this); } command = update(info) |
-    { if (versionAtLeast(Version.TEIID_8_4)) sourceHint = getSourceHint(this); } command = delete(info) |
+    { sourceHint = getSourceHint(this); } command = insert(info) |
+    { sourceHint = getSourceHint(this); } command = update(info) |
+    { sourceHint = getSourceHint(this); } command = delete(info) |
     command = dropTable(info) |
 	LOOKAHEAD(2) command = createTempTable(info) |
     LOOKAHEAD(2) command = createForeignTempTable(info) |
 	command = alter(info) |
 	command = createTrigger(info) |
-	{
-      requiresVersionAtLeast(Version.TEIID_8_4);
-    }
+
     block = compoundStatement(info)
     {
       CreateProcedureCommand procCommand = createASTNode(ASTNodes.CREATE_PROCEDURE_COMMAND);
@@ -1320,7 +1284,7 @@ Command userCommand(ParseInfo info) :
 /*
 name=drop table
 description=Creates a trigger action on the given target.
-example={code:sql}CREATE TRIGGER ON vw INSTEAD OF INSERT AS FOR EACH ROW BEGIN ATOMIC ... END{code}
+example=[source,sql]\n----\nCREATE TRIGGER ON vw INSTEAD OF INSERT AS FOR EACH ROW BEGIN ATOMIC ... END\n----\n
 */
 Drop dropTable(ParseInfo info) #Drop :
 {
@@ -1338,7 +1302,7 @@ Drop dropTable(ParseInfo info) #Drop :
 /*
 name=create temporary table
 description=Creates a temporary table.
-example={code:sql}CREATE LOCAL TEMPORARY TABLE tmp (col integer){code}
+example=[source,sql]\n----\nCREATE LOCAL TEMPORARY TABLE tmp (col integer)\n----\n
 */
 Command createTempTable(ParseInfo info) #Create :
 {
@@ -1357,10 +1321,7 @@ Command createTempTable(ParseInfo info) #Create :
     ]
 
     <TEMPORARY>
-    {
-      if(! localToken)
-        // LOCAL is only optional for Teiid 8.5+        requiresVersionAtLeast(Version.TEIID_8_5);
-    }
+
     <TABLE>
     table = id(null)
     <LPAREN>
@@ -1387,7 +1348,6 @@ Command createTempTable(ParseInfo info) #Create :
     [
         <ON> <COMMIT> <PRESERVE>
         {
-            requiresVersionAtLeast(Version.TEIID_8_10);
             jjtThis.setCommitAction(Create.CommitAction.PRESERVE_ROWS);
         }
         <ROWS>
@@ -1400,7 +1360,7 @@ Command createTempTable(ParseInfo info) #Create :
 /*
 name=temporary table element
 description=Defines a temporary table column.
-example={code:sql}col string NOT NULL{code}
+example=[source,sql]\n----\ncol string NOT NULL\n----\n
 */
 Column tableElement(ParseInfo info) :
 {
@@ -1436,7 +1396,7 @@ Column tableElement(ParseInfo info) :
 /*
 name=raise error statement
 description=Raises an error with the given message.
-example={code:sql}ERROR 'something went wrong'{code}
+example=[source,sql]\n----\nERROR 'something went wrong'\n----\n
 */
 RaiseStatement errorStatement(ParseInfo info) :
 {
@@ -1456,7 +1416,7 @@ RaiseStatement errorStatement(ParseInfo info) :
 /*
 name=raise statement
 description=Raises an error or warning with the given message.
-example={code:sql}RAISE SQLEXCEPTION 'something went wrong'{code}
+example=[source,sql]\n----\nRAISE SQLEXCEPTION 'something went wrong'\n----\n
 */
 RaiseStatement raiseStatement(ParseInfo info) :
 {
@@ -1488,7 +1448,7 @@ RaiseStatement raiseStatementFromExpression(Expression expression) #RaiseStateme
 /*
 name=exception reference
 description=a reference to an exception
-example={code:sql}SQLEXCEPTION 'something went wrong' SQLSTATE '00X', 2{code}
+example=[source,sql]\n----\nSQLEXCEPTION 'something went wrong' SQLSTATE '00X', 2\n----\n
 */
 Expression exceptionReference(ParseInfo info) :
 {
@@ -1507,7 +1467,7 @@ Expression exceptionReference(ParseInfo info) :
 /*
 name=sql exception
 description=creates a sql exception or warning with the specified message, state, and code
-example={code:sql}SQLEXCEPTION 'something went wrong' SQLSTATE '00X', 2{code}
+example=[source,sql]\n----\nSQLEXCEPTION 'something went wrong' SQLSTATE '00X', 2\n----\n
 */
 Expression exception(ParseInfo info) :
 {
@@ -1545,7 +1505,7 @@ ExceptionExpression exceptionExpression() #ExceptionExpression :
 /*
 name=statement
 description=A procedure statement.
-example={code:sql}IF (x = 5) BEGIN ... END{code}
+example=[source,sql]\n----\nIF (x = 5) BEGIN ... END\n----\n
 */
 Statement statement(ParseInfo info) :
 {
@@ -1579,7 +1539,7 @@ Statement statement(ParseInfo info) :
 /*
 name=delimited statement
 description=A procedure statement terminated by ;.
-example={code:sql}SELECT * FROM tbl;{code}
+example=[source,sql]\n----\nSELECT * FROM tbl;\n----\n
 */
 Statement delimitedStatement(ParseInfo info) :
 {
@@ -1603,7 +1563,7 @@ Statement delimitedStatement(ParseInfo info) :
 /*
 name=compound statement
 description=A procedure statement block contained in BEGIN END.
-example={code:sql}BEGIN NOT ATOMIC ... END{code}
+example=[source,sql]\n----\nBEGIN NOT ATOMIC ... END\n----\n
 */
 Block compoundStatement(ParseInfo info) :
 {
@@ -1640,7 +1600,7 @@ Block compoundStatement(ParseInfo info) :
 /*
 name=branching statement
 description=A procedure branching control statement, which typically specifies a label to return control to.
-example={code:sql}BREAK x{code}
+example=[source,sql]\n----\nBREAK x\n----\n
 */
 BranchingStatement branchingStatement(ParseInfo info) #BranchingStatement :
 {
@@ -1665,7 +1625,7 @@ BranchingStatement branchingStatement(ParseInfo info) #BranchingStatement :
 /*
 name=return statement
 description=A return statement.
-example={code:sql}RETURN 1{code}
+example=[source,sql]\n----\nRETURN 1\n----\n
 */
 ReturnStatement returnStatement(ParseInfo info) #ReturnStatement :
 {
@@ -1682,7 +1642,7 @@ ReturnStatement returnStatement(ParseInfo info) #ReturnStatement :
 /*
 name=while statement
 description=A procedure while statement that executes until its condition is false.
-example={code:sql}WHILE (var) BEGIN ... END{code}
+example=[source,sql]\n----\nWHILE (var) BEGIN ... END\n----\n
 */
 WhileStatement whileStatement(ParseInfo info) #WhileStatement :
 {
@@ -1705,7 +1665,7 @@ WhileStatement whileStatement(ParseInfo info) #WhileStatement :
 /*
 name=loop statement
 description=A procedure loop statement that executes over the given cursor.
-example={code:sql}LOOP ON (SELECT * FROM tbl) AS x BEGIN ... END{code}
+example=[source,sql]\n----\nLOOP ON (SELECT * FROM tbl) AS x BEGIN ... END\n----\n
 */
 LoopStatement loopStatement(ParseInfo info) #LoopStatement :
 {
@@ -1733,7 +1693,7 @@ LoopStatement loopStatement(ParseInfo info) #LoopStatement :
 /*
 name=if statement
 description=A procedure loop statement that executes over the given cursor.
-example={code:sql}IF (boolVal) BEGIN variables.x = 1 END ELSE BEGIN variables.x = 2 END{code}
+example=[source,sql]\n----\nIF (boolVal) BEGIN variables.x = 1 END ELSE BEGIN variables.x = 2 END\n----\n
 */
 IfStatement ifStatement(ParseInfo info) #IfStatement :
 {
@@ -1749,7 +1709,6 @@ IfStatement ifStatement(ParseInfo info) #IfStatement :
     <LPAREN>
      (LOOKAHEAD(4) (groupID = id(null) <IS> [<NOT> {not = true;}] <DISTINCT> <FROM> groupID2 = id(null)
      {
-         requiresVersionAtLeast(Version.TEIID_8_12_4);
          IsDistinctCriteria idc = isDistinctCriteria();
          idc.setLeftRowValue(groupSymbol(groupID));
          idc.setRightRowValue(groupSymbol(groupID2));
@@ -1774,7 +1733,7 @@ IfStatement ifStatement(ParseInfo info) #IfStatement :
 /*
 name=declare statement
 description=A procedure declaration statement that creates a variable and optionally assigns a value.
-example={code:sql}DECLARE STRING x = 'a'{code}
+example=[source,sql]\n----\nDECLARE STRING x = 'a'\n----\n
 */
 DeclareStatement declareStatement(ParseInfo info) #DeclareStatement :
 {
@@ -1814,7 +1773,7 @@ DeclareStatement declareStatement(ParseInfo info) #DeclareStatement :
 /*
 name=assignment statement
 description=Assigns a variable a value in a procedure.
-example={code:sql}x = 'b'{code}
+example=[source,sql]\n----\nx = 'b'\n----\n
 */
 Statement assignStatement(ParseInfo info) :
 {
@@ -1913,8 +1872,7 @@ CreateProcedureCommand createProcedure(ParseInfo info) # CreateProcedureCommand 
 /*
 name=procedure body definition
 description=Defines a procedure body on a Procedure metadata object.
-example={code:sql}BEGIN ... END{code} // Teiid 8.5+
-example={code:sql}CREATE VIRTUAL PROCEDURE BEGIN ... END{code} Teiid 8.4-
+example=[source,sql]\n----\nBEGIN ... END\n----\n
 index=true
 */
 CreateProcedureCommand procedureBodyCommand(ParseInfo info) :
@@ -1934,7 +1892,7 @@ CreateProcedureCommand procedureBodyCommand(ParseInfo info) :
 /*
 name=dynamic data statement
 description=A procedure statement that can execute arbitrary sql.
-example={code:sql}EXECUTE IMMEDIATE 'SELECT * FROM tbl' AS x STRING INTO #temp{code}
+example=[source,sql]\n----\nEXECUTE IMMEDIATE 'SELECT * FROM tbl' AS x STRING INTO #temp\n----\n
 */
 DynamicCommand dynamicCommand(ParseInfo info) #DynamicCommand :
 {
@@ -1994,7 +1952,7 @@ DynamicCommand dynamicCommand(ParseInfo info) #DynamicCommand :
 /*
 name=set clause list
 description=A list of value assignments.
-example={code:sql}col1 = 'x', col2 = 'y' ...{code}
+example=[source,sql]\n----\ncol1 = 'x', col2 = 'y' ...\n----\n
 */
 SetClauseList setClauseList(boolean shortName, ParseInfo info) #SetClauseList :
 {
@@ -2037,7 +1995,7 @@ SetClause setClause(ElementSymbol symbol, Expression value) #SetClause :
 /*
 name=typed element list
 description=A list of typed elements.
-example={code:sql}col1 string, col2 integer ...{code}
+example=[source,sql]\n----\ncol1 string, col2 integer ...\n----\n
 */
 List<ProjectedColumn> createElementsWithTypes(ParseInfo info) :
 {
@@ -2079,7 +2037,7 @@ ProjectedColumn projectedColumn(String name, String type) #ProjectedColumn :
 /*
 name=callable statement
 description=A callable statement defined using JDBC escape syntax.
-example={code:sql}{? = CALL proc}{code}
+example=[source,sql]\n----\n{? = CALL proc}\n----\n
 index=true
 */
 StoredProcedure callableStatement(ParseInfo info) :
@@ -2131,7 +2089,7 @@ StoredProcedure callableStatement(ParseInfo info) :
 /*
 name=call statement
 description=Executes the procedure with the given parameters.
-example={code:sql}CALL proc('a', 1){code}
+example=[source,sql]\n----\nCALL proc('a', 1)\n----\n
 */
 StoredProcedure storedProcedure(ParseInfo info, int startIndex) :
 {
@@ -2142,7 +2100,7 @@ StoredProcedure storedProcedure(ParseInfo info, int startIndex) :
 	SourceHint sourceHint = null;
 }
 {
-    { if (versionAtLeast(Version.TEIID_8_4)) sourceHint = getSourceHint(this); }
+    { sourceHint = getSourceHint(this); }
 	(
 		(<EXEC> | <EXECUTE> | <CALL>)
 		procName = id(null)
@@ -2168,8 +2126,7 @@ StoredProcedure storedProcedure(ParseInfo info, int startIndex) :
 	 }
 	]
 	{
-	    if (versionAtLeast(Version.TEIID_8_4))
-	      storedProcedure.setSourceHint(sourceHint);
+	    storedProcedure.setSourceHint(sourceHint);
 
 		return storedProcedure;
 	}
@@ -2187,7 +2144,7 @@ StoredProcedure newStoredProcedure() #StoredProcedure :
 /*
 name=named parameter list
 description=A list of named parameters.
-example={code:sql}param1 => 'x', param2 => 1{code}
+example=[source,sql]\n----\nparam1 => 'x', param2 => 1\n----\n
 */
 void executeNamedParams(ParseInfo info, StoredProcedure storedProcedure, int parameterIndex) :
 {
@@ -2227,7 +2184,7 @@ void executeNamedParams(ParseInfo info, StoredProcedure storedProcedure, int par
 /*
 name=insert statement
 description=Inserts values into the given target.
-example={code:sql}INSERT INTO tbl (col1, col2) VALUES ('a', 1){code}
+example=[source,sql]\n----\nINSERT INTO tbl (col1, col2) VALUES ('a', 1)\n----\n
 */
 Insert insert(ParseInfo info) #Insert :
 {
@@ -2270,7 +2227,7 @@ Insert insert(ParseInfo info) #Insert :
 /*
 name=expression list
 description=A list of expressions.
-example={code:sql}col1, 'a', ...{code}
+example=[source,sql]\n----\ncol1, 'a', ...\n----\n
 */
 ArrayList<Expression> expressionList(ParseInfo info) :
 {
@@ -2296,7 +2253,7 @@ ArrayList<Expression> expressionList(ParseInfo info) :
 /*
 name=update statement
 description=Update values in the given target.
-example={code:sql}UPDATE tbl SET (col1 = 'a') WHERE col2 = 1{code}
+example=[source,sql]\n----\nUPDATE tbl SET (col1 = 'a') WHERE col2 = 1\n----\n
 */
 Update update(ParseInfo info) #Update :
 {
@@ -2335,7 +2292,7 @@ Update update(ParseInfo info) #Update :
 /*
 name=delete statement
 description=Delete rows from the given target.
-example={code:sql}DELETE FROM tbl WHERE col2 = 1{code}
+example=[source,sql]\n----\nDELETE FROM tbl WHERE col2 = 1\n----\n
 */
 Delete delete(ParseInfo info) #Delete :
 {
@@ -2363,7 +2320,7 @@ Delete delete(ParseInfo info) #Delete :
 /*
 name=query expression
 description=A declarative query for data.
-example={code:sql}SELECT * FROM tbl WHERE col2 = 1{code}
+example=[source,sql]\n----\nSELECT * FROM tbl WHERE col2 = 1\n----\n
 */
 QueryCommand queryExpression(ParseInfo info) :
 {
@@ -2385,13 +2342,12 @@ QueryCommand queryExpression(ParseInfo info) :
 	    }
 	  )*
 	]
-	{ if (versionAtLeast(Version.TEIID_8_4)) sourceHint = getSourceHint(this); }
+	{ sourceHint = getSourceHint(this); }
 	queryCommand = queryExpressionBody(info)
 	{
 		queryCommand.setWith(withList);
 
-		if (versionAtLeast(Version.TEIID_8_4))
-		  setSourceHint(sourceHint, queryCommand);
+		setSourceHint(sourceHint, queryCommand);
 
 		return queryCommand;
 	}
@@ -2400,30 +2356,36 @@ QueryCommand queryExpression(ParseInfo info) :
 /*
 name=with list element
 description=A query expression for use in the enclosing query. 
-example={code:sql}X (Y, Z) AS (SELECT 1, 2){code}
+example=[source,sql]\n----\nX (Y, Z) AS (SELECT 1, 2)\n----\n
 */
 WithQueryCommand withListElement(ParseInfo info) #WithQueryCommand :
 {
    String name = null;
    List<ElementSymbol> columns = null;
    QueryCommand queryExpression = null;
+   Token lparen = null;
 }
 {
 	name = id(Boolean.FALSE)
 	[ columns = columnList(true, true)] 
-	<AS> <LPAREN> queryExpression = queryExpression(info) <RPAREN>
+	<AS> lparen = <LPAREN> queryExpression = queryExpression(info) <RPAREN>
 	{
-	    jjtThis.setGroupSymbol(groupSymbol(name));
-	    jjtThis.setColumns(columns);
-	    jjtThis.setQueryExpression(queryExpression);
-	    return jjtThis;
+	    WithQueryCommand result = createASTNode(ASTNodes.WITH_QUERY_COMMAND);
+	    
+	    GroupSymbol groupSymbol = createASTNode(ASTNodes.GROUP_SYMBOL);
+	    groupSymbol.setName(name);
+	    result.setGroupSymbol(groupSymbol);
+	    result.setColumns(columns);
+	    result.setQueryExpression(queryExpression);
+	    result.setNoInline(isNoInline(lparen));
+	    return result;
 	}
 }
 
 /*
 name=query expression body
 description=The body of a query expression, which can optionally be ordered and limited.
-example={code:sql}SELECT * FROM tbl ORDER BY col1 LIMIT 1{code}
+example=[source,sql]\n----\nSELECT * FROM tbl ORDER BY col1 LIMIT 1\n----\n
 */
 QueryCommand queryExpressionBody(ParseInfo info) :
 {
@@ -2456,7 +2418,7 @@ QueryCommand queryExpressionBody(ParseInfo info) :
 /*
 name=query term
 description=Used to establish INTERSECT precedence.
-example={code:sql}SELECT * FROM tbl{code}\n{code:sql}SELECT * FROM tbl1 INTERSECT SELECT * FROM tbl2{code}
+example=[source,sql]\n----\nSELECT * FROM tbl\n----\n\n[source,sql]\n----\nSELECT * FROM tbl1 INTERSECT SELECT * FROM tbl2\n----\n
 */
 QueryCommand queryTerm(ParseInfo info) :
 {
@@ -2495,7 +2457,7 @@ SetQuery setQuery(ISetQuery.Operation operation, boolean all, QueryCommand leftQ
 /*
 name=query primary
 description=A declarative source of rows.
-example={code:sql}TABLE tbl{code}\n{code:sql}SELECT * FROM tbl1{code}
+example=[source,sql]\n----\nTABLE tbl\n----\n\n[source,sql]\n----\nSELECT * FROM tbl1\n----\n
 */
 QueryCommand queryPrimary(ParseInfo info) :
 {
@@ -2521,7 +2483,6 @@ QueryCommand queryPrimary(ParseInfo info) :
          <RPAREN> 
           (<COMMA> <LPAREN> expr = expressionList(info) 
            {
-             requiresVersionAtLeast(Version.TEIID_8_6);
 
              select = createASTNode(ASTNodes.SELECT);
              select.setSymbols(expr);
@@ -2560,7 +2521,7 @@ QueryCommand queryPrimary(ParseInfo info) :
 /*
 name=query
 description=A SELECT query.
-example={code:sql}SELECT col1, max(col2) FROM tbl GROUP BY col1{code}
+example=[source,sql]\n----\nSELECT col1, max(col2) FROM tbl GROUP BY col1\n----\n
 */
 Query query(ParseInfo info) #Query :
 {
@@ -2596,7 +2557,7 @@ Query query(ParseInfo info) #Query :
 /*
 name=into clause
 description=Used to direct the query into a table.  {note}This is deprecated.  Use INSERT INTO with a query expression instead.{note}
-example={code:sql}INTO tbl{code}
+example=[source,sql]\n----\nINTO tbl\n----\n
 */
 Into into(ParseInfo info) #Into :
 {
@@ -2614,7 +2575,7 @@ Into into(ParseInfo info) #Into :
 /*
 name=select clause
 description=The columns returned by a query.  Can optionally be distinct.
-example={code:sql}SELECT *{code}\n{code:sql}SELECT DISTINCT a, b, c{code}
+example=[source,sql]\n----\nSELECT *\n----\n\n[source,sql]\n----\nSELECT DISTINCT a, b, c\n----\n
  */
 Select select(ParseInfo info) #Select :
 {
@@ -2654,7 +2615,7 @@ ExpressionSymbol expressionSymbol() #ExpressionSymbol :
 /*
 name=select sublist
 description=An element in the select clause
-example={code:sql}tbl.*{code}\n{code:sql}tbl.col AS x{code}
+example=[source,sql]\n----\ntbl.*\n----\n\n[source,sql]\n----\ntbl.col AS x\n----\n
 */
 Expression selectSymbol(ParseInfo info) :
 {
@@ -2674,7 +2635,7 @@ Expression selectSymbol(ParseInfo info) :
 /*
 name=select derived column
 description=A select clause item that selects a single column. {note}This is slightly different than a derived column in that the AS keyword is optional.{note}
-example={code:sql}tbl.col AS x{code}
+example=[source,sql]\n----\ntbl.col AS x\n----\n
 */
 Expression selectExpression(ParseInfo info) :
 {
@@ -2698,7 +2659,7 @@ Expression selectExpression(ParseInfo info) :
 /*
 name=derived column
 description=An optionally named expression.
-example={code:sql}tbl.col AS x{code}
+example=[source,sql]\n----\ntbl.col AS x\n----\n
 */
 DerivedColumn derivedColumn(ParseInfo info) #DerivedColumn :
 {
@@ -2721,7 +2682,7 @@ DerivedColumn derivedColumn(ParseInfo info) #DerivedColumn :
 /*
 name=all in group 
 description=A select sublist that can select all columns from the given group.
-example={code:sql}tbl.*{code}
+example=[source,sql]\n----\ntbl.*\n----\n
 */
 MultipleElementSymbol allInGroupSymbol() #MultipleElementSymbol :
 {
@@ -2738,9 +2699,9 @@ MultipleElementSymbol allInGroupSymbol() #MultipleElementSymbol :
 }
 
 /*
-name=ordered aggreate function
+name=ordered aggregate function
 description=An aggregate function that can optionally be ordered.
-example={code:sql}XMLAGG(col1) ORDER BY col2{code}\n{code:sql}ARRAY_AGG(col1){code}
+example=[source,sql]\n----\nXMLAGG(col1) ORDER BY col2\n----\n\n[source,sql]\n----\nARRAY_AGG(col1)\n----\n
 */
 AggregateSymbol orderedAgg(ParseInfo info) :
 {
@@ -2765,7 +2726,7 @@ AggregateSymbol orderedAgg(ParseInfo info) :
 /*
 name=text aggreate function
 description=An aggregate function for creating separated value clobs.
-example={code:sql}TEXTAGG (col1 as t1, col2 as t2 DELIMITER ',' HEADER){code}
+example=[source,sql]\n----\nTEXTAGG (col1 as t1, col2 as t2 DELIMITER ',' HEADER)\n----\n
 */
 AggregateSymbol textAgg(ParseInfo info) :
 {
@@ -2825,7 +2786,7 @@ AggregateSymbol textAgg(ParseInfo info) :
 /*
 name=standard aggregate function
 description=A standard aggregate function.
-example={code:sql}COUNT(*){code}
+example=[source,sql]\n----\nCOUNT(*)\n----\n
 */
 AggregateSymbol aggregateSymbol(ParseInfo info) :
 {
@@ -2868,7 +2829,7 @@ AggregateSymbol aggregateSymbol(ParseInfo info) :
 /*
 name=analytic aggregate function
 description=An analytic aggregate function.
-example={code:sql}ROW_NUMBER(){code}
+example=[source,sql]\n----\nROW_NUMBER()\n----\n
 */
 AggregateSymbol analyticAggregateSymbol(ParseInfo info) :
 {
@@ -2885,7 +2846,7 @@ AggregateSymbol analyticAggregateSymbol(ParseInfo info) :
 /*
 name=filter clause
 description=An aggregate filter clause applied prior to accumulating the value.
-example={code:sql}FILTER (WHERE col1='a'){code}
+example=[source,sql]\n----\nFILTER (WHERE col1='a')\n----\n
 */
 Expression filterClause(ParseInfo info) :
 {
@@ -2901,7 +2862,7 @@ Expression filterClause(ParseInfo info) :
 /*
 name=from clause
 description=A query from clause containing a list of table references.
-example={code:sql}FROM a, b{code}\n{code:sql}FROM a right outer join b, c, d join e".</p>{code}
+example=[source,sql]\n----\nFROM a, b\n----\n\n[source,sql]\n----\nFROM a right outer join b, c, d join e".</p>\n----\n
 */
 From from(ParseInfo info) #From :
 {
@@ -2933,7 +2894,7 @@ From from(ParseInfo info) #From :
 /*
 name=table reference
 description=An optionally escaped joined table.
-example={code:sql}a{code}\n{code:sql}a inner join b{code}
+example=[source,sql]\n----\na\n----\n\n[source,sql]\n----\na inner join b\n----\n
 */
 FromClause tableReference(ParseInfo info) :
 {
@@ -2957,7 +2918,7 @@ FromClause tableReference(ParseInfo info) :
 /*
 name=joined table
 description=A table or join.
-example={code:sql}a{code}\n{code:sql}a inner join b{code}
+example=[source,sql]\n----\na\n----\n\n[source,sql]\n----\na inner join b\n----\n
 */
 FromClause joinedTable(ParseInfo info) :
 {
@@ -2983,7 +2944,7 @@ FromClause joinedTable(ParseInfo info) :
 /*
 name=cross join
 description=A cross join.
-example={code:sql}a CROSS JOIN b{code}
+example=[source,sql]\n----\na CROSS JOIN b\n----\n
 */
 JoinPredicate crossJoin(ParseInfo info) :
 {
@@ -3003,7 +2964,7 @@ JoinPredicate crossJoin(ParseInfo info) :
 /*
 name=qualified table
 description=An INNER or OUTER join.
-example={code:sql}a inner join b{code}
+example=[source,sql]\n----\na inner join b\n----\n
 */
 JoinPredicate qualifiedJoin(ParseInfo info) :
 {
@@ -3049,7 +3010,7 @@ JoinType joinType(IJoinType.Types kind) #JoinType :
 /*
 name=table primary
 description=A single source of rows.
-example={code:sql}a{code}
+example=[source,sql]\n----\na\n----\n
 */
 FromClause tablePrimary(ParseInfo info) :
 {
@@ -3083,7 +3044,6 @@ FromClause tablePrimary(ParseInfo info) :
 	[
 	   (<MAKEIND> makedep = makedepOptions()
 	       {
-	           requiresVersionAtLeast(Version.TEIID_8_12_4);
 	           clause.setMakeInd(makedep);
 	       }
 	   )
@@ -3098,7 +3058,7 @@ Option.MakeDep makedepOptions() :{  Integer max = null;  Boolean join = null;
 /*
 name=xml serialize
 description=Serializes an XML value.
-example={code:sql}XMLSERIALIZE(col1 AS CLOB){code}
+example=[source,sql]\n----\nXMLSERIALIZE(col1 AS CLOB)\n----\n
 */
 XMLSerialize xmlSerialize(ParseInfo info) #XMLSerialize :
 {
@@ -3138,7 +3098,7 @@ XMLSerialize xmlSerialize(ParseInfo info) #XMLSerialize :
 /*
 name=array table
 description=The ARRAYTABLE table function creates tabular results from arrays.  It can be used as a nested table reference.
-example={code:sql}ARRAYTABLE (col1 COLUMNS x STRING) AS y{code}
+example=[source,sql]\n----\nARRAYTABLE (col1 COLUMNS x STRING) AS y\n----\n
 */
 ArrayTable arrayTable(ParseInfo info) # ArrayTable :
 {
@@ -3163,7 +3123,7 @@ ArrayTable arrayTable(ParseInfo info) # ArrayTable :
 /*
 name=text table
 description=The TEXTTABLE table function creates tabular results from text.  It can be used as a nested table reference.
-example={code:sql}TEXTTABLE (file COLUMNS x STRING) AS y{code}
+example=[source,sql]\n----\nTEXTTABLE (file COLUMNS x STRING) AS y\n----\n
 */
 TextTable textTable(ParseInfo info) #TextTable :
 {
@@ -3211,9 +3171,6 @@ TextTable textTable(ParseInfo info) #TextTable :
             (
                 <ROW> <DELIMITER>
                 rowDelimiter = charVal(info, " ROW DELMITER")
-                {
-                    requiresVersionAtLeast(Version.TEIID_8_10);
-                }
             )
         )
 	]
@@ -3245,7 +3202,6 @@ TextTable textTable(ParseInfo info) #TextTable :
 	   LOOKAHEAD(2)
         <NO> <TRIM>
         {
-            requiresVersionAtLeast(Version.TEIID_8_10);
             noTrim = true;      
         }
     ]
@@ -3273,7 +3229,7 @@ TextTable textTable(ParseInfo info) #TextTable :
 /*
 name=text table column
 description=A text table column.
-example={code:sql}x INTEGER WIDTH 6{code}
+example=[source,sql]\n----\nx INTEGER WIDTH 6\n----\n
 */
 TextColumn textColumn(ParseInfo info) #TextColumn :
 {
@@ -3293,7 +3249,6 @@ TextColumn textColumn(ParseInfo info) #TextColumn :
 	  (
         <FOR> <ORDINALITY> 
         {
-          requiresVersionAtLeast(Version.TEIID_8_7);
           jjtThis.setOrdinal(true);
           return jjtThis; 
         }
@@ -3303,9 +3258,6 @@ TextColumn textColumn(ParseInfo info) #TextColumn :
         [
             <HEADER>
             header = stringVal()
-            {
-                requiresVersionAtLeast(Version.TEIID_8_11);
-            }
         ]
 	    datatype = parseDataType()
 	    [
@@ -3330,8 +3282,7 @@ TextColumn textColumn(ParseInfo info) #TextColumn :
 		  jjtThis.setSelector(selector);
 		  jjtThis.setPosition(position);
 
-		  if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_11))
-		      jjtThis.setHeader(header);
+		  jjtThis.setHeader(header);
 
           return jjtThis;
 	    }
@@ -3340,8 +3291,9 @@ TextColumn textColumn(ParseInfo info) #TextColumn :
 }
 
 /*
-name=xml exists
-description=XML Exists on xml query
+name=xml query
+description=Executes an XQuery to return an XML result.
+example=[source,sql]\n----\nXMLQUERY('<a>...</a>' PASSING doc)\n----\n
 */
 Expression xmlExists(ParseInfo info) #XMLExists :
 {
@@ -3354,9 +3306,6 @@ Expression xmlExists(ParseInfo info) #XMLExists :
 }
 {
     <XMLEXISTS> <LPAREN>
-    {
-        requiresVersionAtLeast(Version.TEIID_8_10);
-    }
     [
         xmlNamespaces = xmlNamespaces(info) <COMMA>
     ]
@@ -3392,7 +3341,7 @@ Expression xmlExists(ParseInfo info) #XMLExists :
 /*
 name=xml query
 description=Executes an XQuery to return an XML result.
-example={code:sql}XMLQUERY('<a>...</a>' PASSING doc){code}
+example=[source,sql]\n----\nXMLQUERY('<a>...</a>' PASSING doc)\n----\n
 */
 XMLQuery xmlQuery(ParseInfo info) #XMLQuery :
 {
@@ -3444,6 +3393,7 @@ XMLQuery xmlQuery(ParseInfo info) #XMLQuery :
 name=object table
 description=Returns table results by processing a script.
 example={code:sql}OBJECTTABLE('z' PASSING val AS z COLUMNS col OBJECT 'teiid_row') AS X{code}
+example=[source,sql]\n----\nOBJECTTABLE('z' PASSING val AS z COLUMNS col OBJECT 'teiid_row') AS X\n----\n
 */
 ObjectTable objectTable(ParseInfo info) #ObjectTable :
 {
@@ -3500,7 +3450,7 @@ ObjectTable objectTable(ParseInfo info) #ObjectTable :
 /*
 name=object table column
 description=object table column.
-example={code:sql}y integer 'teiid_row_number'{code}
+example=[source,sql]\n----\ny integer 'teiid_row_number'\n----\n
 */
 ObjectColumn objectColumn(ParseInfo info) #ObjectColumn :
 {
@@ -3588,7 +3538,7 @@ XMLTable xmlTable(ParseInfo info) #XMLTable :
 /*
 name=xml table column
 description=XML table column.
-example={code:sql}y FOR ORDINALITY{code}
+example=[source,sql]\n----\ny FOR ORDINALITY\n----\n
 */
 XMLColumn xmlColumn(ParseInfo info) #XMLColumn :
 {
@@ -3598,7 +3548,7 @@ XMLColumn xmlColumn(ParseInfo info) #XMLColumn :
 	Expression defaultExpr = null;
 }
 {
-	name = id(getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_11) ? Boolean.TRUE : null)
+	name = id(Boolean.TRUE)
 	{
 	   jjtThis.setName(name);
 	}
@@ -3629,7 +3579,7 @@ XMLColumn xmlColumn(ParseInfo info) #XMLColumn :
 /*
 name=unsigned integer
 description=An unsigned interger value.
-example={code:sql}12345{code}
+example=[source,sql]\n----\n12345\n----\n
 */
 int intVal() :
 {
@@ -3649,7 +3599,7 @@ int intVal() :
 /*
 name=table subquery
 description=A table defined by a subquery.
-example={code:sql}(SELECT * FROM tbl) AS x{code}
+example=[source,sql]\n----\n(SELECT * FROM tbl) AS x\n----\n
 */
 SubqueryFromClause subqueryFromClause(ParseInfo info) #SubqueryFromClause :
 {
@@ -3673,7 +3623,7 @@ SubqueryFromClause subqueryFromClause(ParseInfo info) #SubqueryFromClause :
 	    jjtThis.setName(aliasID);
 	    jjtThis.setCommand(command);
         setFromClauseOptions(lparen, jjtThis);
-        jjtThis.setTable(table);
+        jjtThis.setLateral(table);
         return jjtThis;
     }	
 }	
@@ -3681,7 +3631,7 @@ SubqueryFromClause subqueryFromClause(ParseInfo info) #SubqueryFromClause :
 /*
 name=table name
 description=A table named in the FROM clause.
-example={code:sql}tbl AS x{code}
+example=[source,sql]\n----\ntbl AS x\n----\n
 */
 UnaryFromClause unaryFromClause(ParseInfo info) #UnaryFromClause :
 {
@@ -3707,7 +3657,7 @@ UnaryFromClause unaryFromClause(ParseInfo info) #UnaryFromClause :
 /*
 name=where clause
 description=Specifies a search condition
-example={code:sql}WHERE x = 'a'{code}
+example=[source,sql]\n----\nWHERE x = 'a'\n----\n
 */
 Criteria where(ParseInfo info) :
 {
@@ -3807,7 +3757,7 @@ Criteria compoundCritAnd(ParseInfo info) #CompoundCriteria :
 /*
 name=boolean factor
 description=A boolean factor.
-example={code:sql}NOT x = 'a'{code}
+example=[source,sql]\n----\nNOT x = 'a'\n----\n
 */
 Criteria notCrit(ParseInfo info) #NotCriteria :
 {
@@ -3837,7 +3787,7 @@ Criteria notCrit(ParseInfo info) #NotCriteria :
 /*
 name=boolean primary
 description=A boolean predicate or simple expression.
-example={code:sql}col LIKE 'a%'{code}
+example=[source,sql]\n----\ncol LIKE 'a%'\n----\n
 */
 Expression booleanPrimary(ParseInfo info) :
 {
@@ -3852,7 +3802,7 @@ Expression booleanPrimary(ParseInfo info) :
 			LOOKAHEAD(2) ex=regexMatchCrit(info, ex) |
 			ex=setCrit(info, ex) |
 			ex=isNullCrit(info, ex) |
-			LOOKAHEAD(operator() (<ANY>|<SOME>|<ALL>) subquery(info)) ex=subqueryCompareCriteria(info, ex) |
+			LOOKAHEAD(operator() (<ANY>|<SOME>|<ALL>)) ex=subqueryCompareCriteria(info, ex) |
 			ex=compareCrit(info, ex)
 	     )]
 	    )
@@ -3860,9 +3810,6 @@ Expression booleanPrimary(ParseInfo info) :
 	    ex=existsCriteria(info)
         |
         ex=xmlExists(info)
-        {
-            requiresVersionAtLeast(Version.TEIID_8_10);
-        }
     )
 	{
 		return ex;
@@ -3872,7 +3819,7 @@ Expression booleanPrimary(ParseInfo info) :
 /*
 name=comparison operator
 description=A comparison operator.
-example={code:sql}={code}
+example=[source,sql]\n----\n=\n----\n
 */
 Token operator() :
 {
@@ -3895,7 +3842,7 @@ Token operator() :
 /*
 name=comparison predicate
 description=A value comparison.
-example={code:sql}= 'a'{code}
+example=[source,sql]\n----\n= 'a'\n----\n
 */
 CompareCriteria compareCrit(ParseInfo info, Expression expression) #CompareCriteria :
 {
@@ -3922,7 +3869,7 @@ CompareCriteria compareCrit(ParseInfo info, Expression expression) #CompareCrite
 /*
 name=subquery
 description=A subquery.
-example={code:sql}(SELECT * FROM tbl){code}
+example=[source,sql]\n----\n= ANY (SELECT col FROM tbl)\n----\n
 */
 QueryCommand subquery(ParseInfo info) :
 {
@@ -3971,6 +3918,7 @@ SubqueryCompareCriteria subqueryCompareCriteria(ParseInfo info, Expression expre
     Token operator = null;
     Token quantifier = null;
     SubqueryHint hint = null;
+    Expression expr = null;
 }
 {
 	operator=operator()
@@ -3979,11 +3927,10 @@ SubqueryCompareCriteria subqueryCompareCriteria(ParseInfo info, Expression expre
 	   quantifier=<SOME> |
 	   quantifier=<ALL>
 	)
-	{
-	   if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10))
-	       hint = getSubqueryHint(getToken(1));
-	}
-	subquery = subquery(info)
+	{ hint = getSubqueryHint(getToken(1)); }
+	( LOOKAHEAD(subquery(info)) subquery = subquery(info) | 
+      (<LPAREN> expr = expression(info) <RPAREN>)
+    )
 
 	{
 	    jjtThis.setLeftExpression(expression);
@@ -4008,7 +3955,7 @@ SubqueryCompareCriteria subqueryCompareCriteria(ParseInfo info, Expression expre
 /*
 name=match predicate
 description=Matches based upon a pattern.
-example={code:sql}LIKE 'a_'{code}
+example=[source,sql]\n----\nLIKE 'a_'\n----\n
 */
 MatchCriteria matchCrit(ParseInfo info, Expression expression) #MatchCriteria :
 {
@@ -4045,7 +3992,7 @@ MatchCriteria matchCrit(ParseInfo info, Expression expression) #MatchCriteria :
 /*
 name=like regex predicate
 description=A regular expression match.
-example={code:sql}LIKE_REGEX 'a.*b'{code}
+example=[source,sql]\n----\nLIKE_REGEX 'a.*b'\n----\n
 */
 MatchCriteria regexMatchCrit(ParseInfo info, Expression expression) :
 {
@@ -4069,7 +4016,7 @@ MatchCriteria regexMatchCrit(ParseInfo info, Expression expression) :
 /*
 name=character
 description=A single character.
-example={code:sql}'a'{code}
+example=[source,sql]\n----\n'a'\n----\n
 */
 Character charVal(ParseInfo info, String type) :
 {
@@ -4088,7 +4035,7 @@ Character charVal(ParseInfo info, String type) :
 /*
 name=between predicate
 description=A comparison between two values.
-example={code:sql}BETWEEN 1 AND 5{code}
+example=[source,sql]\n----\nBETWEEN 1 AND 5\n----\n
 */
 BetweenCriteria betweenCrit(ParseInfo info, Expression expression) #BetweenCriteria :
 {
@@ -4114,7 +4061,7 @@ BetweenCriteria betweenCrit(ParseInfo info, Expression expression) #BetweenCrite
 /*
 name=is null predicate
 description=A null test.
-example={code:sql}IS NOT NULL{code}
+example=[source,sql]\n----\nIS NOT NULL\n----\n
 */
 IsNullCriteria isNullCrit(ParseInfo info, Expression expression) #IsNullCriteria :
 {
@@ -4135,7 +4082,7 @@ IsNullCriteria isNullCrit(ParseInfo info, Expression expression) #IsNullCriteria
 /*
 name=in predicate
 description=A comparison with multiple values.
-example={code:sql}IN (1, 5){code}
+example=[source,sql]\n----\nIN (1, 5)\n----\n
 */
 AbstractSetCriteria setCrit(ParseInfo info, Expression expression) :
 {
@@ -4204,7 +4151,7 @@ SetCriteria setCriteria(Expression expression, List<Expression> values) #SetCrit
 /*
 name=exists predicate
 description=A test if rows exist.
-example={code:sql}EXISTS (SELECT col FROM tbl){code}
+example=[source,sql]\n----\nEXISTS (SELECT col FROM tbl)\n----\n
 */
 ExistsCriteria existsCriteria(ParseInfo info) #ExistsCriteria :
 {
@@ -4225,7 +4172,7 @@ ExistsCriteria existsCriteria(ParseInfo info) #ExistsCriteria :
 /*
 name=group by clause
 description=Defines the grouping columns
-example={code:sql}GROUP BY col1, col2{code}
+example=[source,sql]\n----\nGROUP BY col1, col2\n----\n
 */
 GroupBy groupBy(ParseInfo info) #GroupBy :
 {
@@ -4239,7 +4186,6 @@ GroupBy groupBy(ParseInfo info) #GroupBy :
       expressions = expressionList(info)
       <RPAREN>
       {
-        requiresVersionAtLeast(Version.TEIID_8_5);
         rollup = true;
       }
       |
@@ -4256,7 +4202,7 @@ GroupBy groupBy(ParseInfo info) #GroupBy :
 /*
 name=having clause
 description=Search condition applied after grouping.
-example={code:sql}HAVING max(col1) = 5{code}
+example=[source,sql]\n----\nHAVING max(col1) = 5\n----\n
 */
 Criteria having(ParseInfo info) :
 {
@@ -4273,7 +4219,7 @@ Criteria having(ParseInfo info) :
 /*
 name=order by clause
 description=Specifices row ordering.
-example={code:sql}ORDER BY x, y DESC{code}
+example=[source,sql]\n----\nORDER BY x, y DESC\n----\n
 */
 OrderBy orderby(ParseInfo info) #OrderBy :
 {
@@ -4299,7 +4245,7 @@ OrderBy orderby(ParseInfo info) #OrderBy :
 /*
 name=sort specification
 description=Defines how to sort on a particular expression
-example={code:sql}col1 NULLS FIRST{code}
+example=[source,sql]\n----\ncol1 NULLS FIRST\n----\n
 */
 OrderByItem sortSpecification(ParseInfo info) #OrderByItem :
 {
@@ -4324,7 +4270,7 @@ OrderByItem sortSpecification(ParseInfo info) #OrderByItem :
 /*
 name=sort key
 description=A sort expression.
-example={code:sql}col1{code}
+example=[source,sql]\n----\ncol1\n----\n
 */
 Expression sortKey(ParseInfo info) :
 {
@@ -4352,7 +4298,7 @@ Expression sortKey(ParseInfo info) :
 /*
 name=integer parameter
 description=A literal integer or parameter reference to an integer.
-example={code:sql}?{code}
+example=[source,sql]\n----\n?\n----\n
 */
 Expression intParam(ParseInfo info) :
 {
@@ -4373,7 +4319,7 @@ Expression intParam(ParseInfo info) :
 /*
 name=limit clause
 description=Limits and/or offsets the resultant rows.
-example={code:sql}LIMIT 2{code}
+example=[source,sql]\n----\nLIMIT 2\n----\n
 */
 Limit limit(ParseInfo info) #Limit :
 {
@@ -4407,7 +4353,7 @@ Limit limit(ParseInfo info) #Limit :
 /*
 name=fetch clause
 description=ANSI limit.
-example={code:sql}FETCH FIRST 1 ROWS ONLY{code}
+example=[source,sql]\n----\nFETCH FIRST 1 ROWS ONLY\n----\n
 */
 Expression fetchLimit(ParseInfo info) :
 {
@@ -4426,7 +4372,7 @@ Expression fetchLimit(ParseInfo info) :
 /*
 name=option clause
 description=Specifies query options.
-example={code:sql}OPTION MAKEDEP tbl{code}
+example=[source,sql]\n----\nOPTION MAKEDEP tbl\n----\n
 */
 Option option(ParseInfo info) #Option :
 {
@@ -4451,7 +4397,6 @@ Option option(ParseInfo info) #Option :
 		<MAKEIND>     
         id=id(null) makedep = makedepOptions()
         {
-            requiresVersionAtLeast(Version.TEIID_8_12_4);
             jjtThis.addIndependentGroup(id, makedep);
         }
         (<COMMA>
@@ -4494,7 +4439,7 @@ Option option(ParseInfo info) #Option :
 /*
 name=expression
 description=A value.
-example={code:sql}col1{code}
+example=[source,sql]\n----\ncol1\n----\n
 */
 Expression expression(ParseInfo info) :
 {
@@ -4513,21 +4458,22 @@ Expression expression(ParseInfo info) :
 /*
 name=common value expression
 description=Establishes the precedence of concat.
-example={code:sql}'a' || 'b'{code}
+example=[source,sql]\n----\n'a' || 'b'\n----\n
 */
 Expression commonValueExpression(ParseInfo info) :
 {
 	Expression leftExpression = null;
 	Expression rightExpression = null;
+	Token operator = null;
 }
 {
 	(	leftExpression=plusExpression(info)
 		(
-			<CONCAT_OP>
+			(operator=<DOUBLE_AMP_OP>|operator=<CONCAT_OP>)
 			rightExpression=plusExpression(info)
 			{
 			    Function function = createASTNode(ASTNodes.FUNCTION);
-			    function.setName("||"); //$NON-NLS-1$
+			    function.setName(operator.image);
 			    function.setArgs(new Expression[] {leftExpression, rightExpression});
 			    leftExpression = function;
 				rightExpression = null;
@@ -4542,7 +4488,7 @@ Expression commonValueExpression(ParseInfo info) :
 
 /*
 name=numeric value expression
-example={code:sql}1 + 2{code}
+example=[source,sql]\n----\n1 + 2\n----\n
 */
 Expression plusExpression(ParseInfo info) :
 {
@@ -4574,7 +4520,7 @@ Expression plusExpression(ParseInfo info) :
 /*
 name=plus or minus
 description=The + or - operator.
-example={code:sql}+{code}
+example=[source,sql]\n----\n+\n----\n
 */
 String plusMinus() :
 {
@@ -4589,7 +4535,7 @@ String plusMinus() :
 /*
 name=term
 description=A numeric term
-example={code:sql}1 * 2{code}
+example=[source,sql]\n----\n1 * 2\n----\n
 */
 Expression timesExpression(ParseInfo info) :
 {
@@ -4621,7 +4567,7 @@ Expression timesExpression(ParseInfo info) :
 /*
 name=star or slash
 description=The * or / operator.
-example={code:sql}/{code}
+example=[source,sql]\n----\n/\n----\n
 */
 String timesOperator() :
 {
@@ -4640,7 +4586,7 @@ String timesOperator() :
 /*
 name=value expression primary
 description=A simple value expression.
-example={code:sql}+col1{code}
+example=[source,sql]\n----\n+col1\n----\n
 */
 Expression valueExpressionPrimary(ParseInfo info) :
 {
@@ -4690,7 +4636,7 @@ Expression valueExpressionPrimary(ParseInfo info) :
 /*
 name=parameter reference
 description=A parameter reference to be bound later.
-example={code:sql}?{code}
+example=[source,sql]\n----\n?\n----\n
 */
 Reference parameterReference(ParseInfo info) :
 {
@@ -4729,9 +4675,6 @@ Expression unescapedFunction(ParseInfo info) :
     |
     (           
         <XMLCAST>
-        {
-            requiresVersionAtLeast(Version.TEIID_8_10);
-        }
         <LPAREN>
         expression = expression(info)
         <AS>
@@ -4749,7 +4692,7 @@ Expression unescapedFunction(ParseInfo info) :
 /*
 name=nested expression
 description=An expression nested in parens
-example={code:sql}(1){code}
+example=[source,sql]\n----\n(1)\n----\n
 */
 Expression nestedExpression(ParseInfo info) :
 {
@@ -4761,7 +4704,7 @@ Expression nestedExpression(ParseInfo info) :
     ( <LPAREN> 
         [expression = expression(info)
         (LOOKAHEAD(2) <COMMA>arrayExpression = expression(info) {
-          requiresVersionAtLeast(Version.TEIID_8_5);
+
           if (expression != null) {
              arrayExpressions = arrayExpressions(arrayExpressions, expression);
              expression = null;
@@ -4769,7 +4712,6 @@ Expression nestedExpression(ParseInfo info) :
           arrayExpressions = arrayExpressions(arrayExpressions, arrayExpression);})*]
         [<COMMA>
           {
-            requiresVersionAtLeast(Version.TEIID_8_5);
             arrayExpressions = arrayExpressions(arrayExpressions, expression);
           } ]
       <RPAREN>
@@ -4791,7 +4733,7 @@ Expression nestedExpression(ParseInfo info) :
 /*
 name=unsigned value expression primary
 description=An unsigned simple value expression.
-example={code:sql}col1{code}
+example=[source,sql]\n----\ncol1\n----\n
 */
 Expression unsignedValueExpressionPrimary(ParseInfo info) :
 {
@@ -4825,14 +4767,12 @@ Expression unsignedValueExpressionPrimary(ParseInfo info) :
         LOOKAHEAD(subquery(info))
         (
             {
-                if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10))
-                    hint = getSubqueryHint(getToken(1));
+                hint = getSubqueryHint(getToken(1));
             }
             subquery = subquery(info)
             {
                 ScalarSubquery ss = scalarSubquery(subquery);
-                if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10))
-                    ss.setSubqueryHint(hint);
+                ss.setSubqueryHint(hint);
 
                 expression = ss;
             }
@@ -4866,7 +4806,7 @@ Reference reference(int referenceIndex) #Reference :
 /*
 name=window specification
 description=The window specification for an analytical or windowed aggregate function.
-example={code:sql}OVER (PARTION BY col1){code}
+example=[source,sql]\n----\nOVER (PARTION BY col1)\n----\n
 */
 Expression windowSpecification(Expression agg, ParseInfo info) :
 {
@@ -4906,7 +4846,7 @@ Expression windowSpecification(Expression agg, ParseInfo info) :
 /*
 name=case expression
 description=If/then/else chain using a common search predicand.
-example={code:sql}CASE col1 WHEN 'a' THEN 1 ELSE 2{code}
+example=[source,sql]\n----\nCASE col1 WHEN 'a' THEN 1 ELSE 2\n----\n
 */
 CaseExpression caseExpression(ParseInfo info) #CaseExpression :
 {
@@ -4940,7 +4880,7 @@ CaseExpression caseExpression(ParseInfo info) #CaseExpression :
 /*
 name=searched case expression
 description=If/then/else chain using multiple search conditions.
-example={code:sql}CASE WHEN x = 'a' THEN 1 WHEN y = 'b' THEN 2{code}
+example=[source,sql]\n----\nCASE WHEN x = 'a' THEN 1 WHEN y = 'b' THEN 2\n----\n
 */
 SearchedCaseExpression searchedCaseExpression(ParseInfo info) #SearchedCaseExpression :
 {
@@ -4974,7 +4914,7 @@ SearchedCaseExpression searchedCaseExpression(ParseInfo info) #SearchedCaseExpre
 /*
 name=function
 description=Calls a scalar function.
-example={code:sql}func('1', col1){code}
+example=[source,sql]\n----\nfunc('1', col1)\n----\n
 */
 Expression function(ParseInfo info) #Function :
 {
@@ -5119,7 +5059,6 @@ Expression function(ParseInfo info) #Function :
 		}
 		[<COMMA> expression = expression(info)
 		 {
-		   requiresVersionAtLeast(Version.TEIID_8_6);
 		   args.add(expression);
 		 }
 		]
@@ -5235,7 +5174,7 @@ Expression function(ParseInfo info) #Function :
 /*
 name=xml parse
 description=Parses the given value as XML.
-example={code:sql}XMLPARSE(DOCUMENT doc WELLFORMED){code}
+example=[source,sql]\n----\nXMLPARSE(DOCUMENT doc WELLFORMED)\n----\n
 */
 XMLParse xmlParse(ParseInfo info) #XMLParse :
 {
@@ -5264,7 +5203,7 @@ XMLParse xmlParse(ParseInfo info) #XMLParse :
 /*
 name=querystring function
 description=Produces a URL query string from the given arguments.
-example={code:sql}QUERYSTRING('path', col1 AS opt, col2 AS val){code}
+example=[source,sql]\n----\nQUERYSTRING('path', col1 AS opt, col2 AS val)\n----\n
 */
 QueryString queryString(ParseInfo info) #QueryString :
 {
@@ -5292,7 +5231,7 @@ QueryString queryString(ParseInfo info) #QueryString :
 /*
 name=xml element
 description=Creates an XML element.
-example={code:sql}XMLELEMENT(NAME "root", child){code}
+example=[source,sql]\n----\nXMLELEMENT(NAME "root", child)\n----\n
 */
 XMLElement xmlElement(ParseInfo info) #XMLElement :
 {
@@ -5331,7 +5270,7 @@ XMLElement xmlElement(ParseInfo info) #XMLElement :
 /*
 name=xml attributes
 description=Creates attributes for the containing element.
-example={code:sql}XMLATTRIBUTES(col1 AS attr1, col2 AS attr2){code}
+example=[source,sql]\n----\nXMLATTRIBUTES(col1 AS attr1, col2 AS attr2)\n----\n
 */
 XMLAttributes xmlAttributes(ParseInfo info) #XMLAttributes :
 {
@@ -5359,7 +5298,7 @@ XMLAttributes xmlAttributes(ParseInfo info) #XMLAttributes :
 /*
 name=json object
 description=Produces a JSON object containing name value pairs.
-example={code:sql}JSONOBJECT(col1 AS val1, col2 AS val2){code}
+example=[source,sql]\n----\nJSONOBJECT(col1 AS val1, col2 AS val2)\n----\n
 */
 JSONObject jsonObject(ParseInfo info) #JSONObject :
 {
@@ -5378,7 +5317,7 @@ JSONObject jsonObject(ParseInfo info) #JSONObject :
 /*
 name=derived column list
 description=a list of name value pairs
-example={code:sql}col1 AS val1, col2 AS val2{code}
+example=[source,sql]\n----\ncol1 AS val1, col2 AS val2\n----\n
 */
 ArrayList<DerivedColumn> derivedColumnList(ParseInfo info) :
 {
@@ -5403,7 +5342,7 @@ ArrayList<DerivedColumn> derivedColumnList(ParseInfo info) :
 /*
 name=xml forest
 description=Produces an element for each derived column.
-example={code:sql}XMLFOREST(col1 AS ELEM1, col2 AS ELEM2){code}
+example=[source,sql]\n----\nXMLFOREST(col1 AS ELEM1, col2 AS ELEM2)\n----\n
 */
 XMLForest xmlForest(ParseInfo info) #XMLForest :
 {
@@ -5428,7 +5367,7 @@ XMLForest xmlForest(ParseInfo info) #XMLForest :
 /*
 name=xml namespaces
 description=Defines XML namespace URI/prefix combinations
-example={code:sql}XMLNAMESPACES('http://foo' AS foo){code}
+example=[source,sql]\n----\nXMLNAMESPACES('http://foo' AS foo)\n----\n
 */
 XMLNamespaces xmlNamespaces(ParseInfo info) #XMLNamespaces :
 {
@@ -5456,7 +5395,7 @@ XMLNamespaces xmlNamespaces(ParseInfo info) #XMLNamespaces :
 /*
 name=xml namespace element
 description=An xml namespace
-example={code:sql}NO DEFAULT{code}
+example=[source,sql]\n----\nNO DEFAULT\n----\n
 */
 NamespaceItem namespaceItem() :
 {
@@ -5485,7 +5424,7 @@ NamespaceItem namespaceItem() :
 /*
 name=simple data type
 description=A non-collection data type.
-example={code:sql}STRING{code}
+example=[source,sql]\n----\nSTRING\n----\n
 */
 ParsedDataType parseDataTypePrimary() :
 {
@@ -5520,7 +5459,7 @@ ParsedDataType parseDataTypePrimary() :
 		(typeToken = <BLOB> ([<LPAREN>length=intVal()<RPAREN>]) {precision = false;} )|
 		(typeToken = <CLOB> ([<LPAREN>length=intVal()<RPAREN>]) {precision = false;} )|
 		(typeToken = <VARBINARY> ([<LPAREN>length=intVal()<RPAREN>]) {precision = false;} ) |
-		typeToken = <GEOMETRY> { requiresVersionAtLeast(Version.TEIID_8_10); } |
+		typeToken = <GEOMETRY> |
 		typeToken = <XML>
 		
 	)
@@ -5539,7 +5478,7 @@ ParsedDataType parseDataTypePrimary() :
 /*
 name=data type
 description=A data type.
-example={code:sql}STRING[]{code}
+example=[source,sql]\n----\nSTRING[]\n----\n
 */
 ParsedDataType parseDataType() :
 {
@@ -5548,7 +5487,7 @@ ParsedDataType parseDataType() :
 }
 {
     type = parseDataTypePrimary()
-    (<LSBRACE><RSBRACE> {requiresVersionAtLeast(Version.TEIID_8_5); arraySuffixes++;})*
+    (<LSBRACE><RSBRACE> {arraySuffixes++;})*
     {
         if (arraySuffixes > 0) {
            type.setType(type.getType() + StringUtil.join(Collections.nCopies(arraySuffixes, "[]"), ""));
@@ -5560,7 +5499,7 @@ ParsedDataType parseDataType() :
 /*
 name=time interval
 description=A time interval keyword.
-example={code:sql}SQL_TSI_HOUR{code}
+example=[source,sql]\n----\nSQL_TSI_HOUR\n----\n
 */
 Constant intervalType() : 
 {
@@ -5586,7 +5525,7 @@ Constant intervalType() :
 /*
 name=non numeric literal
 description=An escaped or simple non numeric literal.
-example={code:sql}'a'{code}
+example=[source,sql]\n----\n'a'\n----\n
 */
 Constant nonNumericLiteral() :
 {
@@ -5629,19 +5568,16 @@ Constant nonNumericLiteral() :
           (
             <DATE>
             {
-                requiresVersionAtLeast(Version.TEIID_8_12_4);
                 escapeType = DataTypeManagerService.DefaultDataTypes.DATE;
             }
            |
            <TIME>
            {
-                requiresVersionAtLeast(Version.TEIID_8_12_4);
                 escapeType = DataTypeManagerService.DefaultDataTypes.TIME;
             }
            |
            <TIMESTAMP>
            {
-                requiresVersionAtLeast(Version.TEIID_8_12_4);
                 escapeType = DataTypeManagerService.DefaultDataTypes.TIMESTAMP;
            }
           )
@@ -5662,7 +5598,7 @@ Constant nonNumericLiteral() :
 /*
 name=unsigned numeric literal
 description=An unsigned numeric literal value.
-example={code:sql}1.234{code}
+example=[source,sql]\n----\n1.234\n----\n
 */
 Constant unsignedNumericLiteral(String strVal) :
 {
@@ -5725,7 +5661,7 @@ unused=true
 /*
 name=ddl statement
 description=A data definition statement.
-example={code:sql}CREATE FOREIGN TABLE X (Y STRING){code}
+example=[source,sql]\n----\nCREATE FOREIGN TABLE X (Y STRING)\n----\n
 index=true
 */
 void ddlStmt(MetadataFactory factory) :
@@ -5748,7 +5684,7 @@ void ddlStmt(MetadataFactory factory) :
 /*
 name=option namespace
 description=A namespace used to shorten the full name of an option key.
-example={code:sql}SET NAMESPACE 'http://foo' AS foo{code}
+example=[source,sql]\n----\nSET NAMESPACE 'http://foo' AS foo\n----\n
 */
 void createNameSpace(MetadataFactory factory) :
 {
@@ -5765,7 +5701,7 @@ void createNameSpace(MetadataFactory factory) :
 /*
 name=create procedure
 description=Defines a procedure or function invocation.
-example={code:sql}CREATE FOREIGN PROCEDURE proc (param STRING) RETURNS STRING{code}
+example=[source,sql]\n----\nCREATE FOREIGN PROCEDURE proc (param STRING) RETURNS STRING\n----\n
 */
 CreateProcedureCommand createDDLProcedure(MetadataFactory factory, ParseInfo info) :
 {
@@ -5795,8 +5731,6 @@ CreateProcedureCommand createDDLProcedure(MetadataFactory factory, ParseInfo inf
 		[<RETURNS>
 		  [
 		      optionsClause(c, factory)
-		      {		          requiresVersionAtLeast(Version.TEIID_8_12_4);
-		      }
 		  ]
 		  (([<TABLE>] <LPAREN>
 	        procedureRsColumn(factory, proc)
@@ -5817,8 +5751,7 @@ CreateProcedureCommand createDDLProcedure(MetadataFactory factory, ParseInfo inf
 			proc.setFunction(function);
 			if (stmt != null) {
 			    boolean test = !virtual;
-			    if (getVersion().isLessThan(Version.TEIID_8_11))
-			        test = function || test;
+			    test = function || test;
 
 			    if (test) {
 			        throw new ParseException(Messages.getString(Messages.TeiidParser.function_def, procName));
@@ -5842,7 +5775,7 @@ CreateProcedureCommand createDDLProcedure(MetadataFactory factory, ParseInfo inf
 /*
 name=procedure parameter
 description=A procedure or function parameter
-example={code:sql}OUT x INTEGER{code}
+example=[source,sql]\n----\nOUT x INTEGER\n----\n
 */
 void procedureParameter(MetadataFactory factory, Procedure proc) :
 {
@@ -5850,7 +5783,7 @@ void procedureParameter(MetadataFactory factory, Procedure proc) :
 	ParsedDataType type = null;
 	ProcedureParameter.Type ppType = ProcedureParameter.Type.In;
 	ProcedureParameter param = null;
-	String defaultValue = null;
+	Expression defaultValue = null;
 	boolean notNull = false;
 	boolean vararg = false;
 }
@@ -5880,7 +5813,7 @@ void procedureParameter(MetadataFactory factory, Procedure proc) :
 			param.setVarArg(vararg);
 		}			
 	}
-	[<DEFAULT_KEYWORD> defaultValue = stringVal() {param.setDefaultValue(defaultValue);}]
+	[<DEFAULT_KEYWORD> defaultValue = expression(ParseInfo.DEFAULT_INSTANCE) {setDefault(param, defaultValue);}]
 	[optionsClause(param, factory)
 	   {
 	      setColumnOptions(param);
@@ -5891,7 +5824,7 @@ void procedureParameter(MetadataFactory factory, Procedure proc) :
 /*
 name=procedure result column
 description=A procedure result column.
-example={code:sql}x INTEGER{code}
+example=[source,sql]\n----\nx INTEGER\n----\n
 */
 void procedureRsColumn(MetadataFactory factory, Procedure proc) :
 {
@@ -5917,7 +5850,7 @@ void procedureRsColumn(MetadataFactory factory, Procedure proc) :
 /*
 name=create table
 description=Defines a table or view.
-example={code:sql}CREATE VIEW vw AS SELECT 1{code}
+example=[source,sql]\n----\nCREATE VIEW vw AS SELECT 1\n----\n
 */
 void createTable(MetadataFactory factory) :
 {
@@ -5932,7 +5865,7 @@ void createTable(MetadataFactory factory) :
 	<CREATE> (
         (<FOREIGN> <TABLE>) | 
         ([<VIRTUAL>] <VIEW> {view = true;}) |
-        (<GLOBAL> <TEMPORARY> <TABLE> { requiresVersionAtLeast(Version.TEIID_8_5); globalTemp = true; view = true;})
+        (<GLOBAL> <TEMPORARY> <TABLE> {globalTemp = true; view = true;})
     )
 
 	tableName = id(null)
@@ -5961,7 +5894,7 @@ void createTable(MetadataFactory factory) :
 /*
 name=create foreign temp table
 description=Defines a foreign temp table
-example={code:sql}CREATE FOREIGN TEMPORARY TABLE t (x string) ON z{code}
+example=[source,sql]\n----\nCREATE FOREIGN TEMPORARY TABLE t (x string) ON z\n----\n
 */
 Create createForeignTempTable(ParseInfo info) :
 {
@@ -5993,7 +5926,7 @@ Create createForeignTempTable(ParseInfo info) :
 /*
 name=create table body
 description=Defines a table.
-example={code:sql}(x string) OPTIONS (CARDINALITY 100){code}
+example=[source,sql]\n----\n(x string) OPTIONS (CARDINALITY 100)\n----\n
 */
 void createTableBody(Table table, MetadataFactory factory) :
 {
@@ -6031,7 +5964,7 @@ void createTableBody(Table table, MetadataFactory factory) :
 /*
 name=foreign key
 description=Defines the foreign key referential constraint.
-example={code:sql}FOREIGN KEY (a, b) REFERENCES tbl (x, y){code}
+example=[source,sql]\n----\nFOREIGN KEY (a, b) REFERENCES tbl (x, y)\n----\n
 */
 AbstractMetadataRecord foreignKey(MetadataFactory factory, Table table, String name) :
 {
@@ -6057,7 +5990,7 @@ AbstractMetadataRecord foreignKey(MetadataFactory factory, Table table, String n
 /*
 name=primary key
 description=Defines the primary key.
-example={code:sql}PRIMARY KEY (a, b){code}
+example=[source,sql]\n----\nPRIMARY KEY (a, b)\n----\n
 */
 AbstractMetadataRecord primaryKey(MetadataFactory factory, Table table, String name) :
 {
@@ -6079,7 +6012,7 @@ AbstractMetadataRecord primaryKey(MetadataFactory factory, Table table, String n
 /*
 name=other constraints
 description=Defines ACCESSPATTERN and UNIQUE constraints and INDEXes. 
-example={code:sql}UNIQUE (a){code}
+example=[source,sql]\n----\nUNIQUE (a)\n----\n
 */
 AbstractMetadataRecord constraint(MetadataFactory factory, Table table, String name, ParseInfo info) :
 {
@@ -6113,7 +6046,7 @@ AbstractMetadataRecord constraint(MetadataFactory factory, Table table, String n
 /*
 name=column list
 description=A list of column names.
-example={code:sql}(a, b){code}
+example=[source,sql]\n----\n(a, b)\n----\n
 */
 List columnList(boolean validate, boolean asElementSymbols) :
 {
@@ -6148,7 +6081,7 @@ List columnList(boolean validate, boolean asElementSymbols) :
 /*
 name=table element
 description=Defines a table column.
-example={code:sql}x INTEGER NOT NULL{code}
+example=[source,sql]\n----\nx INTEGER NOT NULL\n----\n
 */
 void createColumn(MetadataFactory factory, Table table) :
 {
@@ -6156,7 +6089,7 @@ void createColumn(MetadataFactory factory, Table table) :
 	ParsedDataType type = null;
 	boolean autoIncrement = false;
 	boolean notNull = false;
-	String defalt = null;
+	Expression defaultValue = null;
 	Column column = null;
 	List<String> columnName = new ArrayList<String>();
 	boolean index = false;
@@ -6169,7 +6102,6 @@ void createColumn(MetadataFactory factory, Table table) :
 	 (
        <SERIAL>
        {
-         requiresVersionAtLeast(Version.TEIID_8_5);
          type = new ParsedDataType("INTEGER");
          autoIncrement = true;
          notNull = true;
@@ -6189,7 +6121,7 @@ void createColumn(MetadataFactory factory, Table table) :
 	 )
 
 	 ((<PRIMARY> <KEY> { pk = true; }) | ([<UNIQUE> { unique = true;  }] [<INDEX> { index = true; }]))
-	 [<DEFAULT_KEYWORD> defalt = stringVal() {column.setDefaultValue(defalt);}]
+	 [<DEFAULT_KEYWORD> defaultValue = expression(ParseInfo.DEFAULT_INSTANCE) {setDefault(column, defaultValue);}]
 	 [optionsClause(column, factory)
 	   {
 	      setColumnOptions(column);
@@ -6217,7 +6149,7 @@ void createColumn(MetadataFactory factory, Table table) :
 /*
 name=options clause
 description=A list of statement options.
-example={code:sql}OPTIONS ('x' 'y', 'a' 'b'){code}
+example=[source,sql]\n----\nOPTIONS ('x' 'y', 'a' 'b')\n----\n
 */
 void optionsClause(AbstractMetadataRecord record, MetadataFactory factory) :
 {
@@ -6231,7 +6163,7 @@ void optionsClause(AbstractMetadataRecord record, MetadataFactory factory) :
 /*
 name=option pair
 description=An option key/value pair.
-example={code:sql}'key' 'value'{code}
+example=[source,sql]\n----\n'key' 'value'\n----\n
 */
 void optionPair(AbstractMetadataRecord record, MetadataFactory factory) :
 {
@@ -6257,7 +6189,7 @@ void optionPair(AbstractMetadataRecord record, MetadataFactory factory) :
 /*
 name=alter options
 description=alters options of tables/procedure
-example={code:sql}ALTER FOREIGN TABLE foo OPTIONS (ADD cardinality 100){code}
+example=[source,sql]\n----\nALTER FOREIGN TABLE foo OPTIONS (ADD cardinality 100)\n----\n
 */
 void alterStatement(MetadataFactory factory) :
 {
@@ -6292,7 +6224,7 @@ void alterStatement(MetadataFactory factory) :
 /*
 name=alter options list
 description=a list of alterations to options
-example={code:sql}OPTIONS (ADD updatable true){code}
+example=[source,sql]\n----\nOPTIONS (ADD updatable true)\n----\n
 */
 void alterOptionsList(AbstractMetadataRecord record, MetadataFactory factory) :
 {
@@ -6313,7 +6245,7 @@ void alterOptionsList(AbstractMetadataRecord record, MetadataFactory factory) :
 /*
 name=drop option
 description=drop option
-example={code:sql}DROP updatable{code}
+example=[source,sql]\n----\nDROP updatable\n----\n
 */
 void dropOption(AbstractMetadataRecord record) :
 {
@@ -6329,7 +6261,7 @@ void dropOption(AbstractMetadataRecord record) :
 /*
 name=add set option
 description=add or set an option pair
-example={code:sql}ADD updatable true{code}
+example=[source,sql]\n----\nADD updatable true\n----\n
 */
 void addSetOption(AbstractMetadataRecord record, MetadataFactory factory) :
 {
@@ -6341,7 +6273,7 @@ void addSetOption(AbstractMetadataRecord record, MetadataFactory factory) :
 /*
 name=alter column options
 description=alters a set of column options
-example={code:sql}ALTER COLUMN bar OPTIONS (ADD updatable true){code}
+example=[source,sql]\n----\nALTER COLUMN bar OPTIONS (ADD updatable true)\n----\n
 */
 void alterColumn(AbstractMetadataRecord parent, MetadataFactory factory) :
 {

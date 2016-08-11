@@ -33,7 +33,6 @@ import java.util.TreeSet;
 import org.teiid.core.CoreConstants;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.Transform;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol.Type;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -47,6 +46,7 @@ import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
+import org.teiid.translator.SourceSystemFunctions;
 
 
 
@@ -248,16 +248,9 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
                     //pushdown function takes presedence 
                     //TODO: there may be multiple translators contributing functions with the same name / types
                     //need "conformed" logic so that the right pushdown can occur
-                    if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_7)) {
-                        // Teiid 8.7 +
-                        if (CoreConstants.SYSTEM_MODEL.equals(descriptor.getSchema()))
-                            return Arrays.asList(descriptor);
-                    } else {
-                        // Teiid 8.6 and below
-                        if (descriptor.getMethod().getParent() == null || CoreConstants.SYSTEM_MODEL.equals(descriptor.getMethod().getParent().getName())) {
-                            return Arrays.asList(descriptor);
-                        }
-                    }
+                    if (CoreConstants.SYSTEM_MODEL.equals(descriptor.getSchema()))
+                        return Arrays.asList(descriptor);
+
                     result.add(descriptor);
                 }
             }
@@ -269,7 +262,6 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
         return Collections.emptyList();
     }
 
-    @Since(Version.TEIID_8_9)
     public static class ConversionResult {
         public ConversionResult(FunctionMethod method) {
             this.method = method;
@@ -532,19 +524,6 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
              throw new Exception();
         }
 
-        /*
-         * A rather odd test which is necessary to maintain compatibility with 7.7.x
-         *
-         * The original code line is 7.7.x is:
-         * if(!DataTypeManagerService.isImplicitConversion(sourceTypeName, targetTypeName))
-         * and this version does the same thing. This may have been a fix to address a bug
-         * but if someone uses teiid 7, they will encounter this exception so the designer
-         * client resolver must mirror the same exception.
-         */
-        if(teiidVersion.isLessThan(Version.TEIID_8_0) && result.isExplicit()) {
-            throw new Exception();
-        }
-
         return result;
 	}
 
@@ -604,12 +583,18 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
      */
     public List<FunctionMethod> getBuiltInAggregateFunctions(boolean includeAnalytic) {
         ArrayList<FunctionMethod> result = new ArrayList<FunctionMethod>();
+    	if (this.systemFunctions != null) {
+	    	FunctionDescriptor stExtent = this.systemFunctions.getFunction(SourceSystemFunctions.ST_EXTENT, 
+	    			new Class[] {DataTypeManagerService.DefaultDataTypes.GEOMETRY.getTypeClass()});
+	    	result.add(stExtent.getMethod());
+    	}
         for (Type type : IAggregateSymbol.Type.values()) {
             AggregateAttributes aa = new AggregateAttributes();
             String returnType = null;
             String[] argTypes = null;
             aa.setAllowsDistinct(true);
             switch (type) {
+            case TEXTAGG:
             case USER_DEFINED:
                 continue;
             case DENSE_RANK:

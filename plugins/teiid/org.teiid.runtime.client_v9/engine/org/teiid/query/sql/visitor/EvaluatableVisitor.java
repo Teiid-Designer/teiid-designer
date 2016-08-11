@@ -87,7 +87,7 @@ public class EvaluatableVisitor extends LanguageVisitor {
                 //TODO: if we had the context here we could plan better for non-prepared requests
                 || fd.getDeterministic().compareTo(Determinism.COMMAND_DETERMINISTIC) <= 0) {
             evaluationNotPossible(EvaluationLevel.PROCESSING);
-        } else if (fd.getProcedure() != null && isTeiid811OrGreater()) {
+        } else if (fd.getProcedure() != null) {
             //a function defined by a procedure
             evaluationNotPossible(EvaluationLevel.PROCESSING);
         }
@@ -209,7 +209,9 @@ public class EvaluatableVisitor extends LanguageVisitor {
 
     @Override
     public void visit(SubqueryCompareCriteria obj) {
-		evaluationNotPossible(EvaluationLevel.PUSH_DOWN);
+    	if (obj.getCommand() != null) {
+    		evaluationNotPossible(EvaluationLevel.PUSH_DOWN);
+    	}
     }
 
     @Override
@@ -272,5 +274,20 @@ public class EvaluatableVisitor extends LanguageVisitor {
     
     public boolean hasCorrelatedReferences() {
 		return hasCorrelatedReferences;
+	}
+
+    // TODO:  Teiid 9.0
+    // PAUL???
+//    public static final EvaluatableVisitor needsEvaluationVisitor(Object modelID, QueryMetadataInterface metadata, CapabilitiesFinder capFinder) {
+//        EvaluatableVisitor visitor = new EvaluatableVisitor(getTeiidVersion());
+//        visitor.modelId = modelID;
+//        visitor.metadata = metadata;
+//        visitor.capFinder = capFinder;
+//        return visitor;
+//    }
+
+	public void reset() {
+		this.determinismLevel = Determinism.DETERMINISTIC;
+		this.levels.clear();
 	}
 }

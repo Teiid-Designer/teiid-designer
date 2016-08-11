@@ -23,7 +23,6 @@ package org.teiid.adminapi;
 
 
 import java.util.List;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 public interface DataPolicy {
@@ -33,13 +32,13 @@ public interface DataPolicy {
 		DROP,
 		QUERY,
 		INSERT,
-		@Since(Version.TEIID_8_0)
 		MERGE,
 		UPDATE,
 		DELETE,
 		FUNCTION,
 		ALTER,
-		STORED_PROCEDURE;
+		STORED_PROCEDURE,
+		METADATA;
     }
 	
 	public enum PermissionType {
@@ -50,7 +49,6 @@ public interface DataPolicy {
 		ALTER,
 		EXECUTE,
 		DROP,
-		@Since(Version.TEIID_8_0)
 		LANGUAGE};
 	
 	
@@ -88,7 +86,6 @@ public interface DataPolicy {
 	 * If the policy grants all permissions
 	 * @return
 	 */
-	@Since(Version.TEIID_8_7)
 	boolean isGrantAll();
 
 	/**
@@ -144,31 +141,26 @@ public interface DataPolicy {
 		 * Is "LANGUAGE" allowed?
 		 * @return
 		 */
-		@Since(Version.TEIID_8_0)
 		Boolean getAllowLanguage();
 
 		/**
 		 * The condition string
 		 */
-		@Since(Version.TEIID_8_0)
 		String getCondition();
 		
 		/**
 		 * The column mask string
 		 */
-		@Since(Version.TEIID_8_0)
 		String getMask();
 
 		/**
 		 * The column mask order
 		 */
-		@Since(Version.TEIID_8_0)
 		Integer getOrder();
 		
 		/**
 		 * If the condition acts as a constraint.
 		 */
-		@Since(Version.TEIID_8_0)
 		Boolean getConstraint();
 		
 	}

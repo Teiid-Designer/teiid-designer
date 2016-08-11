@@ -54,15 +54,6 @@ public class SimpleNode implements Node, LanguageObject, StringConstants {
         return maxVersion.isLessThan(teiidVersion.get());
     }
 
-    protected boolean isTeiid8OrGreater() {
-        return isTeiidVersionOrGreater(Version.TEIID_8_0);
-    }
-
-    protected boolean isTeiid87OrGreater() {
-        return isTeiidVersionOrGreater(Version.TEIID_8_7);
-    }
-
-
     /**
      * @return the comments
      */

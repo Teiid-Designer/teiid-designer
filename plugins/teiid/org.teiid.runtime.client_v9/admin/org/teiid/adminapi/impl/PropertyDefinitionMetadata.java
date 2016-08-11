@@ -26,7 +26,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.teiid.adminapi.PropertyDefinition;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
@@ -215,13 +214,11 @@ public class PropertyDefinitionMetadata extends AdminObjectImpl implements Prope
 		return allowedValues != null && !allowedValues.isEmpty();
 	}
 
-	@Since(Version.TEIID_8_12_4)
 	@Override
     public String getCategory() {
         return this.category;
     }
 
-	@Since(Version.TEIID_8_12_4)
     public void setCategory(String category) {
         this.category = category;
     }

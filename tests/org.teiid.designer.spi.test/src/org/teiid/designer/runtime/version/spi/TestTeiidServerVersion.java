@@ -7,6 +7,8 @@
 */
 package org.teiid.designer.runtime.version.spi;
 
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+
 import junit.framework.TestCase;
 
 /**
@@ -191,5 +193,12 @@ public class TestTeiidServerVersion extends TestCase {
 	    assertTrue(version("8.8.0").isLessThan(version("8.10.0"))); //$NON-NLS-1$ //$NON-NLS-2$
 
 	    assertFalse(version("8.7.1").isLessThan(version("8.7.x")));  //$NON-NLS-1$//$NON-NLS-2$
+	    
+    }
+    
+    public void testIsLessThan2() {
+	    assertTrue(Version.TEIID_8_12_4.get().isLessThan(version("9.0.0")));
+	    
+	    assertFalse(Version.TEIID_8_12_4.get().isLessThan(version("8.6.0")));
     }
 }

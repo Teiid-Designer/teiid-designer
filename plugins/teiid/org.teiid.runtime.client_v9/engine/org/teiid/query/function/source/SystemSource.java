@@ -33,7 +33,6 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionLibrary;
@@ -170,9 +169,6 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         addClobFunction("lower", Messages.getString(Messages.SystemSource.lowerclob_result), "lowerCase", DataTypeManagerService.DefaultDataTypes.CLOB); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         addClobFunction("upper", Messages.getString(Messages.SystemSource.upperclob_result), "upperCase", DataTypeManagerService.DefaultDataTypes.CLOB); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         
-		// Removed 8.0.0
-		addToCharsFunction();
-        addToBytesFunction();
 
         // conversion
         addConversionFunctions();   
@@ -231,9 +227,8 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         // Since 8.10
         addFunctions(GeometryFunctionMethods.class);
 
-        // Added here in Teiid 8.10 but the class has existed long before this
-        if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10))
-            addFunctions(XMLSystemFunctions.class);
+
+        addFunctions(XMLSystemFunctions.class);
     }
 
     /**
@@ -769,16 +764,9 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
                 new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.replace_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-	@Since(Version.TEIID_8_0)
     private void addEndsWithFunction() {
-	    if (teiidVersion.getMinimumVersion().isLessThan(Version.TEIID_8_0))
-            return;
 
-	    FunctionParameter param1 = null;
-	    if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_12_4))
-            param1 = new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.BOOLEAN, Messages.getString(Messages.SystemSource.endswith_result));                 //$NON-NLS-1$ //$NON-NLS-2$
-        else
-            param1 = new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.endswith_result));                 //$NON-NLS-1$ //$NON-NLS-2$
+	    FunctionParameter param1 = new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.BOOLEAN, Messages.getString(Messages.SystemSource.endswith_result));                 //$NON-NLS-1$ //$NON-NLS-2$
 
         FunctionMethod f =
             new FunctionMethod(SourceSystemFunctions.ENDSWITH, Messages.getString(Messages.SystemSource.endswith_description), STRING, FUNCTION_CLASS, "endsWith", //$NON-NLS-1$ //$NON-NLS-2$ 
@@ -815,32 +803,6 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 					new FunctionParameter(teiidVersion, "length", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.insert_arg3)), //$NON-NLS-1$ //$NON-NLS-2$
 					new FunctionParameter(teiidVersion, "str2", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.insert_arg4)) }, //$NON-NLS-1$ //$NON-NLS-2$
 				new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.insert_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	@Removed(Version.TEIID_8_0)
-	private void addToCharsFunction() {
-	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0))
-	        return;
-
-		functions.add(
-			new FunctionMethod("to_chars", Messages.getString(Messages.SystemSource.encode_description), CONVERSION, FUNCTION_CLASS, "toChars", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$  
-				new FunctionParameter[] {
-					new FunctionParameter(teiidVersion, "value", DataTypeManagerService.DefaultDataTypes.BLOB, Messages.getString(Messages.SystemSource.encode_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
-					new FunctionParameter(teiidVersion, "encoding", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.encode_arg2))}, //$NON-NLS-1$ //$NON-NLS-2$
-				new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.CLOB, Messages.getString(Messages.SystemSource.encode_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	@Removed(Version.TEIID_8_0)
-	private void addToBytesFunction() {
-	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0))
-            return;
-
-		functions.add(
-			new FunctionMethod("to_bytes", Messages.getString(Messages.SystemSource.decode_description), CONVERSION, FUNCTION_CLASS, "toBytes", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$  
-				new FunctionParameter[] {
-					new FunctionParameter(teiidVersion, "value", DataTypeManagerService.DefaultDataTypes.CLOB, Messages.getString(Messages.SystemSource.decode_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
-					new FunctionParameter(teiidVersion, "encoding", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.decode_arg2))}, //$NON-NLS-1$ //$NON-NLS-2$
-				new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.BLOB, Messages.getString(Messages.SystemSource.decode_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
     private void addAsciiFunction() {

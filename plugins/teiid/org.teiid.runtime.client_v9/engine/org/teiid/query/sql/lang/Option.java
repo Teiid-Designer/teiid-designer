@@ -5,7 +5,6 @@ package org.teiid.query.sql.lang;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.annotation.Updated;
 import org.teiid.designer.query.sql.lang.IOption;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -38,7 +37,6 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
     public static class MakeDep {
         private Integer max;
 
-        @Updated(version=Version.TEIID_8_12_4)
         private Boolean join;
 
         private ITeiidServerVersion teiidVersion;
@@ -91,7 +89,6 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
             this.max = max;
         }
 
-        @Updated(version=Version.TEIID_8_12_4)
         public boolean isJoin() {
             if (join == null)
                 return false;
@@ -99,17 +96,14 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
             return join;
         }
 
-        @Since(Version.TEIID_8_12_4)
         public Boolean getJoin() {
             return join;
         }
 
-        @Updated(version=Version.TEIID_8_12_4)
         public void setJoin(Boolean join) {
             this.join = join;
         }
 
-        @Updated(version=Version.TEIID_8_12_4)
         public boolean isSimple() {
             return max == null && join == null;
         }
@@ -117,13 +111,10 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
 
     private List<String> makeDependentGroups;
 
-    @Since(Version.TEIID_8_12_4)
     private List<String> makeIndependentGroups;
 
-    @Since(Version.TEIID_8_5)
     private List<MakeDep> makeDependentOptions;
 
-    @Since(Version.TEIID_8_12_4)
     private List<MakeDep> makeIndependentOptions;
 
     private List<String> makeNotDependentGroups;
@@ -160,10 +151,7 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
         this.makeDependentOptions.add(makedep);
     }
 
-    @Since(Version.TEIID_8_12_4)
     public void addIndependentGroup(String group, MakeDep makedep) {
-        if (isLessThanTeiidVersion(Version.TEIID_8_12_4))
-            return;
 
         if (makedep == null) {
             return;
@@ -189,19 +177,11 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
         return this.makeDependentOptions;
     }
 
-    @Since(Version.TEIID_8_12_4)
     public List<MakeDep> getMakeIndependentOptions() {
-        if (isLessThanTeiidVersion(Version.TEIID_8_12_4))
-            return Collections.emptyList();
-
         return makeIndependentOptions;
     }
 
-    @Since(Version.TEIID_8_12_4)
     public List<String> getMakeIndependentGroups() {
-        if (isLessThanTeiidVersion(Version.TEIID_8_12_4))
-            return Collections.emptyList();
-
         return makeIndependentGroups;
     }
 
@@ -269,10 +249,9 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
         result = prime * result + ((this.makeDependentGroups == null) ? 0 : this.makeDependentGroups.hashCode());
         result = prime * result + ((this.makeDependentOptions == null) ? 0 : this.makeDependentOptions.hashCode());
 
-        if (!isLessThanTeiidVersion(Version.TEIID_8_12_4)) {
-            result = prime * result + ((this.makeIndependentGroups == null) ? 0 : this.makeIndependentGroups.hashCode());
-            result = prime * result + ((this.makeIndependentOptions == null) ? 0 : this.makeIndependentOptions.hashCode());
-        }
+
+        result = prime * result + ((this.makeIndependentGroups == null) ? 0 : this.makeIndependentGroups.hashCode());
+        result = prime * result + ((this.makeIndependentOptions == null) ? 0 : this.makeIndependentOptions.hashCode());
 
         result = prime * result + ((this.makeNotDependentGroups == null) ? 0 : this.makeNotDependentGroups.hashCode());
         result = prime * result + (this.noCache ? 1231 : 1237);
@@ -300,18 +279,16 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
         } else if (!this.makeDependentOptions.equals(other.makeDependentOptions))
             return false;
 
-        if (!isLessThanTeiidVersion(Version.TEIID_8_12_4)) {
-            if (this.makeIndependentGroups == null) {
-                if (other.makeIndependentGroups != null)
-                    return false;
-            } else if (!this.makeIndependentGroups.equals(other.makeIndependentGroups))
+        if (this.makeIndependentGroups == null) {
+            if (other.makeIndependentGroups != null)
                 return false;
-            if (this.makeIndependentOptions == null) {
-                if (other.makeIndependentOptions != null)
-                    return false;
-            } else if (!this.makeIndependentOptions.equals(other.makeIndependentOptions))
+        } else if (!this.makeIndependentGroups.equals(other.makeIndependentGroups))
+            return false;
+        if (this.makeIndependentOptions == null) {
+            if (other.makeIndependentOptions != null)
                 return false;
-        }
+        } else if (!this.makeIndependentOptions.equals(other.makeIndependentOptions))
+            return false;
 
         if (this.makeNotDependentGroups == null) {
             if (other.makeNotDependentGroups != null)

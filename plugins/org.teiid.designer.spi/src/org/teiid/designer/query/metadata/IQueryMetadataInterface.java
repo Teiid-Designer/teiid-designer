@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import javax.script.ScriptEngine;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.annotation.Updated;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -879,6 +878,5 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
     /**
      * @return the widen comparison to string flag
      */
-    @Since(Version.TEIID_8_12_4)
     boolean widenComparisonToString();
 }

@@ -22,7 +22,6 @@
 
 package org.teiid.query.function;
 
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod.Determinism;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
@@ -30,7 +29,6 @@ import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 
-@Since(Version.TEIID_8_0)
 public class SystemFunctionMethods {
 	
 	private static final int MAX_VARIABLES = 512;

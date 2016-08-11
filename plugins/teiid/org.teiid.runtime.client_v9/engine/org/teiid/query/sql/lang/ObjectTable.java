@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.script.CompiledScript;
 import javax.script.ScriptEngine;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IObjectTable;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
@@ -16,7 +15,6 @@ import org.teiid.query.sql.symbol.DerivedColumn;
 /**
  *
  */
-@Since(Version.TEIID_8_0)
 public class ObjectTable extends TableFunctionReference implements IObjectTable<LanguageVisitor> {
 
     /**
@@ -196,7 +194,6 @@ public class ObjectTable extends TableFunctionReference implements IObjectTable<
         if(getName() != null)
             clone.setName(getName());
         clone.setOptional(isOptional());
-        clone.setMakeInd(isMakeInd());
         clone.setMakeInd(getMakeInd());
         clone.setNoUnnest(isNoUnnest());
         clone.setMakeDep(isMakeDep());

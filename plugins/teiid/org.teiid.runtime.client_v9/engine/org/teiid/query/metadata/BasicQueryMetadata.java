@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import javax.script.ScriptEngine;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -641,7 +640,6 @@ public class BasicQueryMetadata implements IQueryMetadataInterface {
     }
 
     @Override
-    @Since(Version.TEIID_8_12_4)
     public boolean widenComparisonToString() {
         return true;
     }

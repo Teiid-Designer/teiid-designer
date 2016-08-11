@@ -66,7 +66,7 @@ public class Aggregate9Symbol extends Function implements AggregateSymbol {
         SUM_TYPES.put(bigDecimalClass, bigDecimalClass);
         
         AVG_TYPES = new HashMap<Class<?>, Class<?>>();
-        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(Version.TEIID_8_0.get());
+        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(Version.TEIID_9_0.get());
         if(dataTypeManager.isDecimalAsDouble()) {
             AVG_TYPES.put(byteClass, doubleClass);
             AVG_TYPES.put(shortClass, doubleClass);

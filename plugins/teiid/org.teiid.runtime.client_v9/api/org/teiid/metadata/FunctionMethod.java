@@ -26,7 +26,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
@@ -58,7 +57,6 @@ import org.teiid.query.function.metadata.FunctionMetadataValidator;
  */
 public class FunctionMethod extends AbstractMetadataRecord {
 
-    @Since(Version.TEIID_8_9)
     public static final String SYSTEM_NAME = AbstractMetadataRecord.RELATIONAL_URI + "system-name"; //$NON-NLS-1$
 
 	private static final long serialVersionUID = -8039086494296455152L;

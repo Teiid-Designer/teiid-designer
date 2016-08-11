@@ -7,12 +7,12 @@
 */
 package org.teiid.designer.query.sql;
 
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IAlterProcedure;
 import org.teiid.designer.query.sql.lang.IAlterTrigger;
 import org.teiid.designer.query.sql.lang.IAlterView;
 import org.teiid.designer.query.sql.lang.IArrayTable;
 import org.teiid.designer.query.sql.lang.IBetweenCriteria;
+import org.teiid.designer.query.sql.lang.ICall;
 import org.teiid.designer.query.sql.lang.ICompareCriteria;
 import org.teiid.designer.query.sql.lang.ICompoundCriteria;
 import org.teiid.designer.query.sql.lang.ICreate;
@@ -31,6 +31,7 @@ import org.teiid.designer.query.sql.lang.IJoinPredicate;
 import org.teiid.designer.query.sql.lang.IJoinType;
 import org.teiid.designer.query.sql.lang.ILimit;
 import org.teiid.designer.query.sql.lang.IMatchCriteria;
+import org.teiid.designer.query.sql.lang.INamedProcedureCall;
 import org.teiid.designer.query.sql.lang.INotCriteria;
 import org.teiid.designer.query.sql.lang.IObjectTable;
 import org.teiid.designer.query.sql.lang.IOption;
@@ -106,6 +107,7 @@ public interface ILanguageVisitor {
      
     // Visitor methods for language objects
     void visit(IBetweenCriteria obj);
+    void visit(ICall obj);
     void visit(ICaseExpression obj);
     void visit(ICompareCriteria obj);
     void visit(ICompoundCriteria obj);
@@ -120,6 +122,7 @@ public interface ILanguageVisitor {
     void visit(IJoinType obj);
     void visit(ILimit obj);
     void visit(IMatchCriteria obj);
+    void visit(INamedProcedureCall obj);
     void visit(INotCriteria obj);
     void visit(IOption obj);
     void visit(IOrderBy obj);
@@ -146,7 +149,6 @@ public interface ILanguageVisitor {
     void visit(IElementSymbol obj);
     void visit(IExpressionSymbol obj);
 
-    @Since(Version.TEIID_8_12_4)
     void visit(IIsDistinctCriteria obj);
 
     void visit(IFunction obj);
@@ -179,13 +181,8 @@ public interface ILanguageVisitor {
     void visit(ITextTable obj);
     void visit(ITextLine obj);
     void visit(IXMLTable obj);
-    
-    @Since(Version.TEIID_8_10)
     void visit(IXMLExists obj);
-    
-    @Since(Version.TEIID_8_10)
     void visit(IXMLCast obj);
-
     void visit(IDerivedColumn obj);
     void visit(IXMLSerialize obj);
     void visit(IXMLQuery obj);

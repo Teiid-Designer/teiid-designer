@@ -22,7 +22,6 @@
 
 package org.teiid.core.util;
 
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
@@ -465,7 +464,6 @@ public class Base64
         return out;
     }   // end decode
 
-    @Since(Version.TEIID_8_12_4)
     public static String encodeUrlSafe(byte[] data) {
         byte[] encode = encodeBytes(data).getBytes();
         for (int i = 0; i < encode.length; i++) {
@@ -478,7 +476,6 @@ public class Base64
         return new String(encode);
     }
 
-    @Since(Version.TEIID_8_12_4)
     public static byte[] decodeUrlSafe(CharSequence data) {
         StringBuilder encode = new StringBuilder();
         for (int i = 0; i < data.length(); i++) {

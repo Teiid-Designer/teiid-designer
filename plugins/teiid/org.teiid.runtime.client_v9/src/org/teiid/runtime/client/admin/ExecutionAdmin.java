@@ -130,16 +130,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
         init();
     }
 
-    private boolean isLessThanTeiidEight() {
-        ITeiidServerVersion minVersion = teiidServer.getServerVersion().getMinimumVersion();
-        return minVersion.isLessThan(Version.TEIID_8_0);
-    }
-    
-    private boolean isLessThanTeiidEightSeven() {
-        ITeiidServerVersion minVersion = teiidServer.getServerVersion().getMinimumVersion();
-        return minVersion.isLessThan(Version.TEIID_8_7);
-    }
-
     @Override
     public boolean dataSourceExists( String name ) {
         // Check if exists, return false
@@ -177,12 +167,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
         String vdbDeploymentName = vdbFile.getFullPath().lastSegment();
         String vdbName = vdbFile.getFullPath().removeFileExtension().lastSegment();
-        
-        // For Teiid Version less than 8.7, do explicit undeploy (TEIID-2873)
-    	if(isLessThanTeiidEightSeven()) {
-    		undeployVdb(vdbName);
-    	}
-    	
+
     	String vdbVersion = "1";
     	
     	if( version != null ) {
@@ -204,11 +189,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
         
         // Get VDB name
         String vdbName = deploymentName.substring(0, deploymentName.indexOf(DYNAMIC_VDB_SUFFIX));
-
-        // For Teiid Version less than 8.7, do explicit undeploy (TEIID-2873)
-    	if(isLessThanTeiidEightSeven()) {
-    		undeployDynamicVdb(vdbName);
-    	}
     	
         // Deploy the VDB
         // TODO: Dont assume vdbVersion
@@ -569,11 +549,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
      */
     @Override
     public Properties getDataSourceProperties(String name) throws Exception {
-        if (isLessThanTeiidEight()) {
-            // Teiid 7.7.x does not support
-            return null;
-        }
-
         return getDataSource(name).getProperties();
     }
 
@@ -737,14 +712,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
         
         Collection<ITeiidDataSource> tdsList = connectionMatcher.findTeiidDataSources(this.dataSourceNames);
         for (ITeiidDataSource ds : tdsList) {
-            if (!isLessThanTeiidEight()) {
-                /* Not done in Teiid 7.7 */
-                // Get Properties for the source
-                Properties dsProps = this.admin.getDataSource(ds.getName());
-                // Transfer properties to the ITeiidDataSource
-                ds.getProperties().clear();
-                ds.getProperties().putAll(dsProps);
-            }
+            // Get Properties for the source
+            Properties dsProps = this.admin.getDataSource(ds.getName());
+            // Transfer properties to the ITeiidDataSource
+            ds.getProperties().clear();
+            ds.getProperties().putAll(dsProps);
 
         	// put ds into map
             this.dataSourceByNameMap.put(ds.getName(), ds);
@@ -763,27 +735,14 @@ public class ExecutionAdmin implements IExecutionAdmin {
             if (translator.getName() != null) {
             	TeiidTranslator teiidTranslator = null;
             	
-                if( teiidServer.getServerVersion().isLessThan(Version.TEIID_8_6)) {
-                	Collection<? extends PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
-                	teiidTranslator =  new TeiidTranslator(translator, propDefs, teiidServer);
-                	
-                	this.translatorByNameMap.put(translator.getName(), teiidTranslator);
-                } else if( teiidServer.getServerVersion().isLessThan(Version.TEIID_8_7)) {
-                	@SuppressWarnings("deprecation")
-					Collection<? extends PropertyDefinition> propDefs = this.admin.getTranslatorPropertyDefinitions(translator.getName());
-                	teiidTranslator =   new TeiidTranslator(translator, propDefs, teiidServer);
-                	
-                	this.translatorByNameMap.put(translator.getName(), teiidTranslator);
-                } else { // TEIID SERVER VERSION 8.7 AND HIGHER
-                	Collection<? extends PropertyDefinition> propDefs  = 
-                			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.OVERRIDE);
-                	Collection<? extends PropertyDefinition> importPropDefs  = 
-                			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.IMPORT);
-                	Collection<? extends PropertyDefinition> extPropDefs  = 
-                			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.EXTENSION_METADATA);
-                	teiidTranslator = new TeiidTranslator(translator, propDefs, importPropDefs, extPropDefs, teiidServer);
-                	this.translatorByNameMap.put(translator.getName(), teiidTranslator);
-                }
+            	Collection<? extends PropertyDefinition> propDefs  = 
+            			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.OVERRIDE);
+            	Collection<? extends PropertyDefinition> importPropDefs  = 
+            			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.IMPORT);
+            	Collection<? extends PropertyDefinition> extPropDefs  = 
+            			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.EXTENSION_METADATA);
+            	teiidTranslator = new TeiidTranslator(translator, propDefs, importPropDefs, extPropDefs, teiidServer);
+            	this.translatorByNameMap.put(translator.getName(), teiidTranslator);
             }
         }
     }
@@ -1011,15 +970,12 @@ public class ExecutionAdmin implements IExecutionAdmin {
         throw new Exception(Messages.getString(Messages.ExecutionAdmin.cannotLoadDriverClass, driverClass));
     }
 
+    // REMOVED IN 8.0
     @Override
     @Deprecated
-    @Removed(Version.TEIID_8_0)
     public void mergeVdbs( String sourceVdbName, int sourceVdbVersion, 
                                             String targetVdbName, int targetVdbVersion ) throws Exception {
-        if (!AnnotationUtils.isApplicable(getClass().getMethod("mergeVdbs", String.class, int.class, String.class, int.class), getServer().getServerVersion()))  //$NON-NLS-1$
-            throw new UnsupportedOperationException(Messages.getString(Messages.ExecutionAdmin.mergeVdbUnsupported));
-
-        admin.mergeVDBs(sourceVdbName, sourceVdbVersion, targetVdbName, targetVdbVersion);        
+        throw new UnsupportedOperationException();     
     }
 
     /**

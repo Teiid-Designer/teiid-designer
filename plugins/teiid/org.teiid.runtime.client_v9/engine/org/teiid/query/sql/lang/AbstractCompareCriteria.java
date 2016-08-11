@@ -79,11 +79,6 @@ public abstract class AbstractCompareCriteria extends Criteria implements Predic
         this.leftExpression = expression;
     }
 
-    /**
-     * @return right expression
-     */
-    public abstract Expression getRightExpression();
-
     @Override
     public int hashCode() {
         final int prime = 31;

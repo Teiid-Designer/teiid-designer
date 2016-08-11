@@ -68,7 +68,7 @@ public class FunctionMetadataValidator {
 	}
 
 	public static final void validateFunctionMethods(ITeiidServerVersion teiidVersion, Collection<FunctionMethod> methods, ValidatorReport report, Map<String, Datatype> runtimeTypeMap) {
-        if (runtimeTypeMap == null && teiidVersion != null && teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0)) {
+        if (runtimeTypeMap == null && teiidVersion != null) {
             runtimeTypeMap = SystemMetadata.getInstance(teiidVersion).getRuntimeTypeMap();
         }
 	    if(methods != null) {
@@ -112,22 +112,19 @@ public class FunctionMetadataValidator {
 	            for(int i=0; i<params.size(); i++) {
 	                FunctionParameter param = params.get(i);
 	                validateFunctionParameter(teiidVersion, param);
-	                if (teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0)) {
-	                    // runtime type map not supported in Teiid 7
-	                    param.setPosition(i+1);
-	                    MetadataFactory.setDataType(param.getRuntimeType(), param, runtimeTypeMap, true);
-	                    param.getUUID();
-	                }
+
+                    // runtime type map not supported in Teiid 7
+                    param.setPosition(i+1);
+                    MetadataFactory.setDataType(param.getRuntimeType(), param, runtimeTypeMap, true);
+                    param.getUUID();
 	            }
 	        }
 
 	        // Validate output parameters
 	        validateFunctionParameter(teiidVersion, method.getOutputParameter());
-	        if (teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0)) {
-	            // runtime type map not supported in Teiid 7
-	            method.getOutputParameter().setPosition(0);
+
+            method.getOutputParameter().setPosition(0);
 	            MetadataFactory.setDataType(method.getOutputParameter().getRuntimeType(), method.getOutputParameter(), runtimeTypeMap, true);
-	        }
         } catch(Exception e) {
         	updateReport(report, method, e.getMessage());
         }
@@ -179,8 +176,6 @@ public class FunctionMetadataValidator {
     public static final void validateName(ITeiidServerVersion teiidVersion, String name) throws Exception {
         validateIsNotNull(name, "Name"); //$NON-NLS-1$
         validateLength(name, MAX_LENGTH, "Name"); //$NON-NLS-1$
-        if (teiidVersion.isLessThan(Version.TEIID_8_0))
-            validateNameCharacters(name, "Name"); //$NON-NLS-1$
     }
 
     /**
@@ -225,8 +220,6 @@ public class FunctionMetadataValidator {
      * @throws Exception Thrown if category is not valid in some way
      */
     public static final void validateCategory(ITeiidServerVersion teiidVersion, String category) throws Exception {
-        if (teiidVersion.isLessThan(Version.TEIID_8_11))
-            validateIsNotNull(category, "Category"); //$NON-NLS-1$
 
         if (category != null) {
             validateLength(category, MAX_LENGTH, "Category"); //$NON-NLS-1$
@@ -280,20 +273,6 @@ public class FunctionMetadataValidator {
 	 	 	 throw new Exception(Messages.gs(Messages.TEIID.TEIID30430,strName, new Integer(maxLength)));
 	 	}
 	}
-
-	/**
-     * Check that specified string uses valid allowed character set.  If not, an exception is thrown using
-     * strName for the exception message.
-     * @param name String to check
-     * @param strName String to use in exception message
-     * @throws FunctionMetadataException Thrown when string uses characters not in allowed character sets
-     */
-	@Removed(Version.TEIID_8_0)
-    private static final void validateNameCharacters(String name, String strName) throws Exception {
-        if (name.indexOf('.') > 0) {
-            throw new Exception(Messages.getString(Messages.ERR.ERR_015_001_0057,strName, '.'));
-        }
-    }
 
     /**
      * Check that specified string is valid Java identifier.  If not, an exception is thrown using

@@ -39,7 +39,6 @@ import org.teiid.client.plan.PlanNode;
 import org.teiid.client.util.ExceptionHolder;
 import org.teiid.core.util.ExternalizeUtil;
 import org.teiid.core.util.MultiArrayOutputStream;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.jdbc.StatementImpl;
@@ -99,7 +98,6 @@ public class ResultsMessage implements Externalizable {
     private boolean delayDeserialization;
     byte[] resultBytes;
 
-    @Since(Version.TEIID_8_9)
     private MultiArrayOutputStream serializationBuffer;
 
     private transient ITeiidServerVersion teiidVersion;

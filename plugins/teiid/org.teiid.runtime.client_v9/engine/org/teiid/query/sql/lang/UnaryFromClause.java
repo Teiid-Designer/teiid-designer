@@ -3,6 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import java.util.Collection;
+
+import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.designer.query.sql.lang.IUnaryFromClause;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
@@ -81,7 +83,13 @@ public class UnaryFromClause extends FromClause implements IUnaryFromClause<Grou
         if (this.groupSymbol == null) {
             if (other.groupSymbol != null) return false;
         } else if (!this.groupSymbol.equals(other.groupSymbol)) return false;
-        return true;
+        
+        if( other.isOptional() == this.isOptional() &&
+                EquivalenceUtil.areEqual(expandedCommand, other.expandedCommand) ) {
+        	return true;
+        }
+        
+        return false;
     }
 
     /** Accept the visitor. **/
@@ -99,7 +107,6 @@ public class UnaryFromClause extends FromClause implements IUnaryFromClause<Grou
         if(getExpandedCommand() != null)
             clone.setExpandedCommand(getExpandedCommand().clone());
         clone.setOptional(isOptional());
-        clone.setMakeInd(isMakeInd());
         clone.setMakeInd(getMakeInd());
         clone.setNoUnnest(isNoUnnest());
         clone.setMakeDep(isMakeDep());

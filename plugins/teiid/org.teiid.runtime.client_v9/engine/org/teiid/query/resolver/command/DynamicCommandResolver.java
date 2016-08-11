@@ -111,7 +111,7 @@ public class DynamicCommandResolver extends CommandResolver {
         if (intoSymbol != null) {
             if (!intoSymbol.isImplicitTempGroupSymbol()) {
                 ResolverUtil.resolveGroup(intoSymbol, metadata);
-                if (!resolvedColumns && getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_12_4)) {
+                if (!resolvedColumns ) {
                     //must be a temp table from a higher scope
                     for (ElementSymbol column : (List<ElementSymbol>)dynamicCmd.getAsColumns()) {
                         column.setGroupSymbol(dynamicCmd.getIntoGroup().clone());

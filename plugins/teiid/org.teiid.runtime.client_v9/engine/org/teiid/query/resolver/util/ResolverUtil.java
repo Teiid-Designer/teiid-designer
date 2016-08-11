@@ -375,6 +375,7 @@ public class ResolverUtil {
         	}
         } else if (expression instanceof Function) {
         	Function f = (Function)expression;
+//        	System.out.println("   >> ResolverUtil.setDesiredType()  Function = " + f.getName() + "  Type = " + f.getType());
         	if (f.getType() == null) {
 	        	f.setType(targetType);
         	}
@@ -411,7 +412,7 @@ public class ResolverUtil {
         	if (query.getFrom() != null) {
         		fromClauseGroups = query.getFrom().getGroups();
         	}
-        	if (!query.getSelect().isDistinct() && teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
+        	if (!query.getSelect().isDistinct()) {
                 groupBy = query.getGroupBy();
             }
         }
@@ -468,14 +469,6 @@ public class ResolverUtil {
                         continue;
                     }
         		}
-        	} else if (sortKey instanceof ExpressionSymbol && orderBy.getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
-        	 // check for legacy positional
-                ExpressionSymbol es = (ExpressionSymbol)sortKey;
-        	    if (es.getExpression() instanceof Constant) {
-                    Constant c = (Constant)es.getExpression();
-                    setExpressionPosition(orderBy, knownElements, i, c);
-                    continue;
-        	    }
         	} else if (sortKey instanceof Constant) {
         		// check for legacy positional
         		Constant c = (Constant)sortKey;
@@ -511,10 +504,7 @@ public class ResolverUtil {
             int index = expressions.indexOf(SymbolMap.getExpression(sortKey));
             // if unrelated and not a simple query - that is more than just a grouping, throw an exception
             if (index == -1 && !isSimpleQuery) {
-                if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10) && groupBy == null)
-                    throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30088, sortKey));
-                else
-                    throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30088, sortKey));
+                throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30088, sortKey));
         	}  
         	orderBy.setExpressionPosition(i, index);
         }
@@ -563,7 +553,7 @@ public class ResolverUtil {
              throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30089, symbol.getOutputName()));
         }
 
-        if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_12_4) && "expression".equalsIgnoreCase(metadata.getExtensionProperty(mid,  BaseColumn.DEFAULT_HANDLING, false))) { //$NON-NLS-1$
+        if (BaseColumn.EXPRESSION_DEFAULT.equalsIgnoreCase(metadata.getExtensionProperty(mid,  BaseColumn.DEFAULT_HANDLING, false))) { //$NON-NLS-1$
             Expression ex = null;
             
             try {
@@ -617,21 +607,20 @@ public class ResolverUtil {
             constant.setType(parameterType);
             return constant;
         } catch (Exception e) {
-            if (version.isGreaterThanOrEqualTo(Version.TEIID_8_12_4)) {
-                //timestamp literals also allow date format
-                if (parameterType == DataTypeManagerService.DefaultDataTypes.TIMESTAMP.getTypeClass()) {
-                    try {
-                        Object newValue = dataTypeManager.transformValue(defaultValue,
-                                                                         DataTypeManagerService.DefaultDataTypes.DATE);
-                        Constant constant = teiidParser.createASTNode(ASTNodes.CONSTANT);
-                        constant.setValue(new Timestamp(((Date)newValue).getTime()));
-                        constant.setType(parameterType);
-                        return constant;
-                    } catch (Exception e1) {
-                    }
+            //timestamp literals also allow date format
+            if (parameterType == DataTypeManagerService.DefaultDataTypes.TIMESTAMP.getTypeClass()) {
+                try {
+                    Object newValue = dataTypeManager.transformValue(defaultValue,
+                                                                     DataTypeManagerService.DefaultDataTypes.DATE);
+                    Constant constant = teiidParser.createASTNode(ASTNodes.CONSTANT);
+                    constant.setValue(new Timestamp(((Date)newValue).getTime()));
+                    constant.setType(parameterType);
+                    return constant;
+                } catch (Exception e1) {
                 }
             }
-             throw new QueryResolverException(e, Messages.gs(Messages.TEIID.TEIID30090, defaultValue, defaultValue.getClass(), parameterType));
+            
+            throw new QueryResolverException(e, Messages.gs(Messages.TEIID.TEIID30090, defaultValue, defaultValue.getClass(), parameterType));
         }
     }
 

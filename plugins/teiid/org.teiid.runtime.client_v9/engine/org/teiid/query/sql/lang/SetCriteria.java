@@ -2,7 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
+
 import org.teiid.designer.query.sql.lang.ISetCriteria;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
@@ -96,8 +99,13 @@ public class SetCriteria extends AbstractSetCriteria implements ISetCriteria<Exp
     public SetCriteria clone() {
         SetCriteria clone = new SetCriteria(this.parser, this.id);
 
-        if(getValues() != null)
-            clone.setValues(cloneCollection(getValues()));
+        Collection copyValues = null;
+	    if (isAllConstants()) {
+	    	copyValues = new LinkedHashSet(values);
+	    } else {
+	    	copyValues = LanguageObject.Util.deepClone(new ArrayList(values), Expression.class);
+	    }
+        clone.setValues( new LinkedHashSet(cloneCollection(copyValues)));
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());
         clone.setNegated(isNegated());

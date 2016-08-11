@@ -143,9 +143,7 @@ public class CloneGenerator {
         CLASS_LIST.add(CompoundCriteria.class);
         CLASS_LIST.add(Constant.class);
         CLASS_LIST.add(CreateProcedureCommand.class);
-        CLASS_LIST.add(CreateUpdateProcedureCommand.class);
         CLASS_LIST.add(Criteria.class);
-        CLASS_LIST.add(CriteriaSelector.class);
         CLASS_LIST.add(DeclareStatement.class);
         CLASS_LIST.add(Delete.class);
         CLASS_LIST.add(DerivedColumn.class);

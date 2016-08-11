@@ -37,9 +37,6 @@ public class ParseInfo implements Serializable {
     private static final boolean ANSI_QUOTED_DEFAULT = PropertiesUtils.getBooleanProperty(System.getProperties(),
                                                                                           "org.teiid.ansiQuotedIdentifiers", true); //$NON-NLS-1$
 
-    @Removed(Version.TEIID_8_0)
-    public Map<String, Integer> nameCounts = null;
-
     private int referenceCount = 0;
 
     /**

@@ -60,39 +60,6 @@ public class ResolveVirtualGroupCriteriaVisitor extends LanguageVisitor {
         this.metadata = metadata;
     }
 
-    @Override
-    public void visit(TranslateCriteria obj) {
-    	if(obj.hasTranslations()) {
-    		Iterator transIter = obj.getTranslations().iterator();
-    		while(transIter.hasNext()) {
-				CompareCriteria ccrit = (CompareCriteria) transIter.next();
-				ElementSymbol element = (ElementSymbol) ccrit.getLeftExpression();
-				try {
-                    ResolverVisitor resolverVisitor = new ResolverVisitor(getTeiidVersion());
-                    resolverVisitor.resolveLanguageObject(element, virtualGroup, metadata);
-				} catch(Exception e) {
-                    throw new RuntimeException(e);
-				}
-    		}
-    	}
-    }
-
-    @Override
-    public void visit(CriteriaSelector obj) {
-    	if(obj.hasElements()) {
-			Iterator elmntIter = obj.getElements().iterator();
-			while(elmntIter.hasNext()) {
-				ElementSymbol virtualElement = (ElementSymbol) elmntIter.next();
-                try {
-                    ResolverVisitor resolverVisitor = new ResolverVisitor(getTeiidVersion());
-                    resolverVisitor.resolveLanguageObject(virtualElement, virtualGroup, metadata);
-                } catch(Exception e) {
-                    throw new RuntimeException(e);
-                }
-			}
-    	}
-    }
-
     /**
      * resolve criteria
      *

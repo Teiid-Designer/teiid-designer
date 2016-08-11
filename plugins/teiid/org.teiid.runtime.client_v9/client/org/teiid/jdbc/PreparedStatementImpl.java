@@ -289,8 +289,7 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
     	message.setStatementType(StatementType.PREPARED);
     	message.setParameterValues(isBatchedCommand?getParameterValuesList(): getParameterValues());
     	message.setBatchedUpdate(isBatchedCommand);
-		if (isGreaterThanTeiidSeven())
-	    	message.setCommand(this.command);
+	    message.setCommand(this.command);
 
     	return message;
     }
@@ -330,9 +329,7 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
 			if (StatementImpl.SET_STATEMENT.matcher(prepareSql).matches() 
 					|| StatementImpl.TRANSACTION_STATEMENT.matcher(prepareSql).matches()
 					|| StatementImpl.SHOW_STATEMENT.matcher(prepareSql).matches()
-					||
-					    (getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_10)
-					        && StatementImpl.SET_CHARACTERISTIC_STATEMENT.matcher(prepareSql).matches())) {
+					|| StatementImpl.SET_CHARACTERISTIC_STATEMENT.matcher(prepareSql).matches()) {
 				metadataResults = new MetadataResult();
 			} else {
 				try {
@@ -668,7 +665,6 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
 
 	@Override
     public void setArray(int parameterIndex, Array x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		if (x instanceof ArrayImpl) {
 			setObject(parameterIndex, x);
 		} else {
@@ -779,40 +775,34 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
 	@Override
     public void setNCharacterStream(int parameterIndex, Reader value)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setClob(parameterIndex, value);
 	}
 
 	@Override
     public void setNCharacterStream(int parameterIndex, Reader value,
 			long length) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setCharacterStream(parameterIndex, value);
 	}
 
 	@Override
     public void setNClob(int parameterIndex, NClob value) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject(parameterIndex, value);
 	}
 
 	@Override
     public void setNClob(int parameterIndex, Reader reader) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setClob(parameterIndex, reader);
 	}
 
 	@Override
     public void setNClob(int parameterIndex, Reader reader, long length)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setClob(parameterIndex, reader);
 	}
 
 	@Override
     public void setNString(int parameterIndex, String value)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject(parameterIndex, value);
 	}
 

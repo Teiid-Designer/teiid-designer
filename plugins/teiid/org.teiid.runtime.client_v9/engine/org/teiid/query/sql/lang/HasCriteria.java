@@ -24,6 +24,7 @@ public class HasCriteria extends Criteria implements PredicateCriteria, IHasCrit
      */
     public HasCriteria(TeiidParser p, int id) {
         super(p, id);
+        throw new UnsupportedOperationException();
     }
 
     /**

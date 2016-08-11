@@ -19,17 +19,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package org.teiid.adminapi.impl;
 
-import org.teiid.designer.annotation.Removed;
+package org.teiid.query.resolver.v9;
+
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.query.resolver.AbstractTestXMLResolver;
+import org.teiid.query.sql.AbstractTestFactory;
+import org.teiid.query.sql.v9.Test9Factory;
 
-@Removed(Version.TEIID_8_0)
-public class TranslatorMetaData extends VDBTranslatorMetaData {
-    private static final long serialVersionUID = 116875548438603151L;
 
-    /**
-     * Translator prefix constant
-     */
-    public static final String TRANSLATOR_PREFIX = "translator-"; //$NON-NLS-1$
+@SuppressWarnings( "javadoc" )
+public class Test9XMLResolver extends AbstractTestXMLResolver {
+    
+    private Test9Factory factory;
+
+    protected Test9XMLResolver(Version teiidVersion) {
+        super(teiidVersion);
+    }
+   
+    public Test9XMLResolver() {
+        this(Version.TEIID_9_0);
+    }
+
+    @Override
+    protected AbstractTestFactory getFactory() {
+        if (factory == null)
+            factory = new Test9Factory(getQueryParser());
+
+        return factory;
+    }
+
 }

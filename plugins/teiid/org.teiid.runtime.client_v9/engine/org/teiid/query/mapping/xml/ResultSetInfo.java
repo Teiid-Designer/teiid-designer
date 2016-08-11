@@ -66,8 +66,6 @@ public class ResultSetInfo {
     
     private ElementSymbol mappingClassSymbol;
 	private boolean inputSet;
-	@Removed(Version.TEIID_8_0)
-	private boolean isCritNullDependent;
 
 	//auto-staging related info
 	private String stagingRoot;
@@ -183,16 +181,6 @@ public class ResultSetInfo {
 
 	public void setInputSet(boolean inputSet) {
 		this.inputSet = inputSet;
-	}
-	
-	@Removed(Version.TEIID_8_0)
-	public void setCritNullDependent(boolean isCritNullDependent) {
-		this.isCritNullDependent = isCritNullDependent;
-	}
-
-	@Removed(Version.TEIID_8_0)
-	public boolean isCritNullDependent(){
-		return this.isCritNullDependent;
 	}
 
 	public String getStagingRoot() {

@@ -91,7 +91,7 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
      */
     @Override
     public List<? extends Expression> getResultSetColumns() {
-        if (returnsResultSet() || parser.getVersion().isLessThan(Version.TEIID_8_0)) {
+        if (returnsResultSet()) {
             return getProjectedSymbols();
         }
         return Collections.emptyList();
@@ -243,7 +243,7 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
 
         // Add children recursively
         tabLevel++;
-        for (Command subCommand : CommandCollectorVisitor.getCommands(this)) {
+        for (Command subCommand : CommandCollectorVisitor.getCommands(this, true)) {
             subCommand.printCommandTree(str, tabLevel);
         }
     }

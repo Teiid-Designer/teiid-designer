@@ -36,7 +36,6 @@ import java.util.regex.Pattern;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.annotation.Updated;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -58,6 +57,7 @@ import org.teiid.metadata.Table;
 import org.teiid.query.metadata.DDLConstants;
 import org.teiid.query.metadata.SystemMetadata;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
+import org.teiid.query.parser.v9.Token;
 import org.teiid.query.sql.lang.AlterTrigger;
 import org.teiid.query.sql.lang.CacheHint;
 import org.teiid.query.sql.lang.Command;
@@ -67,6 +67,7 @@ import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.SourceHint;
 import org.teiid.query.sql.lang.StoredProcedure;
+import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -77,16 +78,16 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 
     protected static final Pattern udtPattern = Pattern.compile("(\\w+)\\s*\\(\\s*(\\d+),\\s*(\\d+),\\s*(\\d+)\\)"); //$NON-NLS-1$
 
-    @Since(Version.TEIID_8_12_4)
     protected static final Pattern FROM_CLAUSE_HINT_PATTERN = Pattern.compile("\\s*(\\w+(?:\\(\\s*(max:\\d+)?\\s*((?:no)?\\s*join)\\s*\\))?)\\s*", Pattern.DOTALL | Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
     protected static final Pattern SOURCE_HINT = Pattern.compile("\\s*sh(\\s+KEEP ALIASES)?\\s*(?::((?:'[^']*')+))?\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
     
     protected static final Pattern SOURCE_HINT_ARG = Pattern.compile("\\s*([^: ]+)(\\s+KEEP ALIASES)?\\s*:((?:'[^']*')+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
-    
-	private static final Pattern CACHE_HINT_PRE_811 = Pattern.compile("/\\*\\+?\\s*cache(\\(\\s*(pref_mem)?\\s*(ttl:\\d{1,19})?\\s*(updatable)?\\s*(scope:(session|vdb|user))?[^\\)]*\\))?[^\\*]*\\*\\/.*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
-	private static final Pattern CACHE_HINT = Pattern.compile("/\\*\\+?\\s*cache(\\(\\s*(pref_mem)?\\s*(ttl:\\d{1,19})?\\s*(updatable)?\\s*(scope:(session|vdb|user))?\\s*(min:\\d{1,19})?[^\\)]*\\))?[^\\*]*\\*\\/.*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
 	
+    private static final Pattern HINT = Pattern.compile("\\s*/\\*([^/]*)\\*/", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
+	private static final Pattern CACHE_HINT_PRE_811 = Pattern.compile("/\\*\\+?\\s*cache(\\(\\s*(pref_mem)?\\s*(ttl:\\d{1,19})?\\s*(updatable)?\\s*(scope:(session|vdb|user))?[^\\)]*\\))?[^\\*]*\\*\\/.*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
+	private static final Pattern CACHE_HINT =Pattern.compile("\\+?\\s*cache(\\(\\s*(pref_mem)?\\s*(ttl:\\d{1,19})?\\s*(updatable)?\\s*(scope:(session|vdb|user))?\\s*(min:\\d{1,19})?[^\\)]*\\))?[^\\*]*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
+
 	private static String COMMENT_START = "/*"; //$NON-NLS-1$
 	private static String COMMENT_END = "*/"; //$NON-NLS-1$
 
@@ -175,6 +176,24 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     public void addComment(Comment comment) {
         comments.add(comment);
     }
+    
+	public String getComment(Token t) {
+		Token optToken = t.specialToken;
+        if (optToken == null) { 
+            return ""; //$NON-NLS-1$
+        }
+        //handle nested comments
+        String image = optToken.image;
+        while (optToken.specialToken != null) {
+        	optToken = optToken.specialToken;
+        	image = optToken.image + image;
+        }
+        String hint = image.substring(2, image.length() - 2);
+        if (hint.startsWith("+")) { //$NON-NLS-1$
+        	hint = hint.substring(1);
+        }
+        return hint;
+	}
 
 	protected String prependSign(String sign, String literal) {
 		if (sign != null && sign.charAt(0) == '-') {
@@ -183,7 +202,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 		return literal;
 	}
 
-	@Since(Version.TEIID_8_0)
 	protected void convertToParameters(List<Expression> values, StoredProcedure storedProcedure, int paramIndex) {
 		for (Expression value : values) {
 			SPParameter parameter = new SPParameter(this, paramIndex++, value);
@@ -407,14 +425,22 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         return sourceHint;
     }
     
+
 	@Override
     public CacheHint getQueryCacheOption(String query) {
 	    Pattern cacheHint = CACHE_HINT;
-	    if (getVersion().isLessThan(Version.TEIID_8_11))
-	        cacheHint = CACHE_HINT_PRE_811;
 
-    	Matcher match = cacheHint.matcher(query);
-    	if (match.matches()) {
+    	Matcher hintMatch = HINT.matcher(query);
+    	int start = 0;
+    	while (hintMatch.find()) {
+    		if (start != hintMatch.start()) {
+    			break;
+    		}
+    		start = hintMatch.end();
+    		Matcher match = CACHE_HINT.matcher(hintMatch.group(1));
+    		if (!match.matches()) {
+    			continue;
+    		}
     	    CacheHint hint = new CacheHint(this);
     		if (match.group(2) !=null) {
     			hint.setPrefersMemory(true);
@@ -431,25 +457,13 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     			scope = scope.substring(6);
     			hint.setScope(scope);
     		}
-    		if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
-    		    String min = match.group(7);
-    		    if (min != null) {
-    		        hint.setMinRows(Long.valueOf(min.substring(4)));
-    		    }
-    		}
+		    String min = match.group(7);
+		    if (min != null) {
+		        hint.setMinRows(Long.valueOf(min.substring(4)));
+		    }
     		return hint;
     	}
     	return null;
-    }
-
-    @Removed(Version.TEIID_8_0)
-    protected String matchesAny(String arg, String ... expected) {
-        for (String string : expected) {
-            if (string.equalsIgnoreCase(arg)) {
-                return arg;
-            }
-        }
-        return null;
     }
 
     @Override
@@ -466,7 +480,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         throw new UnsupportedOperationException("Not supported in Teiid Version " + getVersion()); //$NON-NLS-1$
     }
 
-    @Since(Version.TEIID_8_0)
     protected void setColumnOptions(BaseColumn c) {
     	Map<String, String> props = c.getProperties();
 		setCommonProperties(c, props);
@@ -481,7 +494,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     	}
     }
 
-	@Since(Version.TEIID_8_0)
     protected void removeColumnOption(String key, BaseColumn c) {
     	if (c.getProperty(key, false) != null) {
     		c.setProperty(key, null);
@@ -497,7 +509,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     	}
     }    
     
-	@Since(Version.TEIID_8_0)
     protected void removeColumnOption(String key, Column c) {
         if (key.equals(DDLConstants.CASE_SENSITIVE)) {
         	c.setCaseSensitive(false);
@@ -559,7 +570,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     	}    	
     }
 
-    @Since(Version.TEIID_8_0)
     private void setColumnOptions(Column c, Map<String, String> props) {
         String v = props.remove(DDLConstants.CASE_SENSITIVE); 
         if (v != null) {
@@ -642,7 +652,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         }
     }
 
-    @Since(Version.TEIID_8_0)
     protected void setCommonProperties(AbstractMetadataRecord c, Map<String, String> props) {
         String v = props.remove(DDLConstants.UUID); 
         if (v != null) {
@@ -660,7 +669,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         }
     }
 
-    @Since(Version.TEIID_8_0)
     protected void removeCommonProperty(String key, AbstractMetadataRecord c) {
 		if (key.equals(DDLConstants.UUID)) {
 			c.setUUID(null);
@@ -675,7 +683,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 		}
 	}
 
-    @Since(Version.TEIID_8_0)
     protected void setTableOptions(Table table) {
         Map<String, String> props = table.getProperties();
         setCommonProperties(table, props);
@@ -703,7 +710,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         }
     }
 
-	@Since(Version.TEIID_8_0)
 	protected void removeTableOption(String key, Table table) {
     	if (table.getProperty(key, false) != null) {
     		table.setProperty(key, null);
@@ -727,8 +733,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     	}    	
     }
 
-	@Since(Version.TEIID_8_0)
-	@Updated(version=Version.TEIID_8_11)
 	protected void replaceProcedureWithFunction(MetadataFactory factory, Procedure proc) {
 	    if (proc.isFunction() && proc.getQueryPlan() != null) {
             return;
@@ -759,35 +763,25 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 			}
 
 			// New functionality for Teiid 8.9+
-			if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_9)) {
-			    //copy the metadata
-	            FunctionParameter fp = new FunctionParameter(teiidVersion, pp.getName(), pp.getRuntimeType(), pp.getAnnotation());
-	            fp.setDatatype(pp.getDatatype(), true, pp.getArrayDimensions());
-	            fp.setLength(pp.getLength());
-	            fp.setNameInSource(pp.getNameInSource());
-	            fp.setNativeType(pp.getNativeType());
-	            fp.setNullType(pp.getNullType());
-	            fp.setProperties(pp.getProperties());
-	            fp.setRadix(pp.getRadix());
-	            fp.setScale(pp.getScale());
-	            fp.setUUID(pp.getUUID());
-	            if (pp.getType() == ProcedureParameter.Type.In) {
-	                fp.setVarArg(pp.isVarArg());
-	                ins.add(fp);
-	                fp.setPosition(ins.size());
-	            } else {
-	                method.setOutputParameter(fp);
-	                fp.setPosition(0);
-	            }
-			} else { // Functionality for older parsers 8.8 and below
-			    FunctionParameter fp = new FunctionParameter(teiidVersion, pp.getName(), pp.getRuntimeType(), pp.getAnnotation());
-			    if (pp.getType() == ProcedureParameter.Type.In) {
-			        fp.setVarArg(pp.isVarArg());
-			        ins.add(fp);
-			    } else {
-			        method.setOutputParameter(fp);
-			    }
-			}
+		    //copy the metadata
+            FunctionParameter fp = new FunctionParameter(teiidVersion, pp.getName(), pp.getRuntimeType(), pp.getAnnotation());
+            fp.setDatatype(pp.getDatatype(), true, pp.getArrayDimensions());
+            fp.setLength(pp.getLength());
+            fp.setNameInSource(pp.getNameInSource());
+            fp.setNativeType(pp.getNativeType());
+            fp.setNullType(pp.getNullType());
+            fp.setProperties(pp.getProperties());
+            fp.setRadix(pp.getRadix());
+            fp.setScale(pp.getScale());
+            fp.setUUID(pp.getUUID());
+            if (pp.getType() == ProcedureParameter.Type.In) {
+                fp.setVarArg(pp.isVarArg());
+                ins.add(fp);
+                fp.setPosition(ins.size());
+            } else {
+                method.setOutputParameter(fp);
+                fp.setPosition(0);
+            }
 		}
 		method.setInputParameters(ins);
 		
@@ -828,7 +822,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 		return method;
 	}
 
-	@Since(Version.TEIID_8_0)
 	protected void setProcedureOptions(Procedure proc) {
     	Map<String, String> props = proc.getProperties();
     	setCommonProperties(proc, props);
@@ -839,7 +832,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     	}
     }
 
-	@Since(Version.TEIID_8_0)
 	protected void removeOption(String option, AbstractMetadataRecord record) {
     	if (record instanceof Table) {
     		removeTableOption(option, (Table)record);
@@ -852,7 +844,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     	}
     }
 
-	@Since(Version.TEIID_8_0)
 	protected void setOptions(AbstractMetadataRecord record) {
     	if (record instanceof Table) {
     		setTableOptions((Table)record);
@@ -865,7 +856,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     	}
     }
 
-	@Since(Version.TEIID_8_0)
 	protected void removeProcedureOption(String key, Procedure proc) {
     	if (proc.getProperty(key, false) != null) {
     		proc.setProperty(key, null);
@@ -877,12 +867,10 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     	}
     }    
 
-    @Since(Version.TEIID_8_0)
 	protected boolean isTrue(final String text) {
         return Boolean.valueOf(text);
     }    
 
-    @Since(Version.TEIID_8_0)
 	protected AbstractMetadataRecord getChild(String name, AbstractMetadataRecord record, boolean parameter) {
     	if (record instanceof Table) {
     		if (parameter) {
@@ -894,7 +882,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     	//TODO: function is not supported yet because we store by uid, which should instead be a more friendly "unique name"
     }
 
-    @Since(Version.TEIID_8_0)
 	protected Column getColumn(String columnName, Table table) {
 		Column c = table.getColumnByName(columnName);
 		if (c != null) {
@@ -903,7 +890,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 		throw  new RuntimeException(Messages.getString(Messages.TeiidParser.no_column, columnName, table.getName())); 
 	}
 
-    @Since(Version.TEIID_8_0)
 	protected AbstractMetadataRecord getColumn(String paramName, Procedure proc, boolean parameter) {
 		if (proc.getResultSet() != null) {
 			Column result = proc.getResultSet().getColumnByName(paramName);
@@ -922,7 +908,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 		throw  new RuntimeException(Messages.getString(Messages.TeiidParser.alter_procedure_param_doesnot_exist, paramName, proc.getName()));
 	}
 	
-    @Since(Version.TEIID_8_0)
 	protected FunctionParameter getParameter(String paramName, FunctionMethod func) {
 		List<FunctionParameter> params = func.getInputParameters();
 		for (FunctionParameter param:params) {
@@ -933,7 +918,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 		throw  new RuntimeException(Messages.getString(Messages.TeiidParser.alter_function_param_doesnot_exist, paramName, func.getName()));
 	}	
 	
-    @Since(Version.TEIID_8_0)
 	protected void createDDLTrigger(MetadataFactory schema, AlterTrigger trigger) {
 		GroupSymbol group = trigger.getTarget();
 		
@@ -949,7 +933,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 		}
 	}
 
-    @Since(Version.TEIID_8_0)
     protected BaseColumn addProcColumn(MetadataFactory factory, Procedure proc, String name, ParsedDataType type, boolean rs) {
         BaseColumn column = null;
         if (rs) {
@@ -972,7 +955,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         return column;
     }
 
-	@Since(Version.TEIID_8_0)
     protected void setTypeInfo(ParsedDataType type, BaseColumn column) {
         if (type.getLength() != null){
             column.setLength(type.getLength());
@@ -985,7 +967,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         }
     }
 
-    @Since(Version.TEIID_8_0)
     protected KeyRecord addFBI(MetadataFactory factory, List<Expression> expressions, Table table, String name) {
         List<String> columnNames = new ArrayList<String>(expressions.size());
         List<Boolean> nonColumnExpressions = new ArrayList<Boolean>(expressions.size());
@@ -1004,7 +985,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         return factory.addFunctionBasedIndex(name != null?name:(SQLConstants.NonReserved.INDEX+(fbi?table.getFunctionBasedIndexes().size():table.getIndexes().size())), columnNames, nonColumnExpressions, table);
     }
 
-    @Since(Version.TEIID_8_0)
     protected MetadataFactory getTempMetadataFactory() {
         if (this.metadataFactory == null) {
             this.metadataFactory = new MetadataFactory(version, "temp", "1", "temp", //$NON-NLS-1$ //$NON-NLS-2$
@@ -1013,7 +993,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         return this.metadataFactory;
     }
 
-    @Since(Version.TEIID_8_5)
     protected void setSourceHint(SourceHint sourceHint, Command command) {
         if (sourceHint == null)
             return;
@@ -1025,7 +1004,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         }
     }
 
-    @Since(Version.TEIID_8_5)
     protected List<Expression> arrayExpressions(List<Expression> expressions, Expression expr) {
         if (expressions == null) {
             expressions = new ArrayList<Expression>();
@@ -1035,4 +1013,14 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         }
         return expressions;
     }
+    
+	public static void setDefault(BaseColumn column, Expression value) {
+		if ((value instanceof Constant) && value.getType() == DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()) {
+			column.setDefaultValue(((Constant)value).getValue().toString());
+		} else {
+			//it's an expression
+			column.setProperty(BaseColumn.DEFAULT_HANDLING, BaseColumn.EXPRESSION_DEFAULT);
+			column.setDefaultValue(value.toString());
+		}
+	}
 }

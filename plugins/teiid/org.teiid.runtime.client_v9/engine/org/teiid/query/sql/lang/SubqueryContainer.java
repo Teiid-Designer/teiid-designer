@@ -30,7 +30,12 @@ import org.teiid.designer.query.sql.lang.ISubqueryContainer;
  * @param <T> command
  */
 public interface SubqueryContainer<T extends Command> extends LanguageObject, ISubqueryContainer<T> {
-
+	
+	public static interface Evaluatable<T extends Command> extends SubqueryContainer<T> {
+		boolean shouldEvaluate();
+		
+		void setShouldEvaluate(boolean b);
+	}
     /**
      * Returns the subquery Command object
      * @return the subquery Command object

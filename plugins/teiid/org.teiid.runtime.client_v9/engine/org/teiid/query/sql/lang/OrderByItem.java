@@ -54,7 +54,7 @@ public class OrderByItem extends SimpleNode
 
     @Override
     public void setSymbol(Expression symbol) {
-        if (isTeiidVersionOrGreater(Version.TEIID_8_6) && symbol != null
+        if (symbol != null
                 && !(symbol instanceof Symbol) && !(symbol instanceof Constant)) {
             ExpressionSymbol ex = getTeiidParser().createASTNode(ASTNodes.EXPRESSION_SYMBOL);
             ex.setName("expr"); //$NON-NLS-1$

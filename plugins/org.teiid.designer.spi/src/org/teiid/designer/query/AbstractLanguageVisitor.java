@@ -7,13 +7,13 @@
 */
 package org.teiid.designer.query;
 
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.IAlterProcedure;
 import org.teiid.designer.query.sql.lang.IAlterTrigger;
 import org.teiid.designer.query.sql.lang.IAlterView;
 import org.teiid.designer.query.sql.lang.IArrayTable;
 import org.teiid.designer.query.sql.lang.IBetweenCriteria;
+import org.teiid.designer.query.sql.lang.ICall;
 import org.teiid.designer.query.sql.lang.ICompareCriteria;
 import org.teiid.designer.query.sql.lang.ICompoundCriteria;
 import org.teiid.designer.query.sql.lang.ICreate;
@@ -32,6 +32,7 @@ import org.teiid.designer.query.sql.lang.IJoinPredicate;
 import org.teiid.designer.query.sql.lang.IJoinType;
 import org.teiid.designer.query.sql.lang.ILimit;
 import org.teiid.designer.query.sql.lang.IMatchCriteria;
+import org.teiid.designer.query.sql.lang.INamedProcedureCall;
 import org.teiid.designer.query.sql.lang.INotCriteria;
 import org.teiid.designer.query.sql.lang.IObjectTable;
 import org.teiid.designer.query.sql.lang.IOption;
@@ -107,6 +108,10 @@ public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
     public void visit(IBetweenCriteria obj) {
     }
 
+    @Override
+    public void visit(ICall obj) {
+    }
+    
     @Override
     public void visit(ICaseExpression obj) {
     }
@@ -371,12 +376,10 @@ public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
     public void visit(IXMLTable obj) {
     }
 
-    @Since(Version.TEIID_8_10)
     @Override
     public void visit(IXMLExists obj) {
     }
 
-    @Since(Version.TEIID_8_10)
     @Override
     public void visit(IXMLCast obj) {
     }
@@ -451,5 +454,9 @@ public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
 
     @Override
     public void visit(IWindowSpecification windowSpecification) {
+    }
+    
+    @Override
+    public void visit(INamedProcedureCall namedProcedureCall) {
     }
 }

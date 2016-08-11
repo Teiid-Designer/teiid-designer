@@ -175,10 +175,7 @@ public class SyntaxFactory implements IQueryFactory <Expression,
         aggregateSymbol.setDistinct(isDistinct);
 
         if (expression != null) {
-            if (isGreaterThanOrEqualTo(Version.TEIID_8_0))
-                aggregateSymbol.setArgs(new Expression[] { expression });
-            else
-                aggregateSymbol.setExpression(expression);
+            aggregateSymbol.setArgs(new Expression[] { expression });
         }
 
         return aggregateSymbol;
@@ -264,15 +261,9 @@ public class SyntaxFactory implements IQueryFactory <Expression,
 
     @Override
     public IRaiseStatement createRaiseStatement(Expression expression) {
-        if (isGreaterThanOrEqualTo(Version.TEIID_8_0)) {
-            RaiseStatement raiseStatement = create(ASTNodes.RAISE_STATEMENT);
-            raiseStatement.setExpression(expression);
-            return raiseStatement;
-        } else {
-            RaiseErrorStatement raiseErrorStatement = create(ASTNodes.RAISE_ERROR_STATEMENT);
-            raiseErrorStatement.setExpression(expression);
-            return raiseErrorStatement;
-        }
+        RaiseStatement raiseStatement = create(ASTNodes.RAISE_STATEMENT);
+        raiseStatement.setExpression(expression);
+        return raiseStatement;
     }
 
     @Override
@@ -414,15 +405,9 @@ public class SyntaxFactory implements IQueryFactory <Expression,
 
     @Override
     public ICreateProcedureCommand createCreateProcedureCommand(Block block) {
-        if (isGreaterThanOrEqualTo(Version.TEIID_8_0)) {
-            CreateProcedureCommand command = create(ASTNodes.CREATE_PROCEDURE_COMMAND);
-            command.setBlock(block);
-            return command;
-        } else {
-            CreateUpdateProcedureCommand command = create(ASTNodes.CREATE_UPDATE_PROCEDURE_COMMAND);
-            command.setBlock(block);
-            return command;
-        }
+        CreateProcedureCommand command = create(ASTNodes.CREATE_PROCEDURE_COMMAND);
+        command.setBlock(block);
+        return command;
     }
 
     @Override

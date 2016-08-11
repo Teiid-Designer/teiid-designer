@@ -22,7 +22,6 @@
 
 package org.teiid.query.sql.symbol;
 
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.symbol.IXMLCast;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
@@ -33,7 +32,6 @@ import org.teiid.query.sql.visitor.SQLStringVisitor;
 /**
  * The XMLCast symbol
  */
-@Since(Version.TEIID_8_10)
 public class XMLCast extends SimpleNode implements Expression, IXMLCast<LanguageVisitor> {
 	
 	private Expression expression;

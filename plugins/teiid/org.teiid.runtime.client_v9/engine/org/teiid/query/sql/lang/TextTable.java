@@ -4,7 +4,6 @@ package org.teiid.query.sql.lang;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.ITextTable;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
@@ -22,7 +21,6 @@ public class TextTable extends TableFunctionReference implements ITextTable<Lang
 
     private Character delimiter;
 
-    @Since(Version.TEIID_8_10)
     private Character rowDelimiter;
 
     private Character quote;
@@ -79,22 +77,14 @@ public class TextTable extends TableFunctionReference implements ITextTable<Lang
     /**
      * @return row delimiter
      */
-    @Since(Version.TEIID_8_10)
     public Character getRowDelimiter() {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
-            return null;
-
         return rowDelimiter;
     }
 
     /**
      * @param rowDelimiter
      */
-    @Since(Version.TEIID_8_10)
     public void setRowDelimiter(Character rowDelimiter) {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
-            return;
-
         this.rowDelimiter = rowDelimiter;
     }
 
@@ -185,11 +175,7 @@ public class TextTable extends TableFunctionReference implements ITextTable<Lang
     /**
      * Set no trim on columns
      */
-    @Since(Version.TEIID_8_10)
     public void setNoTrim() {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
-            return;
-
         for (TextColumn col : columns) {
             col.setNoTrim(true);
         }
@@ -198,11 +184,7 @@ public class TextTable extends TableFunctionReference implements ITextTable<Lang
     /**
      * @return if all columns are no trim
      */
-    @Since(Version.TEIID_8_10)
     public boolean isNoTrim() {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
-            return false;
-
         for (TextColumn col : columns) {
             if (!col.isNoTrim()) {
                 return false;
@@ -307,13 +289,11 @@ public class TextTable extends TableFunctionReference implements ITextTable<Lang
         if (this.usingRowDelimiter != other.usingRowDelimiter)
             return false;
 
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
-            if (this.delimiter == null) {
-                if (other.delimiter != null)
-                    return false;
-            } else if (!this.delimiter.equals(other.delimiter))
+        if (this.delimiter == null) {
+            if (other.delimiter != null)
                 return false;
-        }
+        } else if (!this.delimiter.equals(other.delimiter))
+            return false;
 
         return true;
     }
@@ -349,7 +329,6 @@ public class TextTable extends TableFunctionReference implements ITextTable<Lang
         if(getName() != null)
             clone.setName(getName());
         clone.setOptional(isOptional());
-        clone.setMakeInd(isMakeInd());
         clone.setMakeInd(getMakeInd());
         clone.setNoUnnest(isNoUnnest());
         clone.setMakeDep(isMakeDep());

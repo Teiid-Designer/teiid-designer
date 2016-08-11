@@ -41,7 +41,6 @@ import org.teiid.adminapi.VDB;
 import org.teiid.core.util.CopyOnWriteLinkedHashMap;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
@@ -50,54 +49,6 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
 	private static final String VERSION_DELIM = "."; //$NON-NLS-1$
 
 	private static final long serialVersionUID = -4723595252013356436L;
-
-//	/**
-//     * This ONLY exists to ensure that the serialisation framework
-//     * has access to the anonymous class VDBMetaData$1.
-//     *
-//     * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
-//     */
-//    @Removed(Version.TEIID_8_0)
-//	private transient ListOverMap<ModelMetaData> sevenModels = new ListOverMap<ModelMetaData>(new KeyBuilder<ModelMetaData>() {
-//        private static final long serialVersionUID = 846247100420118961L;
-//
-//        @Override
-//        public String getKey(ModelMetaData entry) {
-//            return entry.getName();
-//        }
-//    });
-
-//    /**
-//     * This ONLY exists to ensure that the serialisation framework
-//     * has access to the anonymous class VDBMetaData$2.
-//     *
-//     * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
-//     */
-//    @Removed(Version.TEIID_8_0)
-//    private transient ListOverMap<VDBTranslatorMetaData> sevenTranslators = new ListOverMap<VDBTranslatorMetaData>(new KeyBuilder<VDBTranslatorMetaData>() {
-//        private static final long serialVersionUID = 3890502172003653563L;
-//
-//        @Override
-//        public String getKey(VDBTranslatorMetaData entry) {
-//            return entry.getName();
-//        }
-//    }); 
-    
-//    /**
-//     * This ONLY exists to ensure that the serialisation framework
-//     * has access to the anonymous class VDBMetaData$3.
-//     *
-//     * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
-//     */
-//    @Removed(Version.TEIID_8_0)
-//    private transient ListOverMap<DataPolicyMetadata> sevenDataPolicies = new ListOverMap<DataPolicyMetadata>(new KeyBuilder<DataPolicyMetadata>() {
-//        private static final long serialVersionUID = 4954591545242715254L;
-//
-//        @Override
-//        public String getKey(DataPolicyMetadata entry) {
-//            return entry.getName();
-//        }
-//    }); 
 
 	private LinkedHashMap<String, ModelMetaData> models = new LinkedHashMap<String, ModelMetaData>();
 
@@ -125,32 +76,32 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
 
 	private Map<String, Boolean> visibilityOverrides = new HashMap<String, Boolean>(2);
 
-	private LinkedHashMap<String, ModelMetaData> convertModels(ListOverMap<ModelMetaData> overMap) {
-        LinkedHashMap<String, ModelMetaData> newMap = new LinkedHashMap<String, ModelMetaData>();
-        for (Entry<String, ModelMetaData> entry : overMap.getMap().entrySet()) {
-            newMap.put(entry.getKey(), entry.getValue());
-        }
+//	private LinkedHashMap<String, ModelMetaData> convertModels(ListOverMap<ModelMetaData> overMap) {
+//        LinkedHashMap<String, ModelMetaData> newMap = new LinkedHashMap<String, ModelMetaData>();
+//        for (Entry<String, ModelMetaData> entry : overMap.getMap().entrySet()) {
+//            newMap.put(entry.getKey(), entry.getValue());
+//        }
+//
+//        return newMap;
+//    }
 
-        return newMap;
-    }
+//    private LinkedHashMap<String, DataPolicyMetadata> convertDataPolicies(ListOverMap<DataPolicyMetadata> overMap) {
+//        LinkedHashMap<String, DataPolicyMetadata> newMap = new LinkedHashMap<String, DataPolicyMetadata>();
+//        for (Entry<String, DataPolicyMetadata> entry : overMap.getMap().entrySet()) {
+//            newMap.put(entry.getKey(), entry.getValue());
+//        }
+//
+//        return newMap;
+//    }
 
-    private LinkedHashMap<String, DataPolicyMetadata> convertDataPolicies(ListOverMap<DataPolicyMetadata> overMap) {
-        LinkedHashMap<String, DataPolicyMetadata> newMap = new LinkedHashMap<String, DataPolicyMetadata>();
-        for (Entry<String, DataPolicyMetadata> entry : overMap.getMap().entrySet()) {
-            newMap.put(entry.getKey(), entry.getValue());
-        }
-
-        return newMap;
-    }
-
-    private LinkedHashMap<String, VDBTranslatorMetaData> convertTranslators(ListOverMap<VDBTranslatorMetaData> overMap) {
-        LinkedHashMap<String, VDBTranslatorMetaData> newMap = new LinkedHashMap<String, VDBTranslatorMetaData>();
-        for (Entry<String, VDBTranslatorMetaData> entry : overMap.getMap().entrySet()) {
-            newMap.put(entry.getKey(), entry.getValue());
-        }
-
-        return newMap;
-    }
+//    private LinkedHashMap<String, VDBTranslatorMetaData> convertTranslators(ListOverMap<VDBTranslatorMetaData> overMap) {
+//        LinkedHashMap<String, VDBTranslatorMetaData> newMap = new LinkedHashMap<String, VDBTranslatorMetaData>();
+//        for (Entry<String, VDBTranslatorMetaData> entry : overMap.getMap().entrySet()) {
+//            newMap.put(entry.getKey(), entry.getValue());
+//        }
+//
+//        return newMap;
+//    }
 
     /*
      * Helper method for serialization to deal with differences between Teiid 7 and 8
@@ -163,9 +114,6 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
         Object serModels = readFields.get("models", null);
         if (isLinkedHashMap(serModels)) { /* Teiid Version 8+ */
             models = (LinkedHashMap<String, ModelMetaData>) serModels;
-        } else if (isListOverMap(serModels)) { /* Teiid Version 7 */
-            ListOverMap<ModelMetaData> overMap = (ListOverMap<ModelMetaData>) serModels;
-            models = convertModels(overMap);
         } else
             throw new IllegalStateException();
 
@@ -173,9 +121,6 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
         Object serTranslators = readFields.get("translators", null);
         if (isLinkedHashMap(serModels)) { /* Teiid Version 8+ */
             translators = (LinkedHashMap<String, VDBTranslatorMetaData>) serTranslators;
-        } else if (isListOverMap(serModels)) { /* Teiid Version 7 */
-            ListOverMap<VDBTranslatorMetaData> overMap = (ListOverMap<VDBTranslatorMetaData>) serTranslators;
-            translators = convertTranslators(overMap);
         } else
             throw new IllegalStateException();
 
@@ -183,9 +128,6 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
         Object serDataPolicies = readFields.get("dataPolicies", null);
         if (isLinkedHashMap(serModels)) { /* Teiid Version 8+ */
             dataPolicies = (LinkedHashMap<String, DataPolicyMetadata>) serDataPolicies;
-        } else if (isListOverMap(serModels)) { /* Teiid Version 7 */
-            ListOverMap<DataPolicyMetadata> overMap = (ListOverMap<DataPolicyMetadata>) serDataPolicies;
-            dataPolicies = convertDataPolicies(overMap);
         } else
             throw new IllegalStateException();
 
@@ -447,12 +389,10 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
 		}
 	}
 
-	@Since(Version.TEIID_8_9)
 	public void setVisibilityOverride(String name, boolean visible) {
         this.visibilityOverrides.put(name, visible);
     }
 
-	@Since(Version.TEIID_8_9)
     public Map<String, Boolean> getVisibilityOverrides() {
         return visibilityOverrides;
     }

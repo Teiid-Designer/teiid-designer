@@ -40,7 +40,6 @@ import org.teiid.core.CoreConstants;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.util.ReflectionHelper;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.AbstractMetadataRecord;
@@ -78,15 +77,11 @@ public class FunctionTree {
 
     private Map<String, List<FunctionMethod>> functionsByName = new TreeMap<String, List<FunctionMethod>>(String.CASE_INSENSITIVE_ORDER);
 
-    @Since(Version.TEIID_8_9)
     private Map<String, FunctionMethod> functionsByUuid = new TreeMap<String, FunctionMethod>(String.CASE_INSENSITIVE_ORDER);
-
-    @Since(Version.TEIID_8_9)
     private String schemaName;
 
     private Set<FunctionMethod> allFunctions = new HashSet<FunctionMethod>();
 
-    @Since(Version.TEIID_8_9)
     private int idCount;
 
 	/**
@@ -138,12 +133,10 @@ public class FunctionTree {
         return dataTypeManager;
     }
 
-    @Since(Version.TEIID_8_9)
     public String getSchemaName() {
         return schemaName;
     }
 
-    @Since(Version.TEIID_8_9)
     public Map<String, FunctionMethod> getFunctionsByUuid() {
         return functionsByUuid;
     }
@@ -415,7 +408,7 @@ public class FunctionTree {
             FunctionDescriptor result = new FunctionDescriptor(teiidVersion, method, types, outputType,
                                                                invocationMethod, requiresContext, source.getClassLoader());
 
-            boolean validateClassResult =  teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_12_4) ? validateClass : true;
+            boolean validateClassResult = true;
 
             if (validateClassResult && method.getAggregateAttributes() != null
                 && (method.getPushdown() == PushDown.CAN_PUSHDOWN || method.getPushdown() == PushDown.CANNOT_PUSHDOWN)) {

@@ -40,7 +40,6 @@ import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod.PushDown;
@@ -580,28 +579,25 @@ public class MetadataFactory implements Serializable {
         DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
         String returnType;
         AggregateAttributes aa = null;
-        if (Version.TEIID_8_12_4.get().isLessThan(teiidVersion))
-            returnType = dataTypeManager.getDataTypeName(method.getReturnType());
-        else {
-            Class<?> returnTypeClass = method.getReturnType();
-            //handle user defined aggregates
-            if ((method.getModifiers() & Modifier.STATIC) == 0 && UserDefinedAggregate.class.isAssignableFrom(method.getDeclaringClass())) {
-                aa = new AggregateAttributes();
-                Method m;
-                try {
-                    m = method.getDeclaringClass().getMethod("getResult", CommandContext.class); //$NON-NLS-1$
-                } catch (NoSuchMethodException e) {
-                    throw new RuntimeException(e);
-                } catch (SecurityException e) {
-                    throw new RuntimeException(e);
-                }
-                returnTypeClass = m.getReturnType();
+        
+        Class<?> returnTypeClass = method.getReturnType();
+        //handle user defined aggregates
+        if ((method.getModifiers() & Modifier.STATIC) == 0 && UserDefinedAggregate.class.isAssignableFrom(method.getDeclaringClass())) {
+            aa = new AggregateAttributes();
+            Method m;
+            try {
+                m = method.getDeclaringClass().getMethod("getResult", CommandContext.class); //$NON-NLS-1$
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            } catch (SecurityException e) {
+                throw new RuntimeException(e);
             }
-            if (returnTypeClass.isPrimitive()) {
-                returnTypeClass = convertPrimitiveToObject(returnTypeClass);
-            }
-            returnType = dataTypeManager.getDataTypeName(returnTypeClass);
+            returnTypeClass = m.getReturnType();
         }
+        if (returnTypeClass.isPrimitive()) {
+            returnTypeClass = convertPrimitiveToObject(returnTypeClass);
+        }
+        returnType = dataTypeManager.getDataTypeName(returnTypeClass);
 
         Class<?>[] params = method.getParameterTypes();
         String[] paramTypes = new String[params.length];

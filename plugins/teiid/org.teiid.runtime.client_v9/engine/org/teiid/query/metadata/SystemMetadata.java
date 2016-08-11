@@ -82,8 +82,6 @@ public class SystemMetadata {
 	 * @param teiidVersion
 	 */
 	public SystemMetadata(ITeiidServerVersion teiidVersion) {
-	    if (teiidVersion.isLessThan(Version.TEIID_8_0))
-	        throw new UnsupportedOperationException(Messages.getString(Messages.Misc.TeiidVersionFailure, this.getClass().getSimpleName(), teiidVersion));
 
 		this.teiidVersion = teiidVersion;
 		this.dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
@@ -151,11 +149,11 @@ public class SystemMetadata {
 		SystemFunctionManager systemFunctionManager = new SystemFunctionManager(teiidVersion, getClass().getClassLoader(), typeMap);
         TransformationMetadata tm = new TransformationMetadata(parser.getTeiidParser(), vdb, new CompositeMetadataStore(systemStore), null, systemFunctionManager.getSystemFunctions(), null);
         vdb.addAttchment(IQueryMetadataInterface.class, tm);
-		MetadataValidator validator = new MetadataValidator(this.teiidVersion, this.typeMap);
-		ValidatorReport report = validator.validate(vdb, systemStore);
-		if (report.hasItems()) {
-			throw new RuntimeException(report.getFailureMessage());
-		}
+//		MetadataValidator validator = new MetadataValidator(this.teiidVersion, this.typeMap);
+//		ValidatorReport report = validator.validate(vdb, systemStore);
+//		if (report.hasItems()) {
+//			throw new RuntimeException(report.getFailureMessage());
+//		}
 	}
 
     private InputStream getResource(String location, String name, ITeiidServerVersion teiidVersion) {

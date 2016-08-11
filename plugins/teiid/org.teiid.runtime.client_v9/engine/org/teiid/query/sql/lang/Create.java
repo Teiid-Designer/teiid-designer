@@ -25,7 +25,6 @@ package org.teiid.query.sql.lang;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.ICreate;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.BaseColumn.NullType;
@@ -45,7 +44,6 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 public class Create extends Command
     implements TargetedCommand, ICreate<Expression, LanguageVisitor> {
 
-    @Since(Version.TEIID_8_10)
     public enum CommitAction {
         PRESERVE_ROWS,
     }
@@ -66,7 +64,6 @@ public class Create extends Command
     private Table tableMetadata;
     private String on;
 
-    @Since(Version.TEIID_8_10)
     private CommitAction commitAction;
 
     public GroupSymbol getTable() {
@@ -136,10 +133,7 @@ public class Create extends Command
     	for (ElementSymbol elementSymbol : columns) {
     		Column c = new Column(getTeiidVersion());
 
-    		if (isTeiidVersionOrGreater(Version.TEIID_8_5))
-    		    c.setName(elementSymbol.getShortName());
-    		else
-    		    c.setName(elementSymbol.getName());
+    		c.setName(elementSymbol.getShortName());
 
     		c.setRuntimeType(getTeiidParser().getDataTypeService().getDataTypeName(elementSymbol.getType()));
     		c.setNullType(NullType.Nullable);
@@ -236,13 +230,11 @@ public class Create extends Command
         } else if (!this.tableMetadata.equals(other.tableMetadata))
             return false;
 
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
-            if (this.commitAction == null) {
-                if (other.commitAction != null)
-                    return false;
-            } else if (!this.commitAction.equals(other.commitAction))
+        if (this.commitAction == null) {
+            if (other.commitAction != null)
                 return false;
-        }
+        } else if (!this.commitAction.equals(other.commitAction))
+            return false;
 
         return true;
     }
@@ -279,12 +271,10 @@ public class Create extends Command
         return clone;        
     }
 
-    @Since(Version.TEIID_8_10)
     public CommitAction getCommitAction() {
         return commitAction;
     }
 
-    @Since(Version.TEIID_8_10)
     public void setCommitAction(CommitAction commitAction) {
         this.commitAction = commitAction;
     }

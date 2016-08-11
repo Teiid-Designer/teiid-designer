@@ -124,17 +124,13 @@ public class TempTableResolver extends CommandResolver {
 			ArrayList<TempMetadataID> primaryKey = new ArrayList<TempMetadataID>(create.getPrimaryKey().size());
 			for (ElementSymbol symbol : create.getPrimaryKey()) {
 
-			    if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
-			        Object mid = symbol.getMetadataID();
-			        if (mid instanceof TempMetadataID) {
-			            primaryKey.add((TempMetadataID)mid);
-			        } else if (mid instanceof Column) {
-			            //TODO: this breaks our normal metadata usage
-			            primaryKey.add(tempTable.getElements().get(((Column)mid).getPosition() - 1));                   
-			        }
-			    } else {
-			        primaryKey.add((TempMetadataID) symbol.getMetadataID());
-			    }
+		        Object mid = symbol.getMetadataID();
+		        if (mid instanceof TempMetadataID) {
+		            primaryKey.add((TempMetadataID)mid);
+		        } else if (mid instanceof Column) {
+		            //TODO: this breaks our normal metadata usage
+		            primaryKey.add(tempTable.getElements().get(((Column)mid).getPosition() - 1));                   
+		        }
 			}
 			tempTable.setPrimaryKey(primaryKey);
 		}

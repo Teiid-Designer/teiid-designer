@@ -188,10 +188,8 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
             int result = 1;
 
             result = prime * result + this.groupSymbol.hashCode();
-            if (getTeiidVersion().isLessThan(Version.TEIID_8_0))
-                result = prime * result + (this.getShortCanonicalName() == null ? 0 : this.getShortCanonicalName().hashCode());
-            else
-                result = prime * result + (this.getShortName() == null ? 0 : this.getShortName().hashCode());
+
+            result = prime * result + (this.getShortName() == null ? 0 : this.getShortName().hashCode());
 
             return result;
         }
@@ -240,8 +238,8 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
             clone.setMetadataID(getMetadataID());
         if(getDisplayMode() != null)
             clone.setDisplayMode(getDisplayMode());
-        if(getShortCanonicalName() != null)
-            clone.setShortCanonicalName(getShortCanonicalName());
+//        if(getShortCanonicalName() != null)
+//            clone.setShortCanonicalName(getShortCanonicalName());
         if(getShortName() != null)
             clone.setShortName(getShortName());
         if(getOutputName() != null)

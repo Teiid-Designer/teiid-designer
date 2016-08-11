@@ -2,7 +2,6 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.symbol;
 
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.symbol.IScalarSubquery;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
@@ -22,7 +21,6 @@ public class ScalarSubquery extends SimpleNode
 
     private Class<?> type;
 
-    @Since(Version.TEIID_8_10)
     private SubqueryHint subqueryHint = new SubqueryHint();
 
     private boolean shouldEvaluate;
@@ -72,7 +70,6 @@ public class ScalarSubquery extends SimpleNode
     /**
      * @return sub query hint
      */
-    @Since(Version.TEIID_8_10)
     public SubqueryHint getSubqueryHint() {
         return subqueryHint;
     }
@@ -80,7 +77,6 @@ public class ScalarSubquery extends SimpleNode
     /**
      * @param subqueryHint
      */
-    @Since(Version.TEIID_8_10)
     public void setSubqueryHint(SubqueryHint subqueryHint) {
         this.subqueryHint = subqueryHint;
     }
@@ -99,6 +95,8 @@ public class ScalarSubquery extends SimpleNode
         this.shouldEvaluate = shouldEvaluate;
     }
 
+    // TODO: Teiid 9.0
+    // Check with Paul again??
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -121,11 +119,9 @@ public class ScalarSubquery extends SimpleNode
             if (other.type != null) return false;
         } else if (!this.type.equals(other.type)) return false;
 
-        if(getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
-            if (this.subqueryHint == null) {
-                if (other.subqueryHint != null) return false;
-            } else if (!this.subqueryHint.equals(other.subqueryHint)) return false;
-        }
+        if (this.subqueryHint == null) {
+            if (other.subqueryHint != null) return false;
+        } else if (!this.subqueryHint.equals(other.subqueryHint)) return false;
 
         return true;
     }

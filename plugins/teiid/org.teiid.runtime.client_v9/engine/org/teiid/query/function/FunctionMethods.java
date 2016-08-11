@@ -32,6 +32,9 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.nio.charset.Charset;
 import java.nio.charset.CodingErrorAction;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -61,12 +64,13 @@ import org.teiid.core.util.PropertiesUtils;
 import org.teiid.core.util.ReaderInputStream;
 import org.teiid.core.util.StringUtil;
 import org.teiid.core.util.TimestampWithTimezone;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants;
 import org.teiid.language.SQLConstants.NonReserved;
 import org.teiid.metadata.FunctionMethod.Determinism;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
@@ -75,7 +79,6 @@ import org.teiid.translator.SourceSystemFunctions;
 /**
  * Static method hooks for most of the function library.
  */
-@Since(Version.TEIID_8_0)
 public final class FunctionMethods {
 	
 	private static final boolean CALENDAR_TIMESTAMPDIFF = PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.calendarTimestampDiff", true); //$NON-NLS-1$
@@ -1399,7 +1402,6 @@ public final class FunctionMethods {
         return context.getConnectionId();
     }
 
-    @Since(Version.TEIID_8_12_4)
     @TeiidFunction(category=FunctionCategoryConstants.MISCELLANEOUS)
     public static Object node_id() {
         return System.getProperty("jboss.node.name"); //$NON-NLS-1$
@@ -1531,7 +1533,6 @@ public final class FunctionMethods {
 
 	private enum ErrorAction {THROW_EXCEPTION, IGNORE, WAIT}
 	@TeiidFunction(category=FunctionCategoryConstants.SYSTEM, determinism = Determinism.COMMAND_DETERMINISTIC)
-	@Since(Version.TEIID_8_6)	
 	public static int mvstatus(CommandContext context, String schemaName, String viewName, Boolean validity, String status, String action) throws Exception {
 		if (!validity) {
 			if (ErrorAction.THROW_EXCEPTION.name().equalsIgnoreCase(action)) {
@@ -1545,7 +1546,6 @@ public final class FunctionMethods {
 	}	
 	
 	@TeiidFunction(category=FunctionCategoryConstants.SYSTEM)
-	@Since(Version.TEIID_8_6)
 	public static String[] tokenize(String str, char delimiter) {
 		List<String> tokens = StringUtil.tokenize(str, delimiter);
 		return tokens.toArray(new String[tokens.size()]);
@@ -1566,12 +1566,48 @@ public final class FunctionMethods {
     @TeiidFunction(name=SourceSystemFunctions.REGEXP_REPLACE,
                    category=FunctionCategoryConstants.STRING,
                    nullOnNull=true)
-    @Since(Version.TEIID_8_11)
     public static String regexpReplace(CommandContext context,
                                        String source,
                                        String regex,
                                        String replacement) throws Exception {
         return regexpReplace(context, source, regex, replacement, ""); //$NON-NLS-1$
+    }
+    
+    
+    @TeiidFunction(name=SourceSystemFunctions.REGEXP_REPLACE,
+            category=FunctionCategoryConstants.STRING,
+            nullOnNull=true)
+	public static ClobType regexpReplace(CommandContext context,
+	                                ClobType source,
+	                                String regex,
+	                                String replacement) throws Exception {
+    	return regexpReplace(context, source, regex, replacement, ""); //$NON-NLS-1$
+	}
+    
+    @TeiidFunction(name=SourceSystemFunctions.REGEXP_REPLACE,
+            category=FunctionCategoryConstants.STRING,
+            nullOnNull=true)
+    public static String regexpReplace(CommandContext context,
+                                String source,
+                                String regex,
+                                String replacement,
+                                String flags)
+                                		throws Exception {
+    	return regexpReplace(context, (CharSequence)source, regex, replacement, flags);
+    }
+    
+    @TeiidFunction(name=SourceSystemFunctions.REGEXP_REPLACE,
+            category=FunctionCategoryConstants.STRING,
+            nullOnNull=true)
+    public static ClobType regexpReplace(CommandContext context,
+    							ClobType source,
+                                String regex,
+                                String replacement,
+                                String flags)
+                                		throws Exception {
+    	//TODO: this is not very memory safe - we can write out to the buffermanger if needed
+    	String result = regexpReplace(context, source.getCharSequence(), regex, replacement, flags);
+    	return new ClobType(new ClobImpl(result));
     }
 
     /**
@@ -1598,8 +1634,7 @@ public final class FunctionMethods {
      */
     @TeiidFunction( name = SourceSystemFunctions.REGEXP_REPLACE,
                                 category = FunctionCategoryConstants.STRING, nullOnNull = true )
-    @Since( Version.TEIID_8_11 )
-    public static String regexpReplace(CommandContext context, String source, String regex, String replacement, String flags) throws Exception {
+    public static String regexpReplace(CommandContext context, CharSequence source, String regex, String replacement, String flags) throws Exception {
 
         // Parse regex flags into a bitmask for Pattern API.
         // Exception is the 'g' flag which makes us call replaceAll instead of

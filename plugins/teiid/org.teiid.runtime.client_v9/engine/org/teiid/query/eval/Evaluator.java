@@ -56,7 +56,6 @@ import org.teiid.core.types.XMLType;
 import org.teiid.core.types.XMLType.Type;
 import org.teiid.core.types.basic.StringToSQLXMLTransform;
 import org.teiid.core.util.StringUtil;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.annotation.Updated;
 import org.teiid.designer.query.sql.lang.ICompareCriteria;
 import org.teiid.designer.query.sql.lang.IMatchCriteria.MatchMode;
@@ -148,7 +147,6 @@ public class Evaluator {
 		Type type;
 		private javax.xml.transform.Result result;
 
-		@Since(Version.TEIID_8_10)
 		boolean hasItem;
 
         private XMLQueryRowProcessor() throws Exception {
@@ -680,23 +678,19 @@ public class Evaluator {
                         throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30326, criteria.getPredicateQuantifier()));
                 }
             } else { // value is null
-                if (getTeiidVersion().isLessThan(Version.TEIID_8_12_4))
-                    result = null;
-                else {
-                    switch(criteria.getPredicateQuantifier()) {
-                        case ALL:
-                            if (Boolean.TRUE.equals(result)){
-                                result = null;
-                            }
-                            break;
-                        case SOME:
-                            if (Boolean.FALSE.equals(result)){
-                                result = null;
-                            }
-                            break;
-                        default:
-                            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30326, criteria.getPredicateQuantifier()));
-                    }
+               switch(criteria.getPredicateQuantifier()) {
+                    case ALL:
+                        if (Boolean.TRUE.equals(result)){
+                            result = null;
+                        }
+                        break;
+                    case SOME:
+                        if (Boolean.FALSE.equals(result)){
+                            result = null;
+                        }
+                        break;
+                    default:
+                        throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30326, criteria.getPredicateQuantifier()));
                 }
             }
         } //end value iteration
@@ -864,7 +858,6 @@ public class Evaluator {
 	   }
 	}
 
-	@Since(Version.TEIID_8_10)
 	private Object evaluate(XMLCast expression) throws Exception {
         Object val = internalEvaluate(expression.getExpression());
         if (val == null) {
@@ -949,7 +942,7 @@ public class Evaluator {
 					Reader r = new StringReader(string);
 					type = validate(xp, r);
 				}
-			} else if (value instanceof BinaryType && getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
+			} else if (value instanceof BinaryType ) {
 			    BinaryType string = (BinaryType)value;
 			    result = new SQLXMLImpl(string.getBytesDirect());
 			    result.setCharset(Streamable.CHARSET);
@@ -1075,24 +1068,21 @@ public class Evaluator {
 			XMLQueryRowProcessor rp = null;
 			ITeiidServerVersion teiidVersion = xmlQuery.getTeiidVersion();
             if (xmlQuery.getXQueryExpression().isStreaming()) {
-			    if (teiidVersion.isLessThan(Version.TEIID_8_10))
-			        rp = new XMLQueryRowProcessor();
-			    else
-			        rp = new XMLQueryRowProcessor(exists);
+			    rp = new XMLQueryRowProcessor(exists);
 			}
 			try {
 				result = evaluateXQuery(xmlQuery.getXQueryExpression(), xmlQuery.getPassing(), rp);
-                if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
-                    if (result == null) {
-                        return null;
-                    }
-                    if (exists) {
-                        if (result.iter.next() == null) {
-                            return false;
-                        }
-                        return true;
-                    }
+
+                if (result == null) {
+                    return null;
                 }
+                if (exists) {
+                    if (result.iter.next() == null) {
+                        return false;
+                    }
+                    return true;
+                }
+
 			} catch (RuntimeException e) {
 				if (e.getCause() instanceof XPathException) {
 					throw (XPathException)e.getCause();
@@ -1100,7 +1090,7 @@ public class Evaluator {
 				throw e;
 			}
 			if (rp != null) {
-			    if (exists && teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
+			    if (exists) {
                     return rp.hasItem;
                 }
 				XMLType.Type type = rp.type;
@@ -1340,17 +1330,14 @@ public class Evaluator {
 	throws Exception {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		Object contextItem = null;
-		if(getTeiidVersion().isLessThan(Version.TEIID_8_10))
-		    contextItem = evaluateParameters(cols, parameters);
-		else {
-		    evaluateParameters(cols, parameters);
-	        if (parameters.containsKey(null)) {
-	            contextItem = parameters.remove(null);
-	            if (contextItem == null) {
-	                return null;
-	            }
-	        }
-		}
+
+	    evaluateParameters(cols, parameters);
+        if (parameters.containsKey(null)) {
+            contextItem = parameters.remove(null);
+            if (contextItem == null) {
+                return null;
+            }
+        }
 
 		return XQueryEvaluator.evaluateXQuery(xquery, contextItem, parameters, processor);        
 	}
@@ -1369,10 +1356,7 @@ public class Evaluator {
 		for (DerivedColumn passing : cols) {
 			Object value = evaluateParameter(passing);
 			if (passing.getAlias() == null) {
-			    if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
-				    contextItem = value;
-			    else
-			        parameters.put(null, value);
+			    parameters.put(null, value);
 			} else {
 				parameters.put(passing.getAlias(), value);
 			}
@@ -1503,7 +1487,7 @@ public class Evaluator {
 			}
 	    }
 
-	    if (fd.getProcedure() != null && getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
+	    if (fd.getProcedure() != null) {
             try {
                 return evaluateProcedure(function, values);
             } catch (Exception e) {

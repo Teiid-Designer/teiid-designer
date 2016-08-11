@@ -30,7 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.teiid.core.util.LRUCache;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.metadata.IMetadataID;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -114,7 +113,6 @@ public class TempMetadataID implements Serializable, IMetadataID<TempMetadataID>
 			return model;
 		}
 
-		@Since(Version.TEIID_8_10)
 		public synchronized boolean updateCacheHint(long time) {
             if (time >= cacheHintUpdated) {
                 cacheHintUpdated = time;

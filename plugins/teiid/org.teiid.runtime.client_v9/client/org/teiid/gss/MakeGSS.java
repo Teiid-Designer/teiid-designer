@@ -62,9 +62,6 @@ public class MakeGSS {
 
 	private static Logger logger = Logger.getLogger("org.teiid.jdbc"); //$NON-NLS-1$
 
-	private static boolean isTeiid89OrGreater(ITeiidServerVersion teiidVersion) {
-	    return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_9);
-	}
 
 	public static LogonResult authenticate(ILogon logon, Properties props) 
 			throws LogonException, TeiidClientException, CommunicationException   {
@@ -83,31 +80,22 @@ public class MakeGSS {
         String jaasApplicationName = props.getProperty(TeiidURL.CONNECTION.JAAS_NAME);
         String nl = System.getProperty("line.separator");//$NON-NLS-1$
         if (jaasApplicationName == null) {
-            if (isTeiid89OrGreater(teiidVersion))
-                jaasApplicationName = "Teiid"; //$NON-NLS-1$
-            else {
-                errors.append(Messages.getString(Messages.GSS.client_prop_missing, TeiidURL.CONNECTION.JAAS_NAME));
-                errors.append(nl);
-            }
+            jaasApplicationName = "Teiid"; //$NON-NLS-1$
+
         }
 
         String kerberosPrincipalName =  props.getProperty(TeiidURL.CONNECTION.KERBEROS_SERVICE_PRINCIPLE_NAME);
         if (kerberosPrincipalName == null) {
-            if (isTeiid89OrGreater(teiidVersion)) {
-                try {
-                    TeiidURL url = new TeiidURL(props.getProperty(TeiidURL.CONNECTION.SERVER_URL));
-                    kerberosPrincipalName="TEIID/" +  url.getHostInfo().get(0).getHostName(); //$NON-NLS-1$
-                } catch (Exception e) {
-                    // Ignore exception
-                }
-
-                if (kerberosPrincipalName == null) {
-                    errors.append(Messages.getString(Messages.GSS.client_prop_missing, TeiidURL.CONNECTION.KERBEROS_SERVICE_PRINCIPLE_NAME));
-                    errors.append(nl);
-                }
+            try {
+                TeiidURL url = new TeiidURL(props.getProperty(TeiidURL.CONNECTION.SERVER_URL));
+                kerberosPrincipalName="TEIID/" +  url.getHostInfo().get(0).getHostName(); //$NON-NLS-1$
+            } catch (Exception e) {
+                // Ignore exception
             }
-            else {
-                kerberosPrincipalName="demo/host.example.com@EXAMPLE.COM"; //$NON-NLS-1$
+
+            if (kerberosPrincipalName == null) {
+                errors.append(Messages.getString(Messages.GSS.client_prop_missing, TeiidURL.CONNECTION.KERBEROS_SERVICE_PRINCIPLE_NAME));
+                errors.append(nl);
             }
         }
         

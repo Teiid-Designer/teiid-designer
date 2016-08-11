@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.teiid.core.util.StringUtil;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
@@ -40,7 +39,6 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
  */
 public abstract class AbstractMetadataRecord implements Serializable {
 
-    @Since(Version.TEIID_8_9)
     private static final Collection<AbstractMetadataRecord> EMPTY_INCOMING = Collections.emptyList();
 
 	public interface Modifiable {
@@ -48,7 +46,6 @@ public abstract class AbstractMetadataRecord implements Serializable {
 	}
 	
 	public interface DataModifiable {
-	    @Since(Version.TEIID_8_11)
 	    String DATA_TTL = AbstractMetadataRecord.RELATIONAL_URI + "data-ttl"; //$NON-NLS-1$
 
 		long getLastDataModification();
@@ -68,7 +65,6 @@ public abstract class AbstractMetadataRecord implements Serializable {
 	private volatile Map<String, String> properties;
 	private String annotation;
 
-	@Since(Version.TEIID_8_9)
 	private transient Collection<AbstractMetadataRecord> incomingObjects;
 
 	public static final String RELATIONAL_URI = "{http://www.teiid.org/ext/relational/2012}"; //$NON-NLS-1$
@@ -97,7 +93,6 @@ public abstract class AbstractMetadataRecord implements Serializable {
      * the name in source is not set.
      * @return
      */
-	@Since(Version.TEIID_8_9)
     public String getSourceName() {
         if (this.nameInSource != null && this.nameInSource.length() > 0) {
             return this.nameInSource;
@@ -265,7 +260,6 @@ public abstract class AbstractMetadataRecord implements Serializable {
         return getUUID().hashCode();
     }
 
-    @Since(Version.TEIID_8_9)
     public Collection<AbstractMetadataRecord> getIncomingObjects() {
         if (incomingObjects == null) {
             return EMPTY_INCOMING;
@@ -273,12 +267,10 @@ public abstract class AbstractMetadataRecord implements Serializable {
         return incomingObjects;
     }
 
-    @Since(Version.TEIID_8_9)
     public void setIncomingObjects(Collection<AbstractMetadataRecord> incomingObjects) {
         this.incomingObjects = incomingObjects;
     }
 
-    @Since(Version.TEIID_8_9)
     public boolean isUUIDSet() {
         return this.uuid != null && this.uuid.length() > 0 && !Character.isDigit(this.uuid.charAt(0));
     }

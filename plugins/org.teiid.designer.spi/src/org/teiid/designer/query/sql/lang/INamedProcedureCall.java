@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.query.sql;
+package org.teiid.designer.query.sql.lang;
 
 /**
  * Represents a procedure call that returns a table.

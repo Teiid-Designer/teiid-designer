@@ -193,5 +193,19 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
 
         return clone;
     }
-
+    
+	
+	public static String getName(Expression ex) {
+		if (ex instanceof Symbol) {
+			return ((Symbol)ex).getName();
+		}
+		return "expr"; //$NON-NLS-1$
+	}
+	
+	public static String getOutputName(Expression ex) {
+		if (ex instanceof Symbol) {
+			return ((Symbol)ex).getOutputName();
+		}
+		return "expr"; //$NON-NLS-1$
+	}
 }

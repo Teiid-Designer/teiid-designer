@@ -39,7 +39,6 @@ import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.IResolverVisitor;
 import org.teiid.designer.query.sql.symbol.IElementSymbol.DisplayMode;
@@ -94,14 +93,6 @@ public class ResolverVisitor extends LanguageVisitor
 
 	private static final String SYS_PREFIX = CoreConstants.SYSTEM_MODEL + '.';
 
-	@Removed(Version.TEIID_8_5)
-    private ThreadLocal<Boolean> determinePartialName = new ThreadLocal<Boolean>() {
-    	@Override
-        protected Boolean initialValue() {
-    		return false;
-    	}
-    };
-
     private Collection<GroupSymbol> groups;
     private GroupContext externalContext;
     protected IQueryMetadataInterface metadata;
@@ -111,7 +102,6 @@ public class ResolverVisitor extends LanguageVisitor
     private boolean findShortName;
     private List<ElementSymbol> matches = new ArrayList<ElementSymbol>(2);
     private List<GroupSymbol> groupMatches = new ArrayList<GroupSymbol>(2);
-	@Since(Version.TEIID_8_6)
     private boolean hasUserDefinedAggregate;
     
     /**
@@ -141,10 +131,7 @@ public class ResolverVisitor extends LanguageVisitor
     }
 
     private void setFindShortName(IQueryMetadataInterface metadata) {
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_5))
-            this.findShortName = metadata.findShortName();
-        else
-            this.findShortName = determinePartialName.get();
+        this.findShortName = metadata.findShortName();
     }
     
 	/**
@@ -332,11 +319,24 @@ public class ResolverVisitor extends LanguageVisitor
 
     @Override
     public void visit(SubqueryCompareCriteria obj) {
-        try {
-            obj.setLeftExpression(ResolverUtil.resolveSubqueryPredicateCriteria(obj.getLeftExpression(), obj, metadata));
-        } catch(Exception e) {
-            handleException(e);
-        }
+//        try {
+//            obj.setLeftExpression(ResolverUtil.resolveSubqueryPredicateCriteria(obj.getLeftExpression(), obj, metadata));
+//        } catch(Exception e) {
+//            handleException(e);
+//        }
+    	if (obj.getCommand() != null) {
+	        try {
+	            obj.setLeftExpression(ResolverUtil.resolveSubqueryPredicateCriteria(obj.getLeftExpression(), obj, metadata));
+	        } catch(Exception e) {
+	            handleException(e);
+	        }
+    	} else {
+    		try {
+	    		resolveQuantifiedCompareArray(obj);
+    		} catch (QueryResolverException e) {
+    			handleException(e);
+    		}
+    	}
     }
 
     @Override
@@ -347,6 +347,76 @@ public class ResolverVisitor extends LanguageVisitor
             handleException(e);
         }
     }
+
+
+	private void resolveQuantifiedCompareArray(SubqueryCompareCriteria obj)
+			throws QueryResolverException, AssertionError {
+		Class<?> expressionType = obj.getArrayExpression().getType();
+		
+		if (expressionType == null || !expressionType.isArray()) {
+			throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31175, 
+					Messages.gs(Messages.TEIID.TEIID31175, new Object[] { obj.getArrayExpression(), expressionType })));
+		}
+		
+		Class<?> rightType = expressionType.getComponentType();
+		
+		Expression leftExpression = obj.getLeftExpression();
+		
+		try {
+			setDesiredType(leftExpression, rightType, obj);
+        } catch(Exception e) {
+            handleException(e);
+        }
+		
+		if(leftExpression.getType().equals(rightType) ) {
+			return;
+		}
+		
+		// Try to apply an implicit conversion from one side to the other
+		String leftTypeName = getDataTypeManager().getDataTypeName(leftExpression.getType());
+		String rightTypeName = getDataTypeManager().getDataTypeName(rightType);
+		
+		if (leftExpression.getType() == DataTypeManagerService.DefaultDataTypes.NULL.getClass()) {
+			try {
+				obj.setLeftExpression(ResolverUtil.convertExpression( leftExpression, rightTypeName, metadata) );
+	        } catch(Exception e) {
+	            handleException(e);
+	        }
+			return;
+		}
+  	
+		boolean leftChar = isCharacter(leftExpression, true);
+		boolean rightChar = isCharacter(rightType, true);
+		
+		// Special cases when left expression is a constant
+		if(leftExpression instanceof Constant && !rightChar) {
+		    // Auto-convert constant string on left to expected type on right
+		    try {
+		        obj.setLeftExpression(ResolverUtil.convertExpression( leftExpression, leftTypeName, rightTypeName, metadata));
+		        return;                                           
+		    } catch (QueryResolverException qre) {
+		    	if (leftChar && !metadata.widenComparisonToString()) {
+		        	throw qre;
+		        }
+		    } catch (Exception ex) {
+		    	handleException(ex);
+		    }
+		}
+  	
+		// Try to apply a conversion generically
+		if ((rightChar ^ leftChar) && !metadata.widenComparisonToString()) {
+			throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31172, Messages.gs(Messages.TEIID.TEIID31172, obj)));
+		}
+		if(ResolverUtil.canImplicitlyConvert(getTeiidVersion(), leftTypeName, rightTypeName)) {
+			try {
+				obj.setLeftExpression(ResolverUtil.convertExpression(leftExpression, leftTypeName, rightTypeName, metadata) );
+			} catch (Exception ex) {
+				handleException(ex);
+			}
+			return;
+		}
+		throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30072, Messages.gs(Messages.TEIID.TEIID30072, new Object[] { leftTypeName, rightTypeName, obj })));
+	}
 
     @Override
     public void visit(IsNullCriteria obj) {
@@ -371,7 +441,7 @@ public class ResolverVisitor extends LanguageVisitor
     public void visit(Function obj) {
         try {
             resolveFunction(obj, (FunctionLibrary) this.metadata.getFunctionLibrary());
-			if (obj.isAggregate() && isTeiidVersionOrGreater(Version.TEIID_8_6)) {
+			if (obj.isAggregate()) {
             	hasUserDefinedAggregate = true;
             }
         } catch(Exception e) {
@@ -473,7 +543,6 @@ public class ResolverVisitor extends LanguageVisitor
 		}
     }
 
-    @Since(Version.TEIID_8_10)
     @Override
     public void visit(XMLExists obj) {
         visit(obj.getXmlQuery());
@@ -779,13 +848,10 @@ public class ResolverVisitor extends LanguageVisitor
 	    try {
 	        cr = library.determineNecessaryConversions(function.getName(), function.getType(), args, types, hasArgWithoutType);
 	    } catch (Exception ex) {
-	        if (getTeiidVersion().isLessThan(TeiidServerVersion.Version.TEIID_8_9))
-	            return Collections.emptyList();
-	        else
-	            throw ex;
+	        throw ex;
 	    }
 
-        if (cr.method == null && getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_9)) {
+        if (cr.method == null) {
 			return Collections.emptyList();
 		}
 		Class<?>[] newSignature = types;
@@ -851,11 +917,13 @@ public class ResolverVisitor extends LanguageVisitor
 	                                        ? upper.getType()
 	                                        : lower.getType(), criteria);
 	    // invariants: exp.getType() != null
-	    setDesiredType(lower, exp.getType(), criteria);
-	    setDesiredType(upper, exp.getType(), criteria);
+//	    if( exp.getType() != null ) {
+		    setDesiredType(lower, exp.getType(), criteria);
+		    setDesiredType(upper, exp.getType(), criteria);
+//	    }
 	    // invariants: none of the types is null
 
-	    if (exp.getType().equals(lower.getType()) && exp.getType().equals(upper.getType())) {
+	    if (exp.getType() != null && exp.getType().equals(lower.getType()) && exp.getType().equals(upper.getType())) {
 	        return;
 	    }
 
@@ -1393,7 +1461,6 @@ public class ResolverVisitor extends LanguageVisitor
 	    this.throwException(true);
 	}
 
-	@Since(Version.TEIID_8_6)
 	public boolean hasUserDefinedAggregate() {
 		return hasUserDefinedAggregate;
 	}

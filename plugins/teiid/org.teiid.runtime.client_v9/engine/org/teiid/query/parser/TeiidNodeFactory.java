@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Set;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.v9.Teiid9Parser;
 import org.teiid.query.sql.lang.AlterProcedure;
@@ -507,12 +506,6 @@ public class TeiidNodeFactory {
         */
        CREATE("Create"), //$NON-NLS-1$
 
-       /**
-        * RaiseErrorStatement
-        * @generated
-        */
-       @Removed(Version.TEIID_8_0)
-       RAISE_ERROR_STATEMENT("RaiseErrorStatement"), //$NON-NLS-1$
 
        /**
         * BranchingStatement
@@ -539,20 +532,6 @@ public class TeiidNodeFactory {
        IF_STATEMENT("IfStatement"), //$NON-NLS-1$
 
        /**
-        * CriteriaSelector
-        * @generated
-        */
-       @Removed(Version.TEIID_8_0)
-       CRITERIA_SELECTOR("CriteriaSelector"), //$NON-NLS-1$
-
-       /**
-        * HasCriteria
-        * @generated
-        */
-       @Removed(Version.TEIID_8_0)
-       HAS_CRITERIA("HasCriteria"), //$NON-NLS-1$
-
-       /**
         * DeclareStatement
         * @generated
         */
@@ -563,20 +542,6 @@ public class TeiidNodeFactory {
         * @generated
         */
        COMMAND_STATEMENT("CommandStatement"), //$NON-NLS-1$
-
-       /**
-        * TranslateCriteria
-        * @generated
-        */
-       @Removed(Version.TEIID_8_0)
-       TRANSLATE_CRITERIA("TranslateCriteria"), //$NON-NLS-1$
-
-       /**
-        * CreateUpdateProcedureCommand
-        * @generated
-        */
-       @Removed(Version.TEIID_8_0)
-       CREATE_UPDATE_PROCEDURE_COMMAND("CreateUpdateProcedureCommand"), //$NON-NLS-1$
 
        /**
         * DynamicCommand
@@ -996,28 +961,24 @@ public class TeiidNodeFactory {
         * RaiseStatement
         * @generated
         */
-       @Since(Version.TEIID_8_0)
        RAISE_STATEMENT("RaiseStatement"), //$NON-NLS-1$
 
        /**
         * ExceptionExpression
         * @generated
         */
-       @Since(Version.TEIID_8_0)
        EXCEPTION_EXPRESSION("ExceptionExpression"), //$NON-NLS-1$
 
        /**
         * ReturnStatement
         * @generated
         */
-       @Since(Version.TEIID_8_0)
        RETURN_STATEMENT("ReturnStatement"), //$NON-NLS-1$
 
        /**
         * CreateProcedureCommand
         * @generated
         */
-       @Since(Version.TEIID_8_0)
        CREATE_PROCEDURE_COMMAND("CreateProcedureCommand"), //$NON-NLS-1$
 
        /**
@@ -1030,7 +991,6 @@ public class TeiidNodeFactory {
         * ObjectTable
         * @generated
         */
-       @Since(Version.TEIID_8_0)
        OBJECT_TABLE("ObjectTable"), //$NON-NLS-1$
 
        /**
@@ -1043,14 +1003,12 @@ public class TeiidNodeFactory {
         * JSONObject
         * @generated
         */
-       @Since(Version.TEIID_8_0)
        JSON_OBJECT("JSONObject"), //$NON-NLS-1$
 
        /**
         * Array
         * @generated
         */
-       @Since(Version.TEIID_8_0)
        ARRAY("Array"), //$NON-NLS-1$
 
        /**
@@ -1183,18 +1141,6 @@ public class TeiidNodeFactory {
     * @param nodeType
     * @return
     */
-   private CriteriaSelector createCriteriaSelector(TeiidParser teiidParser, int nodeType) {
-       return new CriteriaSelector(teiidParser, nodeType);
-   }
-
-   /**
-    *
-    * @generated
-    *
-    * @param teiidParser
-    * @param nodeType
-    * @return
-    */
    private HasCriteria createHasCriteria(TeiidParser teiidParser, int nodeType) {
        return new HasCriteria(teiidParser, nodeType);
    }
@@ -1244,7 +1190,8 @@ public class TeiidNodeFactory {
     * @return
     */
    private CreateUpdateProcedureCommand createCreateUpdateProcedureCommand(TeiidParser teiidParser, int nodeType) {
-       return new CreateUpdateProcedureCommand(teiidParser, nodeType);
+//       return new CreateUpdateProcedureCommand(teiidParser, nodeType);
+       throw new UnsupportedOperationException();
    }
 
    /**

@@ -102,7 +102,6 @@ public class ArrayTable extends TableFunctionReference implements IArrayTable<La
         if(getName() != null)
             clone.setName(getName());
         clone.setOptional(isOptional());
-        clone.setMakeInd(isMakeInd());
         clone.setMakeInd(getMakeInd());
         clone.setNoUnnest(isNoUnnest());
         clone.setMakeDep(isMakeDep());

@@ -8,7 +8,6 @@
 package org.teiid.query.sql.symbol;
 
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.function.FunctionDescriptor;
@@ -58,7 +57,6 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
      *
      * @return Get function arguments
      */
-    @Since(Version.TEIID_8_0)
     Expression[] getArgs();
 
     /**
@@ -66,13 +64,11 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
      * @param index Index of argument
      * @return expression
      */
-    @Since(Version.TEIID_8_0)
     Expression getArg(int index);
 
     /**
      * @param arguments
      */
-    @Since(Version.TEIID_8_0)
     void setArgs(Expression[] arguments);
 
     /**
@@ -80,7 +76,6 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
      *
      * @param type New type
      */
-    @Since(Version.TEIID_8_0)
     void setType(Class<?> type);
 
     /**
@@ -169,13 +164,11 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
      * Get the function descriptor that this function resolves to.
      * @return Descriptor or null if resolution has not yet occurred
      */
-    @Since(Version.TEIID_8_0)
     FunctionDescriptor getFunctionDescriptor();
 
     /**
      * @param functionDescriptor
      */
-    @Since(Version.TEIID_8_0)
     void setFunctionDescriptor(FunctionDescriptor functionDescriptor);
 
     /**

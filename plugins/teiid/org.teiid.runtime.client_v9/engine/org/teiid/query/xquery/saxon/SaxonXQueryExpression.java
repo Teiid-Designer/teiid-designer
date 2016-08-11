@@ -243,7 +243,7 @@ public class SaxonXQueryExpression {
         try {
 			this.xQuery = context.compileQuery(xQueryString);
 		} catch (XPathException e) {
-		    throw new QueryResolverException(e, Messages.gs(Messages.TEIID.TEIID30154));
+		    throw new QueryResolverException(e, Messages.gs(Messages.TEIID.TEIID30154, xQueryString));
 		}
     }
     

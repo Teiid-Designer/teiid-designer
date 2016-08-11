@@ -89,7 +89,6 @@ import org.teiid.core.types.XMLType.Type;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.core.util.ReaderInputStream;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.json.simple.ContentHandler;
@@ -227,10 +226,8 @@ public class XMLSystemFunctions {
 		private LinkedList<String> nameStack = new LinkedList<String>();
 		private LinkedList<XMLEvent> eventStack = new LinkedList<XMLEvent>();
 
-		@Since(Version.TEIID_8_12_4)
 		private LinkedList<Boolean> parentArray = new LinkedList<Boolean>();
 
-		@Removed(Version.TEIID_8_12_4)
 		private boolean rootArray;
 
 		private boolean end;
@@ -247,10 +244,6 @@ public class XMLSystemFunctions {
 			this.parser = parser;
 		}
 
-		private boolean isGreaterThanOrEqualTo8_12_4() {
-            return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_12_4);
-        }
-
 		@Override
 		public boolean startObjectEntry(String key)
 				throws ParseException, IOException {
@@ -261,8 +254,7 @@ public class XMLSystemFunctions {
 		@Override
 		public boolean startObject() throws org.teiid.json.simple.ParseException,
 				IOException {
-		    if (isGreaterThanOrEqualTo8_12_4())
-		        parentArray.push(false);
+		    parentArray.push(false);
 
 			start();
 			return false;
@@ -287,17 +279,11 @@ public class XMLSystemFunctions {
 		public boolean startArray() throws org.teiid.json.simple.ParseException,
 				IOException {
 		    
-		    if(isGreaterThanOrEqualTo8_12_4()) {
-		        if ((nameStack.size() == 1 && parentArray.isEmpty()) || parentArray.peek()) {
-		            start();
-		        }
-		        parentArray.push(true);
-		    } else {
-		        if (this.nameStack.size() == 1) {
-		            this.rootArray = true;
-		            start();
-		        }
+		    if ((nameStack.size() == 1 && parentArray.isEmpty()) || parentArray.peek()) {
+		        start();
 		    }
+		    parentArray.push(true);
+
 
 			return false;
 		}
@@ -339,8 +325,7 @@ public class XMLSystemFunctions {
 		@Override
 		public boolean endObject() throws org.teiid.json.simple.ParseException,
 				IOException {
-		    if (isGreaterThanOrEqualTo8_12_4())
-		        parentArray.pop();
+		    parentArray.pop();
 
 			end();
 			return false;
@@ -356,16 +341,12 @@ public class XMLSystemFunctions {
 		@Override
 		public boolean endArray() throws org.teiid.json.simple.ParseException,
 				IOException {
-            if (isGreaterThanOrEqualTo8_12_4()) {
-                parentArray.pop();
-                if ((nameStack.size() == 1 && parentArray.isEmpty()) || parentArray.peek()) {
-                    end();
-                }
-            } else {
-                if (this.nameStack.size() == 1 && rootArray) {
-                    end();
-                }
+
+            parentArray.pop();
+            if ((nameStack.size() == 1 && parentArray.isEmpty()) || parentArray.peek()) {
+                end();
             }
+
 
 			return false;
 		}
@@ -1104,7 +1085,6 @@ public class XMLSystemFunctions {
      * An extension to the standard writer to allow for
      * direct inclusion of large values by reference rather than by copy
      */
-    @Since(Version.TEIID_8_11)
     public static class ExtendedWriter extends FilterWriter {
 
         private static int MAX_INCLUDES = 1<<12;
@@ -1160,7 +1140,6 @@ public class XMLSystemFunctions {
         }
     }
 
-    @Since(Version.TEIID_8_11)
     private static SQLXMLImpl createSQLXML(final FileStoreInputStreamFactory fsisf, final ExtendedWriter ew, CommandContext context) {
         if (ew.includes.isEmpty()) {
             if (fsisf.getStorageMode() == StorageMode.MEMORY) {
@@ -1292,7 +1271,6 @@ public class XMLSystemFunctions {
 		return new BlobType(new BlobImpl(isf));
 	}
 
-	@Since(Version.TEIID_8_7)
     public static XMLOutputFactory getOutputFactory(boolean repairing) {
         if (XMLType.isThreadSafeXmlFactories() && !repairing) {
             return xmlOutputFactory;
@@ -1306,7 +1284,6 @@ public class XMLSystemFunctions {
         return f;
     }
 
-	@Since(Version.TEIID_8_10)
 	@TeiidFunction(category=FunctionCategoryConstants.XML)
     public static XMLType xmlText(String val) throws XMLStreamException, FactoryConfigurationError, IOException, TransformerException {
         //TODO: see if there is a less involved way to escape

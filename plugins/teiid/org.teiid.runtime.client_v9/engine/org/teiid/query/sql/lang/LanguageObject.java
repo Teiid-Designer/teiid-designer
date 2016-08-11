@@ -22,6 +22,9 @@
 
 package org.teiid.query.sql.lang;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.query.parser.LanguageVisitor;
@@ -49,4 +52,32 @@ public interface LanguageObject extends ILanguageObject<LanguageVisitor> {
      */
     @Override
     LanguageObject clone();
+    
+    public static class Util {
+
+		public static <S extends LanguageObject, T extends S> ArrayList<S> deepClone(Collection<T> collection, Class<S> type) {
+			if (collection == null) {
+				return null;
+			}
+			ArrayList<S> result = new ArrayList<S>(collection.size());
+			for (LanguageObject obj : collection) {
+				result.add(type.cast(obj.clone()));
+			}
+			return result;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public static <T extends LanguageObject> T[] deepClone(T[] collection) {
+			if (collection == null) {
+				return null;
+			}
+			T[] copy = Arrays.copyOf(collection, collection.length);
+			for (int i = 0; i < copy.length; i++) {
+				LanguageObject t = copy[i];
+				copy[i] = (T) t.clone();
+			}
+			return copy;
+		}
+    	
+}
 }

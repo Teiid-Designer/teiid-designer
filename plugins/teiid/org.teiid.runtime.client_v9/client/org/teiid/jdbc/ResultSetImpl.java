@@ -165,15 +165,6 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
 		this.batchResults = new BatchResults(this, getCurrentBatch(resultsMsg), this.cursorType == ResultSet.TYPE_FORWARD_ONLY ? 1 : BatchResults.DEFAULT_SAVED_BATCHES);
 	}
 
-	private boolean isLessThanTeiidEight() {
-        return getTeiidVersion().isLessThan(Version.TEIID_8_0);
-    }
-
-    private void checkSupportedVersion() {
-        if (isLessThanTeiidEight())
-            throw new UnsupportedOperationException();
-    }
-
 	public void setMaxFieldSize(int maxFieldSize) {
 		this.maxFieldSize = maxFieldSize;
 	}
@@ -1331,25 +1322,21 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
 
 	@Override
     public Array getArray(int columnIndex) throws SQLException {
-		checkSupportedVersion();
 		return DataTypeTransformer.getArray(getTeiidVersion(), getObject(columnIndex));
 	}
 
 	@Override
     public Array getArray(String columnLabel) throws SQLException {
-		checkSupportedVersion();
 		return DataTypeTransformer.getArray(getTeiidVersion(), getObject(columnLabel));
 	}
 
 	@Override
     public InputStream getAsciiStream(int columnIndex) throws SQLException {
-		checkSupportedVersion();
 		return DataTypeTransformer.getAsciiStream(getTeiidVersion(), getObject(columnIndex)); 	
 	}
 
 	@Override
     public InputStream getAsciiStream(String columnLabel) throws SQLException {
-		checkSupportedVersion();
 		return getAsciiStream(findColumn(columnLabel));	
 	}
 
@@ -1375,37 +1362,31 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
 
 	@Override
     public Reader getNCharacterStream(int columnIndex) throws SQLException {
-		checkSupportedVersion();
 		return getCharacterStream(columnIndex);
 	}
 
 	@Override
     public Reader getNCharacterStream(String columnLabel) throws SQLException {
-		checkSupportedVersion();
 		return getCharacterStream(columnLabel);
 	}
 
 	@Override
     public NClob getNClob(int columnIndex) throws SQLException {
-		checkSupportedVersion();
 		return DataTypeTransformer.getNClob(getTeiidVersion(), getObject(columnIndex));
 	}
 
 	@Override
     public NClob getNClob(String columnLabel) throws SQLException {
-		checkSupportedVersion();
 		return getNClob(findColumn(columnLabel));
 	}
 	
 	@Override
     public String getNString(int columnIndex) throws SQLException {
-		checkSupportedVersion();
 		return getString(columnIndex);
 	}
 
 	@Override
     public String getNString(String columnLabel) throws SQLException {
-		checkSupportedVersion();
 		return getString(columnLabel);
 	}
 	
@@ -1443,7 +1424,6 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
 
 	@Override
     public SQLXML getSQLXML(String columnLabel) throws SQLException {
-		checkSupportedVersion();
 		return getSQLXML(findColumn(columnLabel));
 	}
 

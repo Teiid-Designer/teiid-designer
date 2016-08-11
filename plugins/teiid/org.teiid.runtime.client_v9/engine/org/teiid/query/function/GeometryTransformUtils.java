@@ -91,7 +91,7 @@ public class GeometryTransformUtils {
      */
     public static String lookupProj4Text(CommandContext ctx, int srid) throws Exception {
         /*
-         * TODO
+         * TODO : Teiid 9.0
          * Designer will need to handle this in a different way since we do not want to
          * query the teiid server just to retrieve the String value for the given srid. We
          * should be able to interrogate the spatial_ref_sys csv file for example.

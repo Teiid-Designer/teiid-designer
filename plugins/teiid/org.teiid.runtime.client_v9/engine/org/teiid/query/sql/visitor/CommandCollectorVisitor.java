@@ -24,7 +24,6 @@ package org.teiid.query.sql.visitor;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.ICommandCollectorVisitor;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -37,6 +36,7 @@ import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.SubqueryCompareCriteria;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
+import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.lang.WithQueryCommand;
 import org.teiid.query.sql.navigator.PreOrderNavigator;
 import org.teiid.query.sql.proc.CommandStatement;
@@ -63,6 +63,7 @@ public class CommandCollectorVisitor extends LanguageVisitor
     }
 
     private List<Command> commands = new ArrayList<Command>();
+    private boolean collectExpanded;
 
     /**
      * Get the commands collected by the visitor.  This should best be called 
@@ -88,7 +89,9 @@ public class CommandCollectorVisitor extends LanguageVisitor
 
     @Override
     public void visit(SubqueryCompareCriteria obj) {
-        this.commands.add(obj.getCommand());
+    	if (obj.getCommand() != null) {
+    		this.commands.add(obj.getCommand());
+    	}
     }
 
     /**
@@ -136,18 +139,21 @@ public class CommandCollectorVisitor extends LanguageVisitor
     	this.commands.add(obj.getCommand());
     }
 
-    @Since(Version.TEIID_8_11)
     @Override
     public void visit(Insert obj) {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_11)) {
-            super.visit(obj);
-            return;
-        }
-
         if (obj.getQueryExpression() != null) {
             this.commands.add(obj.getQueryExpression());
         }
     }
+    
+    @Override
+    public void visit(UnaryFromClause obj) {
+    	if (collectExpanded && obj.getExpandedCommand() != null && !obj.getGroup().isProcedure()) {
+    		this.commands.add(obj.getExpandedCommand());
+    	}
+    }
+    
+
     
     @Override
     public List<Command> findCommands(Command command) {
@@ -167,13 +173,17 @@ public class CommandCollectorVisitor extends LanguageVisitor
         return getCommands();
     }
     
+    // TODO: Teiid 9.0
+    // Check with Paul
+    
     /**
      * Helper to quickly get the commands from obj
      * @param command
      * @return list of commands
      */
-    public static final List<Command> getCommands(Command command) {
+    public static final List<Command> getCommands(Command command, boolean includeExpanded) {
         CommandCollectorVisitor visitor = new CommandCollectorVisitor(command.getTeiidVersion());
+        visitor.collectExpanded = includeExpanded;
         return visitor.findCommands(command);
     }
     

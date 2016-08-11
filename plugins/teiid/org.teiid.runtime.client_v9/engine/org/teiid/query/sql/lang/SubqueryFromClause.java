@@ -19,6 +19,8 @@ public class SubqueryFromClause extends FromClause
 
     private Command command;
 
+    private boolean lateral;
+    
     private boolean table;
 
     /**
@@ -28,7 +30,7 @@ public class SubqueryFromClause extends FromClause
     public SubqueryFromClause(TeiidParser p, int id) {
         super(p, id);
     }
-
+    
     /**
      * @return table flag
      */
@@ -41,6 +43,20 @@ public class SubqueryFromClause extends FromClause
      */
     public void setTable(boolean table) {
         this.table = table;
+    }
+
+    /**
+     * @return table flag
+     */
+    public boolean isLateral() {
+        return lateral;
+    }
+    
+    /**
+     * @param table
+     */
+    public void setLateral(boolean table) {
+        this.lateral = table;
     }
 
     /**
@@ -101,7 +117,7 @@ public class SubqueryFromClause extends FromClause
         int result = super.hashCode();
         result = prime * result + ((this.command == null) ? 0 : this.command.hashCode());
         result = prime * result + ((this.symbol == null) ? 0 : this.symbol.hashCode());
-        result = prime * result + (this.table ? 1231 : 1237);
+        result = prime * result + (this.lateral ? 1231 : 1237);
         return result;
     }
 
@@ -117,7 +133,7 @@ public class SubqueryFromClause extends FromClause
         if (this.getName() == null) {
             if (other.getName() != null) return false;
         } else if (!this.getName().equalsIgnoreCase(getName())) return false;
-        if (this.table != other.table) return false;
+        if (this.lateral != other.lateral) return false;
         return true;
     }
 
@@ -133,11 +149,10 @@ public class SubqueryFromClause extends FromClause
 
         if(getCommand() != null)
             clone.setCommand(getCommand().clone());
-        clone.setTable(isTable());
+        clone.setLateral(isLateral());
         if(getName() != null)
             clone.setName(getName());
         clone.setOptional(isOptional());
-        clone.setMakeInd(isMakeInd());
         clone.setMakeInd(getMakeInd());
         clone.setNoUnnest(isNoUnnest());
         clone.setMakeDep(isMakeDep());

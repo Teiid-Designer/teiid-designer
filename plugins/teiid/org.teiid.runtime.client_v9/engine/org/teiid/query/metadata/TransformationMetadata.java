@@ -53,7 +53,6 @@ import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.LRUCache;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.core.util.StringUtil;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -161,7 +160,6 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
     private Set<String> importedModels;
     private Set<String> allowedLanguages;
     private Map<String, DataPolicyMetadata> policies = new TreeMap<String, DataPolicyMetadata>(String.CASE_INSENSITIVE_ORDER);
-    @Since(Version.TEIID_8_5)
     private boolean useOutputNames = true;
     
     /*
@@ -172,7 +170,6 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
     private Map<String, Collection<Table>> partialNameToFullNameCache = Collections.synchronizedMap(new LRUCache<String, Collection<Table>>(1000));
     private Map<String, Collection<StoredProcedureInfo>> procedureCache = Collections.synchronizedMap(new LRUCache<String, Collection<StoredProcedureInfo>>(200));
 
-    @Since(Version.TEIID_8_12_4)
     private boolean widenComparisonToString = true;
 
     /**
@@ -267,9 +264,6 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 	}
 
     public Table getGroupID(String groupName) throws Exception {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_0))
-            groupName = groupName.toUpperCase();
-
         return getMetadataStore().findGroup(groupName);
     }
 
@@ -622,9 +616,6 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
                 case SupportConstants.Element.SEARCHABLE_LIKE:
                 	return (columnRecord.getSearchType() == SearchType.Searchable || columnRecord.getSearchType() == SearchType.Like_Only);
                 case SupportConstants.Element.SEARCHABLE_EQUALITY:
-                    if (getTeiidVersion().isLessThan(Version.TEIID_8_12_4))
-                        return false;
-
                     return (columnRecord.getSearchType() == SearchType.Equality_Only || columnRecord.getSearchType() == SearchType.Searchable || columnRecord.getSearchType() == SearchType.All_Except_Like);
                 case SupportConstants.Element.SELECT:
                     return columnRecord.isSelectable();
@@ -1133,9 +1124,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 		tm.scriptEngineManager = this.scriptEngineManager;
 		tm.importedModels = this.importedModels;
 		tm.allowedLanguages = this.allowedLanguages;
-
-		if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_12_4))
-		    tm.widenComparisonToString = this.widenComparisonToString;
+		tm.widenComparisonToString = this.widenComparisonToString;
 
 		return tm;
 	}
@@ -1222,9 +1211,6 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
     }
     
     public void setWidenComparisonToString(boolean widenComparisonToString) {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_12_4))
-            return;
-
         this.widenComparisonToString = widenComparisonToString;
     }
 }

@@ -39,7 +39,6 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.ISQLStringVisitor;
 import org.teiid.designer.query.sql.IToken;
 import org.teiid.designer.query.sql.lang.IComment;
@@ -183,6 +182,10 @@ import org.teiid.translator.SourceSystemFunctions;
 public class SQLStringVisitor extends LanguageVisitor
     implements SQLConstants.Reserved, SQLConstants.NonReserved, SQLConstants.Tokens, DDLConstants, ISQLStringVisitor<LanguageObject> {
 
+	private static final Set<String> INFIX_FUNCTIONS = new HashSet<String>(Arrays.asList(SQLConstants.Tokens.PLUS, 
+			SQLConstants.Tokens.MINUS, SQLConstants.Tokens.ALL_COLS, SQLConstants.Tokens.SLASH, 
+			SQLConstants.Tokens.CONCAT, SQLConstants.Tokens.DOUBLE_AMP));
+	
     /*
      * Converted from static field to function to allow version to be checked
      */
@@ -285,9 +288,6 @@ public class SQLStringVisitor extends LanguageVisitor
      * @return the shortNameOnly
      */
     public boolean isShortNameOnly() {
-        if (!isTeiid8OrGreater())
-            return false; // Not applicable for teiid 7
-
         return this.shortNameOnly;
     }
 
@@ -295,9 +295,6 @@ public class SQLStringVisitor extends LanguageVisitor
      * @param shortNameOnly the shortNameOnly to set
      */
     private void setShortNameOnly(boolean shortNameOnly) {
-        if (!isTeiid8OrGreater())
-            return; // Not applicable for teiid 7
-
         this.shortNameOnly = shortNameOnly;
     }
 
@@ -709,12 +706,12 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         append(BY);
         append(SPACE);
-        if (isTeiidVersionOrGreater(Version.TEIID_8_5) && obj.isRollup()) {
+        if (obj.isRollup()) {
         	append(ROLLUP);
         	append(Tokens.LPAREN);
         }
         registerNodes(obj.getSymbols(), 0);
-        if (isTeiidVersionOrGreater(Version.TEIID_8_5) && obj.isRollup()) {
+        if (obj.isRollup()) {
         	append(Tokens.RPAREN);
         }
 
@@ -727,7 +724,7 @@ public class SQLStringVisitor extends LanguageVisitor
         // Turn off adding comments until the query is completely formed
         disableComments(obj);
 
-        if (isTeiid8OrGreater() && obj.isMerge()) {
+        if (obj.isMerge()) {
             append(MERGE);
         } else {
             append(INSERT);
@@ -773,58 +770,6 @@ public class SQLStringVisitor extends LanguageVisitor
 
         enableComments(obj);
         addComments(obj);
-    }
-
-    private void visit7( Create obj ) {
-        append(CREATE);
-        append(SPACE);
-        append(LOCAL);
-        append(SPACE);
-        append(TEMPORARY);
-        append(SPACE);
-        append(TABLE);
-        append(SPACE);
-        visitNode(obj.getTable());
-        append(SPACE);
-
-        // Columns clause
-        List<Column> columns = obj.getColumns();
-        append("("); //$NON-NLS-1$
-        Iterator<Column> iter = columns.iterator();
-        while (iter.hasNext()) {
-            Column element = iter.next();
-            outputDisplayName(element.getName());
-            append(SPACE);
-            if (element.isAutoIncremented()) {
-                append(NonReserved.SERIAL);
-            } else {
-                append(element.getRuntimeType());
-                if (element.getNullType() == NullType.No_Nulls) {
-                    append(NOT);
-                    append(SPACE);
-                    append(NULL);
-                }
-            }
-            if (iter.hasNext()) {
-                append(", "); //$NON-NLS-1$
-            }
-        }
-        if (!obj.getPrimaryKey().isEmpty()) {
-            append(", "); //$NON-NLS-1$
-            append(PRIMARY);
-            append(" "); //$NON-NLS-1$
-            append(NonReserved.KEY);
-            append(Tokens.LPAREN);
-            Iterator<ElementSymbol> pkiter = obj.getPrimaryKey().iterator();
-            while (pkiter.hasNext()) {
-                outputShortName(pkiter.next());
-                if (pkiter.hasNext()) {
-                    append(", "); //$NON-NLS-1$
-                }
-            }
-            append(Tokens.RPAREN);
-        }
-        append(")"); //$NON-NLS-1$
     }
 
     private String buildTableOptions(Table table) {
@@ -1189,7 +1134,7 @@ public class SQLStringVisitor extends LanguageVisitor
         return name;
     }
 
-    private void visit8( Create obj ) {
+    private void visit9( Create obj ) {
         append(CREATE);
         append(SPACE);
         if (obj.getTableMetadata() != null) {
@@ -1258,21 +1203,19 @@ public class SQLStringVisitor extends LanguageVisitor
         
         append(Tokens.RPAREN);
 
-        if (isTeiid810OrGreater()) {
-            CommitAction commitAction = obj.getCommitAction();
-            if (commitAction != null) {
-                append(Tokens.SPACE);
-                append(Reserved.ON);
-                append(Tokens.SPACE);
-                append(Reserved.COMMIT);
-                append(Tokens.SPACE);
-                switch (commitAction) {
-                    case PRESERVE_ROWS:
-                        append(NonReserved.PRESERVE);
-                        append(Tokens.SPACE);
-                        append(Reserved.ROWS);
-                        break;
-                }
+        CommitAction commitAction = obj.getCommitAction();
+        if (commitAction != null) {
+            append(Tokens.SPACE);
+            append(Reserved.ON);
+            append(Tokens.SPACE);
+            append(Reserved.COMMIT);
+            append(Tokens.SPACE);
+            switch (commitAction) {
+                case PRESERVE_ROWS:
+                    append(NonReserved.PRESERVE);
+                    append(Tokens.SPACE);
+                    append(Reserved.ROWS);
+                    break;
             }
         }
     }
@@ -1282,10 +1225,7 @@ public class SQLStringVisitor extends LanguageVisitor
         // Turn off adding comments until the query is completely formed
         disableComments(obj);
 
-        if (isTeiid8OrGreater())
-            visit8(obj);
-        else
-            visit7(obj);
+        visit9(obj);
 
         enableComments(obj);
         addComments(obj);
@@ -1312,10 +1252,8 @@ public class SQLStringVisitor extends LanguageVisitor
         disableComments(obj);
 
         Expression expr = obj.getExpression();
-        if (isTeiid8OrGreater())
-            appendNested(expr);
-        else
-            visitNode(expr);
+        
+        appendNested(expr);
 
         append(SPACE);
         append(IS);
@@ -1395,9 +1333,6 @@ public class SQLStringVisitor extends LanguageVisitor
             append(")"); //$NON-NLS-1$
         }
 
-        if (isLessThanTeiid8124())
-            addMakeDep(obj);
-
         enableComments(obj);
         addComments(obj);
     }
@@ -1414,14 +1349,9 @@ public class SQLStringVisitor extends LanguageVisitor
         }
 
         if (obj.getMakeDep() != null) {
-            if (obj.getMakeDep().isSimple() && isLessThanTeiid8124()) {
-                append(Option.MAKEDEP);
-                append(SPACE);
-            } else {
-                append(Option.MAKEDEP);
-                appendMakeDepOptions(obj.getMakeDep());
-                append(SPACE);
-            }
+            append(Option.MAKEDEP);
+            appendMakeDepOptions(obj.getMakeDep());
+            append(SPACE);
         }
         
         if (obj.isMakeNotDep()) {
@@ -1430,10 +1360,10 @@ public class SQLStringVisitor extends LanguageVisitor
         }
         
         // Will return false if NOT less than Teiid 8.12.4        
-        if (obj.isMakeInd()) {
-            append(FromClause.MAKEIND);
-            append(SPACE);
-        }
+//        if (obj.isMakeInd()) {
+//            append(FromClause.MAKEIND);
+//            append(SPACE);
+//        }
 
         // Will return null if less than Teiid 8.12.4
         if (obj.getMakeInd() != null) {
@@ -1447,7 +1377,7 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
         }
 
-        if (isTeiid8OrGreater() && obj.isPreserve()) {
+        if (obj.isPreserve()) {
             append(FromClause.PRESERVE);
             append(SPACE);
         }
@@ -1530,14 +1460,8 @@ public class SQLStringVisitor extends LanguageVisitor
         if (obj.getEscapeChar() != MatchCriteria.NULL_ESCAPE_CHAR) {
             append(SPACE);
             append(ESCAPE);
-            if (isTeiid8OrGreater()) {
-                append(SPACE);
-                outputLiteral(String.class, false, obj.getEscapeChar());
-            } else {
-                append(" '"); //$NON-NLS-1$
-                append(String.valueOf(obj.getEscapeChar()));
-                append("'"); //$NON-NLS-1$
-            }
+            append(SPACE);
+            outputLiteral(String.class, false, obj.getEscapeChar());
         }
 
         enableComments(obj);
@@ -1631,8 +1555,6 @@ public class SQLStringVisitor extends LanguageVisitor
      * @return this visitor
      */
     public SQLStringVisitor appendMakeDepOptions(MakeDep makedep) {
-        if (isLessThanTeiidVersion(Version.TEIID_8_5))
-            return this;
 
         boolean parens = false;
         if (makedep.getMax() != null || makedep.isJoin()) {
@@ -1813,9 +1735,17 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
         }
         append(AS);
+    	if (obj.isNoInline()) {
+    		append(SPACE);
+        	append(BEGIN_HINT);
+            append(SPACE);
+            append(WithQueryCommand.NO_INLINE);
+            append(SPACE);
+            append(END_HINT);
+    	}
         append(SPACE);
         append(Tokens.LPAREN);
-        if (isTeiidVersionOrGreater(Version.TEIID_8_5) && obj.getCommand() == null) {
+        if (obj.getCommand() == null) {
             append("<dependent values>"); //$NON-NLS-1$
         } else {
             visitNode(obj.getCommand());
@@ -1898,7 +1828,7 @@ public class SQLStringVisitor extends LanguageVisitor
         append(BEGIN_HINT);
         append("sh"); //$NON-NLS-1$
 
-        if (isTeiid8OrGreater() && sh.isUseAliases()) {
+        if (sh.isUseAliases()) {
             append(SPACE);
             append("KEEP ALIASES"); //$NON-NLS-1$
         }
@@ -1911,7 +1841,7 @@ public class SQLStringVisitor extends LanguageVisitor
         if (sh.getSpecificHints() != null) {
             for (Map.Entry<String, SpecificHint> entry : sh.getSpecificHints().entrySet()) {
                 append(entry.getKey());
-                if (isTeiid8OrGreater() && entry.getValue().isUseAliases()) {
+                if (entry.getValue().isUseAliases()) {
                     append(SPACE);
                     append("KEEP ALIASES"); //$NON-NLS-1$
                 }
@@ -2005,10 +1935,7 @@ public class SQLStringVisitor extends LanguageVisitor
 
         // variable
 
-        if (isTeiid8OrGreater())
-            appendNested(obj.getExpression());
-        else
-            visitNode(obj.getExpression());
+        appendNested(obj.getExpression());
 
         // operator and beginning of list
         append(SPACE);
@@ -2234,7 +2161,7 @@ public class SQLStringVisitor extends LanguageVisitor
             append(CacheHint.SCOPE);
             append(obj.getScope());            
         }
-        if (obj.getMinRows() != null && isTeiid811OrGreater()) {
+        if (obj.getMinRows() != null ) {
             if (!addParens) {
                 append(Tokens.LPAREN);
                 addParens = true;
@@ -2258,8 +2185,8 @@ public class SQLStringVisitor extends LanguageVisitor
         disableComments(obj);
 
         addHintComment(obj);
-        if (obj.isTable()) {
-            append(TABLE);
+        if (obj.isLateral()) {
+            append(LATERAL);
         }
         append("(");//$NON-NLS-1$
         visitNode(obj.getCommand());
@@ -2267,13 +2194,9 @@ public class SQLStringVisitor extends LanguageVisitor
         append(" AS ");//$NON-NLS-1$
 
         GroupSymbol groupSymbol = obj.getGroupSymbol();
-        if (isTeiid8OrGreater())
-            append(escapeSinglePart(groupSymbol.getOutputName()));
-        else
-            append(groupSymbol.getOutputName());
 
-        if (isLessThanTeiid8124())
-            addMakeDep(obj);
+        append(escapeSinglePart(groupSymbol.getOutputName()));
+
 
         enableComments(obj);
         addComments(obj);
@@ -2309,10 +2232,16 @@ public class SQLStringVisitor extends LanguageVisitor
         disableComments(obj);
 
         addHintComment(obj);
-        visitNode(obj.getGroup());
-
-        if (isLessThanTeiid8124())
-            addMakeDep(obj);
+        
+        if (obj.getExpandedCommand() != null) {
+            append("(");//$NON-NLS-1$
+            visitNode(obj.getExpandedCommand());
+            append(")");//$NON-NLS-1$
+            append(" AS ");//$NON-NLS-1$
+            append(escapeSinglePart(obj.getGroup().getName()));
+        } else {
+        	visitNode(obj.getGroup());
+    	}
 
         enableComments(obj);
         addComments(obj);
@@ -2370,30 +2299,25 @@ public class SQLStringVisitor extends LanguageVisitor
         // Turn off adding comments until the query is completely formed
         disableComments(obj);
 
-        if (isTeiid8OrGreater())
-            append(obj.getName());
-        else
-            append(obj.getAggregateFunction().name());
+        append(obj.getName());
+
         append("("); //$NON-NLS-1$
 
         if (obj.isDistinct()) {
             append(DISTINCT);
             append(" "); //$NON-NLS-1$
-        } else if (isTeiid8OrGreater() && obj.getAggregateFunction() == Type.USER_DEFINED) {
+        } else if (obj.getAggregateFunction() == Type.USER_DEFINED) {
             append(ALL);
             append(" "); //$NON-NLS-1$
         }
 
-        if ((!isTeiid8OrGreater() && obj.getExpression() == null) ||
-             (isTeiid8OrGreater() && (obj.getArgs() == null ||  obj.getArgs().length == 0))) {
+        if (obj.getArgs() == null ||  obj.getArgs().length == 0 ) {
             if (obj.getAggregateFunction() == Type.COUNT) {
                 append(Tokens.ALL_COLS);
             }
-        } else if (isTeiid8OrGreater()) {
-            registerNodes(obj.getArgs(), 0);
         } else {
-            visitNode(obj.getExpression());
-        }
+            registerNodes(obj.getArgs(), 0);
+        } 
 
         if (obj.getOrderBy() != null) {
             append(SPACE);
@@ -2447,41 +2371,6 @@ public class SQLStringVisitor extends LanguageVisitor
         addComments(obj);
     }
 
-    private void visit7(Constant obj) {
-        Class<?> type = obj.getType();
-        String[] constantParts = null;
-        if (obj.isMultiValued()) {
-            constantParts = new String[] {"?"}; //$NON-NLS-1$
-        } else if (obj.getValue() == null) {
-            if (type.equals(DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass())) {
-                constantParts = new String[] {UNKNOWN};
-            } else {
-                constantParts = new String[] {"null"}; //$NON-NLS-1$
-            }
-        } else {
-            if (Number.class.isAssignableFrom(type)) {
-                constantParts = new String[] {obj.getValue().toString()};
-            } else if (type.equals(DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass())) {
-                constantParts = new String[] {obj.getValue().equals(Boolean.TRUE) ? TRUE : FALSE};
-            } else if (type.equals(DataTypeManagerService.DefaultDataTypes.TIMESTAMP.getTypeClass())) {
-                constantParts = new String[] {"{ts'", obj.getValue().toString(), "'}"}; //$NON-NLS-1$ //$NON-NLS-2$
-            } else if (type.equals(DataTypeManagerService.DefaultDataTypes.TIME.getTypeClass())) {
-                constantParts = new String[] {"{t'", obj.getValue().toString(), "'}"}; //$NON-NLS-1$ //$NON-NLS-2$
-            } else if (type.equals(DataTypeManagerService.DefaultDataTypes.DATE.getTypeClass())) {
-                constantParts = new String[] {"{d'", obj.getValue().toString(), "'}"}; //$NON-NLS-1$ //$NON-NLS-2$
-            }
-            if (constantParts == null) {
-                String strValue = obj.getValue().toString();
-                strValue = escapeStringValue(strValue, "'"); //$NON-NLS-1$
-                constantParts = new String[] {"'", strValue, "'"}; //$NON-NLS-1$ //$NON-NLS-2$
-            }
-        }
-
-        for (String string : constantParts) {
-            append(string);
-        }
-    }
-
     private void outputLiteral(Class<?> type, boolean multiValued, Object value) throws AssertionError {
         String[] constantParts = null;
         if (multiValued) {
@@ -2493,7 +2382,7 @@ public class SQLStringVisitor extends LanguageVisitor
                 constantParts = new String[] {"null"}; //$NON-NLS-1$
             }
         } else {
-			if (isTeiid87OrGreater() && value.getClass() == ArrayImpl.class) {
+			if (value.getClass() == ArrayImpl.class) {
 				ArrayImpl av = (ArrayImpl)value;
 				append(Tokens.LPAREN);
 				for (int i = 0; i < av.getValues().length; i++) {
@@ -2506,14 +2395,14 @@ public class SQLStringVisitor extends LanguageVisitor
 				}
 
                 // Added to support Teiid 8.9
-				if (av.getValues().length == 1 && isTeiid89OrGreater()) {
+				if (av.getValues().length == 1 ) {
 				    append(Tokens.COMMA);
 				}
 
 				append(Tokens.RPAREN);
                 return;
 
-            } else if (type.isArray() && isTeiid89OrGreater()) { // Added to support Teiid 8.9
+            } else if (type.isArray()) { // Added to support Teiid 8.9
                 append(Tokens.LPAREN);
                 int length = java.lang.reflect.Array.getLength(value);
                 for (int i = 0; i < length; i++) {
@@ -2546,9 +2435,9 @@ public class SQLStringVisitor extends LanguageVisitor
                 constantParts = new String[] {"X'", value.toString(), "'"}; //$NON-NLS-1$ //$NON-NLS-2$
             }
             if (constantParts == null) {
-                if (isTeiid8OrGreater() && DataTypeManagerService.DefaultDataTypes.isLOB(type)) {
+                if ( DataTypeManagerService.DefaultDataTypes.isLOB(type) ) {
                     constantParts = new String[] {"?"}; //$NON-NLS-1$
-                } else if (isTeiid8124OrGreater()) {
+                } else {
                     append('\'');
                     String strValue = value.toString();
                     for (int i = 0; i < strValue.length(); i++) {
@@ -2564,10 +2453,6 @@ public class SQLStringVisitor extends LanguageVisitor
                     }
                     append('\'');
                     return;
-                } else {
-                    String strValue = value.toString();
-                    strValue = escapeStringValue(strValue, "'"); //$NON-NLS-1$
-                    constantParts = new String[] {"'", strValue, "'"}; //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
         }
@@ -2577,7 +2462,7 @@ public class SQLStringVisitor extends LanguageVisitor
         }
     }
 
-    private void visit8(Constant obj) {
+    private void visit9(Constant obj) {
         Class<?> type = obj.getType();
         boolean multiValued = obj.isMultiValued();
         Object value = obj.getValue();
@@ -2589,10 +2474,7 @@ public class SQLStringVisitor extends LanguageVisitor
         // Turn off adding comments until the query is completely formed
         disableComments(obj);
 
-        if (isTeiid8OrGreater())
-            visit8(obj);
-        else
-            visit7(obj);
+        visit9(obj);
 
         enableComments(obj);
         addComments(obj);
@@ -2689,7 +2571,7 @@ public class SQLStringVisitor extends LanguageVisitor
             }
             append(")"); //$NON-NLS-1$
 
-        } else if (name.equals("+") || name.equals("-") || name.equals("*") || name.equals("/") || name.equals("||")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        } else if (INFIX_FUNCTIONS.contains(name)) { 
             append("("); //$NON-NLS-1$
 
             if (args != null) {
@@ -2803,26 +2685,6 @@ public class SQLStringVisitor extends LanguageVisitor
 
     // ############ Visitor methods for storedprocedure language objects ####################
 
-    private void visit7(Block obj) {
-        addLabel(obj);
-        List<Statement> statements = obj.getStatements();
-        // Add first clause
-        append(BEGIN);
-        if (obj.isAtomic()) {
-            append(SPACE);
-            append(ATOMIC);
-        }
-        append("\n"); //$NON-NLS-1$
-        Iterator<Statement> stmtIter = statements.iterator();
-        while (stmtIter.hasNext()) {
-            // Add each statement
-            addTabs(1);
-            visitNode(stmtIter.next());
-            append("\n"); //$NON-NLS-1$
-        }
-        addTabs(0);
-        append(END);
-    }
 
     private void addStatements(List<Statement> statements) {
         Iterator<Statement> stmtIter = statements.iterator();
@@ -2835,7 +2697,7 @@ public class SQLStringVisitor extends LanguageVisitor
         addTabs(0);
     }
 
-    private void visit8(Block obj) {
+    private void visit9(Block obj) {
         addLabel(obj);
         List<Statement> statements = obj.getStatements();
         // Add first clause
@@ -2863,10 +2725,7 @@ public class SQLStringVisitor extends LanguageVisitor
         // Turn off adding comments until the query is completely formed
         disableComments(block);
 
-        if (isTeiid8OrGreater())
-            visit8(block);
-        else
-            visit7(block);
+        visit9(block);
 
         enableComments(block);
         addComments(block);
@@ -2894,7 +2753,7 @@ public class SQLStringVisitor extends LanguageVisitor
         disableComments(obj);
 
         visitNode(obj.getCommand());
-        if (isTeiid8OrGreater() && !obj.isReturnable()) {
+        if (!obj.isReturnable()) {
             append(SPACE);
             append(WITHOUT);
             append(SPACE);
@@ -2907,41 +2766,11 @@ public class SQLStringVisitor extends LanguageVisitor
     }
 
     @Override
-    @Removed(Version.TEIID_8_0)
-    public void visit(CreateUpdateProcedureCommand obj) {
-        // Turn off adding comments until the query is completely formed
-        disableComments(obj);
-
-        append(CREATE);
-        append(SPACE);
-        if (!obj.isUpdateProcedure()) {
-            append(VIRTUAL);
-            append(SPACE);
-        }
-        append(PROCEDURE);
-        append("\n"); //$NON-NLS-1$
-        addTabs(0);
-        visitNode(obj.getBlock());
-
-        enableComments(obj);
-        addComments(obj);
-    }
-
-    @Override
     public void visit(CreateProcedureCommand obj) {
     	addCacheHint(obj.getCacheHint());
         // Turn off adding comments until the query is completely formed
         disableComments(obj);
 
-        if (isLessThanTeiidVersion(Version.TEIID_8_4)) {
-            append(CREATE);
-            append(SPACE);
-            append(VIRTUAL);
-            append(SPACE);
-            append(PROCEDURE);
-            append("\n"); //$NON-NLS-1$
-            addTabs(0);
-        }
         visitNode(obj.getBlock());
 
         enableComments(obj);
@@ -3026,119 +2855,6 @@ public class SQLStringVisitor extends LanguageVisitor
         }
         visitNode(obj.getExpression());
         append(";"); //$NON-NLS-1$
-
-        enableComments(obj);
-        addComments(obj);
-    }
-
-    @Override
-    public void visit(HasCriteria obj) {
-        // Turn off adding comments until the query is completely formed
-        disableComments(obj);
-
-        append(HAS);
-        append(SPACE);
-        visitNode(obj.getSelector());
-
-        enableComments(obj);
-        addComments(obj);
-    }
-
-    @Override
-    public void visit(TranslateCriteria obj) {
-        // Turn off adding comments until the query is completely formed
-        disableComments(obj);
-
-        append(TRANSLATE);
-        append(SPACE);
-        visitNode(obj.getSelector());
-
-        if (obj.hasTranslations()) {
-            append(SPACE);
-            append(WITH);
-            append(SPACE);
-            append("("); //$NON-NLS-1$
-            Iterator critIter = obj.getTranslations().iterator();
-
-            while (critIter.hasNext()) {
-                visitNode((Criteria)critIter.next());
-                if (critIter.hasNext()) {
-                    append(", "); //$NON-NLS-1$
-                }
-                if (!critIter.hasNext()) {
-                    append(")"); //$NON-NLS-1$
-                }
-            }
-        }
-
-        enableComments(obj);
-        addComments(obj);
-    }
-
-    @Override
-    public void visit(CriteriaSelector obj) {
-        // Turn off adding comments until the query is completely formed
-        disableComments(obj);
-
-        switch (obj.getSelectorType()) {
-            case EQ:
-                append("= "); //$NON-NLS-1$
-                break;
-            case GE:
-                append(">= "); //$NON-NLS-1$
-                break;
-            case GT:
-                append("> "); //$NON-NLS-1$
-                break;
-            case LE:
-                append("<= "); //$NON-NLS-1$
-                break;
-            case LT:
-                append("< "); //$NON-NLS-1$
-                break;
-            case NE:
-                append("<> "); //$NON-NLS-1$
-                break;
-            case IN:
-                append(IN);
-                append(SPACE);
-                break;
-            case IS_NULL:
-                append(IS);
-                append(SPACE);
-                append(NULL);
-                append(SPACE);
-                break;
-            case LIKE:
-                append(LIKE);
-                append(SPACE);
-                break;
-            case BETWEEN:
-                append(BETWEEN);
-                append(SPACE);
-                break;
-            case NO_TYPE:
-            default:
-                // Append nothing
-                break;
-        }
-
-        append(CRITERIA);
-        if (obj.hasElements()) {
-            append(SPACE);
-            append(ON);
-            append(SPACE);
-            append("("); //$NON-NLS-1$
-
-            Iterator elmtIter = obj.getElements().iterator();
-            while (elmtIter.hasNext()) {
-                visitNode((ElementSymbol)elmtIter.next());
-                if (elmtIter.hasNext()) {
-                    append(", "); //$NON-NLS-1$
-                }
-            }
-            append(")"); //$NON-NLS-1$
-        }
 
         enableComments(obj);
         addComments(obj);
@@ -3244,10 +2960,8 @@ public class SQLStringVisitor extends LanguageVisitor
         append(") "); //$NON-NLS-1$
         append(AS);
         append(" "); //$NON-NLS-1$
-        if (isTeiid8OrGreater())
-            outputDisplayName(obj.getCursorName());
-        else
-            append(obj.getCursorName());
+
+        outputDisplayName(obj.getCursorName());
 
         append("\n"); //$NON-NLS-1$
         addTabs(0);
@@ -3335,14 +3049,16 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         append(quantifier);
 
-        if (isTeiid810OrGreater()) {
-            addSubqueryHint(obj.getSubqueryHint());
-            append(SPACE);
-        }
-
+        addSubqueryHint(obj.getSubqueryHint());
+        append(SPACE);
+        
         append("("); //$NON-NLS-1$
 
-        visitNode(obj.getCommand());
+        if (obj.getCommand() != null) {
+        	visitNode(obj.getCommand());
+        } else {
+        	visitNode(obj.getArrayExpression());
+        }
         append(")"); //$NON-NLS-1$
 
         enableComments(obj);
@@ -3354,16 +3070,14 @@ public class SQLStringVisitor extends LanguageVisitor
         // Turn off adding comments until the query is completely formed
         disableComments(obj);
 
-        if (isTeiid810OrGreater()) {
-            if (obj.getSubqueryHint().isDepJoin() || obj.getSubqueryHint().isMergeJoin() || obj.getSubqueryHint().isNoUnnest()) {
-                if (this.parts.charAt(this.parts.length() - 1) == ' ') {
-                    this.parts.setLength(this.parts.length() - 1);
-                }
-                addSubqueryHint(obj.getSubqueryHint());
-                append(SPACE);
+        if (obj.getSubqueryHint().isDepJoin() || obj.getSubqueryHint().isMergeJoin() || obj.getSubqueryHint().isNoUnnest()) {
+            if (this.parts.charAt(this.parts.length() - 1) == ' ') {
+                this.parts.setLength(this.parts.length() - 1);
             }
+            addSubqueryHint(obj.getSubqueryHint());
+            append(SPACE);
         }
-
+        
         // operator and beginning of list
         append("("); //$NON-NLS-1$
         visitNode(obj.getCommand());
@@ -3557,7 +3271,7 @@ public class SQLStringVisitor extends LanguageVisitor
 
         append("TEXTTABLE("); //$NON-NLS-1$
         visitNode(obj.getFile());
-        if (isTeiid8OrGreater() && obj.getSelector() != null) {
+        if (obj.getSelector() != null) {
             append(SPACE);
             append(NonReserved.SELECTOR);
             append(SPACE);
@@ -3577,7 +3291,9 @@ public class SQLStringVisitor extends LanguageVisitor
                 append(SPACE);
                 append(NonReserved.ORDINALITY);
             } else {
-                if (col.getHeader() != null && isTeiid811OrGreater()) {
+                if (col.getHeader() != null) {
+	            	append(NonReserved.HEADER);
+	            	append(SPACE);
                     outputLiteral(String.class, false, col.getHeader());
                     append(SPACE);
                 }
@@ -3594,7 +3310,7 @@ public class SQLStringVisitor extends LanguageVisitor
                     append(SPACE);
                     append(NonReserved.TRIM);
                 }
-                if (isTeiid8OrGreater() && col.getSelector() != null) {
+                if (col.getSelector() != null) {
                     append(SPACE);
                     append(NonReserved.SELECTOR);
                     append(SPACE);
@@ -3669,9 +3385,6 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         outputDisplayName(obj.getName());
 
-        if (isLessThanTeiid8124())
-            addMakeDep(obj);
-
         enableComments(obj);
         addComments(obj);
     }
@@ -3696,8 +3409,7 @@ public class SQLStringVisitor extends LanguageVisitor
             registerNodes(obj.getPassing(), 0);
         }
 
-        if ((isTeiid8OrGreater() && !obj.getColumns().isEmpty() && !obj.isUsingDefaultColumn())
-            || (!isTeiid8OrGreater() && !obj.getColumns().isEmpty())) {
+        if (!obj.getColumns().isEmpty() && !obj.isUsingDefaultColumn()) {
             append(SPACE);
             append(NonReserved.COLUMNS);
             for (Iterator<XMLColumn> cols = obj.getColumns().iterator(); cols.hasNext();) {
@@ -3734,9 +3446,6 @@ public class SQLStringVisitor extends LanguageVisitor
         append(AS);
         append(SPACE);
         outputDisplayName(obj.getName());
-
-        if (isLessThanTeiid8124())
-            addMakeDep(obj);
 
         enableComments(obj);
         addComments(obj);
@@ -3787,9 +3496,6 @@ public class SQLStringVisitor extends LanguageVisitor
         append(AS);
         append(SPACE);
         outputDisplayName(obj.getName());
-
-        if (isLessThanTeiid8124())
-            addMakeDep(obj);
 
         enableComments(obj);
         addComments(obj);
@@ -3917,30 +3623,30 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
             append(obj.getTypeString());
         }
-        if (isTeiid8OrGreater()) {
-            if (obj.getEncoding() != null) {
-                append(SPACE);
-                append(NonReserved.ENCODING);
-                append(SPACE);
-                append(escapeSinglePart(obj.getEncoding()));
-            }
-            if (obj.getVersion() != null) {
-                append(SPACE);
-                append(NonReserved.VERSION);
-                append(SPACE);
-                append(newConstant(obj.getVersion()));
-            }
-            if (obj.getDeclaration() != null) {
-                append(SPACE);
-                if (obj.getDeclaration()) {
-                    append(NonReserved.INCLUDING);
-                } else {
-                    append(NonReserved.EXCLUDING);
-                }
-                append(SPACE);
-                append(NonReserved.XMLDECLARATION);
-            }
+
+        if (obj.getEncoding() != null) {
+            append(SPACE);
+            append(NonReserved.ENCODING);
+            append(SPACE);
+            append(escapeSinglePart(obj.getEncoding()));
         }
+        if (obj.getVersion() != null) {
+            append(SPACE);
+            append(NonReserved.VERSION);
+            append(SPACE);
+            append(newConstant(obj.getVersion()));
+        }
+        if (obj.getDeclaration() != null) {
+            append(SPACE);
+            if (obj.getDeclaration()) {
+                append(NonReserved.INCLUDING);
+            } else {
+                append(NonReserved.EXCLUDING);
+            }
+            append(SPACE);
+            append(NonReserved.XMLDECLARATION);
+        }
+
         append(Tokens.RPAREN);
 
         enableComments(obj);
@@ -4047,16 +3753,11 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         outputDisplayName(obj.getName());
 
-        if (isLessThanTeiid8124())
-            addMakeDep(obj);
-
         enableComments(obj);
         addComments(obj);
     }
 
     private void addMakeDep(FromClause obj) {
-        if (isLessThanTeiidVersion(Version.TEIID_8_5))
-            return;
 
         MakeDep makeDep = obj.getMakeDep();
         if (makeDep != null && !makeDep.isSimple()) {
@@ -4064,9 +3765,6 @@ public class SQLStringVisitor extends LanguageVisitor
             append(MAKEDEP);
             appendMakeDepOptions(makeDep);
         }
-
-        if (isLessThanTeiid8124())
-            return;
 
         makeDep = obj.getMakeInd();
         if (makeDep != null && !makeDep.isSimple()) {
@@ -4076,18 +3774,7 @@ public class SQLStringVisitor extends LanguageVisitor
         }
     }
 
-    private void visit7(AlterProcedure<CreateUpdateProcedureCommand> obj) {
-        append(ALTER);
-        append(SPACE);
-        append(PROCEDURE);
-        append(SPACE);
-        append(obj.getTarget());
-        beginClause(1);
-        append(AS);
-        append(obj.getDefinition().getBlock());
-    }
-
-    private void visit8(AlterProcedure<CreateProcedureCommand> obj) {
+    private void visit9(AlterProcedure<CreateProcedureCommand> obj) {
         append(ALTER);
         append(SPACE);
         append(PROCEDURE);
@@ -4103,10 +3790,8 @@ public class SQLStringVisitor extends LanguageVisitor
         // Turn off adding comments until the query is completely formed
         disableComments(obj);
 
-        if (isTeiid8OrGreater())
-            visit8(obj);
-        else
-            visit7(obj);
+        visit9(obj);
+
 
         enableComments(obj);
         addComments(obj);

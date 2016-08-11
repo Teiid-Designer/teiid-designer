@@ -25,7 +25,6 @@ package org.teiid.metadata;
 import java.util.Collections;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
@@ -35,6 +34,11 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
 	private static final long serialVersionUID = 6382258617714856616L;
 
 	public static final String DEFAULT_HANDLING = AbstractMetadataRecord.RELATIONAL_URI + "default_handling"; //$NON-NLS-1$
+	public static final String EXPRESSION_DEFAULT = "expression"; //$NON-NLS-1$
+	
+	public static final String SPATIAL_SRID = MetadataFactory.SPATIAL_URI + "srid"; //$NON-NLS-1$
+	public static final String SPATIAL_TYPE = MetadataFactory.SPATIAL_URI + "type"; //$NON-NLS-1$
+	public static final String SPATIAL_COORD_DIMENSION = MetadataFactory.SPATIAL_URI + "coord_dimension"; //$NON-NLS-1$
 
 	public enum NullType {
 		No_Nulls {
@@ -59,9 +63,7 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
     private NullType nullType;
     private int position;
     private Datatype datatype;
-    @Since(Version.TEIID_8_7)
     private int arrayDimensions;
-    @Since(Version.TEIID_8_7)
     private String nativeType;
 
     public BaseColumn(ITeiidServerVersion teiidVersion) {
@@ -197,7 +199,6 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
 		return arrayDimensions;
 	}
 
-	@Since(Version.TEIID_8_7)
     public String getNativeType() {
         return nativeType;
     }
@@ -206,7 +207,6 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
      * @param nativeType The nativeType to set.
      * @since 4.2
      */
-	@Since(Version.TEIID_8_7)
     public void setNativeType(String nativeType) {
         this.nativeType = nativeType;
     }

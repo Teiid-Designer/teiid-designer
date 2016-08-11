@@ -143,14 +143,7 @@ public class UpdateProcedureResolver extends CommandResolver {
         // Only applicable for teiid 7
         //
         if (command instanceof CreateUpdateProcedureCommand && ((CreateUpdateProcedureCommand)command).isUpdateProcedure()) {
-            resolveVirtualGroupElements((CreateUpdateProcedureCommand) command, metadata);
-
-            //add the default variables
-            String countVar = ProcedureReservedWords.VARIABLES + Symbol.SEPARATOR + ProcedureReservedWords.ROWS_UPDATED;
-            ElementSymbol updateCount = create(ASTNodes.ELEMENT_SYMBOL);
-            updateCount.setName(countVar);
-            updateCount.setType(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass());
-            symbols.add(updateCount);
+        	throw new UnsupportedOperationException();
         }
         //
         // End of Only applicable to teiid 7
@@ -172,13 +165,9 @@ public class UpdateProcedureResolver extends CommandResolver {
     private void resolveCommand(TriggerAction ta, TempMetadataAdapter metadata, boolean resolveNullLiterals) throws Exception {
 
         ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> cmd;
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
-            cmd = create(ASTNodes.CREATE_UPDATE_PROCEDURE_COMMAND);
-        } else {
-            cmd = create(ASTNodes.CREATE_PROCEDURE_COMMAND);
-            //TODO: this is not generally correct - we should update the api to set the appropriate type
-            ((CreateProcedureCommand)cmd).setUpdateType(ICommand.TYPE_INSERT);
-        }
+        cmd = create(ASTNodes.CREATE_PROCEDURE_COMMAND);
+        //TODO: this is not generally correct - we should update the api to set the appropriate type
+        ((CreateProcedureCommand)cmd).setUpdateType(ICommand.TYPE_INSERT);
 
         cmd.setBlock(ta.getBlock());
         cmd.setVirtualGroup(ta.getView());
@@ -186,42 +175,11 @@ public class UpdateProcedureResolver extends CommandResolver {
         resolveBlock(cmd, ta.getBlock(), ta.getExternalGroupContexts(), metadata);
     }
 
-    @Removed(Version.TEIID_8_0)
+    // removed in 8.0
     @Deprecated
     private void resolveVirtualGroupElements(CreateUpdateProcedureCommand procCommand, IQueryMetadataInterface metadata)
         throws Exception {
-
-        // virtual group on procedure
-        GroupSymbol virtualGroup = procCommand.getVirtualGroup();
-
-        if (!metadata.isVirtualGroup(virtualGroup.getMetadataID())) {
-            //if this is a compensating procedure, just return
-            return;
-        }
-
-        ResolveVirtualGroupCriteriaVisitor.resolveCriteria(procCommand, virtualGroup, metadata);
-
-        // get a symbol map between virtual elements and the elements that define
-        // then in the query transformation, this info is used in evaluating/validating
-        // has criteria/translate criteria clauses
-        Command transformCmd;
-        try {
-            QueryResolver queryResolver = new QueryResolver(getTeiidVersion());
-            transformCmd = queryResolver.resolveView(virtualGroup,
-                                                     metadata.getVirtualPlan(virtualGroup.getMetadataID()),
-                                                     SQLConstants.Reserved.SELECT,
-                                                     metadata).getCommand();
-        } catch (Exception e) {
-            throw new QueryResolverException(e, e.getMessage());
-        }
-
-        List<Expression> cloned = new ArrayList<Expression>();
-        for (Expression item : transformCmd.getProjectedSymbols()) {
-            cloned.add(item.clone());
-        }
-
-        Map<ElementSymbol, Expression> symbolMap = SymbolMap.createSymbolMap(virtualGroup, cloned, metadata).asMap();
-        procCommand.setSymbolMap(symbolMap);
+    		throw new UnsupportedOperationException();
     }
 
     /**
@@ -234,8 +192,6 @@ public class UpdateProcedureResolver extends CommandResolver {
 
         if (command instanceof CreateProcedureCommand)
             resolveBlock((CreateProcedureCommand) command, ((CreateProcedureCommand) command).getBlock(), command.getExternalGroupContexts(), metadata);
-        else if (command instanceof CreateUpdateProcedureCommand)
-            resolveBlock((CreateUpdateProcedureCommand) command, ((CreateUpdateProcedureCommand) command).getBlock(), command.getExternalGroupContexts(), metadata);
         else if (command instanceof TriggerAction)
             resolveCommand((TriggerAction)command, metadata, resolveNullLiterals);
         else
@@ -296,158 +252,11 @@ public class UpdateProcedureResolver extends CommandResolver {
         }
     }
 
-    @SuppressWarnings( "incomplete-switch" )
-    @Removed(Version.TEIID_8_0)
+    // Removed in Teiid 8.0
     @Deprecated
     private void resolveStatement(CreateUpdateProcedureCommand command, Statement statement, GroupContext externalGroups, GroupSymbol variables, TempMetadataAdapter metadata)
         throws Exception {
-        ResolverVisitor visitor = new ResolverVisitor(getTeiidVersion());
-
-        switch (statement.getType()) {
-            case TYPE_IF:
-                IfStatement ifStmt = (IfStatement)statement;
-                Criteria ifCrit = ifStmt.getCondition();
-                for (SubqueryContainer container : ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(ifCrit)) {
-                    resolveEmbeddedCommand(metadata, externalGroups, container.getCommand());
-                }
-                visitor.resolveLanguageObject(ifCrit, null, externalGroups, metadata);
-                resolveBlock(command, ifStmt.getIfBlock(), externalGroups, metadata);
-                if (ifStmt.hasElseBlock()) {
-                    resolveBlock(command, ifStmt.getElseBlock(), externalGroups, metadata);
-                }
-                break;
-            case TYPE_COMMAND:
-                CommandStatement cmdStmt = (CommandStatement)statement;
-                Command subCommand = cmdStmt.getCommand();
-
-                TempMetadataStore discoveredMetadata = resolveEmbeddedCommand(metadata, externalGroups, subCommand);
-
-                if (subCommand instanceof StoredProcedure) {
-                    StoredProcedure sp = (StoredProcedure)subCommand;
-                    for (SPParameter param : sp.getParameters()) {
-                        ISPParameter.ParameterInfo paramType = ISPParameter.ParameterInfo.valueOf(param.getParameterType());
-                        switch (paramType) {
-                            case OUT:
-                            case RETURN_VALUE:
-                                if (param.getExpression() != null && !isAssignable(metadata, param)) {
-                                    throw new QueryResolverException(
-                                                                     Messages.gs(Messages.TEIID.TEIID30121, param.getExpression()));
-                                }
-                                sp.setCallableStatement(true);
-                                break;
-                            case INOUT:
-                                if (!isAssignable(metadata, param)) {
-                                    continue;
-                                }
-                                sp.setCallableStatement(true);
-                                break;
-                        }
-                    }
-                }
-
-                if (discoveredMetadata != null) {
-                    metadata.getMetadataStore().getData().putAll(discoveredMetadata.getData());
-                }
-
-                //dynamic commands need to be updated as to their implicitly expected projected symbols 
-                if (subCommand instanceof DynamicCommand) {
-                    DynamicCommand dynCommand = (DynamicCommand)subCommand;
-
-                    if (dynCommand.getIntoGroup() == null && !command.isUpdateProcedure() && !dynCommand.isAsClauseSet()
-                        && !command.getProjectedSymbols().isEmpty()) {
-                        dynCommand.setAsColumns(command.getProjectedSymbols());
-                    }
-                }
-
-                if (!command.isUpdateProcedure()) {
-                    //don't bother using the metadata when it doesn't matter
-                    if (command.getResultsCommand() != null && command.getResultsCommand().getType() == ICommand.TYPE_DYNAMIC) {
-                        DynamicCommand dynamicCommand = (DynamicCommand)command.getResultsCommand();
-                        if (!dynamicCommand.isAsClauseSet()) {
-                            dynamicCommand.setAsColumns(Collections.EMPTY_LIST);
-                        }
-                    }
-
-                    if (subCommand.returnsResultSet()) {
-                        //this could be the last select statement, set the projected symbol
-                        //on the virtual procedure command
-                        command.setResultsCommand(subCommand);
-                    }
-                }
-
-                break;
-            case TYPE_ERROR:
-            case TYPE_ASSIGNMENT:
-            case TYPE_DECLARE:
-                ExpressionStatement exprStmt = (ExpressionStatement)statement;
-                //first resolve the value.  this ensures the value cannot use the variable being defined
-                if (exprStmt.getExpression() != null) {
-                    Expression expr = exprStmt.getExpression();
-                    for (SubqueryContainer container : ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(expr)) {
-                        resolveEmbeddedCommand(metadata, externalGroups, container.getCommand());
-                    }
-                    visitor.resolveLanguageObject(expr, null, externalGroups, metadata);
-                }
-
-                //second resolve the variable
-                if (statement.getType() == StatementType.TYPE_DECLARE) {
-                    collectDeclareVariable((DeclareStatement)statement, variables, metadata, externalGroups);
-                } else if (statement.getType() == StatementType.TYPE_ASSIGNMENT) {
-                    AssignmentStatement assStmt = (AssignmentStatement)statement;
-                    visitor.resolveLanguageObject(assStmt.getVariable(), null, externalGroups, metadata);
-                    if (!metadata.elementSupports(assStmt.getVariable().getMetadataID(), SupportConstants.Element.UPDATE)) {
-                        throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30121, assStmt.getVariable()));
-                    }
-                    //don't allow variable assignments to be external
-                    assStmt.getVariable().setIsExternalReference(false);
-                }
-
-                //third ensure the type matches
-                if (exprStmt.getExpression() != null) {
-                    Class<?> varType = exprStmt.getExpectedType();
-                    Class<?> exprType = exprStmt.getExpression().getType();
-                    if (exprType == null) {
-                        throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30123));
-                    }
-                    String varTypeName = getDataTypeManager().getDataTypeName(varType);
-                    exprStmt.setExpression(ResolverUtil.convertExpression(exprStmt.getExpression(), varTypeName, metadata));
-                }
-                break;
-            case TYPE_WHILE:
-                WhileStatement whileStmt = (WhileStatement)statement;
-                Criteria whileCrit = whileStmt.getCondition();
-                for (SubqueryContainer container : ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(whileCrit)) {
-                    resolveEmbeddedCommand(metadata, externalGroups, container.getCommand());
-                }
-                visitor.resolveLanguageObject(whileCrit, null, externalGroups, metadata);
-                resolveBlock(command, whileStmt.getBlock(), externalGroups, metadata);
-                break;
-            case TYPE_LOOP:
-                LoopStatement loopStmt = (LoopStatement)statement;
-                String groupName = loopStmt.getCursorName();
-
-                if (metadata.getMetadataStore().getTempGroupID(groupName) != null) {
-                    throw new QueryResolverException(Messages.getString(Messages.ERR.ERR_015_012_0065));
-                }
-
-                //check - cursor name should not start with #
-                if (GroupSymbol.isTempGroupName(loopStmt.getCursorName())) {
-                    throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30125, loopStmt.getCursorName()));
-                }
-                Command cmd = loopStmt.getCommand();
-                resolveEmbeddedCommand(metadata, externalGroups, cmd);
-                List<Expression> symbols = cmd.getProjectedSymbols();
-
-                //add the loop cursor group into its own context
-                TempMetadataStore store = metadata.getMetadataStore().clone();
-                metadata = new TempMetadataAdapter(metadata.getMetadata(), store);
-                externalGroups = new GroupContext(externalGroups, null);
-
-                ProcedureContainerResolver.addScalarGroup(getTeiidParser(), groupName, store, externalGroups, symbols, false);
-
-                resolveBlock(command, loopStmt.getBlock(), externalGroups, metadata);
-                break;
-        }
+    	throw new UnsupportedOperationException();
     }
 
     @SuppressWarnings( "incomplete-switch" )
@@ -481,11 +290,12 @@ public class UpdateProcedureResolver extends CommandResolver {
                         switch (paramType) {
                             case OUT:
                             case RETURN_VALUE:
-                                if (param.getExpression() != null && !isAssignable(metadata, param)) {
-                                    throw new QueryResolverException(
-                                                                     Messages.gs(Messages.TEIID.TEIID30121, param.getExpression()));
-                                }
-                                sp.setCallableStatement(true);
+            	            	if (param.getExpression() != null) {
+            	            		if (!isAssignable(metadata, param)) {
+	                                    throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30121, param.getExpression()));
+	                                }
+	                                sp.setCallableStatement(true);
+            	            	}
                                 break;
                             case INOUT:
                                 if (!isAssignable(metadata, param)) {
@@ -618,8 +428,6 @@ public class UpdateProcedureResolver extends CommandResolver {
 
         if (command instanceof CreateProcedureCommand)
             resolveStatement((CreateProcedureCommand)command, statement, externalGroups, variables, metadata);
-        else if (command instanceof CreateUpdateProcedureCommand)
-            resolveStatement((CreateUpdateProcedureCommand)command, statement, externalGroups, variables, metadata);
         else
             throw new IllegalArgumentException();
     }

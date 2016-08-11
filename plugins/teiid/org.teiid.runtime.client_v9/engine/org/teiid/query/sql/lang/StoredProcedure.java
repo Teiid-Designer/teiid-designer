@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -40,6 +41,7 @@ public class StoredProcedure extends ProcedureContainer
     private boolean displayNamedParameters;
 
     private boolean isProcedureRelational;
+	private boolean pushedInQuery;
 
     private String procedureName;
 
@@ -301,12 +303,14 @@ public class StoredProcedure extends ProcedureContainer
         }
         //add result set columns
         List<ElementSymbol> result = new ArrayList<ElementSymbol>(getResultSetColumns());
+        int size = result.size();
         //add out/inout parameter symbols
         for (SPParameter parameter : mapOfParameters.values()) {
             if(parameter.getParameterType() == ParameterInfo.RETURN_VALUE.index()){
                 ElementSymbol symbol = parameter.getParameterSymbol();
                 symbol.setGroupSymbol(this.getGroupSymbol());
-                result.add(0, symbol);
+                //should be first among parameters, which we'll ensure
+            	result.add(size, symbol);
             } else if(parameter.getParameterType() == ParameterInfo.INOUT.index() || parameter.getParameterType() == ParameterInfo.OUT.index()){
                 ElementSymbol symbol = parameter.getParameterSymbol();
                 symbol.setGroupSymbol(this.getGroupSymbol());
@@ -376,7 +380,11 @@ public class StoredProcedure extends ProcedureContainer
         if (this.resultSetParameterKey == null) {
             if (other.resultSetParameterKey != null) return false;
         } else if (!this.resultSetParameterKey.equals(other.resultSetParameterKey)) return false;
-        return true;
+        
+		if( this.mapOfParameters.equals(other.mapOfParameters) &&
+		this.pushedInQuery == other.pushedInQuery ) return true;
+		
+        return false;
     }
 
     /** Accept the visitor. **/
@@ -407,9 +415,30 @@ public class StoredProcedure extends ProcedureContainer
         if(getOption() != null)
             clone.setOption(getOption().clone());
 
+        clone.pushedInQuery = pushedInQuery;
+        
         copyMetadataState(clone);
         return clone;
     }
+
+	    
+	public LinkedHashMap<ElementSymbol, Expression> getProcedureParameters() {
+		LinkedHashMap<ElementSymbol, Expression> map = new LinkedHashMap<ElementSymbol, Expression>();
+	    for (SPParameter element : this.getInputParameters()) {
+	        map.put(element.getParameterSymbol(), element.getExpression());            
+	    } // for
+	    
+	    return map;
+	}
+
+    
+	public boolean isPushedInQuery() {
+		return pushedInQuery;
+	}
+	
+	public void setPushedInQuery(boolean pushedInQuery) {
+		this.pushedInQuery = pushedInQuery;
+	}
 
 }
 /* JavaCC - OriginalChecksum=c312e9c5d62fcc77b0a38cf092591213 (do not edit this line) */

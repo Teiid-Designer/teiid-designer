@@ -142,7 +142,7 @@ public class Insert extends ProcedureContainer
      * @param query
      */
     public void setQueryExpression( QueryCommand query ) {
-        if (isTeiid8OrGreater() && query instanceof Query) {
+        if (query instanceof Query) {
             /*
              * Modified in Teiid 8.6 due to TEIID-2698.
              * This moves the addition of values from the parser to here

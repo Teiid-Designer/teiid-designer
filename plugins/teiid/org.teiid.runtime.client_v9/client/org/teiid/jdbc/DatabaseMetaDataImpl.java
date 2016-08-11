@@ -40,7 +40,6 @@ import org.teiid.core.CoreConstants;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.JDBCSQLTypeInfo;
 import org.teiid.core.util.PropertiesUtils;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
 
@@ -227,7 +226,6 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
         .append(" AND UCASE(Name)").append(LIKE_ESCAPE)//$NON-NLS-1$
         .append(" ORDER BY TABLE_SCHEM").toString(); //$NON-NLS-1$
 
-    @Since(Version.TEIID_8_9)
     private static final String QUERY_FUNCTIONS = new StringBuffer("SELECT VDBName AS Function_CAT, SchemaName AS FUNCTION_SCHEM, " //$NON-NLS-1$
       + "Name AS FUNCTION_NAME, Description as REMARKS, 1 as FUNCTION_TYPE, UID AS SPECIFIC_NAME") //$NON-NLS-1$
       .append(" FROM ").append(RUNTIME_MODEL.VIRTUAL_MODEL_NAME).append(".Functions") //$NON-NLS-1$ //$NON-NLS-2$
@@ -236,7 +234,6 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
       .append(" AND UCASE(Name)").append(LIKE_ESCAPE)//$NON-NLS-1$
       .append(" ORDER BY FUNCTION_CAT, FUNCTION_SCHEM, FUNCTION_NAME, SPECIFIC_NAME").toString(); //$NON-NLS-1$
 
-    @Since(Version.TEIID_8_9)
     private static final String QUERY_FUNCTION_COLUMNS = new StringBuffer("SELECT VDBName AS Function_CAT, SchemaName AS FUNCTION_SCHEM, ") //$NON-NLS-1$
       .append("FunctionName AS FUNCTION_NAME, Name as COLUMN_NAME, CASE WHEN Type = 'ReturnValue' Then 4 WHEN Type = 'In' Then 1 ELSE 0 END AS COLUMN_TYPE") //$NON-NLS-1$
       .append(", 1 AS DATA_TYPE") //$NON-NLS-1$
@@ -279,7 +276,7 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
     DatabaseMetaDataImpl(ConnectionImpl connection) {
         super(connection.getTeiidVersion());
         this.driverConnection = connection;
-        if (PropertiesUtils.getBooleanProperty(connection.getConnectionProps(), REPORT_AS_VIEWS, false)) {
+        if (PropertiesUtils.getBooleanProperty(connection.getConnectionProps(), REPORT_AS_VIEWS, true)) {
         	TABLE_TYPE = "CASE WHEN IsSystem = 'true' and UCASE(Type) = 'TABLE' THEN 'SYSTEM TABLE' WHEN IsPhysical <> 'true' AND UCASE(Type) = 'TABLE' THEN 'VIEW' ELSE UCASE(Type) END"; //$NON-NLS-1$       	
         } else {
         	TABLE_TYPE = "CASE WHEN IsSystem = 'true' and UCASE(Type) = 'TABLE' THEN 'SYSTEM TABLE' ELSE UCASE(Type) END"; //$NON-NLS-1$
@@ -890,10 +887,8 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
            buf.append("SELECT VDBName AS TABLE_CAT, SchemaName AS TABLE_SCHEM, TableName AS TABLE_NAME") //$NON-NLS-1$
                .append(", case when KeyType = 'Index' then TRUE else FALSE end AS NON_UNIQUE, NULL AS INDEX_QUALIFIER, KeyName AS INDEX_NAME"); //$NON-NLS-1$
 
-           if (isTeiidVersionOrGreater(Version.TEIID_8_7))
-               buf.append(", 3 AS TYPE, convert(Position, short) AS ORDINAL_POSITION, k.Name AS COLUMN_NAME"); //$NON-NLS-1$
-           else
-               buf.append(", 0 AS TYPE, convert(Position, short) AS ORDINAL_POSITION, k.Name AS COLUMN_NAME"); //$NON-NLS-1$
+           buf.append(", 3 AS TYPE, convert(Position, short) AS ORDINAL_POSITION, k.Name AS COLUMN_NAME"); //$NON-NLS-1$
+
 
           buf.append(", NULL AS ASC_OR_DESC, 0 AS CARDINALITY, 1 AS PAGES, NULL AS FILTER_CONDITION") //$NON-NLS-1$
                .append(" FROM ").append(RUNTIME_MODEL.VIRTUAL_MODEL_NAME).append(".KeyColumns k") //$NON-NLS-1$ //$NON-NLS-2$
@@ -901,10 +896,9 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
                .append(" AND UCASE(SchemaName)").append(LIKE_ESCAPE)//$NON-NLS-1$
                .append(" AND UCASE(TableName)") .append(LIKE_ESCAPE); //$NON-NLS-1$
 
-          if (isTeiidVersionOrGreater(Version.TEIID_8_7))
-              buf.append(" AND KeyType IN ('Unique', ?)"); //$NON-NLS-1$
-          else
-              buf.append(" AND KeyType IN ('Index', ?)"); //$NON-NLS-1$
+
+          buf.append(" AND KeyType IN ('Unique', ?)"); //$NON-NLS-1$
+
 
           buf.append(" ORDER BY NON_UNIQUE, TYPE, INDEX_NAME, ORDINAL_POSITION").toString(); //$NON-NLS-1$
 
@@ -919,10 +913,9 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
           .append(", convert(decodeString(TYPE, '").append(PARAM_DIRECTION_MAPPING).append("', ','), short) AS COLUMN_TYPE") //$NON-NLS-1$ //$NON-NLS-2$
           .append(", 1 AS DATA_TYPE"); //$NON-NLS-1$
 
-        if (isTeiidVersionOrGreater(Version.TEIID_8_7))
-          buf.append(", DataType AS TYPE_NAME, p.Precision AS \"PRECISION\", TypeLength  AS LENGTH, convert(case when scale > 32767 then 32767 else Scale end, short) AS SCALE"); //$NON-NLS-1$
-        else
-          buf.append(", DataType AS TYPE_NAME, p.Precision AS \"PRECISION\", TypeLength  AS LENGTH, convert(Scale, short) AS SCALE"); //$NON-NLS-1$
+
+        buf.append(", DataType AS TYPE_NAME, p.Precision AS \"PRECISION\", TypeLength  AS LENGTH, convert(case when scale > 32767 then 32767 else Scale end, short) AS SCALE"); //$NON-NLS-1$
+
 
         buf.append(", Radix AS RADIX, convert(decodeString(NullType, '") //$NON-NLS-1$
           .append(PROC_COLUMN_NULLABILITY_MAPPING).append("', ','), integer) AS NULLABLE") //$NON-NLS-1$
@@ -961,29 +954,22 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
 
         try {
             String query = getQueryIndexInfoStatement();
-            if (isTeiidVersionOrGreater(Version.TEIID_8_8)) {
-                if (approximate) {
-                    query += " UNION ALL " + QUERY_INDEX_INFO_CARDINALITY;
-                }
-                query += " ORDER BY NON_UNIQUE, TYPE, INDEX_NAME, ORDINAL_POSITION";
+            if (approximate) {
+                query += " UNION ALL " + QUERY_INDEX_INFO_CARDINALITY;
             }
+            query += " ORDER BY NON_UNIQUE, TYPE, INDEX_NAME, ORDINAL_POSITION";
 
             prepareQuery = driverConnection.prepareStatement(query); 
             prepareQuery.setObject(1, catalog.toUpperCase());
             prepareQuery.setObject(2, schema.toUpperCase());
             prepareQuery.setObject(3, table.toUpperCase());
 
-            if (isTeiidVersionOrGreater(Version.TEIID_8_7))
-                prepareQuery.setObject(4, unique?null:"Index"); //$NON-NLS-1$
-            else
-                prepareQuery.setObject(4, unique?null:"NonUnique"); //$NON-NLS-1$
+            prepareQuery.setObject(4, unique?null:"Index"); //$NON-NLS-1$
 
-            if (isTeiidVersionOrGreater(Version.TEIID_8_8)) {
-                if (approximate) {
-                    prepareQuery.setObject(5, catalog.toUpperCase());
-                    prepareQuery.setObject(6, schema.toUpperCase());
-                    prepareQuery.setObject(7, table.toUpperCase());
-                }
+            if (approximate) {
+                prepareQuery.setObject(5, catalog.toUpperCase());
+                prepareQuery.setObject(6, schema.toUpperCase());
+                prepareQuery.setObject(7, table.toUpperCase());
             }
 
             // make a query against runtimemetadata and get results
@@ -2163,9 +2149,6 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
 
     @Override
     public boolean supportsGetGeneratedKeys() throws SQLException {
-		if (driverConnection.isLessThanTeiidEight())
-		    return false;
-
         return true;
     }
 
@@ -2236,9 +2219,6 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
 
     @Override
     public boolean supportsNamedParameters() throws SQLException {
-        if (driverConnection.isLessThanTeiidEight())
-            return false;
-
         return true;
     }
 
@@ -2509,132 +2489,125 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
 			String functionNamePattern, String columnNamePattern)
 			throws SQLException {
 
-	    if (isTeiidVersionOrGreater(Version.TEIID_8_9)) {
-	        if (catalog == null) {
-	            catalog = PERCENT;
-	        }
-	        
-	        if (schemaPattern == null) {
-	            schemaPattern = PERCENT;
-	        }
-	        
-	        if (functionNamePattern == null) {
-	            functionNamePattern = PERCENT;
-	        }
-	        
-	        if (columnNamePattern == null) {
-	            columnNamePattern = PERCENT;
-	        }
-	        
-	        List records = new ArrayList ();
+        if (catalog == null) {
+            catalog = PERCENT;
+        }
+        
+        if (schemaPattern == null) {
+            schemaPattern = PERCENT;
+        }
+        
+        if (functionNamePattern == null) {
+            functionNamePattern = PERCENT;
+        }
+        
+        if (columnNamePattern == null) {
+            columnNamePattern = PERCENT;
+        }
+        
+        List records = new ArrayList ();
 
-	        ResultSetMetaData rmetadata = null;
-	        ResultSetImpl results = null;
-	        PreparedStatementImpl prepareQuery = null;
-	        try {
-	            prepareQuery = driverConnection.prepareStatement(QUERY_FUNCTION_COLUMNS);
-	            prepareQuery.setString(1, catalog.toUpperCase());
-	            prepareQuery.setString(2, schemaPattern.toUpperCase());
-	            prepareQuery.setString(3, functionNamePattern.toUpperCase());
-	            prepareQuery.setString(4, columnNamePattern.toUpperCase());
-	            results = prepareQuery.executeQuery();
-	            // Get the metadata for the results
-	            rmetadata = results.getMetaData();
-	            int cols = rmetadata.getColumnCount();
-	            while (results.next ()) {
-	                List currentRow = new ArrayList (cols);
-	                for(int i=0; i < cols; i++) {
-	                    currentRow.add(results.getObject(i+1));
-	                }
-	                String typeName = (String)currentRow.get(6);
-	                Integer length = (Integer)currentRow.get(8);
-	                Integer precision = (Integer)currentRow.get(7);
-	                if (precision != null && precision <= 0) {
-	                    currentRow.set(7, JDBCSQLTypeInfo.getDefaultPrecision(getTeiidVersion(), typeName));
-	                }
-	                if (length != null && length <= 0) {
-	                    currentRow.set(8, JDBCSQLTypeInfo.getDefaultPrecision(getTeiidVersion(), typeName));
-	                }
-	                if (typeName != null) {
-	                    currentRow.set(5, JDBCSQLTypeInfo.getSQLType(getTeiidVersion(), typeName));
-	                } else {
-	                    currentRow.set(5, null);                    
-	                }
-	                // add the current row to the list of records.
-	                records.add(currentRow);
-	            }// end of while
+        ResultSetMetaData rmetadata = null;
+        ResultSetImpl results = null;
+        PreparedStatementImpl prepareQuery = null;
+        try {
+            prepareQuery = driverConnection.prepareStatement(QUERY_FUNCTION_COLUMNS);
+            prepareQuery.setString(1, catalog.toUpperCase());
+            prepareQuery.setString(2, schemaPattern.toUpperCase());
+            prepareQuery.setString(3, functionNamePattern.toUpperCase());
+            prepareQuery.setString(4, columnNamePattern.toUpperCase());
+            results = prepareQuery.executeQuery();
+            // Get the metadata for the results
+            rmetadata = results.getMetaData();
+            int cols = rmetadata.getColumnCount();
+            while (results.next ()) {
+                List currentRow = new ArrayList (cols);
+                for(int i=0; i < cols; i++) {
+                    currentRow.add(results.getObject(i+1));
+                }
+                String typeName = (String)currentRow.get(6);
+                Integer length = (Integer)currentRow.get(8);
+                Integer precision = (Integer)currentRow.get(7);
+                if (precision != null && precision <= 0) {
+                    currentRow.set(7, JDBCSQLTypeInfo.getDefaultPrecision(getTeiidVersion(), typeName));
+                }
+                if (length != null && length <= 0) {
+                    currentRow.set(8, JDBCSQLTypeInfo.getDefaultPrecision(getTeiidVersion(), typeName));
+                }
+                if (typeName != null) {
+                    currentRow.set(5, JDBCSQLTypeInfo.getSQLType(getTeiidVersion(), typeName));
+                } else {
+                    currentRow.set(5, null);                    
+                }
+                // add the current row to the list of records.
+                records.add(currentRow);
+            }// end of while
 
-	            logger.fine(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getfunctioncolumns_success));
+            logger.fine(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getfunctioncolumns_success));
 
-	            // construct results object from column values and their metadata
-	            return dummyStatement().createResultSet(records, rmetadata);
-	        } catch(Exception e) {
-	            throw new SQLException(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getfunctioncolumns_error, e.getMessage()), e);
-	        } finally {
-	            if (prepareQuery != null) {
-	                prepareQuery.close();
-	            }
-	        }
-	    }
+            // construct results object from column values and their metadata
+            return dummyStatement().createResultSet(records, rmetadata);
+        } catch(Exception e) {
+            throw new SQLException(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getfunctioncolumns_error, e.getMessage()), e);
+        } finally {
+            if (prepareQuery != null) {
+                prepareQuery.close();
+            }
+        }
 
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
     public ResultSet getFunctions(String catalog, String schemaPattern,
 			String functionNamePattern) throws SQLException {
 
-	       if (isTeiidVersionOrGreater(Version.TEIID_8_9)) {
 
-            if (catalog == null) {
-                catalog = PERCENT;
-            }
-
-            if (schemaPattern == null) {
-                schemaPattern = PERCENT;
-            }
-
-            if (functionNamePattern == null) {
-                functionNamePattern = PERCENT;
-            }
-            List records = new ArrayList();
-
-            ResultSetMetaData rmetadata = null;
-            ResultSetImpl results = null;
-            PreparedStatementImpl prepareQuery = null;
-            try {
-                prepareQuery = driverConnection.prepareStatement(QUERY_FUNCTIONS);
-                prepareQuery.setString(1, catalog.toUpperCase());
-                prepareQuery.setString(2, schemaPattern.toUpperCase());
-                prepareQuery.setString(3, functionNamePattern.toUpperCase());
-                results = prepareQuery.executeQuery();
-                // Get the metadata for the results
-                rmetadata = results.getMetaData();
-                int cols = rmetadata.getColumnCount();
-                while (results.next()) {
-                    List currentRow = new ArrayList(cols);
-
-                    for (int i = 0; i < cols; i++) {
-                        currentRow.add(results.getObject(i + 1));
-                    }
-
-                    records.add(currentRow);
-                }
-
-                logger.fine(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getfunctions_success));
-
-                // construct results object from column values and their metadata
-                return dummyStatement().createResultSet(records, rmetadata);
-            } catch (Exception e) {
-                throw new SQLException(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getfunctions_error, e.getMessage()), e);
-            } finally {
-                if (prepareQuery != null) {
-                    prepareQuery.close();
-                }
-            }
+        if (catalog == null) {
+            catalog = PERCENT;
         }
 
-		throw new UnsupportedOperationException();
+        if (schemaPattern == null) {
+            schemaPattern = PERCENT;
+        }
+
+        if (functionNamePattern == null) {
+            functionNamePattern = PERCENT;
+        }
+        List records = new ArrayList();
+
+        ResultSetMetaData rmetadata = null;
+        ResultSetImpl results = null;
+        PreparedStatementImpl prepareQuery = null;
+        try {
+            prepareQuery = driverConnection.prepareStatement(QUERY_FUNCTIONS);
+            prepareQuery.setString(1, catalog.toUpperCase());
+            prepareQuery.setString(2, schemaPattern.toUpperCase());
+            prepareQuery.setString(3, functionNamePattern.toUpperCase());
+            results = prepareQuery.executeQuery();
+            // Get the metadata for the results
+            rmetadata = results.getMetaData();
+            int cols = rmetadata.getColumnCount();
+            while (results.next()) {
+                List currentRow = new ArrayList(cols);
+
+                for (int i = 0; i < cols; i++) {
+                    currentRow.add(results.getObject(i + 1));
+                }
+
+                records.add(currentRow);
+            }
+
+            logger.fine(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getfunctions_success));
+
+            // construct results object from column values and their metadata
+            return dummyStatement().createResultSet(records, rmetadata);
+        } catch (Exception e) {
+            throw new SQLException(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getfunctions_error, e.getMessage()), e);
+        } finally {
+            if (prepareQuery != null) {
+                prepareQuery.close();
+            }
+        }
 	}
 
     @Override

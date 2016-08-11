@@ -92,10 +92,7 @@ public abstract class MappingBaseNode extends MappingNode implements IMappingBas
             MappingBaseNode recursiveRoot = getRecursiveRootNode(recursiveElement);
 			String mappingClass = recursiveElement.getMappingClass();
 
-			/* The upper case of the class is used in Teiid 7 mappings */
 			ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
-			if (minVersion.isLessThan(Version.TEIID_8_0))
-				mappingClass = mappingClass.toUpperCase();
 
             recursiveRoot.setRootRecursiveNode(true, mappingClass);
             addChild(elem);

@@ -43,6 +43,7 @@ import org.teiid.adminapi.impl.EngineStatisticsMetadata;
 import org.teiid.adminapi.impl.EntryMetaData;
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.adminapi.impl.RequestMetadata;
+//import org.teiid.adminapi.impl.RequestMetadata;
 import org.teiid.adminapi.impl.SessionMetadata;
 import org.teiid.adminapi.impl.SourceMappingMetadata;
 import org.teiid.adminapi.impl.TransactionMetadata;
@@ -323,27 +324,19 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 				}
 			}
 
-            if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
-                if (node.get(METADATAS).isDefined()) {
-                    List<ModelNode> metadataNodes = node.get(METADATAS).asList();
-                    for (ModelNode modelNode : metadataNodes) {
-                        String text = null;
-                        String type = null;
-                        if (modelNode.get(METADATA).isDefined()) {
-                            text = modelNode.get(METADATA).asString();
-                        }
-                        if (modelNode.get(METADATA_TYPE).isDefined()) {
-                            type = modelNode.get(METADATA_TYPE).asString();
-                        }
-                        model.addSourceMetadata(type, text);
+
+            if (node.get(METADATAS).isDefined()) {
+                List<ModelNode> metadataNodes = node.get(METADATAS).asList();
+                for (ModelNode modelNode : metadataNodes) {
+                    String text = null;
+                    String type = null;
+                    if (modelNode.get(METADATA).isDefined()) {
+                        text = modelNode.get(METADATA).asString();
                     }
-                }
-            } else {
-                if (node.get(METADATA).isDefined()) {
-                    model.setSchemaText(node.get(METADATA).asString());
-                }
-                if (node.get(METADATA_TYPE).isDefined()) {
-                    model.setSchemaSourceType(node.get(METADATA_TYPE).asString());
+                    if (modelNode.get(METADATA_TYPE).isDefined()) {
+                        type = modelNode.get(METADATA_TYPE).asString();
+                    }
+                    model.addSourceMetadata(type, text);
                 }
             }
 
@@ -989,15 +982,15 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		private static final String REQUEST_COUNT = "request-count"; //$NON-NLS-1$
 		
 		public static CacheStatisticsMetadataMapper INSTANCE = new CacheStatisticsMetadataMapper();
-
+		
 		@Override
-        public CacheStatisticsMetadata unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
+		public CacheStatisticsMetadata unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null)
 				return null;
 				
 			CacheStatisticsMetadata cache = new CacheStatisticsMetadata();
 			cache.setTotalEntries(node.get(TOTAL_ENTRIES).asInt());
-			cache.setHitRatio(node.get(HITRATIO).asDouble());
+			cache.setHitRatio(Double.parseDouble(node.get(HITRATIO).asString()));
 			cache.setRequestCount(node.get(REQUEST_COUNT).asInt());
 			
 			unwrapDomain(cache, node);
@@ -1005,18 +998,18 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
-			addAttribute(node, TOTAL_ENTRIES, ModelType.STRING, true);
+		public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
+			addAttribute(node, TOTAL_ENTRIES, ModelType.INT, true);
 			addAttribute(node, HITRATIO, ModelType.STRING, true);
-			addAttribute(node, REQUEST_COUNT, ModelType.STRING, true);
+			addAttribute(node, REQUEST_COUNT, ModelType.INT, true);
 			return node; 		
 		}
 		
 		public AttributeDefinition[] getAttributeDefinitions() {
 			return new AttributeDefinition[] {
-					new SimpleAttributeDefinition(TOTAL_ENTRIES, ModelType.STRING, false),
+					new SimpleAttributeDefinition(TOTAL_ENTRIES, ModelType.INT, false),
 					new SimpleAttributeDefinition(HITRATIO, ModelType.STRING, false),
-					new SimpleAttributeDefinition(REQUEST_COUNT, ModelType.STRING, false)
+					new SimpleAttributeDefinition(REQUEST_COUNT, ModelType.INT, false)
 			};
 		}
 	}	

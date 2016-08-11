@@ -22,7 +22,6 @@
 
 package org.teiid.metadata;
 
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
@@ -49,7 +48,6 @@ public class Column extends BaseColumn implements Comparable<Column> {
 			}
 		},
 		Searchable,
-		@Since(Version.TEIID_8_12_4)
         Equality_Only {
             @Override
             public String toString() {
@@ -285,7 +283,6 @@ public class Column extends BaseColumn implements Comparable<Column> {
         this.distinctValues = Table.asInt(distinctValues);
     }
 
-    @Since(Version.TEIID_8_7)
     public void setDistinctValues(long distinctValues) {
     	this.distinctValues = Table.asInt(distinctValues);
     }
@@ -298,7 +295,6 @@ public class Column extends BaseColumn implements Comparable<Column> {
         this.nullValues = Table.asInt(nullValues);
     }
 
-    @Since(Version.TEIID_8_7)    
     public void setNullValues(long nullValues) {
     	this.nullValues = Table.asInt(nullValues);
     }

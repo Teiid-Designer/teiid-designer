@@ -37,7 +37,6 @@ import org.teiid.adminapi.Model;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.CopyOnWriteLinkedHashMap;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
@@ -54,15 +53,6 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
      *
      * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
      */
-    @Removed(Version.TEIID_8_0)
-	private transient ListOverMap<SourceMappingMetadata> sevenSources = new ListOverMap<SourceMappingMetadata>(new KeyBuilder<SourceMappingMetadata>() {
-        private static final long serialVersionUID = 2273673984691112369L;
-
-        @Override
-        public String getKey(SourceMappingMetadata entry) {
-            return entry.getName();
-        }
-    });
 
 	protected Map<String, SourceMappingMetadata> sources = new CopyOnWriteLinkedHashMap<String, SourceMappingMetadata>();	
 	protected String modelType = Type.PHYSICAL.name();
@@ -70,28 +60,24 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
 	protected String path; 
     protected boolean visible = true;
 
-    @Since(Version.TEIID_8_0)
     protected List<Message> messages;
 
     protected transient List<Message> runtimeMessages;
 
-    @Since(Version.TEIID_8_10)
     protected List<String> sourceMetadataType = new ArrayList<String>();
 
-    @Since(Version.TEIID_8_10)
 	protected List<String> sourceMetadataText = new ArrayList<String>();
 
-    @Since(Version.TEIID_8_0)
 	protected MetadataStatus metadataStatus = MetadataStatus.LOADING;
 
-	private Map<String, SourceMappingMetadata> convertSources(ListOverMap<SourceMappingMetadata> overMap) {
-        Map<String, SourceMappingMetadata> newMap = new CopyOnWriteLinkedHashMap<String, SourceMappingMetadata>();
-        for (Entry<String, SourceMappingMetadata> entry : overMap.getMap().entrySet()) {
-            newMap.put(entry.getKey(), entry.getValue());
-        }
-
-        return newMap;
-    }
+//	private Map<String, SourceMappingMetadata> convertSources(ListOverMap<SourceMappingMetadata> overMap) {
+//        Map<String, SourceMappingMetadata> newMap = new CopyOnWriteLinkedHashMap<String, SourceMappingMetadata>();
+//        for (Entry<String, SourceMappingMetadata> entry : overMap.getMap().entrySet()) {
+//            newMap.put(entry.getKey(), entry.getValue());
+//        }
+//
+//        return newMap;
+//    }
 
 	/*
      * Helper method for serialization to deal with differences between Teiid 7 and 8
@@ -103,9 +89,6 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
         Object serSources = serFields.get("sources", null);
         if (isLinkedHashMap(serSources)) { /* Teiid Version 8+ */
             sources = newCopyOnWriteLinkedHashMap((LinkedHashMap<String, SourceMappingMetadata>) serSources);
-        } else if (isListOverMap(serSources)) { /* Teiid Version 7 */
-            ListOverMap<SourceMappingMetadata> overMap = (ListOverMap<SourceMappingMetadata>)serSources;
-            sources = convertSources(overMap);
         } else
             throw new IllegalStateException();
 
@@ -396,7 +379,6 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
 		}		
     }
 
-    @Since(Version.TEIID_8_11)
     public void addSourceMetadata(String type, String text) {
         this.sourceMetadataType.add(type);
         this.sourceMetadataText.add(text);

@@ -50,7 +50,7 @@ public class Validator implements IValidator<LanguageObject> {
         // Construct combined runtime / query metadata if necessary
         if(object instanceof Command) {                        
             // Recursively validate subcommands
-            Iterator<Command> iter = CommandCollectorVisitor.getCommands((Command)object).iterator();
+            Iterator<Command> iter = CommandCollectorVisitor.getCommands((Command)object, true).iterator();
             while(iter.hasNext()) {
                 Command subCommand = iter.next();
                 validate(subCommand, metadata, visitor);

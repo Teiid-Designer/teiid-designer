@@ -4,7 +4,6 @@ package org.teiid.query.sql.lang;
 
 import java.util.Collection;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IFromClause;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
@@ -29,7 +28,6 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
     /**
      * 
      */
-    @Since(Version.TEIID_8_0)
     public static final String PRESERVE = "PRESERVE"; //$NON-NLS-1$
 
     private boolean optional;
@@ -38,10 +36,8 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
 
     private boolean makeNotDep;
 
-    @Removed(Version.TEIID_8_12_4)
     private boolean makeIndOld;
 
-    @Since(Version.TEIID_8_12_4)
     private MakeDep makeIndNew;
 
     private boolean noUnnest;
@@ -56,19 +52,13 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
         super(p, id);
     }
 
-    private boolean isLessThanTeiid124() {
-        return isLessThanTeiidVersion(Version.TEIID_8_12_4);
-    }
-
     /**
      * @return whether has any hints set
      */
     public boolean hasHint() {
         boolean hasHint =  optional || makeDep != null || makeNotDep || noUnnest || preserve;
-        if (isLessThanTeiid124())
-            hasHint = hasHint || isMakeInd();
-        else
-            hasHint = hasHint || getMakeInd() != null;
+
+        hasHint = hasHint || getMakeInd() != null;
 
         return hasHint;
     }
@@ -86,45 +76,29 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
     /**
      * @return make ind flag
      */
-    @Removed(Version.TEIID_8_12_4)
     public boolean isMakeInd() {
-        if (! isLessThanTeiid124())
-            return false;
-
-        return makeIndOld;
+        throw new UnsupportedOperationException();
     }
 
     /**
      * @return the makeIndNew
      */
-    @Since(Version.TEIID_8_12_4)
     public MakeDep getMakeInd() {
-        if (isLessThanTeiid124())
-            return null;
-
         return this.makeIndNew;
     }
 
     /**
      * @param makeInd
      */
-    @Removed(Version.TEIID_8_12_4)
     public void setMakeInd(boolean makeInd) {
-        if (! isLessThanTeiid124())
             return;
-
-        this.makeIndOld = makeInd;
     }
 
     /**
      * @param makeInd the makeInd to set
      */
-    @Since(Version.TEIID_8_12_4)
     public void setMakeInd(MakeDep makeInd) {
-        if (isLessThanTeiid124())
-            return;
-
-        this.makeIndNew = makeInd;
+        return;
     }
 
     /**
@@ -200,10 +174,7 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
         int result = super.hashCode();
         result = prime * result + (this.makeDep == null ? 0 : this.makeDep.hashCode());
 
-        if (isLessThanTeiid124())
-            result = prime * result + (this.makeIndOld ? 1231 : 1237);
-        else
-            result = prime * result + (this.makeIndNew == null ? 0 : this.makeIndNew.hashCode());
+        result = prime * result + (this.makeIndNew == null ? 0 : this.makeIndNew.hashCode());
 
         result = prime * result + (this.makeNotDep ? 1231 : 1237);
         result = prime * result + (this.noUnnest ? 1231 : 1237);
@@ -225,15 +196,11 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
         } else if (!this.makeDep.equals(other.makeDep))
             return false;
 
-        if (isLessThanTeiid124())
-            if (this.makeIndOld != other.makeIndOld) return false;
-        else {
-            if (this.makeIndNew == null) {
-                if (other.makeIndNew != null)
-                    return false;
-            } else if (!this.makeIndNew.equals(other.makeIndNew))
+        if (this.makeIndNew == null) {
+            if (other.makeIndNew != null)
                 return false;
-        }
+        } else if (!this.makeIndNew.equals(other.makeIndNew))
+            return false;
 
         
         if (this.makeNotDep != other.makeNotDep) return false;

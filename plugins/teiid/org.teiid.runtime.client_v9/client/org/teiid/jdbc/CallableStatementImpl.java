@@ -246,37 +246,30 @@ public class CallableStatementImpl extends PreparedStatementImpl implements Call
     }
 
 	public SQLXML getSQLXML(int parameterIndex) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getSQLXML(getTeiidVersion(), getObject(parameterIndex));
 	}
 
 	public Array getArray(int parameterIndex) throws SQLException {
-		checkSupportedVersion(Version.TEIID_8_5);
 		return DataTypeTransformer.getArray(getTeiidVersion(), getObject(parameterIndex));
 	}
 
 	public Array getArray(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_8_5);
 		return DataTypeTransformer.getArray(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public BigDecimal getBigDecimal(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getBigDecimal(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public Blob getBlob(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getBlob(getTeiidVersion(), getObject(parameterName));
 	}
 	
 	public boolean getBoolean(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getBoolean(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public byte getByte(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getByte(getTeiidVersion(), getObject(parameterName));
 	}
 
@@ -285,7 +278,6 @@ public class CallableStatementImpl extends PreparedStatementImpl implements Call
 	}
 
 	public byte[] getBytes(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getBytes(getTeiidVersion(), getObject(parameterName));
 	}
 
@@ -294,52 +286,42 @@ public class CallableStatementImpl extends PreparedStatementImpl implements Call
 	}
 
 	public Reader getCharacterStream(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getCharacterStream(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public Clob getClob(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getClob(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public Date getDate(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getDate(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public Date getDate(String parameterName, Calendar cal) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return getDate(cal, getObject(parameterName));
 	}
 
 	public double getDouble(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getDouble(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public float getFloat(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getFloat(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public int getInt(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getInteger(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public long getLong(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getLong(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public Reader getNCharacterStream(int parameterIndex) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getCharacterStream(getTeiidVersion(), getObject(parameterIndex));
 	}
 
 	public Reader getNCharacterStream(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getCharacterStream(getTeiidVersion(), getObject(parameterName));
 	}
 
@@ -348,22 +330,18 @@ public class CallableStatementImpl extends PreparedStatementImpl implements Call
 	}
 
 	public NClob getNClob(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getNClob(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public String getNString(int parameterIndex) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getString(getTeiidVersion(), getObject(parameterIndex));
 	}
 
 	public String getNString(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getString(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public Object getObject(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return getObject((Object)parameterName);
 	}
 
@@ -392,12 +370,10 @@ public class CallableStatementImpl extends PreparedStatementImpl implements Call
 	}
 	
 	public SQLXML getSQLXML(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getSQLXML(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public short getShort(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getShort(getTeiidVersion(), getObject(parameterName));
 	}
 
@@ -406,22 +382,18 @@ public class CallableStatementImpl extends PreparedStatementImpl implements Call
 	}
 
 	public Time getTime(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getTime(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public Time getTime(String parameterName, Calendar cal) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return getTime(cal, getObject(parameterName));
 	}
 
 	public Timestamp getTimestamp(String parameterName) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return DataTypeTransformer.getTimestamp(getTeiidVersion(), getObject(parameterName));
 	}
 
 	public Timestamp getTimestamp(String parameterName, Calendar cal) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		return getTimestamp(cal, getObject(parameterName));
 	}
 
@@ -443,22 +415,18 @@ public class CallableStatementImpl extends PreparedStatementImpl implements Call
 	}
 
 	public void setAsciiStream(String parameterName, InputStream x)	throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setAsciiStream((Object)parameterName, x);
 	}
 
 	public void setAsciiStream(String parameterName, InputStream x, int length)	throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setAsciiStream((Object)parameterName, x);
 	}
 
 	public void setAsciiStream(String parameterName, InputStream x, long length) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setAsciiStream((Object)parameterName, x);
 	}
 
 	public void setBigDecimal(String parameterName, BigDecimal x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject(parameterName, x);
 	}
 
@@ -468,174 +436,143 @@ public class CallableStatementImpl extends PreparedStatementImpl implements Call
 
 	public void setBinaryStream(String parameterName, InputStream x, int length)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setBinaryStream(parameterName, x);
 	}
 
 	public void setBinaryStream(String parameterName, InputStream x, long length)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setBinaryStream(parameterName, x);
 	}
 
 	public void setBlob(String parameterName, Blob x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject(parameterName, x);
 	}
 
 	public void setBlob(String parameterName, InputStream inputStream)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setBlob((Object)parameterName, inputStream);
 	}
 
 	public void setBlob(String parameterName, InputStream inputStream,
 			long length) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setBlob((Object)parameterName, inputStream);
 	}
 
 	public void setBoolean(String parameterName, boolean x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setByte(String parameterName, byte x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setBytes(String parameterName, byte[] x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setCharacterStream(String parameterName, Reader reader)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setClob(parameterName, reader);
 	}
 
 	public void setCharacterStream(String parameterName, Reader reader,
 			int length) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setClob(parameterName, reader);
 	}
 
 	public void setCharacterStream(String parameterName, Reader reader,
 			long length) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setClob(parameterName, reader);
 	}
 
 	public void setClob(String parameterName, Clob x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setClob(String parameterName, Reader reader)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setClob((Object)parameterName, reader);
 	}
 
 	public void setClob(String parameterName, Reader reader, long length)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setClob((Object)parameterName, reader);
 	}
 
 	public void setDate(String parameterName, Date x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setDate(String parameterName, Date x, Calendar cal)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setDate((Object)parameterName, x, cal);
 	}
 
 	public void setDouble(String parameterName, double x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setFloat(String parameterName, float x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setInt(String parameterName, int x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setLong(String parameterName, long x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setNCharacterStream(String parameterName, Reader value)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setClob((Object)parameterName, value);
 	}
 
 	public void setNCharacterStream(String parameterName, Reader value,
 			long length) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setClob((Object)parameterName, value);
 	}
 
 	public void setNClob(String parameterName, NClob value) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, value);
 	}
 
 	public void setNClob(String parameterName, Reader reader)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setClob((Object)parameterName, reader);
 	}
 
 	public void setNClob(String parameterName, Reader reader, long length)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setClob((Object)parameterName, reader);
 	}
 
 	public void setNString(String parameterName, String value)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, null);
 	}
 
 	public void setNull(String parameterName, int sqlType) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, null);
 	}		
 
 	public void setNull(String parameterName, int sqlType, String typeName)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, null);
 	}
 
 	public void setObject(String parameterName, Object x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setObject(String parameterName, Object x, int targetSqlType)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x, targetSqlType);
 	}
 
 	public void setObject(String parameterName, Object x, int targetSqlType,
 			int scale) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x, targetSqlType, scale);
 	}
 
@@ -645,45 +582,37 @@ public class CallableStatementImpl extends PreparedStatementImpl implements Call
 
 	public void setSQLXML(String parameterName, SQLXML xmlObject)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, xmlObject);
 	}
 
 	public void setShort(String parameterName, short x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setString(String parameterName, String x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setTime(String parameterName, Time x) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setTime(String parameterName, Time x, Calendar cal)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setTime((Object)parameterName, x, cal);
 	}
 
 	public void setTimestamp(String parameterName, Timestamp x)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, x);
 	}
 
 	public void setTimestamp(String parameterName, Timestamp x, Calendar cal)
 			throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setTimestamp((Object)parameterName, x, cal);
 	}
 
 	public void setURL(String parameterName, URL val) throws SQLException {
-		checkSupportedVersion(Version.TEIID_7_7);
 		setObject((Object)parameterName, val);
 	}
 

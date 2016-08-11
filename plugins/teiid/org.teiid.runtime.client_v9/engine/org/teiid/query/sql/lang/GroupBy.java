@@ -4,7 +4,6 @@ package org.teiid.query.sql.lang;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IGroupBy;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
@@ -20,7 +19,6 @@ public class GroupBy extends SimpleNode implements IGroupBy<Expression, Language
     /** The set of expressions for the data elements to be group. */
     private List<Expression> symbols = new ArrayList<Expression>();
 
-    @Since(Version.TEIID_8_5)
     private boolean rollup;
 
     /**
@@ -110,18 +108,14 @@ public class GroupBy extends SimpleNode implements IGroupBy<Expression, Language
      * @return rollup
      */
     public boolean isRollup() {
-        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
-            return rollup;
-
-        return false;
+        return rollup;
     }
 
     /**
      * @param rollup
      */
     public void setRollup(boolean rollup) {
-        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
-            this.rollup = rollup;
+        this.rollup = rollup;
     }
 
 }

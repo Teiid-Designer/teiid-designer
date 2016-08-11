@@ -32,7 +32,6 @@ import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.BinaryType;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.PropertiesUtils;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionDescriptor;
@@ -140,12 +139,10 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
         return this.requiresContext;
     }
 
-    @Since(Version.TEIID_8_11)
     public Procedure getProcedure() {
         return procedure;
     }
 
-    @Since(Version.TEIID_8_11)
     public void setProcedure(Procedure procedure) {
         this.procedure = procedure;
     }

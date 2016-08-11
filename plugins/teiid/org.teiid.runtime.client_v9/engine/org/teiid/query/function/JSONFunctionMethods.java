@@ -40,7 +40,6 @@ import org.teiid.core.types.InputStreamFactory;
 import org.teiid.core.types.InputStreamFactory.StorageMode;
 import org.teiid.core.types.Streamable;
 import org.teiid.core.util.ObjectConverterUtil;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.json.simple.ContentHandler;
@@ -52,7 +51,6 @@ import org.teiid.query.function.source.XMLSystemFunctions;
 import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.TeiidClientException;
 
-@Since(Version.TEIID_8_0)
 public class JSONFunctionMethods {
 	
 	/**
@@ -118,8 +116,6 @@ public class JSONFunctionMethods {
             MemoryStorageManager manager = new MemoryStorageManager();
 
             String fileStoreName = "json"; //$NON-NLS-1$
-            if (teiidVersion.isLessThan(Version.TEIID_8_11))
-                fileStoreName = "xml"; //$NON-NLS-1$
 
 			fs = manager.createFileStore(fileStoreName);
 			fsisf = new FileStoreInputStreamFactory(fs, Streamable.ENCODING);

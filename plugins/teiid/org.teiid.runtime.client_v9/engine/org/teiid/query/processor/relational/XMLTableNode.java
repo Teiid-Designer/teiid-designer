@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.source.XMLSystemFunctions;
@@ -32,7 +31,6 @@ import net.sf.saxon.value.StringValue;
 /**
  * Cutdown version of original XMLTableNode
  */
-@Since(Version.TEIID_8_10)
 public class XMLTableNode {
 
     private static Map<Class<?>, BuiltInAtomicType> typeMapping = new HashMap<Class<?>, BuiltInAtomicType>();
@@ -78,7 +76,6 @@ public class XMLTableNode {
      * @return value
      * @throws Exception
      */
-    @Since(Version.TEIID_8_10)
     public static Object getValue(Class<?> type, Item colItem, Configuration config, CommandContext context)
         throws Exception {
         Object value = colItem;

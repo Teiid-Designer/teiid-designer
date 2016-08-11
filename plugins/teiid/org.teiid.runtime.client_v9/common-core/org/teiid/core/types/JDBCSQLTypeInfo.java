@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Set;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.designer.annotation.AnnotationUtils;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -126,10 +125,10 @@ public final class JDBCSQLTypeInfo {
 
     private static TypeInfo addType(DefaultDataTypes type, int maxDisplaySize, int precision, String javaClassName, int... sqlTypes) {
         ITeiidServerVersion minTeiidVersion = TeiidServerVersion.Version.TEIID_7_7.get();
-        if (AnnotationUtils.hasAnnotation(type, Since.class)) {
-            Since since = AnnotationUtils.getAnnotation(type, Since.class);
-            minTeiidVersion = since.value().get();
-        }
+//        if (AnnotationUtils.hasAnnotation(type, Since.class)) {
+//            Since since = AnnotationUtils.getAnnotation(type, Since.class);
+//            minTeiidVersion = since.value().get();
+//        }
 
         return addType(minTeiidVersion, type.getId(), maxDisplaySize, precision, javaClassName, sqlTypes);
     }

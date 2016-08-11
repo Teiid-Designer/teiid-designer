@@ -2,7 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang;
 
-import org.teiid.designer.annotation.Since;
+import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.designer.query.sql.lang.ISubqueryCompareCriteria;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants;
@@ -13,7 +13,31 @@ import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ScalarSubquery;
 
 /**
+ * <p>This class implements a quantified comparison predicate.  This is
+ * a criteria which represents a simple operator relationship between an expression and
+ * either a scalar subquery or a table subquery preceded by one of the possible quantifiers.
+ * </p>
  *
+ * <p>The quantifiers are:
+ * <ul><li>{@link #NO_QUANTIFIER}, meaning the subquery has no quantifier and therefore must be
+ * a scalar subquery</li>
+ * <li>{@link #SOME} and {@link #ANY}, which are synonymous - the criteria is true if there is at
+ * least one comparison between the left expression and the values of the subquery.  The criteria
+ * is false if the subquery returns no rows.</li>
+ * <li>{@link #ALL}</li> - the criteria is true only if all of the comparisons between the left
+ * expression and each value of the subquery is true.  The criteria is also true if the subquery
+ * returns no rows.</li></ul>
+ *
+ * <p>Some examples are:</p>
+ * <UL>
+ * <LI>ticker = ANY (Select ... FROM ... WHERE ... )</LI>
+ * <li>price &gt;= ALL (Select ... FROM ... WHERE ... )</LI>
+ * <LI>revenue &lt; (Select ... FROM ... WHERE ... )</LI>
+ * </UL>
+ * 
+ * This can also represent a quantified comparison against array.  In which case the
+ * arrayExpression member will be set and command will not.
+ * 
  */
 public class SubqueryCompareCriteria extends AbstractCompareCriteria
     implements SubqueryContainer<QueryCommand>, ISubqueryCompareCriteria< LanguageVisitor, QueryCommand> {
@@ -55,9 +79,9 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
 
     private PredicateQuantifier predicateQuantifier = PredicateQuantifier.ALL;
 
+    private Expression arrayExpression;
     private QueryCommand command;
 
-    @Since(Version.TEIID_8_10)
     private SubqueryHint subqueryHint = new SubqueryHint();
 
     /**
@@ -86,9 +110,6 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
      */
     public String getPredicateQuantifierAsString() {
         String name = this.predicateQuantifier.name();
-
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
-            return name + SQLConstants.Tokens.SPACE;
 
         return name;
     }
@@ -120,13 +141,6 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
     }
 
     @Override
-    public Expression getRightExpression() {
-        ScalarSubquery scalarSubquery = parser.createASTNode(ASTNodes.SCALAR_SUBQUERY);
-        scalarSubquery.setCommand(getCommand());
-        return scalarSubquery;
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -137,24 +151,23 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        SubqueryCompareCriteria other = (SubqueryCompareCriteria)obj;
-        if (this.command == null) {
-            if (other.command != null) return false;
-        } else if (!this.command.equals(other.command)) return false;
-        if (this.predicateQuantifier != other.predicateQuantifier) return false;
-
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
-            if (this.subqueryHint == null) {
-                if (other.subqueryHint != null)
-                    return false;
-            } else if (! this.subqueryHint.equals(other.subqueryHint))
-                return false;
+        // Use super.equals() to check obvious stuff and variable
+        if(obj == this) {
+            return true;
         }
 
-        return true;
+        if(! (obj instanceof SubqueryCompareCriteria)) {
+            return false;
+        }
+
+        SubqueryCompareCriteria scc = (SubqueryCompareCriteria)obj;
+
+        return getOperator() == scc.getOperator() &&
+               getPredicateQuantifier() == scc.getPredicateQuantifier() &&
+               EquivalenceUtil.areEqual(getLeftExpression(), scc.getLeftExpression()) &&
+               EquivalenceUtil.areEqual(getCommand(), scc.getCommand()) &&
+               EquivalenceUtil.areEqual(subqueryHint, scc.subqueryHint) &&
+               EquivalenceUtil.areEqual(arrayExpression, scc.arrayExpression);
     }
 
     /** Accept the visitor. **/
@@ -179,18 +192,26 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
         if (this.subqueryHint != null) {
             clone.subqueryHint = this.subqueryHint.clone();
         }
-
+        if (this.arrayExpression != null) {
+        	clone.arrayExpression = (Expression) this.arrayExpression.clone();
+        }
         return clone;
     }
 
-    @Since(Version.TEIID_8_10)
     public SubqueryHint getSubqueryHint() {
         return subqueryHint;
     }
 
-    @Since(Version.TEIID_8_10)
     public void setSubqueryHint(SubqueryHint subqueryHint) {
         this.subqueryHint = subqueryHint;
     }
+
+	public Expression getArrayExpression() {
+		return arrayExpression;
+	}
+	
+	public void setArrayExpression(Expression expression) {
+		this.arrayExpression = expression;
+	}
 }
 /* JavaCC - OriginalChecksum=e9b141cd60d09da32342d127668258f8 (do not edit this line) */

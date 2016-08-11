@@ -123,7 +123,7 @@ public class SimpleQueryResolver extends CommandResolver {
             qrv.visit(query);
             ResolverVisitor visitor = (ResolverVisitor)qrv.getVisitor();
 			visitor.throwException(true);
-			if (visitor.hasUserDefinedAggregate() && getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6)) {
+			if (visitor.hasUserDefinedAggregate() ) {
 				ExpressionMappingVisitor emv = new ExpressionMappingVisitor(getTeiidVersion(), null) {
 					@Override
                     public Expression replaceExpression(Expression element) {
@@ -185,26 +185,23 @@ public class SimpleQueryResolver extends CommandResolver {
             
             
             QueryCommand recursive = null;
-            if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
-                try {
-                    getQueryResolver().resolveCommand(queryExpression, metadata.getMetadata(), false);
-                } catch (QueryResolverException e) {
-                    if (!(queryExpression instanceof SetQuery)) {
-                        throw e;
-                    }
-                    SetQuery setQuery = (SetQuery)queryExpression;
-                    //valid form must be a union with nothing above
-                    if (setQuery.getOperation() != Operation.UNION
-                            || setQuery.getLimit() != null 
-                            || setQuery.getOrderBy() != null 
-                            || setQuery.getOption() != null) {
-                        throw e;
-                    }
-                    getQueryResolver().resolveCommand(queryExpression, metadata.getMetadata(), false);
-                    recursive = setQuery.getRightQuery();
-                }
-            } else {
+
+            try {
                 getQueryResolver().resolveCommand(queryExpression, metadata.getMetadata(), false);
+            } catch (QueryResolverException e) {
+                if (!(queryExpression instanceof SetQuery)) {
+                    throw e;
+                }
+                SetQuery setQuery = (SetQuery)queryExpression;
+                //valid form must be a union with nothing above
+                if (setQuery.getOperation() != Operation.UNION
+                        || setQuery.getLimit() != null 
+                        || setQuery.getOrderBy() != null 
+                        || setQuery.getOption() != null) {
+                    throw e;
+                }
+                getQueryResolver().resolveCommand(setQuery.getLeftQuery(), metadata.getMetadata(), false);
+                recursive = setQuery.getRightQuery();
             }
 
             if (!discoveredGroups.add(obj.getGroupSymbol())) {
@@ -539,7 +536,7 @@ public class SimpleQueryResolver extends CommandResolver {
         @Override
         public void visit(SubqueryFromClause obj) {
         	Collection<GroupSymbol> externalGroups = this.currentGroups;
-        	if (obj.isTable() && allowImplicit) {
+        	if (obj.isLateral() && allowImplicit) {
         		externalGroups = new ArrayList<GroupSymbol>(externalGroups);
         		externalGroups.addAll(this.implicitGroups);
         	}

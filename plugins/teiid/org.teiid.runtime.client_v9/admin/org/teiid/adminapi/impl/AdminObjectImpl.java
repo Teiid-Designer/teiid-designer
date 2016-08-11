@@ -33,7 +33,6 @@ import java.util.Properties;
 import org.teiid.adminapi.AdminObject;
 import org.teiid.core.util.CopyOnWriteLinkedHashMap;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 public abstract class AdminObjectImpl implements AdminObject, Serializable {
@@ -46,34 +45,18 @@ public abstract class AdminObjectImpl implements AdminObject, Serializable {
 	 *
 	 * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
 	 */
-	@Removed(Version.TEIID_8_0)
-	private transient ListOverMap<PropertyMetadata> sevenProperties = new ListOverMap<PropertyMetadata>(new KeyBuilder<PropertyMetadata>() {
-        private static final long serialVersionUID = 3687928367250819142L;
-
-        @Override
-        public String getKey(PropertyMetadata entry) {
-            return entry.getName();
-        }
-    });
 
 	private String name;
 
-	@Since(Version.TEIID_8_0)
 	private String serverGroup;
 
-	@Since(Version.TEIID_8_0)
 	private String serverName;
 
-	@Since(Version.TEIID_8_0)
 	private String hostName;
 
 	private Map<String, String> properties = new CopyOnWriteLinkedHashMap<String, String>();
 
 	protected transient Map<Class<?>, Object> attachments = new CopyOnWriteLinkedHashMap<Class<?>, Object>();
-
-	protected boolean isListOverMap(Object obj) {
-        return obj instanceof ListOverMap;
-    }
 
     protected boolean isLinkedHashMap(Object obj) {
         return obj instanceof LinkedHashMap;
@@ -81,16 +64,6 @@ public abstract class AdminObjectImpl implements AdminObject, Serializable {
 
     protected boolean isMap(Object obj) {
         return obj instanceof Map;
-    }
-
-    private Map<String, String> convertProperties(ListOverMap<PropertyMetadata> overMap) {
-        Map<String, String> newMap = new CopyOnWriteLinkedHashMap<String, String>();
-        for (Entry<String, PropertyMetadata> entry : overMap.getMap().entrySet()) {
-            PropertyMetadata propertyMetadata = entry.getValue();
-            newMap.put(propertyMetadata.getName(), propertyMetadata.getValue());
-        }
-
-        return Collections.synchronizedMap(newMap);
     }
 
     protected <K, V> CopyOnWriteLinkedHashMap<K, V> newCopyOnWriteLinkedHashMap(Map<K, V> oldMap) {
@@ -125,11 +98,6 @@ public abstract class AdminObjectImpl implements AdminObject, Serializable {
             return;
         }
 
-        /* Teiid Version 7 */
-        if (serProps instanceof ListOverMap) {
-            ListOverMap<PropertyMetadata> overMap = (ListOverMap<PropertyMetadata>)serProps;
-            properties = convertProperties(overMap);
-        }
     }
 
 	@Override

@@ -66,11 +66,11 @@ import org.teiid.adminapi.impl.VDBTranslatorMetaData;
 import org.teiid.adminapi.jboss.MetadataMapper;
 import org.teiid.adminapi.jboss.VDBMetadataMapper;
 import org.teiid.adminapi.jboss.VDBMetadataMapper.RequestMetadataMapper;
+//import org.teiid.adminapi.jboss.VDBMetadataMapper.RequestMetadataMapper;
 import org.teiid.adminapi.jboss.VDBMetadataMapper.SessionMetadataMapper;
 import org.teiid.adminapi.jboss.VDBMetadataMapper.TransactionMetadataMapper;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
@@ -113,11 +113,7 @@ public class Admin9Factory {
         }
 
         if(port < 0) {
-        	if( teiidVersion.isGreaterThan(Version.TEIID_8_12_4)) {
-        		port = 9990;
-        	} else {
-        		port = 9999;
-        	}
+        	port = 9990;
         }
 
         try {
@@ -1374,11 +1370,8 @@ public class Admin9Factory {
 				    List<String> translatorProperties = new ArrayList<String>();
 				    translatorProperties.add("translator-name");
 				    translatorProperties.add(translatorName);
-				    
-				    if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_7)) {
-				        translatorProperties.add("type");
-				        translatorProperties.add(TranlatorPropertyType.OVERRIDE.name());
-				    }
+				    translatorProperties.add("type");
+				    translatorProperties.add(TranlatorPropertyType.OVERRIDE.name());
 				    
 	        		cliCall("read-translator-properties",
 	        		        new String[] {"subsystem", "teiid"},
@@ -1391,7 +1384,6 @@ public class Admin9Factory {
 	    }
 		
 		@Override
-        @Since(Version.TEIID_8_7)
         public Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type) throws AdminException {
             BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
             Translator translator = getTranslator(translatorName);
@@ -2341,20 +2333,20 @@ public class Admin9Factory {
 			}
 		}
 
+		// REMOVED IN TEIID 8.0
         @Override
-        @Removed(Version.TEIID_8_0)
         public void mergeVDBs(String sourceVDBName, int sourceVDBVersion, String targetVDBName, int targetVDBVersion) {
             throw new UnsupportedOperationException();
         }
 
+        // REMOVED IN TEIID 8.0
         @Override
-        @Removed(Version.TEIID_8_0)
         public void deployVDB(String fileName, InputStream vdb) {
             throw new UnsupportedOperationException();
         }
 
+        // REMOVED IN TEIID 8.0
         @Override
-        @Removed(Version.TEIID_8_0)
         public void deleteVDB(String vdbName, int version) {
             throw new UnsupportedOperationException();
         }
