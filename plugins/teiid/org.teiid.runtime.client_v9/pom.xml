@@ -20,7 +20,6 @@
 	    <!-- WildFly AS based dependencies -->
 		<version.org.wildfly.core>1.0.2.Final</version.org.wildfly.core>
 		<version.org.wildfly.security>1.1.2.Final</version.org.wildfly.security>
-
         <version.org.jboss.modules.jboss-modules>1.3.0.Final</version.org.jboss.modules.jboss-modules>
         <version.org.jboss.jboss-vfs>3.2.9.Final</version.org.jboss.jboss-vfs>
         <version.org.jboss.jboss-threads>2.2.0.Final</version.org.jboss.jboss-threads>
@@ -45,11 +44,11 @@
             connector-api,                         jgroups,                      json-simple,
             jta,                                           nux,                            xnio-api,
             xnio-nio,                                  xom,                           wildfly-cli,      
-            wildfly-controller, wildfly-controller-client, wildfly-protocol
+            wildfly-controller, wildfly-controller-client, wildfly-protocol, wildfly-security-manager,
             jboss-dmr,                              jboss-logging,             jboss-marshalling,
             jboss-marshalling-river,        jboss-modules,          jboss-remoting,
             jboss-sasl,                              jboss-threads,            jboss-vfs,
-            netty,                                      jts,                               jts2geojson,
+            netty-all,                                      jts,                               jts2geojson,
             proj4j
         </dependencies-to-copy>
         <source-not-available>nux</source-not-available>
@@ -294,8 +293,8 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>org.jboss.spec.javax.resource</groupId>
-            <artifactId>jboss-connector-api_1.7_spec</artifactId>
+            <groupId>org.wildfly.swarm</groupId>
+            <artifactId>connector-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jgroups</groupId>
@@ -370,10 +369,6 @@
             <artifactId>jboss-modules</artifactId>
         </dependency>
         <dependency>
-		  <groupId>org.jboss.remoting</groupId>
-		  <artifactId>jboss-remoting</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.jboss.sasl</groupId>
             <artifactId>jboss-sasl</artifactId>
         </dependency>
@@ -414,18 +409,11 @@
 		<dependency>
 		  <groupId>org.wildfly.security</groupId>
 		  <artifactId>wildfly-security-manager</artifactId>
-		  <version>1.1.2.Final</version>
-		  <scope>import</scope>
+		  <version>${version.org.wildfly.security}</version>
 		</dependency>
 		<dependency>
-		  <groupId>org.jboss.remoting</groupId>
-		  <artifactId>jboss-remoting</artifactId>
-		  <version>4.0.9.Final</version>
-		  <scope>import</scope>
-		</dependency>
-		<dependency>
-		  <groupId>org.jboss.spec.javax.resource</groupId>
-		  <artifactId>jboss-connector-api_1.7_spec</artifactId>
+		  <groupId>org.wildfly.swarm</groupId>
+		  <artifactId>connector-api</artifactId>
 			<version>${version.connector-api}</version>
 		</dependency>
             <dependency>
