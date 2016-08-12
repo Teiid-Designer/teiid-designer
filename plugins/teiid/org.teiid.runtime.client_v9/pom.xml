@@ -15,7 +15,7 @@
     <description>Teiid SQL runtime client</description>
     <properties>
         <jbossas-version>9.0.2.Final</jbossas-version>
-        <version.org.jboss.jboss-dmr>1.2.0.Final</version.org.jboss.jboss-dmr>
+        <version.org.jboss.jboss-dmr>1.1.1.Final</version.org.jboss.jboss-dmr>
 
 	    <!-- WildFly AS based dependencies -->
 		<version.org.wildfly.core>1.0.2.Final</version.org.wildfly.core>
