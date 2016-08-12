@@ -10,7 +10,7 @@
     <groupId>org.jboss.tools.teiid.plugins.teiid</groupId>
     <artifactId>org.teiid.runtime.client_v9</artifactId>
     <packaging>eclipse-plugin</packaging>
-    <name>teiid runtime client</name>
+    <name>teiid runtime client V9</name>
 	<version>10.1.0-SNAPSHOT</version>
     <description>Teiid SQL runtime client</description>
     <properties>
