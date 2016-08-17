@@ -67,16 +67,19 @@
         <section id="multi-version-support-section">
 	        <title>Teiid Version Support</title>
 	        <para>
-	            Teiid Designer is bundled with 3 versions of the Teiid Client Runtime, notably:
+	            Teiid Designer is bundled with 4 versions of the Teiid Client Runtime, notably:
                 <itemizedlist>
                     <listitem>
-                        <para>Teiid Server 7.7 version installed on JBoss Server 5.1;</para>
+                        <para><emphasis role="bold">Teiid Server 7.7</emphasis> version installed on <emphasis role="bold">JBoss Server 5.1</emphasis>.</para>
                     </listitem>
                     <listitem>
-                        <para>Teiid Server 8.0, 8.1, 8.2 and 8.3 versions installed on JBoss Server 7;</para>
+                        <para><emphasis role="bold">Teiid Server 8.0</emphasis>, <emphasis role="bold">8.1, 8.2 and 8.3</emphasis> versions installed on <emphasis role="bold">JBoss Server 7</emphasis>.</para>
                     </listitem>
                     <listitem>
-                        <para>Teiid Server 8.4 thru 8.12.4 installed on JBoss Server 7.1.1, 7.2 and EAP 6.1 or greater.</para>
+                        <para><emphasis role="bold">Teiid Server 8.4</emphasis> thru <emphasis role="bold">8.12</emphasis> installed on <emphasis role="bold">JBoss Server 7.1.1, 7.2</emphasis> and <emphasis role="bold">EAP 6.1</emphasis> or greater.</para>
+                    </listitem>
+                     <listitem>
+                        <para><emphasis role="bold">Teiid Server 9.0</emphasis> installed on <emphasis role="bold">Wildfly 9+</emphasis>.</para>
                     </listitem>
                 </itemizedlist>
                 This allows multiple client runtime support from within a single installation of Teiid Designer. However, in order
