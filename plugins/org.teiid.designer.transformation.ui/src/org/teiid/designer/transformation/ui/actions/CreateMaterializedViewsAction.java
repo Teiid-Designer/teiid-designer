@@ -64,7 +64,9 @@ public class CreateMaterializedViewsAction extends SortableSelectionAction {
     @Override
     protected boolean isValidSelection( final ISelection selection ) {
         boolean isValid = true;
-        if (SelectionUtilities.isEmptySelection(selection) || !SelectionUtilities.isAllEObjects(selection)) isValid = false;
+        if (SelectionUtilities.isEmptySelection(selection) || 
+        		!SelectionUtilities.isAllEObjects(selection) ||
+        		SelectionUtilities.getSelectedEObjects(selection).size() == 1) isValid = false;
 
         if (isValid ) {
             final Collection objs = SelectionUtilities.getSelectedEObjects(selection);

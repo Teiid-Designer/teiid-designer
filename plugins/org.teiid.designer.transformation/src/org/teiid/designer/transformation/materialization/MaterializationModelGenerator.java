@@ -391,7 +391,7 @@ public class MaterializationModelGenerator {
 				this.materializedViewModel = ModelUtil.getModel(this.targetLocation);
 			} else if( this.targetLocation instanceof IFile ) {
 				this.materializedViewModel = ModelUtil.getModelResource((IFile)this.targetLocation, true);
-				this.targetLocation = this.materializedViewModel;
+				this.targetLocation = this.materializedViewModel.getParent();
 	        } else if( this.targetLocation instanceof ModelResource ) {
 	        	this.materializedViewModel = (ModelResource)this.targetLocation;
 	        }

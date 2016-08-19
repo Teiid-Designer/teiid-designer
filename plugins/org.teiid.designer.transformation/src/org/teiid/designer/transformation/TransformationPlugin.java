@@ -11,6 +11,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -45,6 +48,8 @@ public class TransformationPlugin extends Plugin {
      * Delimiter used by extension/extension point declarations
      */
     public static final String DELIMITER = "."; //$NON-NLS-1$
+
+    private IPath pluginPath;
 
     /**
      * The identifiers for all TransformationPlugin extension points
@@ -118,5 +123,15 @@ public class TransformationPlugin extends Plugin {
 
         // initialize the Teiid cleanup enabled preference
         prefs.putBoolean(PreferenceConstants.AUTO_EXPAND_SELECT, PreferenceConstants.AUTO_EXPAND_SELECT_DEFAULT);
+    }
+    
+	public IPath getInstallPath() throws Exception {
+        if (this.pluginPath == null) {
+            URL url = FileLocator.find(TRANSFORMATION_PLUGIN.getBundle(), new Path(""), null); //$NON-NLS-1$
+            url = FileLocator.toFileURL(url);
+            this.pluginPath = new Path(url.getFile());
+        }
+
+        return (IPath)this.pluginPath.clone();
     }
 }
