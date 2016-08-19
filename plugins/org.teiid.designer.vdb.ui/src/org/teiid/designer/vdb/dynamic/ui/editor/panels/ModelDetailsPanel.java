@@ -194,7 +194,9 @@ public class ModelDetailsPanel {
 					boolean added = false;
 					while(!added) {
 						String newName = "Name_" + numSources; //$NON-NLS-1$
-						model.addSource(new VdbSource(model.getVdb(), newName, "JNDI_NAME", "TRANSLATOR_NAME")); //$NON-NLS-1$ //$NON-NLS-2$
+						String newJndi = "JNDI_NAME_" + numSources; //$NON-NLS-1$
+						String newTranslator = "TRANSLATOR_NAME_" + numSources; //$NON-NLS-1$
+						model.addSource(new VdbSource(model.getVdb(), newName, newJndi, newTranslator));
 						if(!added) numSources++;
 					}
 					refreshModelDetails();
