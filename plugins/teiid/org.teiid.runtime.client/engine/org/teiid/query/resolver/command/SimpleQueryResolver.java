@@ -200,7 +200,7 @@ public class SimpleQueryResolver extends CommandResolver {
                             || setQuery.getOption() != null) {
                         throw e;
                     }
-                    getQueryResolver().resolveCommand(queryExpression, metadata.getMetadata(), false);
+                    getQueryResolver().resolveCommand(setQuery.getLeftQuery(), metadata.getMetadata(), false);
                     recursive = setQuery.getRightQuery();
                 }
             } else {
