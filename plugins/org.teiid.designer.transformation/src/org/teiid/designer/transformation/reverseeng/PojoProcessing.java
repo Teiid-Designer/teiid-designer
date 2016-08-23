@@ -118,6 +118,9 @@ public class PojoProcessing {
 		
 		// parse the package name to use to create the folder structure
 		List<String> nodes = Util.getTokens(packageName, ".");
+
+		// TODO: future option to have user define the name of the "main" source folder
+		nodes.add("main");
 		
 		// create a file path structure of only the package name, used for creating path structure for artifacts
 		StringBuffer packageFilePath = new StringBuffer();

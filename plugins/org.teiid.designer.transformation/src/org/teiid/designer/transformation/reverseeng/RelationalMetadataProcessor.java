@@ -55,8 +55,10 @@ public final class RelationalMetadataProcessor implements MetadataProcessor {
 		this.tableMetadata.add(relTable);
 		
 		List<org.teiid.designer.metamodels.relational.Column> columns = table.getColumns();
+		int orderValue = 1;
 		for( org.teiid.designer.metamodels.relational.Column col : columns ) {
-			addColumn(col, relTable);
+			addColumn(col, relTable, orderValue);
+			orderValue++;
 		}		
 			
 	}
@@ -67,7 +69,7 @@ public final class RelationalMetadataProcessor implements MetadataProcessor {
 	 * @param column
 	 * @param reltable 
 	 */
-	private void addColumn(org.teiid.designer.metamodels.relational.Column column, Table reltable)  {
+	private void addColumn(org.teiid.designer.metamodels.relational.Column column, Table reltable, int orderValue)  {
 
 		Column relColumn = reltable.createColumn(column.getName());
 		
@@ -79,7 +81,7 @@ public final class RelationalMetadataProcessor implements MetadataProcessor {
 //		relColumn.setType(aspect.getRuntimeTypeName(column.getType()));
 		relColumn.setTypeName(runtimeTypeName);
 		relColumn.setJavaType(javaType);
-//		relColumn.setOrder(aspect.getOrder());
+		relColumn.setOrder(orderValue);
 		relColumn.setPrecision(column.getPrecision());
 //		relColumn.setMaxLength(aspect.get);
 		relColumn.setScale(column.getScale());
