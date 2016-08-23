@@ -143,7 +143,8 @@ public class SqlTablePanel extends Composite {
         GridLayout gridLayout = new GridLayout();
         buttonComposite.setLayout(gridLayout);
         gridLayout.numColumns = 4;
-        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
+        gridLayout.horizontalSpacing = 0;
+        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
         buttonComposite.setLayoutData(gridData);
         addButton = WidgetFactory.createButton(buttonComposite,
                                                UiConstants.Util.getString("SqlTablePanel.addButton.text"), BUTTON_GRID_STYLE); //$NON-NLS-1$
