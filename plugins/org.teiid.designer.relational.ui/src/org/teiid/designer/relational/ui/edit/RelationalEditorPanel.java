@@ -92,6 +92,7 @@ public abstract class RelationalEditorPanel {
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.BEGINNING).applyTo(label);
 
         this.modelNameText = new Text(thePanel, SWT.BORDER | SWT.SINGLE);
+        this.modelNameText.setData("modelNameText");
         this.modelNameText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         this.modelNameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         GridDataFactory.fillDefaults().grab(true, false).applyTo(this.modelNameText);
@@ -103,6 +104,7 @@ public abstract class RelationalEditorPanel {
         label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
 
         this.nameText = new Text(thePanel, SWT.BORDER | SWT.SINGLE);
+        this.nameText.setData("nameText");
         this.nameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         GridDataFactory.fillDefaults().grab(true, false).applyTo(this.nameText);
         this.nameText.addModifyListener(new ModifyListener() {
@@ -122,6 +124,7 @@ public abstract class RelationalEditorPanel {
         label.setText(Messages.nameInSourceLabel);
 
         this.nameInSourceText = new Text(thePanel, SWT.BORDER | SWT.SINGLE);
+        this.nameInSourceText.setData("nameInSourceText");
         this.nameInSourceText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         GridDataFactory.fillDefaults().grab(true, false).applyTo(this.nameInSourceText);
         this.nameInSourceText.addModifyListener(new ModifyListener() {

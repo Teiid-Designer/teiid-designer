@@ -22,7 +22,9 @@ import org.eclipse.jface.text.source.VerticalRuler;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -58,6 +60,8 @@ import org.teiid.designer.relational.model.RelationalParameter;
 import org.teiid.designer.relational.model.RelationalProcedureResultSet;
 import org.teiid.designer.relational.model.RelationalViewProcedure;
 import org.teiid.designer.relational.ui.UiConstants;
+import org.teiid.designer.relational.ui.edit.EditColumnDialog;
+import org.teiid.designer.relational.ui.edit.EditParameterDialog;
 import org.teiid.designer.relational.ui.edit.RelationalEditorPanel;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
 import org.teiid.designer.transformation.ui.Messages;
@@ -508,6 +512,21 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 					
 				}
 				
+			}
+		});
+        
+    	
+        this.columnsViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+				Object[] objs = sel.toArray();
+				if( objs.length == 1 && objs[0] instanceof RelationalColumn) {
+					EditColumnDialog dialog = new EditColumnDialog(getShell(), (RelationalColumn)objs[0]);
+					dialog.open();
+					handleInfoChanged();
+				}
 			}
 		});
     	
@@ -1127,6 +1146,20 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 					
 				}
 				
+			}
+		});
+        
+        this.parametersViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+				Object[] objs = sel.toArray();
+				if( objs.length == 1 && objs[0] instanceof RelationalParameter) {
+					EditParameterDialog dialog = new EditParameterDialog(getShell(), (RelationalParameter)objs[0]);
+					dialog.open();
+					handleInfoChanged();
+				}
 			}
 		});
         

@@ -149,6 +149,15 @@ public class Messages extends NLS {
     public static String saveModelMedErrorMsg;
     public static String saveModelErrorMsg;
     
+    public static String Edit;
+    public static String EditColumnTitle;
+    public static String EditingColumnInformation;
+    public static String Name;
+    public static String ColumnLengthError;
+    public static String ClickOkToAcceptChanges;
+    public static String EditParameterTitle;
+    public static String EditingParameterInformation;
+    
     static {
         NLS.initializeMessages("org.teiid.designer.relational.ui.messages", Messages.class); //$NON-NLS-1$
     }

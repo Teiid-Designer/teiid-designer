@@ -22,10 +22,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -33,7 +33,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -65,7 +64,6 @@ import org.teiid.designer.relational.model.RelationalIndex;
 import org.teiid.designer.relational.model.RelationalPrimaryKey;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
-import org.teiid.designer.relational.model.RelationalView;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
@@ -106,7 +104,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	private StyledTextEditor nativeQueryTextEditor;
 	
 	// column widgets
-	private Button addColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
+	private Button addColumnButton, editColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
 	private Button changePkColumnsButton, addFKButton, editFKButton, deleteFKButton;
 	private Button addUCButton, editUCButton, deleteUCButton;
 	private Button addIndexButton, deleteIndexButton, editIndexButton;
@@ -114,7 +112,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	private TableViewerBuilder pkColumnsViewer, fkViewer;  //ucColumnsViewer,
 	private TableViewerBuilder uniqueConstraintsViewer, indexesViewer;
 
-	private boolean finishedStartup = false;
 	private boolean validationPerformed = false;
 	
 	private int HEIGHT_HINT_80 = 80;
@@ -130,8 +127,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		for( String str : MULTIPLICITY.AS_ARRAY ) {
 			MULTIPLICITY_LIST.add(str);
 		}
-		
-		finishedStartup = true;
 	}
 
 	@Override
@@ -142,10 +137,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	private boolean isPhysicalModel() {
 	    return getRelationalReference().getModelType() == ModelType.PHYSICAL;
 	}
-
-	private boolean isRelationalView() {
-        return getRelationalReference() instanceof RelationalView;
-    }
 
 	@Override
 	protected void createPanel(Composite parent) {
@@ -183,9 +174,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	
 	
 	private void createPrimaryKeyTab(TabFolder folderParent) {
-	    if (isRelationalView())
-	        return;
-
         Composite thePanel = createPrimaryKeyPanel(folderParent);
         
         this.primaryKeyTab = new TabItem(folderParent, SWT.NONE);
@@ -197,9 +185,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	
 	
 	private void createUniqueConstraintTab(TabFolder folderParent) {
-	    if (isRelationalView())
-	        return;
-
         Composite thePanel = createUniqueConstraintPanel(folderParent);
         
         this.uniqueConstraintTab = new TabItem(folderParent, SWT.NONE);
@@ -211,9 +196,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	
 	
 	private void createForeignKeysTab(TabFolder folderParent) {
-	    if (isRelationalView())
-	        return;
-
         Composite thePanel = createForeignKeysPanel(folderParent);
 
         this.foreignKeysTab = new TabItem(folderParent, SWT.NONE);
@@ -223,9 +205,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	}
 	
 	private void createIndexesTab(TabFolder folderParent) {
-	    if (isRelationalView())
-	        return;
-
         Composite thePanel = createIndexesPanel(folderParent);
         
         this.indexesTab = new TabItem(folderParent, SWT.NONE);
@@ -236,9 +215,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	}
 	
 	private void createNativeQueryTab(TabFolder folderParent) {
-	    if (isRelationalView())
-	        return;
-
         Composite thePanel = createNativeQueryPanel(folderParent);
         
         this.nativeQueryTab = new TabItem(folderParent, SWT.NONE);
@@ -258,11 +234,8 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         synchronizeIndexTab();
         synchronizeNativeQueryTab();
 
-        if( finishedStartup ) {
-	        setNativeQueryEnablement(! isRelationalView() );
-	        setKeyTabsEnablement(! isRelationalView());
-        }
-
+	    setNativeQueryEnablement(true );
+	    setKeyTabsEnablement(true);
 	}
 
 	/**
@@ -616,14 +589,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(thePanel);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
 
-        if(isRelationalView()) {
-            Text pkHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
-            pkHelpText.setBackground(parent.getBackground());
-            pkHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, HEIGHT_HINT_80).span(2, 1).applyTo(pkHelpText);
-            pkHelpText.setText(Messages.primaryKeysNotSupportedForViews);
-        }
-
         this.includePrimaryKeyCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).span(2, 1).applyTo(this.includePrimaryKeyCB);
         this.includePrimaryKeyCB.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.INCLUDE));
@@ -745,14 +710,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	    Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
         GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
-
-        if(isRelationalView()) {
-            Text ucHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
-            ucHelpText.setBackground(parent.getBackground());
-            ucHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, HEIGHT_HINT_80).span(2, 1).applyTo(ucHelpText);
-            ucHelpText.setText(Messages.uniqueConstraintsNotSupportedForViews);
-        }
         
     	// Create 1 panels
     	// Top is just a Table of current FK with Add/Edit/Delete buttons
@@ -876,14 +833,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
 
-        if(isRelationalView()) {
-            Text fkHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
-            fkHelpText.setBackground(parent.getBackground());
-            fkHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, HEIGHT_HINT_80).span(2, 1).applyTo(fkHelpText);
-            fkHelpText.setText(Messages.foreignKeysNotSupportedForViews);
-        }
-
     	// Create 1 panels
     	// Top is just a Table of current FK with Add/Edit/Delete buttons
     	
@@ -1004,14 +953,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	    Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
         GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
-
-        if(isRelationalView()) {
-            Text indexesHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
-            indexesHelpText.setBackground(parent.getBackground());
-            indexesHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, HEIGHT_HINT_80).span(2, 1).applyTo(indexesHelpText);
-            indexesHelpText.setText(Messages.indexesNotSupportedForViews);
-        }
 
         Composite buttonPanel = new Composite(thePanel, SWT.NONE);
         GridLayoutFactory.fillDefaults().numColumns(3).applyTo(buttonPanel);
@@ -1161,8 +1102,8 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
 
-        Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 4);
-        GridLayoutFactory.fillDefaults().numColumns(4).applyTo(buttonPanel);
+        Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 5);
+        GridLayoutFactory.fillDefaults().numColumns(5).applyTo(buttonPanel);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
 
     	addColumnButton = new Button(buttonPanel, SWT.PUSH);
@@ -1174,6 +1115,32 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			public void widgetSelected(SelectionEvent e) {
 	    		getRelationalReference().createColumn();
 				handleInfoChanged();
+			}
+    		
+		});
+
+    	editColumnButton = new Button(buttonPanel, SWT.PUSH);
+    	editColumnButton.setText(Messages.Edit);
+    	GridDataFactory.fillDefaults().applyTo(editColumnButton);
+    	editColumnButton.setEnabled(false);
+    	editColumnButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				RelationalColumn column = null;
+				
+				IStructuredSelection selection = (IStructuredSelection)columnsViewer.getSelection();
+				for( Object obj : selection.toArray()) {
+					if( obj instanceof RelationalColumn ) {
+						column =  (RelationalColumn) obj;
+						break;
+					}
+				}
+				if( column != null ) {
+					EditColumnDialog dialog = new EditColumnDialog(getShell(), column);
+					dialog.open();
+					handleInfoChanged();
+				}
 			}
     		
 		});
@@ -1269,7 +1236,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         // create columns
         TableViewerColumn column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.columnNameLabel);
-        column.setEditingSupport(new ColumnNameEditingSupport(this.columnsViewer.getTableViewer()));
         column.setLabelProvider(new ColumnDataLabelProvider(0));
 
         column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
@@ -1280,7 +1246,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.lengthLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(2));
-        column.setEditingSupport(new ColumnWidthEditingSupport(this.columnsViewer.getTableViewer()));
 
         if( getRelationalReference() != null ) {
 	        for( RelationalColumn row : getRelationalReference().getColumns() ) {
@@ -1314,6 +1279,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 						enable = false;
 					}
 					deleteColumnButton.setEnabled(enable);
+					editColumnButton.setEnabled(enable && objs.length == 1);
 					if( enable ) {
 						upColumnButton.setEnabled(getRelationalReference().canMoveColumnUp(columnInfo));
 						downColumnButton.setEnabled(getRelationalReference().canMoveColumnDown(columnInfo));
@@ -1321,6 +1287,20 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 					
 				}
 				
+			}
+		});
+        
+        this.columnsViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+				Object[] objs = sel.toArray();
+				if( objs.length == 1 && objs[0] instanceof RelationalColumn) {
+					EditColumnDialog dialog = new EditColumnDialog(getShell(), (RelationalColumn)objs[0]);
+					dialog.open();
+					handleInfoChanged();
+				}
 			}
 		});
         
@@ -1412,146 +1392,6 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		}
 		
 		
-	}
-    
-    class ColumnNameEditingSupport extends EditingSupport {
-    	
-		private TextCellEditor editor;
-
-		/**
-		 * Create a new instance of the receiver.
-		 * 
-		 * @param viewer the column viewer
-		 */
-		public ColumnNameEditingSupport(ColumnViewer viewer) {
-			super(viewer);
-			this.editor = new TextCellEditor((Composite) viewer.getControl());
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-		 */
-		@Override
-		protected boolean canEdit(Object element) {
-			return true;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-		 */
-		@Override
-		protected CellEditor getCellEditor(Object element) {
-			return editor;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
-		 */
-		@Override
-		protected Object getValue(Object element) {
-			if( element instanceof RelationalColumn ) {
-				return ((RelationalColumn)element).getName();
-			}
-			return 0;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
-		 *      java.lang.Object)
-		 */
-		@Override
-		protected void setValue(Object element, Object value) {
-			if( element instanceof RelationalColumn ) {
-				String oldValue = ((RelationalColumn)element).getName();
-				String newValue = (String)value;
-				if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-					((RelationalColumn)element).setName(newValue);
-					columnsViewer.getTableViewer().refresh(element);
-					handleInfoChanged();
-				}
-			}
-		}
-
-	}
-    
-    class ColumnWidthEditingSupport extends EditingSupport {
-    	
-		private TextCellEditor editor;
-
-		/**
-		 * Create a new instance of the receiver.
-		 * 
-		 * @param viewer the column viewer
-		 */
-		public ColumnWidthEditingSupport(ColumnViewer viewer) {
-			super(viewer);
-			this.editor = new TextCellEditor((Composite) viewer.getControl());
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-		 */
-		@Override
-		protected boolean canEdit(Object element) {
-			return true;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-		 */
-		@Override
-		protected CellEditor getCellEditor(Object element) {
-			return editor;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
-		 */
-		@Override
-		protected Object getValue(Object element) {
-			if( element instanceof RelationalColumn ) {
-				return Integer.toString(((RelationalColumn)element).getLength());
-			}
-			return 0;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
-		 *      java.lang.Object)
-		 */
-		@Override
-		protected void setValue(Object element, Object value) {
-			if( element instanceof RelationalColumn ) {
-				int oldValue = ((RelationalColumn)element).getLength();
-				int newValue = oldValue;
-				try {
-					newValue = Integer.parseInt((String)value);
-				} catch (NumberFormatException ex) {
-					return;
-				}
-				if( newValue != oldValue ) {
-					((RelationalColumn)element).setLength(newValue);
-					columnsViewer.getTableViewer().refresh(element);
-				}
-			}
-		}
-
 	}
     
     class DatatypeEditingSupport extends ComboBoxEditingSupport {

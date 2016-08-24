@@ -27,7 +27,9 @@ import org.eclipse.jface.text.source.VerticalRuler;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -70,6 +72,7 @@ import org.teiid.designer.relational.model.RelationalUniqueConstraint;
 import org.teiid.designer.relational.model.RelationalViewTable;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
+import org.teiid.designer.relational.ui.edit.EditColumnDialog;
 import org.teiid.designer.relational.ui.edit.EditForeignKeyDialog;
 import org.teiid.designer.relational.ui.edit.EditIndexDialog;
 import org.teiid.designer.relational.ui.edit.EditUniqueConstraintDialog;
@@ -120,7 +123,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 	private Document sqlDocument;
 	
 	// column widgets
-	private Button addColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
+	private Button addColumnButton, editColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
 	private Button changePkColumnsButton, addFKButton, editFKButton, deleteFKButton;
 	private Button addUCButton, editUCButton, deleteUCButton;
 	private Button addIndexButton, deleteIndexButton, editIndexButton;
@@ -1078,6 +1081,33 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 			}
     		
 		});
+
+    	editColumnButton = new Button(buttonPanel, SWT.PUSH);
+    	editColumnButton.setText(Messages.Edit);
+    	GridDataFactory.fillDefaults().applyTo(editColumnButton);
+    	editColumnButton.setEnabled(false);
+    	editColumnButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				RelationalColumn column = null;
+				
+				IStructuredSelection selection = (IStructuredSelection)columnsViewer.getSelection();
+				for( Object obj : selection.toArray()) {
+					if( obj instanceof RelationalColumn ) {
+						column =  (RelationalColumn) obj;
+						break;
+					}
+				}
+				if( column != null ) {
+					EditColumnDialog dialog = new EditColumnDialog(getShell(), column);
+					dialog.open();
+					handleInfoChanged();
+				}
+			}
+    		
+		});
+    	
     	
     	deleteColumnButton = new Button(buttonPanel, SWT.PUSH);
     	deleteColumnButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
@@ -1215,6 +1245,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 						enable = false;
 					}
 					deleteColumnButton.setEnabled(enable);
+					editColumnButton.setEnabled(enable && objs.length == 1);
 					if( enable ) {
 						upColumnButton.setEnabled(getRelationalReference().canMoveColumnUp(columnInfo));
 						downColumnButton.setEnabled(getRelationalReference().canMoveColumnDown(columnInfo));
@@ -1224,6 +1255,21 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 				
 			}
 		});
+        
+        this.columnsViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+				Object[] objs = sel.toArray();
+				if( objs.length == 1 && objs[0] instanceof RelationalColumn) {
+					EditColumnDialog dialog = new EditColumnDialog(getShell(), (RelationalColumn)objs[0]);
+					dialog.open();
+					handleInfoChanged();
+				}
+			}
+		});
+        
         
         return thePanel;
     }

@@ -18,7 +18,9 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -79,8 +81,8 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 	private Text resultSetNameText, nativeQueryHelpText;
 
 	// parameter widgets
-	private Button addParameterButton, deleteParameterButton, upParameterButton, downParameterButton;
-	private Button addColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
+	private Button addParameterButton, editParameterButton, deleteParameterButton, upParameterButton, downParameterButton;
+	private Button addColumnButton, editColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
 	private Combo updateCountCombo;
 	private TableViewerBuilder parametersViewer;
 	private TableViewerBuilder columnsViewer;
@@ -281,8 +283,8 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
     		}
         });
 
-        Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 4);
-        GridLayoutFactory.fillDefaults().numColumns(4).applyTo(buttonPanel);
+        Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 5);
+        GridLayoutFactory.fillDefaults().numColumns(5).applyTo(buttonPanel);
         GridDataFactory.fillDefaults().span(2, 1).applyTo(buttonPanel);
 	  	
     	addColumnButton = new Button(buttonPanel, SWT.PUSH);
@@ -299,6 +301,32 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 		});
     	this.addColumnButton.setEnabled(false);
     	
+    	editColumnButton = new Button(buttonPanel, SWT.PUSH);
+    	editColumnButton.setText(Messages.Edit);
+    	GridDataFactory.fillDefaults().applyTo(editColumnButton);
+    	editColumnButton.setEnabled(false);
+    	editColumnButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				RelationalColumn column = null;
+				
+				IStructuredSelection selection = (IStructuredSelection)columnsViewer.getSelection();
+				for( Object obj : selection.toArray()) {
+					if( obj instanceof RelationalColumn ) {
+						column =  (RelationalColumn) obj;
+						break;
+					}
+				}
+				if( column != null ) {
+					EditColumnDialog dialog = new EditColumnDialog(getShell(), column);
+					dialog.open();
+					handleInfoChanged();
+				}
+			}
+    		
+		});
+
     	deleteColumnButton = new Button(buttonPanel, SWT.PUSH);
     	deleteColumnButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
     	GridDataFactory.fillDefaults().applyTo(deleteColumnButton);
@@ -450,6 +478,20 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 			}
 		});
     	
+        this.columnsViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+				Object[] objs = sel.toArray();
+				if( objs.length == 1 && objs[0] instanceof RelationalColumn) {
+					EditColumnDialog dialog = new EditColumnDialog(getShell(), (RelationalColumn)objs[0]);
+					dialog.open();
+					handleInfoChanged();
+				}
+			}
+		});
+        
     	return thePanel;
 	}
 
@@ -766,8 +808,8 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
         GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
 
-        Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 4);
-        GridLayoutFactory.fillDefaults().numColumns(4).applyTo(buttonPanel);
+        Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 5);
+        GridLayoutFactory.fillDefaults().numColumns(5).applyTo(buttonPanel);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
 	  	
     	addParameterButton = new Button(buttonPanel, SWT.PUSH);
@@ -779,6 +821,32 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 			public void widgetSelected(SelectionEvent e) {
 	    		getRelationalReference().createParameter();
 				handleInfoChanged();
+			}
+    		
+		});
+    	
+    	editParameterButton = new Button(buttonPanel, SWT.PUSH);
+    	editParameterButton.setText(Messages.Edit);
+    	GridDataFactory.fillDefaults().applyTo(editParameterButton);
+    	editParameterButton.setEnabled(false);
+    	editParameterButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				RelationalParameter parameter = null;
+				
+				IStructuredSelection selection = (IStructuredSelection)parametersViewer.getSelection();
+				for( Object obj : selection.toArray()) {
+					if( obj instanceof RelationalParameter ) {
+						parameter =  (RelationalParameter) obj;
+						break;
+					}
+				}
+				if( parameter != null ) {
+					EditParameterDialog dialog = new EditParameterDialog(getShell(), parameter);
+					dialog.open();
+					handleInfoChanged();
+				}
 			}
     		
 		});
@@ -938,6 +1006,20 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 					
 				}
 				
+			}
+		});
+        
+        this.parametersViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+				Object[] objs = sel.toArray();
+				if( objs.length == 1 && objs[0] instanceof RelationalParameter) {
+					EditParameterDialog dialog = new EditParameterDialog(getShell(), (RelationalParameter)objs[0]);
+					dialog.open();
+					handleInfoChanged();
+				}
 			}
 		});
         

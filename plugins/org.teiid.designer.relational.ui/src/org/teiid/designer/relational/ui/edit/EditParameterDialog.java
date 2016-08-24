@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.transformation.ui.editors;
+package org.teiid.designer.relational.ui.edit;
 
 
 import java.util.ArrayList;
@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -36,9 +38,9 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
 import org.teiid.designer.relational.RelationalConstants.DIRECTION;
 import org.teiid.designer.relational.model.RelationalParameter;
-import org.teiid.designer.transformation.ui.Messages;
-import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.designer.transformation.ui.UiPlugin;
+import org.teiid.designer.relational.ui.Messages;
+import org.teiid.designer.relational.ui.UiConstants;
+import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
@@ -153,7 +155,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 		datatype.setLayoutData(new GridData());
 
 		final Combo datatypeCombo = new Combo(composite,
-				SWT.NONE);
+				SWT.READ_ONLY);
 		datatypeCombo.setForeground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_BLUE));
 		datatypeCombo.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, true));
@@ -200,8 +202,14 @@ public class EditParameterDialog extends TitleAreaDialog {
 				if (value == null) {
 					value = EMPTY_STRING;
 				}
-				tempParameter.setLength(Integer.parseInt(value));
-				validate();
+				IStatus lengthCheck = validateLength(value);
+				if( lengthCheck.isOK() ) {
+					tempParameter.setLength(Integer.parseInt(value));
+					validate();
+				} else {
+					setErrorMessage(lengthCheck.getMessage());
+					getButton(IDialogConstants.OK_ID).setEnabled(false);
+				}
 			}
 		});
 		
@@ -212,7 +220,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 		label2.setText(Messages.directionLabel);
 		label2.setLayoutData(new GridData());
 
-		final Combo directionCombo = new Combo(composite, SWT.NONE);
+		final Combo directionCombo = new Combo(composite, SWT.READ_ONLY);
 		directionCombo.setForeground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_BLUE));
 		directionCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true));
@@ -231,9 +239,25 @@ public class EditParameterDialog extends TitleAreaDialog {
 	}
 	
 	private void validate() {
-
-		boolean enable = true;
-		getButton(IDialogConstants.OK_ID).setEnabled(enable);
+		this.tempParameter.validate();
+		IStatus status = this.tempParameter.getStatus();
+		if( status.getSeverity() == IStatus.ERROR ) {
+			setErrorMessage(status.getMessage());
+			getButton(IDialogConstants.OK_ID).setEnabled(false);
+		} else {
+			setErrorMessage(null);
+			setMessage(Messages.ClickOkToAcceptChanges);
+			getButton(IDialogConstants.OK_ID).setEnabled(true);
+		}
+	}
+	
+	private IStatus validateLength(String lengthStr) {
+		try {
+			Integer.parseInt(lengthStr);
+		} catch (NumberFormatException e) {
+			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, NLS.bind(Messages.ColumnLengthError, lengthStr));
+		}
+		return Status.OK_STATUS;
 	}
 
 	@Override
@@ -308,7 +332,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 		public Image getImage(Object element) {
 			if (this.columnNumber == 0) {
 				return UiPlugin.getDefault().getImage(
-						UiConstants.Images.COLUMN_ICON);
+						UiConstants.Images.PARAMETER_ICON);
 			}
 			return null;
 		}
