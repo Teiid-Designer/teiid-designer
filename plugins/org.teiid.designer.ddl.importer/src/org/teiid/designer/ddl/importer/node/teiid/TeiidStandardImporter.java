@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.I18n;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.ddl.DdlImporterManager;
@@ -37,6 +38,7 @@ import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalSchema;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
+import org.teiid.designer.transformation.ddl.TeiidSQLConstants;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.modeshape.sequencer.ddl.DdlConstants;
 import org.teiid.modeshape.sequencer.ddl.StandardDdlLexicon;
@@ -305,7 +307,12 @@ public class TeiidStandardImporter  extends TeiidAbstractImporter {
 		col.setParent(table);
 		table.getColumns().add(col);
 		initialize(col, node);
-
+		
+		if( TeiidSQLConstants.isReservedWord(col.getName()) ) {
+			String name = col.getName();
+			col.setName(StringConstants.DQUOTE + name + StringConstants.DQUOTE);
+		}
+		
 		setDataType(node, col);
 
 		return col;

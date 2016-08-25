@@ -255,7 +255,18 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 	}
 	
 	private String getName(EObject eObj) {
-		return ModelerCore.getModelEditor().getName(eObj);
+		String emfName = ModelerCore.getModelEditor().getName(eObj);
+
+		if( (emfName.startsWith(SQUOTE) && emfName.endsWith(SQUOTE)) || 
+			(emfName.startsWith(DQUOTE) && emfName.endsWith(DQUOTE))  ) {
+			return emfName; // already quoted
+		}
+		
+		if( TeiidSQLConstants.isReservedWord(emfName) ) {
+			emfName = DQUOTE + emfName + DQUOTE;
+		}
+		
+		return emfName;
 	}
 	
 	private String getDescription(EObject eObj) {
