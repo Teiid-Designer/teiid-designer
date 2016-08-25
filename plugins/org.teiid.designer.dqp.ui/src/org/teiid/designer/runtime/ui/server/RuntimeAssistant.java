@@ -42,6 +42,12 @@ public final class RuntimeAssistant {
      * @return <code>true</code> if preview is enabled, a Teiid Instance exists, and a connection to the server has been made
      */
     public static boolean ensurePreviewEnabled( Shell shell ) {
+    	if( getServer() == null ) {
+	        MessageDialog.openWarning(shell, UTIL.getString(PREFIX + "noServerDefinedTitle"), //$NON-NLS-1$
+	        			UTIL.getString(PREFIX + "noServerDefinedMessage")); //$NON-NLS-1$
+	        	return false;
+    	}
+    	
         boolean parentServerConnecting = getServer().isConnecting();
         boolean parentServerConnected = getServer().isParentConnected();
         boolean defaultServerExists = previewServerExists();
