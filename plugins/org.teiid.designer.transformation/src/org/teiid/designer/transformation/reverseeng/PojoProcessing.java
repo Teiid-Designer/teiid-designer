@@ -119,17 +119,21 @@ public class PojoProcessing {
 		// parse the package name to use to create the folder structure
 		List<String> nodes = Util.getTokens(packageName, ".");
 
+		StringBuffer jarPackageFilePath = new StringBuffer();
+		for (String n : nodes) {
+			jarPackageFilePath.append(n).append(File.separator);
+		}
 		// TODO: future option to have user define the name of the "main" source folder
 		nodes.add("main");
 		
 		// create a file path structure of only the package name, used for creating path structure for artifacts
-		StringBuffer packageFilePath = new StringBuffer();
+		StringBuffer modulePackagePath = new StringBuffer();
 			
 		for (String n : nodes) {
-			packageFilePath.append(n).append(File.separator);
+			modulePackagePath.append(n).append(File.separator);
 		}
 		
-		File javaFileLoc = new File(classFileLocaton.getAbsolutePath() + File.separator + packageFilePath.toString());
+		File javaFileLoc = new File(classFileLocaton.getAbsolutePath() + File.separator + jarPackageFilePath.toString());
 		javaFileLoc.mkdirs();
 		
 		File pojoJarFile = null;
@@ -183,11 +187,11 @@ public class PojoProcessing {
 
 		}
 		
-		PojoCompilation.compile(javaFileLoc, packageFilePath.toString(), pojoJarFile);	
+		PojoCompilation.compile(javaFileLoc, jarPackageFilePath.toString(), pojoJarFile);	
 		
 		if (module != null) {
 			try {
-				module.performPackaging(options, packageName, pojoJarFile, moduleZipFileName, buildLocation, packageFilePath.toString(), kitLocation);
+				module.performPackaging(options, packageName, pojoJarFile, moduleZipFileName, buildLocation, modulePackagePath.toString(), kitLocation);
 
 //				ReverseEngineerPlugin.LOGGER.info("[ReverseEngineering] Created module zip: " + pojoJarName);
 

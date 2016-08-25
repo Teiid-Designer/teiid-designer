@@ -30,10 +30,12 @@ public interface ReverseEngConstants {
     
     String DEFAULT_MODULE_SUFFIX = "_JDG_Module.zip"; //$NON-NLS-1$
     
-    String PROTOBUF = "Protobuf";
-    String HIBERNATE = "Hibernate";
-    String NONE = "NONE";
-    String DEFAULT_JDG_MODULE_FOLDER= "/jdg_module";
+    String PROTOBUF = "Protobuf";  //$NON-NLS-1$
+    String HIBERNATE = "Hibernate";  //$NON-NLS-1$
+    String NONE = "NONE";  //$NON-NLS-1$
+    String DEFAULT_JDG_MODULE_FOLDER= "/jdg_module";  //$NON-NLS-1$
+    
+    String INFINISPAN_EXT_ASSISTANT_NS = "infinispan"; //$NON-NLS-1$
     
     public enum Mode  {
     	MATERIALIZE,

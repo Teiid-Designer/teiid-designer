@@ -250,6 +250,8 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         // -----------------------------------------------
         Composite bottomComposite = new Composite(parent, SWT.NULL);
         bottomComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        ((GridData)bottomComposite.getLayoutData()).heightHint = 400;
+        ((GridData)bottomComposite.getLayoutData()).widthHint = 400;
         GridLayout bottomLayout = new GridLayout(2, false);
         bottomLayout.horizontalSpacing = 0;
         bottomComposite.setLayout(bottomLayout);

@@ -105,6 +105,8 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         // -----------------------------------------------
         Group tableGroup = WidgetFactory.createGroup(composite, Messages.availableMedsDialogTableLabel);
         tableGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        ((GridData)tableGroup.getLayoutData()).heightHint = 300;
+        ((GridData)tableGroup.getLayoutData()).widthHint = 500;
         createTableViewer(tableGroup);
 
         return composite;
@@ -203,6 +205,7 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
     private void createTableViewer( Composite parent ) {
         tableViewerBuilder = new TableViewerBuilder(parent, (SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
         ColumnViewerToolTipSupport.enableFor(tableViewerBuilder.getTableViewer());
+        ((GridData)tableViewerBuilder.getTable().getLayoutData()).heightHint = 100;
 
         // create columns
         createColumns();

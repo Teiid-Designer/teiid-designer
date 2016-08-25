@@ -31,6 +31,9 @@ import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
@@ -40,6 +43,7 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.UniqueKey;
+import org.teiid.designer.metamodels.relational.extension.InfinispanCacheModelExtensionConstants;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.reverseeng.ReverseEngConstants;
 
@@ -139,12 +143,19 @@ public class MaterializedModelManager implements ReverseEngConstants {
             
 	        selectedViewOrTable.setMaterialized(true);
 
-            Table matTable = createMaterializedSourceTable( selectedViewOrTable);
+            Table matTable = createMaterializedSourceTable( selectedViewOrTable, false);
             
             selectedViewOrTable.setMaterializedTable(matTable);
             
             // Add the schema to the materialized view model
             addValue(newSourceModel, matTable, getModelResourceContents(newSourceModel));
+            
+            // Create staging table, add to model and set extension property
+            Table stagingTable =  createMaterializedSourceTable( selectedViewOrTable, true);
+            addValue(newSourceModel, stagingTable, getModelResourceContents(newSourceModel));
+            getExtensionAssistant().setPropertyValue(
+            		stagingTable, InfinispanCacheModelExtensionConstants.PropertyIds.PRIMARY_TABLE, matTable.getName());
+
             
             ModelBuildUtil.rebuildImports(targetModelResource.getEmfResource(), true);
             
@@ -169,7 +180,7 @@ public class MaterializedModelManager implements ReverseEngConstants {
         return this.targetModelResource;
     }
     
-    private Table createMaterializedSourceTable(Table table) {
+    private Table createMaterializedSourceTable(Table table, boolean createStagingTable) {
         
         //create the new table and the staging table and add them to the result physical model
         final Table newMatTable = (Table)RelationalFactory.eINSTANCE.create(table.eClass() );
@@ -181,6 +192,9 @@ public class MaterializedModelManager implements ReverseEngConstants {
             name = tmp;
         }
         
+        if( createStagingTable ) {
+        	name = "ST_" + name;
+        }
         //Set table names
         newMatTable.setName(name);
         
@@ -484,6 +498,24 @@ public class MaterializedModelManager implements ReverseEngConstants {
         } catch (ModelWorkspaceException mwe) {
             mwe.printStackTrace();
         }
+
+        try {
+        	getExtensionAssistant().applyMedIfNecessary(modelFile);
+        	
+        	// TODO:  JDG Use-Case >> Add translator properties some point
+        	// <property name="SupportsDirectQueryProcedure" value="true"/>
+        	//  <property name="SupportsNativeQueries" value="true"/>
+			resrc.save(new NullProgressMonitor(), false);
+		} catch (ModelWorkspaceException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
         return resrc;
+    }
+    
+    private ModelObjectExtensionAssistant getExtensionAssistant() {
+        final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+        return (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(INFINISPAN_EXT_ASSISTANT_NS);
     }
 }

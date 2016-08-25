@@ -31,7 +31,14 @@ class LocaleProposalProvider extends CComboProposalProvider {
     LocaleProposalProvider(final CCombo combo) {
         super(combo);
 
-        this.locales = new ArrayList<Locale>(Arrays.asList(Locale.getAvailableLocales()));
+        List<Locale> tmpLocals = new ArrayList<Locale>(Arrays.asList(Locale.getAvailableLocales()));
+        this.locales = new ArrayList<Locale>();
+        for( Locale locale : tmpLocals) {
+        	if( locale != null && locale.getDisplayName() != null && locale.getDisplayName().length() > 0 ) {
+        		this.locales.add(locale);
+        	}
+        }
+        
         Collections.sort(this.locales, ExtensionConstants.LOCALE_COMPARATOR);
 
         final Set<Character> temp = new HashSet<Character>();
