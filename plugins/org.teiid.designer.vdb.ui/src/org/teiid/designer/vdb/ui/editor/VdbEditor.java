@@ -15,6 +15,7 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -570,65 +572,6 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         int col1Width = totalAreaWidth - MODELS_PANEL_IMAGE_COL_WIDTH - MODELS_PANEL_IMAGE_COL_WIDTH;
         if(col1Width<MODELS_PANEL_MODELNAME_COL_WIDTH_MIN) col1Width=MODELS_PANEL_MODELNAME_COL_WIDTH_MIN;
         modelsGroup.getTable().getColumn(0).getColumn().setWidth(col1Width);
-    }
-
-    private Composite createEditorBottom( Composite parent ) {
-        Composite pnlBottom = new Composite(parent, SWT.BORDER);
-        pnlBottom.setLayout(new GridLayout());
-        pnlBottom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        CTabFolder tabFolder = WidgetFactory.createTabFolder(pnlBottom);
-
-        { // roles tab
-            CTabItem theTab = new CTabItem(tabFolder, SWT.NONE);
-            theTab.setText(i18n("rolesTab")); //$NON-NLS-1$
-            theTab.setToolTipText(i18n("rolesTabToolTip")); //$NON-NLS-1$
-            Composite tabPanel = new Composite(tabFolder, SWT.NONE);
-            tabPanel.setLayout(new GridLayout());
-            tabPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            theTab.setControl(tabPanel);
-            dataRolesPanel = new DataRolesPanel(tabPanel, this);
-            theTab.setControl(tabPanel);
-            tabPanel.layout();
-        }
-
-        { // properties tab
-            CTabItem theTab = new CTabItem(tabFolder, SWT.NONE);
-            theTab.setText(i18n("propertiesTab")); //$NON-NLS-1$
-            theTab.setToolTipText(i18n("propertiesTabToolTip")); //$NON-NLS-1$
-            Composite tabPanel = new Composite(tabFolder, SWT.NONE);
-            tabPanel.setLayout(new GridLayout());
-            tabPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            theTab.setControl(tabPanel);
-            propertiesPanel = new PropertiesPanel(tabPanel, getVdb());
-            theTab.setControl(tabPanel);
-            tabPanel.layout();
-        }
-        
-        { // properties tab
-            CTabItem theTab = new CTabItem(tabFolder, SWT.NONE);
-            theTab.setText(i18n("userDefinedPropertiesTab")); //$NON-NLS-1$
-            theTab.setToolTipText(i18n("userDefinedPropertiesTabToolTip")); //$NON-NLS-1$
-            Composite tabPanel = new Composite(tabFolder, SWT.NONE);
-            tabPanel.setLayout(new GridLayout());
-            tabPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            theTab.setControl(tabPanel);
-            userDefinedPropertiesPanel = new UserDefinedPropertiesPanel(tabPanel, getVdb());
-            theTab.setControl(tabPanel);
-            tabPanel.layout();
-        }
-
-        { // translator overrides tab
-            CTabItem theTab = new CTabItem(tabFolder, SWT.NONE);
-            theTab.setText(i18n("translatorOverridesTab")); //$NON-NLS-1$
-            theTab.setToolTipText(i18n("translatorOverridesTabToolTip")); //$NON-NLS-1$
-            pnlTranslatorOverrides = new TranslatorOverridesPanel(tabFolder, this.vdb);
-            theTab.setControl(pnlTranslatorOverrides);
-            pnlTranslatorOverrides.layout();
-        }
-
-        tabFolder.setSelection(0);
-        
-        return pnlBottom;
     }
 
     void addSelectionToVdb(VdbFolders vdbFolder, TableViewer tableViewer, String confirmOverwriteMessage) {
@@ -1633,27 +1576,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 	        addSynchronizePanel(headerPanel);
         }
         
-        // So create another Tab Folder (bottom oriented)
-        CTabFolder tabFolder = WidgetFactory.createTabFolder(mainPanel);
-        tabFolder.setTabPosition(SWT.BOTTOM);
-        { // models tab
-            CTabItem leftTab = new CTabItem(tabFolder, SWT.NONE);
-            leftTab.setText(Messages.vdbEditor_content_tab_label);
-            leftTab.setToolTipText(Messages.vdbEditor_content_tab_tooltip);
-            Composite leftPanel = createEditorTop(tabFolder);
-            
-            leftTab.setControl(leftPanel);
-        }
-        { // advanced tab
-            CTabItem rightTab = new CTabItem(tabFolder, SWT.NONE);
-            rightTab.setText(Messages.vdbEditor_advanced_tab_label);
-            rightTab.setToolTipText(Messages.vdbEditor_advanced_tab_tooltip);
-            Composite rightPanel = createEditorBottom(tabFolder);
 
-            rightTab.setControl(rightPanel);
-        }
-        
-        tabFolder.setSelection(0);
+        @SuppressWarnings("unused")
+        Composite mainpanel = createMainPanel(mainPanel);
+
 
         ModelerCore.getWorkspace().addResourceChangeListener(this);
         
@@ -1812,7 +1738,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }
     }
 
-    private Composite createEditorTop( Composite parent ) {
+    private Composite createMainPanel( Composite parent ) {
         Composite pnlTop = new Composite(parent, SWT.BORDER);
         pnlTop.setLayout(new GridLayout());
         pnlTop.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -1820,6 +1746,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         { // models tab
             CTabItem modelsTab = new CTabItem(tabFolder, SWT.NONE);
+            modelsTab.setImage(VdbUiPlugin.singleton.getImage(VdbUiConstants.Images.MODEL_ICON));
             modelsTab.setText(i18n("modelsTab")); //$NON-NLS-1$
             modelsTab.setToolTipText(i18n("modelsTabToolTip")); //$NON-NLS-1$
             
@@ -1847,6 +1774,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         { // schema files tab
             CTabItem schemaTab = new CTabItem(tabFolder, SWT.NONE);
+            schemaTab.setImage(VdbUiPlugin.singleton.getImage(VdbUiConstants.Images.SCHEMA_MODEL_ICON));
             schemaTab.setText(i18n("schemaTab")); //$NON-NLS-1$
             schemaTab.setToolTipText(i18n("schemaTabToolTip")); //$NON-NLS-1$
             Composite pnlFiles = new Composite(tabFolder, SWT.NONE);
@@ -1887,6 +1815,55 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             pnlDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             descriptionTab.setControl(pnlDescription);
             descriptionPanel = new DescriptionPanel(pnlDescription, getVdb());
+        }
+        
+        { // roles tab
+            CTabItem theTab = new CTabItem(tabFolder, SWT.NONE);
+            theTab.setImage(VdbUiPlugin.singleton.getImage(VdbUiConstants.Images.DATA_ROLE));
+            theTab.setText(i18n("rolesTab")); //$NON-NLS-1$
+            theTab.setToolTipText(i18n("rolesTabToolTip")); //$NON-NLS-1$
+            Composite tabPanel = new Composite(tabFolder, SWT.NONE);
+            tabPanel.setLayout(new GridLayout());
+            tabPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            theTab.setControl(tabPanel);
+            dataRolesPanel = new DataRolesPanel(tabPanel, this);
+            theTab.setControl(tabPanel);
+            tabPanel.layout();
+        }
+        
+        { // properties tab
+            CTabItem theTab = new CTabItem(tabFolder, SWT.NONE);
+            theTab.setText(i18n("propertiesTab")); //$NON-NLS-1$
+            theTab.setToolTipText(i18n("propertiesTabToolTip")); //$NON-NLS-1$
+            Composite tabPanel = new Composite(tabFolder, SWT.NONE);
+            tabPanel.setLayout(new GridLayout());
+            tabPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            theTab.setControl(tabPanel);
+            propertiesPanel = new PropertiesPanel(tabPanel, getVdb());
+            theTab.setControl(tabPanel);
+            tabPanel.layout();
+        }
+        
+        { // properties tab
+            CTabItem theTab = new CTabItem(tabFolder, SWT.NONE);
+            theTab.setText("User Properties"); //i18n("userDefinedPropertiesTab")); //$NON-NLS-1$
+            theTab.setToolTipText(i18n("userDefinedPropertiesTabToolTip")); //$NON-NLS-1$
+            Composite tabPanel = new Composite(tabFolder, SWT.NONE);
+            tabPanel.setLayout(new GridLayout());
+            tabPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            theTab.setControl(tabPanel);
+            userDefinedPropertiesPanel = new UserDefinedPropertiesPanel(tabPanel, getVdb());
+            theTab.setControl(tabPanel);
+            tabPanel.layout();
+        }
+
+        { // translator overrides tab
+            CTabItem theTab = new CTabItem(tabFolder, SWT.NONE);
+            theTab.setText(i18n("translatorOverridesTab")); //$NON-NLS-1$
+            theTab.setToolTipText(i18n("translatorOverridesTabToolTip")); //$NON-NLS-1$
+            pnlTranslatorOverrides = new TranslatorOverridesPanel(tabFolder, this.vdb);
+            theTab.setControl(pnlTranslatorOverrides);
+            pnlTranslatorOverrides.layout();
         }
 
         this.schemaGroup.setInput(vdb);

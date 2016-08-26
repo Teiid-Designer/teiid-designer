@@ -89,6 +89,9 @@ public interface VdbUiConstants {
         String VDB_ICON = OBJ16 + "VDB.gif"; //$NON-NLS-1$
         String DYNAMIC_VDB_ICON = OBJ16 + "dynamic-vdb.png"; //$NON-NLS-1$
         String DDL_VDB_ICON = OBJ16 + "ddl-vdb.png"; //$NON-NLS-1$
+        String DATA_ROLE = OBJ16 + "data-role.png"; //$NON-NLS-1$
+        String MODEL_ICON = OBJ16 + "Model.gif"; //$NON-NLS-1$
+        String SCHEMA_MODEL_ICON = OBJ16 + "XSDSchema.gif"; //$NON-NLS-1$
         String ERROR_ICON = OBJ16 + "error_st_obj.gif"; //$NON-NLS-1$
         String WARNING_ICON = OBJ16 + "warning_st_obj.gif"; //$NON-NLS-1$
     }
