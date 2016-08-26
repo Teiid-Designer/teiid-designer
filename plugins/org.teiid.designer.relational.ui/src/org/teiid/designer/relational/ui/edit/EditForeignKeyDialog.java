@@ -613,7 +613,9 @@ public class EditForeignKeyDialog extends TitleAreaDialog {
     	} else {
     		if( editedFK.getStatus().getSeverity() < IStatus.ERROR ) {
     			setErrorMessage(null);
-    		} else if(editedFK.getStatus().getSeverity() == IStatus.WARNING) {
+    		}
+    		
+    		if(editedFK.getStatus().getSeverity() == IStatus.WARNING) {
     			setMessage(editedFK.getStatus().getMessage(), IMessageProvider.WARNING);
     		} else if(editedFK.getStatus().getSeverity() == IStatus.ERROR) {
     			setErrorMessage(editedFK.getStatus().getMessage());
@@ -626,7 +628,7 @@ public class EditForeignKeyDialog extends TitleAreaDialog {
     @Override
     public void create() {
         super.create();
-        getButton(IDialogConstants.OK_ID).setEnabled(true);
+        validate();
     }
     
     @Override

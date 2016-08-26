@@ -410,7 +410,9 @@ public class EditIndexDialog extends TitleAreaDialog {
 		} else {
 			if (editedIndex.getStatus().getSeverity() < IStatus.ERROR) {
 				setErrorMessage(null);
-			} else if (editedIndex.getStatus().getSeverity() == IStatus.WARNING) {
+			} 
+			
+			if (editedIndex.getStatus().getSeverity() == IStatus.WARNING) {
 				setMessage(editedIndex.getStatus().getMessage(), IMessageProvider.WARNING);
 			} else if (editedIndex.getStatus().getSeverity() == IStatus.ERROR) {
 				setErrorMessage(editedIndex.getStatus().getMessage());
@@ -423,7 +425,7 @@ public class EditIndexDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		getButton(IDialogConstants.OK_ID).setEnabled(true);
+		validate();
 	}
 
 	@Override
