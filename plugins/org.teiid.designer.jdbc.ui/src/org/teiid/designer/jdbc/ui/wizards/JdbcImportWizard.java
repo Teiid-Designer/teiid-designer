@@ -139,6 +139,7 @@ public class JdbcImportWizard extends AbstractWizard
     boolean controlsHaveBeenCreated = false;
     private boolean isVirtual;
     private boolean isVdbSourceModel;
+    private boolean updatable = true;
 
     private IJdbcImportPostProcessor[] postProcessors;
 
@@ -718,6 +719,8 @@ public class JdbcImportWizard extends AbstractWizard
             if (ppProcessorPack == null) {
                 final JdbcSource src = getSource();
                 final RelationalModelProcessor processor = JdbcModelProcessorManager.createRelationalModelProcessor(srcPg.getMetadataProcessor());
+                
+                processor.setUpdatable(this.updatable);
 
                 // set property on processor for Inclusion of incomplete FKs.
                 final boolean includeIncompleteFKs = getDatabase().getIncludes().includeIncompleteFKs();
@@ -1004,6 +1007,10 @@ public class JdbcImportWizard extends AbstractWizard
     	
     	return didDeployDS;
     }
+    
+	public void setUpdatable(boolean updatable) {
+		this.updatable = updatable;
+	}
 
     // ===========================================================================================================================
     // Inner Class
