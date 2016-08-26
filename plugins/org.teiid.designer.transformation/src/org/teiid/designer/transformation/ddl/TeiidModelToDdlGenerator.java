@@ -34,6 +34,7 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.metamodels.relational.AccessPattern;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.DirectionKind;
@@ -702,6 +703,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	
 		boolean hasPK = table.getPrimaryKey() != null;
 		boolean hasFKs = table.getForeignKeys().size() > 0;
+		boolean hasAPs = table.getAccessPatterns().size() > 0;
 		
 		int nColumns = 0;
 		int count = 0;
@@ -726,7 +728,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			}
 			sb.append(theSB.toString());
 			
-			if( (hasFKs && includeFKs) || hasUCs ) sb.append(COMMA);
+			if( (hasFKs && includeFKs) || hasUCs || hasAPs ) sb.append(COMMA);
 		}
 		
 		// FK
@@ -788,7 +790,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				sb.append(theSB.toString());
 				if( countFK < nFKs ) sb.append(COMMA);
 			}
-			if( hasUCs ) sb.append(COMMA);
+			if( hasUCs || hasAPs ) sb.append(COMMA);
 		}
 		// UC's
 		// CONSTRAINT PK_ACCOUNTHOLDINGS UNIQUE(TRANID)
@@ -814,6 +816,33 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				sb.append(theSB.toString());
 			}
 		}
+		
+		if( !hasPK && !(hasFKs) && !hasUCs) {
+			sb.append(COMMA);
+		}
+		if( hasAPs ) {
+			int nAPs = table.getAccessPatterns().size();
+			int apCount = 0;
+			for( Object obj: table.getAccessPatterns() ) {
+				apCount++;
+				AccessPattern ap = (AccessPattern)obj;
+				String name = getName(ap);
+
+				StringBuilder theSB = new StringBuilder(NEW_LINE + TAB + CONSTRAINT + SPACE + name + SPACE + ACCESSPATTERN);
+				nColumns = ap.getColumns().size();
+				count = 0;
+				for( Object col : ap.getColumns() ) {
+					count++;
+					if( count == 1 ) theSB.append(OPEN_BRACKET);
+					theSB.append(getName((EObject)col));
+					if( count < nColumns ) theSB.append(COMMA + SPACE);
+					else theSB.append(CLOSE_BRACKET);
+				}
+				if( apCount < nAPs ) sb.append(COMMA);
+				sb.append(theSB.toString());
+			}
+		}
+		
 		return sb.toString();
     }
     
