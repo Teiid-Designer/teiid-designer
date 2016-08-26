@@ -70,7 +70,7 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 
 		setControl(mainPanel);
 
-		setMessage("Select target model for export and define available options");
+		setMessage(Messages.ExportTeiidDdlModelSelectionPage_initialMessage);
 		
 		new Label(mainPanel, SWT.NONE);
 		new Label(mainPanel, SWT.NONE);
@@ -178,6 +178,7 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 		IStatus status = exporter.validate();
 		if( status.isOK()) {
 			setErrorMessage(null);
+			setMessage(Messages.ExportTeiidDdlModelSelectionPage_configureOptionsAndClickNextMessage);
 			setPageComplete(true);
 			return true;
 		} else if( status.getSeverity() == IStatus.WARNING ){
