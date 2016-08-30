@@ -74,6 +74,7 @@ public final class PreviewManager {
 	String deploymentName;
 	String modelName;
 	DependentObjectHelper helper;
+	DataSourceHelper dsHelper;
 
 	public PreviewManager(EObject targetObject) {
 		super();
@@ -93,6 +94,8 @@ public final class PreviewManager {
 		String uuid = new UUID(java.util.UUID.randomUUID()).exportableForm();
 		vdbName = "PREVIEW-" + uuid;
 		deploymentName = vdbName+DYNAMIC_VDB_SUFFIX;
+		
+		this.dsHelper = new DataSourceHelper();
 	}
 	
 	public String getDynamicVdbString() throws ModelWorkspaceException {
@@ -105,6 +108,12 @@ public final class PreviewManager {
 			}
 		}
 		return dynamicVdb;
+	}
+	
+	public IStatus getDataSourcesStatus() {
+		dsHelper.checkDeployments();
+		
+		return dsHelper.getStatus();
 	}
 	
 	public String getPreviewVdbName() {
@@ -329,6 +338,7 @@ public final class PreviewManager {
      * @return the VDB deployment string
      */
     public String createDynamicVdb() throws ModelWorkspaceException {
+    	
         StringBuffer sb = new StringBuffer();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"); //$NON-NLS-1$
         sb.append("\n<vdb name=\""+ vdbName +"\" version=\"1\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -346,6 +356,11 @@ public final class PreviewManager {
         
         for( ModelFragmentInfo info : modelFragments ) {
         	sb.append(info.getModelXml());
+        	// constructing model XML will identify/store a JNDI name if it exists in the model resource
+        	// Save this off to the DataSourceHelper to check that they exist
+        	if( info.getJndiName() != null ) {
+        		dsHelper.addJndiName(info.getJndiName(), info.getModelResource());
+        	}
         }
         String transOverrides = getTranslatorOverrides(modelFragments);
         if( StringUtilities.isNotEmpty(transOverrides)) {
@@ -470,6 +485,10 @@ public final class PreviewManager {
      */
     public void deployDynamicVdb(String deploymentName, InputStream inStream) throws Exception {
     	getDefaultServer().deployDynamicVdb(deploymentName, inStream);
+    }
+    
+    public IStatus doCreateMissingDataSources() {
+    	return dsHelper.createMissingDataSources();
     }
     
 
@@ -696,6 +715,7 @@ public final class PreviewManager {
     class ModelFragmentInfo {
     	ModelResource modelResource;
     	Set<EObject> eObjects;
+    	String jndiProp;
     	
     	public ModelFragmentInfo(EObject eObj, ModelResource mr) {
     		eObjects = new HashSet<EObject>();
@@ -716,7 +736,7 @@ public final class PreviewManager {
             final ConnectionInfoHelper helper = new ConnectionInfoHelper();
             String translatorName = helper.getTranslatorName(modelResource);
             if( translatorName == null ) translatorName = StringConstants.EMPTY_STRING;
-            String jndiProp = helper.getJndiProperty(modelResource);
+            jndiProp = helper.getJndiProperty(modelResource);
     		
             sb.append("\n\t<model name=\""+ modelName + "\" type=\"" + modelType + "\" visible=\"true\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             if( !isVirtual ) {
@@ -767,6 +787,10 @@ public final class PreviewManager {
     	
     	public void addObject(EObject eObj) {
     		eObjects.add(eObj);
+    	}
+    	
+    	public String getJndiName() {
+    		return jndiProp;
     	}
     		
     }

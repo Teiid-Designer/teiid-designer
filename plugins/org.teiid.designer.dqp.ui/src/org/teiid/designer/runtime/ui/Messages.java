@@ -105,6 +105,10 @@ public class Messages extends NLS {
     public static String PreviewDataInputDialog_initialMessage;
     public static String PreviewDataInputDialog_previewXMLLabel;
     
+    public static String PreviewDataWorker_dataSourceMissingTitle;
+    public static String PreviewDataWorker_dataSourceCreationErrorTitle;
+    public static String PreviewDataWorker_vdbDeploymentErrorTitle;
+    
     static {
         NLS.initializeMessages("org.teiid.designer.runtime.ui.messages", Messages.class); //$NON-NLS-1$
     }

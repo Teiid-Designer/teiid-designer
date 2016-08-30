@@ -186,6 +186,7 @@ public class FlatFileConnectionInfoProvider  extends ConnectionInfoHelper implem
 		String home = modelProps.getProperty(IFlatFileProfileConstants.HOME_URL);
 		if( home != null ) {
 			connProps.put(IFlatFileProfileConstants.TEIID_PARENT_DIRECTORY_KEY, home);
+			connProps.put(FILE_CLASSNAME, FILE_CONNECTION_FACTORY);
 		}
 		
 		return connProps;

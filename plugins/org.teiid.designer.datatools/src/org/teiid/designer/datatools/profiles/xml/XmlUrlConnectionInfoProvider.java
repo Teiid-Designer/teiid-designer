@@ -115,21 +115,16 @@ public class XmlUrlConnectionInfoProvider  extends ConnectionInfoHelper implemen
 			throws ModelWorkspaceException {
 		Properties modelProps = super.getConnectionProperties(modelResource);
 		
-		return modelProps;
+		Properties connProps = new Properties();
+		// Search for "URL" value
 		
-//		Properties connProps = new Properties();
-		// Search for "HOME" value
+		String url = (String)modelProps.get(IXmlProfileConstants.URL_PROP_ID);
+		if( url != null ) {
+			connProps.put(IXmlProfileConstants.WS_ENDPOINT_KEY, url);
+			connProps.put(WS_CLASSNAME, WS_CONNECTION_FACTORY);
+		}
 		
-//		String fileUrl = modelProps.getProperty(IXmlProfileConstants.LOCAL_FILE_PATH_PROP_ID);
-//		if( fileUrl != null ) {
-//			IPath fullPath = new Path(fileUrl);
-//			String fileName = fullPath.lastSegment().toString();
-//			String directoryUrl = fullPath.removeLastSegments(1).toString();
-//			connProps.put(IXmlProfileConstants.TEIID_PARENT_DIRECTORY_KEY, directoryUrl);
-//			connProps.put(IXmlProfileConstants.XML_FILE_NAME, fileName);
-//		}
-//		
-//		return connProps;
+		return connProps;
 	}
 
 	@Override

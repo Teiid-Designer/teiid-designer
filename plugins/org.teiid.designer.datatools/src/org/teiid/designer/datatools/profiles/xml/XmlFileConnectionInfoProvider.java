@@ -95,7 +95,7 @@ public class XmlFileConnectionInfoProvider extends ConnectionInfoHelper implemen
 		
 		Properties baseProps = profile.getBaseProperties();
 		Properties flatFileProps = new Properties();
-		
+
 		try {
 			flatFileProps = getConnectionProperties(modelResource);
 		} catch (ModelWorkspaceException e) {
@@ -116,7 +116,16 @@ public class XmlFileConnectionInfoProvider extends ConnectionInfoHelper implemen
 			throws ModelWorkspaceException {
 		Properties modelProps = super.getConnectionProperties(modelResource);
 		
-		return modelProps;
+		Properties connProps = new Properties();
+		// Search for "URL" value
+		
+		String url = (String)modelProps.get(IXmlProfileConstants.LOCAL_FILE_PATH_PROP_ID);
+		if( url != null ) {
+			connProps.put(IXmlProfileConstants.TEIID_PARENT_DIRECTORY_KEY, url);
+			connProps.put(FILE_CLASSNAME, FILE_CONNECTION_FACTORY);
+		}
+		
+		return connProps;
 	}
 
 	@Override

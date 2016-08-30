@@ -15,7 +15,6 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
-import org.teiid.designer.datatools.DatatoolsPlugin;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
@@ -48,7 +47,7 @@ public class FlatFileUrlConnectionInfoProvider  extends ConnectionInfoHelper imp
 	public Properties getTeiidRelatedProperties(IConnectionProfile connectionProfile) {
         Properties connectionProps = new Properties();
         
-        Properties props = connectionProfile.getBaseProperties();
+        Properties props =  connectionProfile.getBaseProperties();
         
         String fileUrl = props.getProperty(IFlatFileProfileConstants.URL_PROP_ID);
         if( fileUrl != null ) {
@@ -87,6 +86,23 @@ public class FlatFileUrlConnectionInfoProvider  extends ConnectionInfoHelper imp
 	@Override
 	public Properties getCommonProfileProperties(IConnectionProfile profile) {
 		return super.getCommonProfileProperties(profile);
+	}
+
+	@Override
+	public Properties getConnectionProperties(ModelResource modelResource)
+			throws ModelWorkspaceException {
+		Properties modelProps = super.getConnectionProperties(modelResource);
+		
+		Properties connProps = new Properties();
+		// Search for "URL" value
+		
+		String url = (String)modelProps.get(IFlatFileProfileConstants.URL_PROP_ID);
+		if( url != null ) {
+			connProps.put(IFlatFileProfileConstants.WS_ENDPOINT_KEY, url);
+			connProps.put(WS_CLASSNAME, WS_CONNECTION_FACTORY);
+		}
+		
+		return connProps;
 	}
 
 	@Override
