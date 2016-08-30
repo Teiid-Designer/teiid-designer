@@ -817,7 +817,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			}
 		}
 		
-		if( !hasPK && !(hasFKs) && !hasUCs) {
+		if( !hasPK && !(hasFKs) && !hasUCs && hasAPs) {
 			sb.append(COMMA);
 		}
 		if( hasAPs ) {
