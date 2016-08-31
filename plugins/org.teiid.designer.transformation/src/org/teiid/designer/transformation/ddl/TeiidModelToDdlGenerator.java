@@ -136,7 +136,27 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		if( eObj instanceof Table ) {
 			if( isVirtual ) {
 				// generate DDL for a View including SQL statement
-				return view((Table)eObj);
+				if( ((Table)eObj).isSupportsUpdate() ) {
+					// Need to process SELECT, INSERT, UPDATE, DELETE statements
+					String select =  view((Table)eObj);
+					String insert = insert((Table)eObj);
+					String update = update((Table)eObj);
+					String delete = delete((Table)eObj);
+					StringBuilder sb = new StringBuilder(select);
+					if( insert != null ) {
+						sb.append(NEW_LINE).append(insert);
+					}
+					if( update != null ) {
+						sb.append(NEW_LINE).append(update);
+					}
+					if( delete != null ) {
+						sb.append(NEW_LINE).append(delete);
+					}
+					return sb.toString();
+					
+				} else {
+					return view((Table)eObj);
+				}
 			} else {
 				// Generate simple CREATE FOREIGN TABLE
 				return table((Table)eObj);
@@ -399,6 +419,79 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			}
 		}
 		return sb.toString();
+    }
+    
+    
+    private String insert(Table table) {
+        if (! includeTables)
+            return null;
+        
+		TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(table);
+		String sqlString = TransformationHelper.getInsertSqlString(tRoot);
+		
+		if( StringUtilities.isEmpty(sqlString) ) return null;
+        
+        StringBuilder sb = new StringBuilder();
+        
+    	sb.append(CREATE_TRIGGER_ON).append(SPACE);
+
+        sb.append(getName(table));
+        
+        sb.append(SPACE).append(INSTEAD_OF).append(SPACE).append(INSERT).append(SPACE).append(AS);
+        
+        sb.append(SPACE).append(NEW_LINE + TAB).append(sqlString);
+        
+        sb.append(NEW_LINE);
+        
+        return sb.toString();
+    }
+    
+    private String update(Table table) {
+        if (! includeTables)
+            return null;
+        
+		TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(table);
+		String sqlString = TransformationHelper.getUpdateSqlString(tRoot);
+		
+		if( StringUtilities.isEmpty(sqlString) ) return null;
+        
+        StringBuilder sb = new StringBuilder();
+        
+    	sb.append(CREATE_TRIGGER_ON).append(SPACE);
+
+        sb.append(getName(table));
+        
+        sb.append(SPACE).append(INSTEAD_OF).append(SPACE).append(UPDATE).append(SPACE).append(AS);
+        
+        sb.append(SPACE).append(NEW_LINE + TAB).append(sqlString);
+        
+        sb.append(NEW_LINE);
+        
+        return sb.toString();
+    }
+    
+    private String delete(Table table) {
+        if (! includeTables)
+            return null;
+        
+		TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(table);
+		String sqlString = TransformationHelper.getDeleteSqlString(tRoot);
+		
+		if( StringUtilities.isEmpty(sqlString) ) return null;
+        
+        StringBuilder sb = new StringBuilder();
+        
+    	sb.append(CREATE_TRIGGER_ON).append(SPACE);
+
+        sb.append(getName(table));
+        
+        sb.append(SPACE).append(INSTEAD_OF).append(SPACE).append(DELETE).append(SPACE).append(AS);
+        
+        sb.append(SPACE).append(NEW_LINE + TAB).append(sqlString);
+        
+        sb.append(NEW_LINE);
+        
+        return sb.toString();
     }
     
     /*
@@ -974,13 +1067,10 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	for( String ns : extensionNamespaces ) {
     		ModelObjectExtensionAssistant assistant = medAggregator.getModelObjectExtensionAssistant(ns);
     		if( assistant != null ) {
-    			Collection<ModelExtensionPropertyDefinition> defns = assistant.getPropertyDefinitions(modelObject);
-
-    				String property = assistant.getOverriddenValue(modelObject, propId);
-    				if(!CoreStringUtil.isEmpty(property)) {
-    					return true;
-    				}
-
+				String property = assistant.getOverriddenValue(modelObject, propId);
+				if(!CoreStringUtil.isEmpty(property)) {
+					return true;
+				}
     		}
     	}
     	
@@ -993,13 +1083,10 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	for( String ns : extensionNamespaces ) {
     		ModelObjectExtensionAssistant assistant = medAggregator.getModelObjectExtensionAssistant(ns);
     		if( assistant != null ) {
-    			Collection<ModelExtensionPropertyDefinition> defns = assistant.getPropertyDefinitions(modelObject);
-
-    				String property = assistant.getOverriddenValue(modelObject, propId);
-    				if(!CoreStringUtil.isEmpty(property)) {
-    					return property;
-    				}
-
+				String property = assistant.getOverriddenValue(modelObject, propId);
+				if(!CoreStringUtil.isEmpty(property)) {
+					return property;
+				}
     		}
     	}
     	

@@ -96,6 +96,10 @@ public interface TeiidDDLConstants {
 		public static final String INOUT = "INOUT"; //$NON-NLS-1$
 		public static final String OUT = "OUT"; //$NON-NLS-1$
 		public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
+		public static final String INSERT = "INSERT"; //$NON-NLS-1$
+		public static final String UPDATE = "UPDATE"; //$NON-NLS-1$
+		public static final String DELETE = "DELETE"; //$NON-NLS-1$
+		public static final String AS = "AS"; //$NON-NLS-1$
 		
 		/* REST EXTENSION PROPERTIES
 		METHOD 	HTTP Method to use 	Yes 	GET | POST| PUT | DELETE
