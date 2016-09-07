@@ -67,13 +67,26 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
          */
         List<String> tokens = new ArrayList<String>();
         List<ITeiidColumnInfo> columnInfoList = metadataFileInfo.getColumnInfoList();
-        
+    	
         String alias = "A"; //$NON-NLS-1$
         StringBuffer sb = new StringBuffer();
         int i=0;
         int nColumns = columnInfoList.size();
         for(ITeiidColumnInfo columnStr : columnInfoList) {
-            sb.append(alias).append(DOT).append(columnStr.getSymbolName());
+        	String columnName = columnStr.getSymbolName();
+        	
+        	// Column names may contain spaces and/or odd characters as long as they are double-quoted
+        	// Need to check for d-quotes and triple d-quote the column alias.
+        	String aliasColumnName = columnName;
+        	boolean aliasColumn = false;
+        	if( columnName.startsWith(D_QUOTE) ) {
+        		aliasColumnName = D_QUOTE + D_QUOTE + columnName + D_QUOTE + D_QUOTE;
+        		aliasColumn = true;
+        	}
+            sb.append(alias).append(DOT).append(columnName);
+            if( aliasColumn ) {
+            	sb.append(SPACE).append(AS).append(SPACE).append(aliasColumnName);
+            }
             
             if(i < (nColumns-1)) {
                 sb.append(COMMA).append(SPACE);
@@ -120,20 +133,20 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         String delimiter = metadataFileInfo.getDelimiter();
         if( metadataFileInfo.doUseDelimitedColumns() && ! DEFAULT_DELIMITER.equals(delimiter) ) {
             sb.append(DELIMITER_STR); //$NON-NLS-1$
-            sb.append(SPACE).append('\'').append(delimiter).append('\'');
+            sb.append(SPACE).append(S_QUOTE).append(delimiter).append(S_QUOTE);
         }
         
         if( metadataFileInfo.doIncludeQuote() ) {
             String quote = metadataFileInfo.getQuote();
             if( ! DEFAULT_QUOTE.equals(quote)) {
                 sb.append(QUOTE_STR); //$NON-NLS-1$
-                sb.append(SPACE).append('\'').append(quote).append('\'');
+                sb.append(SPACE).append(S_QUOTE).append(quote).append(S_QUOTE);
             }
         } else if(metadataFileInfo.doIncludeEscape() ) {
             String escape = metadataFileInfo.getEscape();
             if( ! DEFAULT_ESCAPE.equals(escape)) {
                 sb.append(ESCAPE_STR); //$NON-NLS-1$
-                sb.append(SPACE).append('\'').append(escape).append('\'');
+                sb.append(SPACE).append(S_QUOTE).append(escape).append(S_QUOTE);
             }
         }
         
