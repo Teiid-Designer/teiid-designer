@@ -191,6 +191,15 @@
          label="%generateArchiveVdbAction.label">
       </resourceAction>
    </extension>
+   <extension
+        id="SetConnectionProfileAction"
+        name="%setConnectionProfileAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.connection.SetConnectionProfileAction"
+         label="%setConnectionProfileAction.label">
+      </resourceAction>
+   </extension>
 
 <!-- Decorator -->
    <extension

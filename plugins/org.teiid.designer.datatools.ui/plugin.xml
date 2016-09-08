@@ -2,15 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-        id="SetConnectionProfileAction"
-        name="%setConnectionProfileAction.name"
-        point="org.teiid.designer.ui.modelResourceAction">
-      <resourceAction
-         name="org.teiid.designer.datatools.ui.actions.SetConnectionProfileAction"
-         label="%setConnectionProfileAction.label">
-      </resourceAction>
-   </extension>
-   <extension
         id="RemoveConnectionInfoAction"
         name="%removeConnectionInfoAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
@@ -281,7 +272,37 @@
          </enabledWhen>
       </page>
    </extension>
+ 
+<!-- 
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.teiid.designer.datatools.profiles.jdg.JDGProfilePropertyPage"
+            icon="icons/full/obj16/connectionFolder.gif"
+            id="org.teiid.designer.datatools.profiles.jdg.profileProperties"
+            name="%connectionProperties.name">
+         <filter
+               name="org.eclipse.datatools.profile.property.id"
+               value="org.teiid.designer.datatools.profiles.jdg.JDGConnectionProfile"/>
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>
+      </page>
+   </extension>
    
+      <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+   <newWizard
+         class="org.teiid.designer.datatools.profiles.jdg.JDGConnectionProfileWizard"
+         description="Create a JDG connection profile."
+         icon="icons/full/obj16/connectionFolder.gif"
+         id="org.teiid.designer.datatools.profiles.jdg.JDGConnectionProfileWizard"
+         name="JDG"
+         profile="org.teiid.designer.datatools.profiles.jdg.JDGConnectionProfile"/>
+   </extension>
+-->
    <extension point="org.eclipse.datatools.connectivity.ui.driverUIContributor">
       <driverUIContributor
             class="org.teiid.designer.datatools.profiles.modeshape.ModeShapeDriverUIContributor"
