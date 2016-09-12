@@ -1,8 +1,6 @@
 package org.teiid.designer.relational.ui.edit;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -11,7 +9,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -31,7 +28,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalColumn;
@@ -43,11 +39,9 @@ import org.teiid.designer.relational.ui.util.RelationalUiUtil;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
-import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 
 public class RelationalViewEditorPanel  extends RelationalEditorPanel implements RelationalConstants {	
 	private List<String> MULTIPLICITY_LIST;
@@ -299,7 +293,7 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
         GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
 
-        Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 4);
+        Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 5);
         GridLayoutFactory.fillDefaults().numColumns(5).applyTo(buttonPanel);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
 
@@ -312,6 +306,7 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
 			public void widgetSelected(SelectionEvent e) {
 	    		getRelationalReference().createColumn();
 				handleInfoChanged();
+				setColumnButtonsState();
 			}
     		
 		});
@@ -338,6 +333,7 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
 					dialog.open();
 					handleInfoChanged();
 				}
+				setColumnButtonsState();
 			}
     		
 		});
@@ -361,9 +357,9 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
 				}
 				if( column != null ) {
 					getRelationalReference().removeColumn(column);
-					deleteColumnButton.setEnabled(false);
 					handleInfoChanged();
 				}
+				setColumnButtonsState();
 			}
     		
 		});
@@ -390,10 +386,8 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
 					getRelationalReference().moveColumnUp(info);
 					handleInfoChanged();
 					columnsViewer.getTable().select(selectedIndex-1);
-					downColumnButton.setEnabled(getRelationalReference().canMoveColumnDown(info));
-					upColumnButton.setEnabled(getRelationalReference().canMoveColumnUp(info));
-					
 				}
+				setColumnButtonsState();
 			}
     		
 		});
@@ -420,10 +414,8 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
 					getRelationalReference().moveColumnDown(info);
 					handleInfoChanged();
 					columnsViewer.getTable().select(selectedIndex+1);
-					downColumnButton.setEnabled(getRelationalReference().canMoveColumnDown(info));
-					upColumnButton.setEnabled(getRelationalReference().canMoveColumnUp(info));
-					
 				}
+				setColumnButtonsState();
 			}
     		
 		});
@@ -439,7 +431,6 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
         column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.dataTypeLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(1));
-        column.setEditingSupport(new DatatypeEditingSupport(this.columnsViewer.getTableViewer()));
         
         column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.lengthLabel);
@@ -455,36 +446,7 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
-				
-				if( sel.isEmpty()) {
-					deleteColumnButton.setEnabled(false);
-					upColumnButton.setEnabled(false);
-					downColumnButton.setEnabled(false);
-				} else {
-					boolean enable = true;
-					Object[] objs = sel.toArray();
-					RelationalColumn columnInfo = null;
-					for( Object obj : objs) {
-						if(  !(obj instanceof RelationalColumn)) {
-							enable = false;
-							break;
-						} else {
-							columnInfo = (RelationalColumn)obj;
-						}
-					} 
-					if( objs.length == 0 ) {
-						enable = false;
-					}
-					deleteColumnButton.setEnabled(enable);
-					editColumnButton.setEnabled(enable && objs.length == 1);
-					if( enable ) {
-						upColumnButton.setEnabled(getRelationalReference().canMoveColumnUp(columnInfo));
-						downColumnButton.setEnabled(getRelationalReference().canMoveColumnDown(columnInfo));
-					}
-					
-				}
-				
+				setColumnButtonsState();
 			}
 		});
         
@@ -504,6 +466,22 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
         
         return thePanel;
     }
+	
+	private void setColumnButtonsState() {
+		IStructuredSelection selection = (IStructuredSelection)this.columnsViewer.getSelection();
+		boolean enable = selection != null && !selection.isEmpty();
+		deleteColumnButton.setEnabled(enable);
+		editColumnButton.setEnabled(enable);
+		if( enable ) {
+			Object[] objs = selection.toArray();
+			RelationalColumn columnInfo = (RelationalColumn)objs[0];
+			upColumnButton.setEnabled(getRelationalReference().canMoveColumnUp(columnInfo));
+			downColumnButton.setEnabled(getRelationalReference().canMoveColumnDown(columnInfo));
+		} else {
+			upColumnButton.setEnabled(false);
+			downColumnButton.setEnabled(false);
+		}
+	}
 
 	@Override
 	protected void validate() {
@@ -591,50 +569,4 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
 		
 		
 	}
-    
-    class DatatypeEditingSupport extends ComboBoxEditingSupport {
-    	
-    	private String[] datatypes;
-        /**
-         * @param viewer the column viewer
-         */
-        public DatatypeEditingSupport( ColumnViewer viewer ) {
-            super(viewer);
-
-            Collection<String> unsortedTypes = new ArrayList<String>();
-            try {
-				unsortedTypes = DatatypeUtilities.getAllDesignTimeTypeNames();
-			} catch (ModelerCoreException e) {
-				UiConstants.Util.log(e);
-			}
-    		Collection<String> dTypes = new ArrayList<String>();
-    		
-    		String[] sortedStrings = unsortedTypes.toArray(new String[unsortedTypes.size()]);
-    		Arrays.sort(sortedStrings);
-    		for( String dType : sortedStrings ) {
-    			dTypes.add(dType);
-    		}
-    		
-    		datatypes = dTypes.toArray(new String[dTypes.size()]);
-    		
-        }
-
-
-        @Override
-        protected String getElementValue( Object element ) {
-        	return ((RelationalColumn)element).getDatatype();
-        }
-
-        @Override
-        protected String[] refreshItems( Object element ) {
-            return datatypes;
-        }
-
-        @Override
-        protected void setElementValue( Object element,
-                                        String newValue ) {
-            ((RelationalColumn)element).setDatatype(newValue);
-        }
-    }
-
 }

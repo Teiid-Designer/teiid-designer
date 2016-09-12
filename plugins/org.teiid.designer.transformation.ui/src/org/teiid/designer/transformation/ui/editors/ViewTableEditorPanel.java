@@ -8,7 +8,6 @@
 package org.teiid.designer.transformation.ui.editors;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,11 +23,8 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.source.VerticalRuler;
-import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -37,7 +33,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -58,7 +53,6 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.query.sql.ISQLConstants;
@@ -86,12 +80,10 @@ import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
 import org.teiid.designer.ui.common.graphics.ColorManager;
-import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 
 
 /**
@@ -852,6 +844,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 	        		getRelationalReference().addForeignKey(newFK);
 	        	}
 	        	handleInfoChanged();
+	        	setFKButtonsState();
 			}
     		
 		});
@@ -882,6 +875,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 		        	}
 		        	handleInfoChanged();
 				}
+				setFKButtonsState();
 			}
     		
 		});
@@ -905,9 +899,9 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 				}
 				if( fk != null ) {
 					getRelationalReference().removeForeignKey(fk);
-					deleteFKButton.setEnabled(false);
 					handleInfoChanged();
 				}
+				setFKButtonsState();
 			}
     		
 		});
@@ -931,16 +925,35 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				// Update buttons
-				IStructuredSelection selection = (IStructuredSelection)fkViewer.getSelection();
-				boolean enable = ! selection.isEmpty();
-				editFKButton.setEnabled(enable);
-				deleteFKButton.setEnabled(enable);
-				
+				setFKButtonsState();
+			}
+		});
+        
+        this.fkViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+				Object[] objs = sel.toArray();
+				if( objs.length == 1 && objs[0] instanceof RelationalForeignKey) {
+					EditForeignKeyDialog dialog = new EditForeignKeyDialog(getShell(), getModelFile(), getRelationalReference(), (RelationalForeignKey)objs[0], true);
+		        	int result = dialog.open();
+		        	if( result == Window.OK) {
+		        		//
+		        	}
+		        	handleInfoChanged();
+				}
 			}
 		});
         
         return thePanel;
+	}
+	
+	private void setFKButtonsState() {
+		IStructuredSelection selection = (IStructuredSelection)this.fkViewer.getSelection();
+		boolean enable = selection != null && !selection.isEmpty();
+		deleteFKButton.setEnabled(enable);
+		editFKButton.setEnabled(enable);
 	}
 	
 	private Composite createIndexesPanel(Composite parent) {
@@ -968,6 +981,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 	        		getRelationalReference().addIndex(newIndex);
 	        	}
 	        	handleInfoChanged();
+	        	setIndexButtonsState();
 			}
     		
 		});
@@ -998,6 +1012,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 		        	}
 		        	handleInfoChanged();
 				}
+				setIndexButtonsState();
 			}
     		
 		});
@@ -1021,9 +1036,9 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 				}
 				if( index != null ) {
 					getRelationalReference().removeIndex(index);
-					deleteIndexButton.setEnabled(false);
 					handleInfoChanged();
 				}
+				setIndexButtonsState();
 			}
     		
 		});
@@ -1047,16 +1062,38 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				// Update buttons
-				IStructuredSelection selection = (IStructuredSelection)indexesViewer.getSelection();
-				boolean enable = ! selection.isEmpty();
-				editIndexButton.setEnabled(enable);
-				deleteIndexButton.setEnabled(enable);
-				
+				setIndexButtonsState();
+			}
+		});
+
+        this.indexesViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
+				Object[] objs = sel.toArray();
+				if( objs.length == 1 && objs[0] instanceof RelationalIndex) {
+					EditIndexDialog dialog = new EditIndexDialog(getShell(), getRelationalReference(), (RelationalIndex)objs[0], true);
+		        	
+		        	int result = dialog.open();
+		        	if( result == Window.OK) {
+		        		//
+		        	}
+		        	handleInfoChanged();
+				}
+				setIndexButtonsState();
 			}
 		});
 
     	return thePanel;
+	}
+
+	
+	private void setIndexButtonsState() {
+		IStructuredSelection selection = (IStructuredSelection)this.indexesViewer.getSelection();
+		boolean enable = selection != null && !selection.isEmpty();
+		deleteIndexButton.setEnabled(enable);
+		editIndexButton.setEnabled(enable);
 	}
 
 	private Composite createColumnTableGroup(Composite parent) {
@@ -1065,8 +1102,8 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
 
-        Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 4);
-        GridLayoutFactory.fillDefaults().numColumns(4).applyTo(buttonPanel);
+        Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 5);
+        GridLayoutFactory.fillDefaults().numColumns(5).applyTo(buttonPanel);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
 
     	addColumnButton = new Button(buttonPanel, SWT.PUSH);
@@ -1078,6 +1115,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 			public void widgetSelected(SelectionEvent e) {
 	    		getRelationalReference().createColumn();
 				handleInfoChanged();
+				setColumnButtonsState();
 			}
     		
 		});
@@ -1104,6 +1142,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 					dialog.open();
 					handleInfoChanged();
 				}
+				setColumnButtonsState();
 			}
     		
 		});
@@ -1128,9 +1167,9 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 				}
 				if( column != null ) {
 					getRelationalReference().removeColumn(column);
-					deleteColumnButton.setEnabled(false);
 					handleInfoChanged();
 				}
+				setColumnButtonsState();
 			}
     		
 		});
@@ -1157,10 +1196,8 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 					getRelationalReference().moveColumnUp(info);
 					handleInfoChanged();
 					columnsViewer.getTable().select(selectedIndex-1);
-					downColumnButton.setEnabled(getRelationalReference().canMoveColumnDown(info));
-					upColumnButton.setEnabled(getRelationalReference().canMoveColumnUp(info));
-					
 				}
+				setColumnButtonsState();
 			}
     		
 		});
@@ -1187,10 +1224,8 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 					getRelationalReference().moveColumnDown(info);
 					handleInfoChanged();
 					columnsViewer.getTable().select(selectedIndex+1);
-					downColumnButton.setEnabled(getRelationalReference().canMoveColumnDown(info));
-					upColumnButton.setEnabled(getRelationalReference().canMoveColumnUp(info));
-					
 				}
+				setColumnButtonsState();
 			}
     		
 		});
@@ -1200,18 +1235,15 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         // create columns
         TableViewerColumn column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.columnNameLabel);
-        column.setEditingSupport(new ColumnNameEditingSupport(this.columnsViewer.getTableViewer()));
         column.setLabelProvider(new ColumnDataLabelProvider(0));
 
         column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.dataTypeLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(1));
-        column.setEditingSupport(new DatatypeEditingSupport(this.columnsViewer.getTableViewer()));
         
         column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.lengthLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(2));
-        column.setEditingSupport(new ColumnWidthEditingSupport(this.columnsViewer.getTableViewer()));
 
         if( getRelationalReference() != null ) {
 	        for( RelationalColumn row : getRelationalReference().getColumns() ) {
@@ -1223,36 +1255,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
-				
-				if( sel.isEmpty()) {
-					deleteColumnButton.setEnabled(false);
-					upColumnButton.setEnabled(false);
-					downColumnButton.setEnabled(false);
-				} else {
-					boolean enable = true;
-					Object[] objs = sel.toArray();
-					RelationalColumn columnInfo = null;
-					for( Object obj : objs) {
-						if(  !(obj instanceof RelationalColumn)) {
-							enable = false;
-							break;
-						} else {
-							columnInfo = (RelationalColumn)obj;
-						}
-					} 
-					if( objs.length == 0 ) {
-						enable = false;
-					}
-					deleteColumnButton.setEnabled(enable);
-					editColumnButton.setEnabled(enable && objs.length == 1);
-					if( enable ) {
-						upColumnButton.setEnabled(getRelationalReference().canMoveColumnUp(columnInfo));
-						downColumnButton.setEnabled(getRelationalReference().canMoveColumnDown(columnInfo));
-					}
-					
-				}
-				
+				setColumnButtonsState();
 			}
 		});
         
@@ -1273,6 +1276,23 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         
         return thePanel;
     }
+	
+	
+	private void setColumnButtonsState() {
+		IStructuredSelection selection = (IStructuredSelection)this.columnsViewer.getSelection();
+		boolean enable = selection != null && !selection.isEmpty();
+		deleteColumnButton.setEnabled(enable);
+		editColumnButton.setEnabled(enable);
+		if( enable ) {
+			Object[] objs = selection.toArray();
+			RelationalColumn columnInfo = (RelationalColumn)objs[0];
+			upColumnButton.setEnabled(getRelationalReference().canMoveColumnUp(columnInfo));
+			downColumnButton.setEnabled(getRelationalReference().canMoveColumnDown(columnInfo));
+		} else {
+			upColumnButton.setEnabled(false);
+			downColumnButton.setEnabled(false);
+		}
+	}
 	
     /*
      * Create the SQL Display tab panel
@@ -1438,191 +1458,6 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 		
 	}
     
-    class ColumnNameEditingSupport extends EditingSupport {
-    	
-		private TextCellEditor editor;
-
-		/**
-		 * Create a new instance of the receiver.
-		 * 
-		 * @param viewer the column viewer
-		 */
-		public ColumnNameEditingSupport(ColumnViewer viewer) {
-			super(viewer);
-			this.editor = new TextCellEditor((Composite) viewer.getControl());
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-		 */
-		@Override
-		protected boolean canEdit(Object element) {
-			return true;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-		 */
-		@Override
-		protected CellEditor getCellEditor(Object element) {
-			return editor;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
-		 */
-		@Override
-		protected Object getValue(Object element) {
-			if( element instanceof RelationalColumn ) {
-				return ((RelationalColumn)element).getName();
-			}
-			return 0;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
-		 *      java.lang.Object)
-		 */
-		@Override
-		protected void setValue(Object element, Object value) {
-			if( element instanceof RelationalColumn ) {
-				String oldValue = ((RelationalColumn)element).getName();
-				String newValue = (String)value;
-				if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-					((RelationalColumn)element).setName(newValue);
-					columnsViewer.getTableViewer().refresh(element);
-					handleInfoChanged();
-				}
-			}
-		}
-
-	}
-    
-    class ColumnWidthEditingSupport extends EditingSupport {
-    	
-		private TextCellEditor editor;
-
-		/**
-		 * Create a new instance of the receiver.
-		 * 
-		 * @param viewer the column viewer
-		 */
-		public ColumnWidthEditingSupport(ColumnViewer viewer) {
-			super(viewer);
-			this.editor = new TextCellEditor((Composite) viewer.getControl());
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-		 */
-		@Override
-		protected boolean canEdit(Object element) {
-			return true;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-		 */
-		@Override
-		protected CellEditor getCellEditor(Object element) {
-			return editor;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
-		 */
-		@Override
-		protected Object getValue(Object element) {
-			if( element instanceof RelationalColumn ) {
-				return Integer.toString(((RelationalColumn)element).getLength());
-			}
-			return 0;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
-		 *      java.lang.Object)
-		 */
-		@Override
-		protected void setValue(Object element, Object value) {
-			if( element instanceof RelationalColumn ) {
-				int oldValue = ((RelationalColumn)element).getLength();
-				int newValue = oldValue;
-				try {
-					newValue = Integer.parseInt((String)value);
-				} catch (NumberFormatException ex) {
-					return;
-				}
-				if( newValue != oldValue ) {
-					((RelationalColumn)element).setLength(newValue);
-					columnsViewer.getTableViewer().refresh(element);
-				}
-			}
-		}
-
-	}
-    
-    class DatatypeEditingSupport extends ComboBoxEditingSupport {
-    	
-    	private String[] datatypes;
-        /**
-         * @param viewer the column viewer
-         */
-        public DatatypeEditingSupport( ColumnViewer viewer ) {
-            super(viewer);
-
-            Collection<String> unsortedTypes = new ArrayList<String>();
-            try {
-				unsortedTypes = DatatypeUtilities.getAllDesignTimeTypeNames();
-			} catch (ModelerCoreException e) {
-				UiConstants.Util.log(e);
-			}
-    		Collection<String> dTypes = new ArrayList<String>();
-    		
-    		String[] sortedStrings = unsortedTypes.toArray(new String[unsortedTypes.size()]);
-    		Arrays.sort(sortedStrings);
-    		for( String dType : sortedStrings ) {
-    			dTypes.add(dType);
-    		}
-    		
-    		datatypes = dTypes.toArray(new String[dTypes.size()]);
-    		
-        }
-
-
-        @Override
-        protected String getElementValue( Object element ) {
-        	return ((RelationalColumn)element).getDatatype();
-        }
-
-        @Override
-        protected String[] refreshItems( Object element ) {
-            return datatypes;
-        }
-
-        @Override
-        protected void setElementValue( Object element,
-                                        String newValue ) {
-            ((RelationalColumn)element).setDatatype(newValue);
-        }
-    }
-    
     class FKDataLabelProvider extends ColumnLabelProvider {
 
 		private final int columnNumber;
@@ -1645,16 +1480,6 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 							return ((RelationalForeignKey)element).getName();
 						}
 					}
-//					case 1: {
-//						if(element instanceof RelationalForeignKey) {
-//							return ((RelationalForeignKey)element).getDatatype();
-//						}
-//					}
-//					case 2: {
-//						if(element instanceof RelationalForeignKey) {
-//							return Integer.toString(((RelationalForeignKey)element).getLength());
-//						}
-//					}
 				}
 			}
 			return EMPTY_STRING;
