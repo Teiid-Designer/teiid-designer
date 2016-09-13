@@ -7,11 +7,6 @@
 */
 package org.teiid.designer.transformation.ui.wizards.file;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -24,16 +19,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.source.VerticalRuler;
-import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.ModifyEvent;
@@ -53,15 +45,13 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
-import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.proc.ITeiidColumnInfo;
+import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
-import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.graphics.ColorManager;
 import org.teiid.designer.ui.common.table.CheckBoxEditingSupport;
-import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
@@ -120,7 +110,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	Button useHeaderForColumnNamesCB;
 	Button delimitedParseRowButton;
 	Action delimitedParseRowAction;
-	Button addColumnDelimitedButton, deleteColumnDelimitedButton, upColumnDelimitedButton, downColumnDelimitedButton;
+	Button addColumnDelimitedButton, editColumnDelimitedButton, deleteColumnDelimitedButton, upColumnDelimitedButton, downColumnDelimitedButton;
 	
 	// ====================================================
 	// FIXED COLUMN WIDTH OPTION WIDGETS
@@ -128,7 +118,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	TextViewer fixedFileContentsViewer;
 	TableViewerBuilder fixedColumnsViewer;
 	Text fixedFirstDataRowText, cursorPositionText, selectedTextLengthText;
-	Button addColumnFixedButton, deleteColumnFixedButton, upColumnFixedButton, downColumnFixedButton;
+	Button addColumnFixedButton, editColumnFixedButton, deleteColumnFixedButton, upColumnFixedButton, downColumnFixedButton;
 	
 	Action createColumnAction;
 
@@ -597,6 +587,34 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 			public void widgetSelected(SelectionEvent e) {
 	    		createColumn();
 				handleInfoChanged(false);
+				setDelimitedColumnButtonsState();
+			}
+    		
+		});
+	  	
+    	editColumnDelimitedButton = new Button(theGroup, SWT.PUSH);
+    	editColumnDelimitedButton.setText(Messages.Edit);
+    	GridDataFactory.fillDefaults().applyTo(editColumnDelimitedButton);
+    	editColumnDelimitedButton.setEnabled(false);
+    	editColumnDelimitedButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TeiidColumnInfo column = null;
+				
+				IStructuredSelection selection = (IStructuredSelection)delimitedColumnsViewer.getSelection();
+				for( Object obj : selection.toArray()) {
+					if( obj instanceof TeiidColumnInfo ) {
+						column =  (TeiidColumnInfo) obj;
+						break;
+					}
+				}
+				if( column != null ) {
+					EditDelimitedColumnDialog dialog = new EditDelimitedColumnDialog(getShell(), column);
+					dialog.open();
+					handleInfoChanged(false);
+				}
+				setDelimitedColumnButtonsState();
 			}
     		
 		});
@@ -621,8 +639,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				if( info != null ) {
 					dataFileInfo.removeColumn(info);
 					handleInfoChanged(false);
-					deleteColumnDelimitedButton.setEnabled(false);
 				}
+				setDelimitedColumnButtonsState();
 			}
     		
 		});
@@ -649,9 +667,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 					dataFileInfo.moveColumnUp(info);
 					handleInfoChanged(false);
 					delimitedColumnsViewer.getTable().select(selectedIndex-1);
-					downColumnDelimitedButton.setEnabled(dataFileInfo.canMoveDown(info));
-					upColumnDelimitedButton.setEnabled(dataFileInfo.canMoveUp(info));
 				}
+				setDelimitedColumnButtonsState();
 			}
     		
 		});
@@ -678,13 +695,29 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 					dataFileInfo.moveColumnDown(info);
 					handleInfoChanged(false);
 					delimitedColumnsViewer.getTable().select(selectedIndex+1);
-					downColumnDelimitedButton.setEnabled(dataFileInfo.canMoveDown(info));
-					upColumnDelimitedButton.setEnabled(dataFileInfo.canMoveUp(info));
 				}
+				setDelimitedColumnButtonsState();
 			}
     		
 		});
     }
+    
+    
+	private void setDelimitedColumnButtonsState() {
+		IStructuredSelection selection = (IStructuredSelection)this.delimitedColumnsViewer.getSelection();
+		boolean enable = selection != null && !selection.isEmpty();
+		deleteColumnDelimitedButton.setEnabled(enable);
+		editColumnDelimitedButton.setEnabled(enable);
+		if( enable ) {
+			Object[] objs = selection.toArray();
+			TeiidColumnInfo columnInfo = (TeiidColumnInfo)objs[0];
+			upColumnDelimitedButton.setEnabled(dataFileInfo.canMoveUp(columnInfo));
+			downColumnDelimitedButton.setEnabled(dataFileInfo.canMoveDown(columnInfo));
+		} else {
+			upColumnDelimitedButton.setEnabled(false);
+			downColumnDelimitedButton.setEnabled(false);
+		}
+	}
     
     private void createDelimitedColumnInfoGroup(Composite parent) {
     	Group theGroup = WidgetFactory.createGroup(parent, getString("columnInfoGroup"), SWT.NONE, 1, 1); //$NON-NLS-1$
@@ -699,13 +732,11 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
         // create columns
         TableViewerColumn column = delimitedColumnsViewer.createColumn(SWT.LEFT, 50, 40, true);
         column.getColumn().setText(getString("columnName") + getSpaces(36)); //$NON-NLS-1$
-        column.setEditingSupport(new ColumnNameEditingSupport(this.delimitedColumnsViewer.getTableViewer()));
         column.setLabelProvider(new ColumnDataLabelProvider(0));
 
         column = delimitedColumnsViewer.createColumn(SWT.LEFT, 50, 40, true);
         column.getColumn().setText(getString("datatype") + getSpaces(12)); //$NON-NLS-1$ 
         column.setLabelProvider(new ColumnDataLabelProvider(1));
-        column.setEditingSupport(new DatatypeEditingSupport(this.delimitedColumnsViewer.getTableViewer()));
 
         if( this.dataFileInfo != null ) {
 	        for( ITeiidColumnInfo row : this.dataFileInfo.getColumnInfoList() ) {
@@ -717,33 +748,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
-				
-				if( sel.isEmpty()) {
-					deleteColumnDelimitedButton.setEnabled(false);
-					upColumnDelimitedButton.setEnabled(false);
-					downColumnDelimitedButton.setEnabled(false);
-				} else {
-					boolean enable = true;
-					Object[] objs = sel.toArray();
-					ITeiidColumnInfo columnInfo = null;
-					for( Object obj : objs) {
-						if(  !(obj instanceof ITeiidColumnInfo)) {
-							enable = false;
-							break;
-						} else {
-							columnInfo = (ITeiidColumnInfo)obj;
-						}
-					} 
-					if( objs.length == 0 ) {
-						enable = false;
-					}
-					deleteColumnDelimitedButton.setEnabled(enable);
-					if( enable ) {
-						upColumnDelimitedButton.setEnabled(dataFileInfo.canMoveUp(columnInfo));
-						downColumnDelimitedButton.setEnabled(dataFileInfo.canMoveDown(columnInfo));
-					}
-				}	
+				setDelimitedColumnButtonsState();
 			}
 		});
     }
@@ -907,6 +912,35 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 			public void widgetSelected(SelectionEvent e) {
 	    		createColumn();
 				handleInfoChanged(false);
+				setFixedColumnButtonsState();
+			}
+    		
+		});
+    	
+	  	
+    	editColumnFixedButton = new Button(theGroup, SWT.PUSH);
+    	editColumnFixedButton.setText(Messages.Edit);
+    	GridDataFactory.fillDefaults().applyTo(editColumnFixedButton);
+    	editColumnFixedButton.setEnabled(false);
+    	editColumnFixedButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TeiidColumnInfo column = null;
+				
+				IStructuredSelection selection = (IStructuredSelection)fixedColumnsViewer.getSelection();
+				for( Object obj : selection.toArray()) {
+					if( obj instanceof TeiidColumnInfo ) {
+						column =  (TeiidColumnInfo) obj;
+						break;
+					}
+				}
+				if( column != null ) {
+					EditFixedColumnDialog dialog = new EditFixedColumnDialog(getShell(), column);
+					dialog.open();
+					handleInfoChanged(false);
+				}
+				setFixedColumnButtonsState();
 			}
     		
 		});
@@ -931,8 +965,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				if( info != null ) {
 					dataFileInfo.removeColumn(info);
 					handleInfoChanged(false);
-					deleteColumnFixedButton.setEnabled(false);
 				}
+				setFixedColumnButtonsState();
 			}
     		
 		});
@@ -959,9 +993,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 					dataFileInfo.moveColumnUp(info);
 					handleInfoChanged(false);
 					fixedColumnsViewer.getTable().select(selectedIndex-1);
-					downColumnFixedButton.setEnabled(dataFileInfo.canMoveDown(info));
-					upColumnFixedButton.setEnabled(dataFileInfo.canMoveUp(info));
 				}
+				setFixedColumnButtonsState();
 			}
     		
 		});
@@ -988,13 +1021,28 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 					dataFileInfo.moveColumnDown(info);
 					handleInfoChanged(false);
 					fixedColumnsViewer.getTable().select(selectedIndex+1);
-					downColumnFixedButton.setEnabled(dataFileInfo.canMoveDown(info));
-					upColumnFixedButton.setEnabled(dataFileInfo.canMoveUp(info));
 				}
+				setFixedColumnButtonsState();
 			}
     		
 		});
     }
+    
+	private void setFixedColumnButtonsState() {
+		IStructuredSelection selection = (IStructuredSelection)this.fixedColumnsViewer.getSelection();
+		boolean enable = selection != null && !selection.isEmpty();
+		deleteColumnFixedButton.setEnabled(enable);
+		editColumnFixedButton.setEnabled(enable);
+		if( enable ) {
+			Object[] objs = selection.toArray();
+			TeiidColumnInfo columnInfo = (TeiidColumnInfo)objs[0];
+			upColumnFixedButton.setEnabled(dataFileInfo.canMoveUp(columnInfo));
+			downColumnFixedButton.setEnabled(dataFileInfo.canMoveDown(columnInfo));
+		} else {
+			upColumnFixedButton.setEnabled(false);
+			downColumnFixedButton.setEnabled(false);
+		}
+	}
     
     private void createFixedColumnInfoGroup(Composite parent) {
     	Group columnInfoGroup = WidgetFactory.createGroup(parent, getString("columnInfoGroup"), SWT.NONE, 1, 1); //$NON-NLS-1$
@@ -1008,23 +1056,19 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
         // create columns
         TableViewerColumn column = fixedColumnsViewer.createColumn(SWT.LEFT, 30, 50, true);
         column.getColumn().setText(getString("columnName") + getSpaces(36)); //$NON-NLS-1$
-        column.setEditingSupport(new ColumnNameEditingSupport(this.fixedColumnsViewer.getTableViewer()));
         column.setLabelProvider(new ColumnDataLabelProvider(0));
 
         column = fixedColumnsViewer.createColumn(SWT.LEFT, 30, 50, true);
         column.getColumn().setText(getString("datatype") + getSpaces(12)); //$NON-NLS-1$ 
         column.setLabelProvider(new ColumnDataLabelProvider(1));
-        column.setEditingSupport(new DatatypeEditingSupport(this.fixedColumnsViewer.getTableViewer()));
         
         column = fixedColumnsViewer.createColumn(SWT.LEFT, 30, 50, true);
         column.getColumn().setText(getString("width") + getSpaces(12)); //$NON-NLS-1$ 
         column.setLabelProvider(new ColumnDataLabelProvider(2));
-        column.setEditingSupport(new ColumnWidthEditingSupport(this.fixedColumnsViewer.getTableViewer()));
         
         column = fixedColumnsViewer.createColumn(SWT.LEFT, 30, 50, true);
         column.getColumn().setText(getString("noTrimLabel") + getSpaces(12)); //$NON-NLS-1$ 
         column.setLabelProvider(new ColumnDataLabelProvider(3));
-        column.setEditingSupport(new NoTrimEditingSupport(this.fixedColumnsViewer.getTableViewer()));
     	
         if( this.dataFileInfo != null ) {
 	        for( ITeiidColumnInfo row : this.dataFileInfo.getColumnInfoList() ) {
@@ -1036,35 +1080,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
-				
-				if( sel.isEmpty()) {
-					deleteColumnFixedButton.setEnabled(false);
-					upColumnFixedButton.setEnabled(false);
-					downColumnFixedButton.setEnabled(false);
-				} else {
-					boolean enable = true;
-					Object[] objs = sel.toArray();
-					ITeiidColumnInfo columnInfo = null;
-					for( Object obj : objs) {
-						if(  !(obj instanceof ITeiidColumnInfo)) {
-							enable = false;
-							break;
-						} else {
-							columnInfo = (ITeiidColumnInfo)obj;
-						}
-					} 
-					if( objs.length == 0 ) {
-						enable = false;
-					}
-					deleteColumnFixedButton.setEnabled(enable);
-					if( enable ) {
-						upColumnFixedButton.setEnabled(dataFileInfo.canMoveUp(columnInfo));
-						downColumnFixedButton.setEnabled(dataFileInfo.canMoveDown(columnInfo));
-					}
-					
-				}
-				
+				setFixedColumnButtonsState();
 			}
 		});
        
@@ -1400,192 +1416,6 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 		
 		
 	}
-    
-    class ColumnNameEditingSupport extends EditingSupport {
-    	
-		private TextCellEditor editor;
-
-		/**
-		 * Create a new instance of the receiver.
-		 * 
-         * @param viewer the viewer where the editing support is being provided (cannot be <code>null</code>)
-		 */
-		public ColumnNameEditingSupport(ColumnViewer viewer) {
-			super(viewer);
-			this.editor = new TextCellEditor((Composite) viewer.getControl());
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-		 */
-		@Override
-		protected boolean canEdit(Object element) {
-			return true;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-		 */
-		@Override
-		protected CellEditor getCellEditor(Object element) {
-			return editor;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
-		 */
-		@Override
-		protected Object getValue(Object element) {
-			if( element instanceof ITeiidColumnInfo ) {
-				return ((ITeiidColumnInfo)element).getName();
-			}
-			return 0;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
-		 *      java.lang.Object)
-		 */
-		@Override
-		protected void setValue(Object element, Object value) {
-			if( element instanceof ITeiidColumnInfo ) {
-				String oldValue = ((ITeiidColumnInfo)element).getName();
-				String newValue = (String)value;
-				if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-					((TeiidColumnInfo)element).setName(newValue);
-					delimitedColumnsViewer.getTableViewer().refresh(element);
-					fixedColumnsViewer.getTableViewer().refresh(element);
-
-					handleInfoChanged(false);
-				}
-			}
-		}
-
-	}
-    
-    class ColumnWidthEditingSupport extends EditingSupport {
-    	
-		private TextCellEditor editor;
-
-		/**
-		 * Create a new instance of the receiver.
-		 * 
-		 * @param viewer the viewer where the editing support is being provided (cannot be <code>null</code>)
-		 */
-		public ColumnWidthEditingSupport(ColumnViewer viewer) {
-			super(viewer);
-			this.editor = new TextCellEditor((Composite) viewer.getControl());
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-		 */
-		@Override
-		protected boolean canEdit(Object element) {
-			return true;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-		 */
-		@Override
-		protected CellEditor getCellEditor(Object element) {
-			return editor;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
-		 */
-		@Override
-		protected Object getValue(Object element) {
-			if( element instanceof ITeiidColumnInfo ) {
-				return Integer.toString(((ITeiidColumnInfo)element).getWidth());
-			}
-			return 0;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
-		 *      java.lang.Object)
-		 */
-		@Override
-		protected void setValue(Object element, Object value) {
-			if( element instanceof ITeiidColumnInfo ) {
-				int oldValue = ((ITeiidColumnInfo)element).getWidth();
-				int newValue = oldValue;
-				try {
-					newValue = Integer.parseInt((String)value);
-				} catch (NumberFormatException ex) {
-					return;
-				}
-				if( newValue != oldValue ) {
-					((TeiidColumnInfo)element).setWidth(newValue);
-					fixedColumnsViewer.getTableViewer().refresh(element);
-
-					handleInfoChanged(false);
-				}
-			}
-		}
-
-	}
-    
-    class DatatypeEditingSupport extends ComboBoxEditingSupport {
-    	
-    	private String[] datatypes;
-        /**
-         * @param viewer
-         */
-        public DatatypeEditingSupport( ColumnViewer viewer ) {
-            super(viewer);
-            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
-    		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
-    		Collection<String> dTypes = new ArrayList<String>();
-    		
-    		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);
-    		Arrays.sort(sortedStrings);
-    		for( String dType : sortedStrings ) {
-    			dTypes.add(dType);
-    		}
-    		
-    		datatypes = dTypes.toArray(new String[dTypes.size()]);
-    		
-        }
-
-
-        @Override
-        protected String getElementValue( Object element ) {
-        	return ((ITeiidColumnInfo)element).getDatatype();
-        }
-
-        @Override
-        protected String[] refreshItems( Object element ) {
-            return datatypes;
-        }
-
-        @Override
-        protected void setElementValue( Object element,
-                                        String newValue ) {
-            ((TeiidColumnInfo)element).setDatatype(newValue);
-            
-            handleInfoChanged(false);
-        }
-    }
     
     class NoTrimEditingSupport extends CheckBoxEditingSupport {
     	

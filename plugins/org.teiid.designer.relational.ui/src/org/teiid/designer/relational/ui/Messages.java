@@ -154,6 +154,7 @@ public class Messages extends NLS {
     public static String EditingColumnInformation;
     public static String Name;
     public static String ColumnLengthError;
+    public static String ColumnWidthError;
     public static String ClickOkToAcceptChanges;
     public static String EditParameterTitle;
     public static String EditingParameterInformation;
