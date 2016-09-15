@@ -421,6 +421,14 @@ public final class TranslatorOverridesPanel extends Composite {
                     handlePropertySelected(event);
                 }
             });
+            
+            this.propertiesViewer.addDoubleClickListener(new IDoubleClickListener() {
+    			
+    			@Override
+    			public void doubleClick(DoubleClickEvent event) {
+    				handleEditProperty();
+    			}
+    		});
 
             //
             // add toolbar below the table

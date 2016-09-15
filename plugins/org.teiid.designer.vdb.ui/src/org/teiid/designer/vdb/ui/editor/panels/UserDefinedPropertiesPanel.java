@@ -1,16 +1,22 @@
 package org.teiid.designer.vdb.ui.editor.panels;
 
+import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
+import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.EDIT;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -49,6 +55,7 @@ public class UserDefinedPropertiesPanel {
     TableViewerBuilder propertiesViewer;
 	Button addPropertyButton;
 	Button removePropertyButton;
+	Button editPropertyButton;
 
 	
     static String i18n( final String id ) {
@@ -167,12 +174,21 @@ public class UserDefinedPropertiesPanel {
                 handlePropertySelected();
             }
         });
+        
+
+        this.propertiesViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				handleEditProperty();
+			}
+		});
 
         //
         // add toolbar below the table
         //
         
-        Composite toolbarPanel = WidgetFactory.createPanel(pnlUserProperties, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 2);
+        Composite toolbarPanel = WidgetFactory.createPanel(pnlUserProperties, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 3);
         
         this.addPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
         this.addPropertyButton.setImage(VdbUiPlugin.singleton.getImage(ADD));
@@ -205,6 +221,24 @@ public class UserDefinedPropertiesPanel {
 		});
         this.removePropertyButton.setEnabled(false);
         
+        this.editPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+        this.editPropertyButton.setEnabled(false);
+        this.editPropertyButton.setImage(VdbUiPlugin.singleton.getImage(EDIT));
+        this.editPropertyButton.setToolTipText(Util.getString(PREFIX + "editPropertyAction.toolTip")); //$NON-NLS-1$
+        this.editPropertyButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleEditProperty();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        
         this.propertiesViewer.setInput(this);
 	}
 	
@@ -212,6 +246,7 @@ public class UserDefinedPropertiesPanel {
 	void handlePropertySelected() {
 		boolean hasSelection = !this.propertiesViewer.getSelection().isEmpty();
 		this.removePropertyButton.setEnabled(hasSelection);
+		this.editPropertyButton.setEnabled(hasSelection);
 	}
 	
     private SimpleProperty getSelectedProperty() {
@@ -242,7 +277,6 @@ public class UserDefinedPropertiesPanel {
 
             // select the new property
             
-            
             SimpleProperty prop = null;
             
             for(TableItem item : this.propertiesViewer.getTable().getItems() ) {
@@ -267,6 +301,41 @@ public class UserDefinedPropertiesPanel {
 
         // update UI
         this.propertiesViewer.refresh();
+    }
+    
+    void handleEditProperty() {
+        assert (!this.propertiesViewer.getSelection().isEmpty());
+        
+        IStructuredSelection ssel = (IStructuredSelection)this.propertiesViewer.getSelection();
+        
+        SimpleProperty selectedProp = (SimpleProperty)ssel.getFirstElement();
+        
+        AddGeneralPropertyDialog dialog = new AddGeneralPropertyDialog(propertiesViewer.getControl().getShell(), vdb.getProperties(), selectedProp);
+
+        if (dialog.open() == Window.OK) {
+            // update model
+            this.vdb.removeProperty(selectedProp.getName());
+            // update model
+            vdb.setProperty(dialog.getName(), dialog.getValue());
+
+            // update UI from model
+            this.propertiesViewer.refresh();
+            
+            // select the new property
+            
+            SimpleProperty prop = null;
+            
+            for(TableItem item : this.propertiesViewer.getTable().getItems() ) {
+            	if( item.getData() instanceof SimpleProperty && ((SimpleProperty)item.getData()).getName().equals(dialog.getName()) ) {
+            		prop = (SimpleProperty)item.getData();
+            		break;
+            	}
+            }
+
+            if( prop != null ) {
+                this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
+            }
+        }
     }
 	
 	class PropertyLabelProvider extends ColumnLabelProvider {
