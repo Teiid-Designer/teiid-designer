@@ -115,6 +115,16 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                     	teiidServer.getTeiidJdbcInfo().setPort(portNumber);
                     }
                 }
+                
+                // Server config may have changed (admin port or port offset)
+                int teiidPort = teiidServer.getTeiidAdminInfo().getPortNumber();
+                JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
+                if( jb7 != null ) {
+                	int managementPort = jb7.getManagementPort();
+                	if( teiidPort != managementPort ) {
+                		teiidServer.getTeiidAdminInfo().setPort(Integer.toString(managementPort));
+                	}
+                }
 
                 teiidServer.notifyRefresh();
 
@@ -169,7 +179,16 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                 ITeiidServer teiidServer = factory.adaptServer(parentServer);
                 if (teiidServer != null)
                     teiidServer.disconnect();
-            
+                
+                // Server config may have changed (admin port or port offset)
+                int teiidPort = teiidServer.getTeiidAdminInfo().getPortNumber();
+                JBoss7Server jb7 = (JBoss7Server) parentServer.loadAdapter(JBoss7Server.class, null);
+                if( jb7 != null ) {
+                	int managementPort = jb7.getManagementPort();
+                	if( teiidPort != managementPort ) {
+                		teiidServer.getTeiidAdminInfo().setPort(Integer.toString(managementPort));
+                	}
+                }
             } else if (state == IServer.STATE_STARTED) {
 
                 teiidServerStarted(parentServer);

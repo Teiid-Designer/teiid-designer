@@ -652,7 +652,14 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
 	
 	        if (adminSSLCheckbox != null) {
 	            adminSSLCheckbox.setSelection(teiidAdminInfo.isSecure());
-        }
+	        }
+        } else {
+	        String portValue = teiidAdminInfo.getPort() != null ? teiidAdminInfo.getPort() : EMPTY_STRING;
+	        if (adminPort instanceof Text) {
+	            setIfDifferent((Text) adminPort, portValue);
+	        } else if (adminPort instanceof Label) {
+	            ((Label) adminPort).setText(portValue);
+	        }
         }
 
         setIfDifferent(jdbcUserNameText, teiidJdbcInfo.getUsername() != null ? teiidJdbcInfo.getUsername() : EMPTY_STRING);
