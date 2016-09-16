@@ -8,6 +8,8 @@
 package org.teiid.designer.ui.refactor.rename;
 
 import java.util.List;
+
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -47,6 +49,16 @@ public class RenameRefactorAction extends AbstractRefactorAction {
             return;
         }
         
+        List<IResource> resources = SelectionUtilities.getSelectedIResourceObjects(selection);
+        for( IResource resource : resources ) {
+        	if( resource instanceof IProject ) {
+        		action.setEnabled(false);
+        		return;
+        	}
+        }
+        
         super.selectionChanged(action, selection);
     }
+    
+    
 }

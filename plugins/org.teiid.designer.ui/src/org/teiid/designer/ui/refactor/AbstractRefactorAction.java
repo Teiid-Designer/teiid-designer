@@ -79,12 +79,6 @@ public abstract class AbstractRefactorAction implements IWorkbenchWindowActionDe
         }
 
         List<IResource> resources = SelectionUtilities.getSelectedIResourceObjects(selection);
-        for( IResource resource : resources ) {
-        	if( resource instanceof IProject ) {
-        		action.setEnabled(false);
-        		return;
-        	}
-        }
 
         action.setEnabled(true);
         selectedResources = resources;
