@@ -559,7 +559,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_DATA_TYPE)) {
 				// Need to create a procedure parameter with return direction
 				RelationalParameter param = createProcedureParameter(child, procedure);
-				param.setName("resultParam");
+				param.setName("result"); //$NON-NLS-1$
 				param.setDirection(DirectionKind.RETURN_LITERAL.toString());
 			} else if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
 				procOptionNodes.add(child);

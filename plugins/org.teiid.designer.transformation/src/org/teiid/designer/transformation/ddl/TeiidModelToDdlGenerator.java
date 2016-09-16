@@ -267,10 +267,26 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 	private String getParameterDdl(ProcedureParameter param) {
         
         StringBuilder sb = new StringBuilder();
+
+        if( param.getDirection().getValue() != DirectionKind.IN && param.getDirection().getValue() != DirectionKind.RETURN ) {
+        	String directionStr = param.getDirection().getLiteral();
+        	sb.append(directionStr).append(SPACE);
+        }
+        
         sb.append(getName(param));
         sb.append(SPACE);
+        
         String teiidDdlDataType = resolveExportedDataType(param.getType());
         sb.append(getParameterDatatypeDdl(teiidDdlDataType, param.getLength(), param.getPrecision(), param.getScale()));
+        
+        if( param.getNullable().getValue() == NullableType.NO_NULLS ) {
+        	sb.append(SPACE).append(param.getNullable().getLiteral());
+        }
+        
+        if( param.getDirection().getValue() != DirectionKind.RETURN ) {
+        	String directionStr = "result";
+        	sb.append(SPACE).append(directionStr);
+        }
         
 		return sb.toString();
 	}
