@@ -179,14 +179,28 @@ public final class FileUtil {
         String mimeType = null;
 
         InputStream mimeTypesStream = FileUtil.class.getResourceAsStream("mime.types"); //$NON-NLS-1$
-        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap(mimeTypesStream);
-        mimeType = mimeTypesMap.getContentType(file);
-        if (mimeType != null)
-            return mimeType;
 
-        mimeType = mimeTypesMap.getContentType(file.getName());
-        if (mimeType != null)
-            return mimeType;
+        try {
+            MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap(mimeTypesStream);
+            
+			mimeType = mimeTypesMap.getContentType(file);
+			if (mimeType != null) {
+				return mimeType;
+			}
+
+			mimeType = mimeTypesMap.getContentType(file.getName());
+			if (mimeType != null) {
+				return mimeType;
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} finally {
+	    	try {
+				mimeTypesStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
         return mimeType;
     }

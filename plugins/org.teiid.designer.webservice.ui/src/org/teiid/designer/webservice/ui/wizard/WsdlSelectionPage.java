@@ -357,12 +357,16 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         IValidationReport report = null;
 
         try {
+        	FileInputStream fis = new FileInputStream(resource.getFile());
             report = validator.validate(resource.getFile().toURI().toString(),
-                                        new FileInputStream(resource.getFile()),
+            		fis,
                                         new WSDLValidationConfiguration());
+            fis.close();
         } catch (FileNotFoundException err) {
             // This should really never happen.
-        }
+        } catch (IOException e) {
+			e.printStackTrace();
+		}
 
         if (report != null && report.getValidationMessages().length > 0) {
             wsdlValidationMessages.put(resource, report);

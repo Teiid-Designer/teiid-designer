@@ -112,6 +112,8 @@ public class VdbModelEntryTest {
         final ModelObjectAnnotations annotations = mock(ModelObjectAnnotations.class);
         when(modelResource.getAnnotations()).thenReturn(annotations);
         entry = vdb.addEntry(modelPath);
+        
+        fileInputStream.close();
     }
     
     @After

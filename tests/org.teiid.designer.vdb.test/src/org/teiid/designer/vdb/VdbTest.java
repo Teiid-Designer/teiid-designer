@@ -326,9 +326,13 @@ public class VdbTest implements VdbConstants {
             assertTrue(expIdxFile.exists());
 
             /* Compare the checksums of the created index file and the expected index file */
-            Checksum idxChksum = ChecksumUtil.computeChecksum(new FileInputStream(((VdbModelEntry)modelEntry).getIndexFile()));
-            Checksum expChksum = ChecksumUtil.computeChecksum(new FileInputStream(expIdxFile));
+            FileInputStream fis1 = new FileInputStream(((VdbModelEntry)modelEntry).getIndexFile());
+            FileInputStream fis2 = new FileInputStream(expIdxFile);
+            Checksum idxChksum = ChecksumUtil.computeChecksum(fis1);
+            Checksum expChksum = ChecksumUtil.computeChecksum(fis2);
             assertEquals(expChksum.getValue(), idxChksum.getValue());
+            fis1.close();
+            fis2.close();
         }
 
         for (VdbSchemaEntry schemaEntry : booksVdb.getSchemaEntries()) {
@@ -343,9 +347,13 @@ public class VdbTest implements VdbConstants {
             assertTrue(expIdxFile.exists());
 
             /* Compare the checksums of the created index file and the expected index file */
-            Checksum idxChksum = ChecksumUtil.computeChecksum(new FileInputStream(schemaEntry.getIndexFile()));
-            Checksum expChksum = ChecksumUtil.computeChecksum(new FileInputStream(expIdxFile));
+            FileInputStream fis1 = new FileInputStream(schemaEntry.getIndexFile());
+            FileInputStream fis2 = new FileInputStream(expIdxFile);
+            Checksum idxChksum = ChecksumUtil.computeChecksum(fis1);
+            Checksum expChksum = ChecksumUtil.computeChecksum(fis2);
             assertEquals(expChksum.getValue(), idxChksum.getValue());
+            fis1.close();
+            fis2.close();
         }
     }
 
@@ -401,6 +409,7 @@ public class VdbTest implements VdbConstants {
                                EntryElement.INDEX_NAME.equals(prop.getName()));
                 }
             }
+            entryStream.close();
         }
 
         archive.close();
@@ -479,7 +488,7 @@ public class VdbTest implements VdbConstants {
                 if (zipEntry.getName().equals("TestUDF/EMPLOYEE_VIEWS.xmi"))
                     empViewModelPresent = true;
             }
-
+            entryStream.close();
         }
 
         archive.close();

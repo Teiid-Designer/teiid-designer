@@ -245,6 +245,10 @@ IEditorActionDelegate, ISelectionChangedListener, IUpdate {
         planRs.next();
         executionPlan = planRs.getString("PLAN_XML"); //$NON-NLS-1$
         stmt.execute("SET NOEXEC OFF"); //$NON-NLS-1$
+        
+        planRs.close();
+        stmt.close();
+        
         return executionPlan;
     }
     

@@ -254,6 +254,8 @@ public class TestDynamicVdbImport implements VdbConstants, Commentable {
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
         unmarshaller.setSchema(VdbUtil.getManifestSchema());
         VdbElement manifest = (VdbElement)unmarshaller.unmarshal(fileStream);
+        
+        fileStream.close();
 
         CommentReader reader = new CommentReader(manifest);
         reader.read(portfolioFile);

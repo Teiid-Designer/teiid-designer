@@ -103,6 +103,11 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
             if (monitor.isCanceled())
             {
                 terminateExecution();
+                try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
                 return Status.CANCEL_STATUS;
             }
             monitor.subTask(Messages.ResultSupportRunnable_task_statement);
@@ -129,6 +134,11 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
                 if (monitor.isCanceled())
                 {
                     terminateExecution();
+                    try {
+    					connection.close();
+    				} catch (SQLException e) {
+    					e.printStackTrace();
+    				}
                     return Status.CANCEL_STATUS;
                 }
                 monitor.subTask(Messages.ResultSupportRunnable_task_run);
@@ -140,6 +150,11 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
         			resultsViewAPI.appendStatusMessage(getOperationCommand(), th.getMessage());
         			resultsViewAPI.updateStatus(getOperationCommand(), OperationCommand.STATUS_FAILED);
         		}
+                try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
                 return Status.CANCEL_STATUS;
             }
 
@@ -151,6 +166,11 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
                 if (monitor.isCanceled())
                 {
                     terminateExecution();
+                    try {
+    					connection.close();
+    				} catch (SQLException e) {
+    					e.printStackTrace();
+    				}
                     return Status.CANCEL_STATUS;
                 }
                 monitor.subTask(Messages.ResultSupportRunnable_task_iterate);
@@ -169,6 +189,11 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
 	                	resultsViewAPI.updateStatus(getOperationCommand(), OperationCommand.STATUS_FAILED);
                 	}
                 }
+                try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
                 return Status.CANCEL_STATUS;
             }
             
@@ -193,6 +218,11 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
             
             if(monitorRunnable._returnStatus != null)
             {
+                try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
                 return monitorRunnable._returnStatus;
             }
             
@@ -213,6 +243,11 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
                 {
                     resultsViewAPI.updateStatus(getOperationCommand(), OperationCommand.STATUS_FAILED);
                 }
+                try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
                 return Status.CANCEL_STATUS;
             }
         }
@@ -241,7 +276,11 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
             handleEnd(connection, _stmt);
             monitor.done();
         }
-
+        try {
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
         return Status.OK_STATUS;
     }
     
@@ -337,6 +376,7 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
                 if( planRs.next() ) {
                 	executionPlan = planRs.getString("PLAN_XML"); //$NON-NLS-1$
                 }
+                planRs.close();
             } catch (SQLException e) {
                 String message = org.teiid.datatools.connectivity.ui.Messages.getString("TeiidAdHocScriptRunnable.getPlanError"); //$NON-NLS-1$
                  IStatus status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, message, e);
@@ -378,7 +418,7 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
     boolean lastException = false;//if the last time is an Exception, we can't getResultSet immediately,should use
     // getMoreResult()
     SQLException exception = null;
-    ResultSet rs = null;
+    ResultSet theResultSet = null;
     ArrayList updateCountList = new ArrayList();//to keep the updateCount number temporarily
     while (!isTerminated() && needLoopThroughResults())
     {
@@ -394,19 +434,19 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
             {
                 if (moreResult)
                 {
-                    rs = cstmt.getResultSet();
-                    if (rs != null)
+                    theResultSet = cstmt.getResultSet();
+                    if (theResultSet != null)
                     {
                         if(_lastUpdateCount != -1)
                         {
                         	resultsViewAPI.appendUpdateCountMessage(getOperationCommand(), _lastUpdateCount);
                             _lastUpdateCount = -1;
                         }
-                        ResultSetMetaData metadata = rs.getMetaData();
+                        ResultSetMetaData metadata = theResultSet.getMetaData();
                         if(metadata.getColumnCount() == 1 && metadata.getColumnType(1) == Types.SQLXML) {
                         	try {
-                        	rs.next();
-                        	SQLXML xml = rs.getSQLXML(1);
+                        	theResultSet.next();
+                        	SQLXML xml = theResultSet.getSQLXML(1);
                         	
                         	Reader reader = xml.getCharacterStream();
                         	BufferedReader bReader = new BufferedReader(reader);
@@ -419,6 +459,9 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
 
                         	}
                         	resultsViewAPI.appendXMLResultSet(getOperationCommand(), stringbuf.toString());
+							if( bReader != null ) {
+								bReader.close();
+							}
                         	} catch (SQLException e) {
             					// TODO Auto-generated catch block
             					e.printStackTrace();
@@ -428,9 +471,11 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
+							} finally {
+
 							}
                         } else {
-                        	resultsViewAPI.appendResultSet(getOperationCommand(), rs);
+                        	resultsViewAPI.appendResultSet(getOperationCommand(), theResultSet);
                         }
                     }
                 }
@@ -444,14 +489,15 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
                     }
                     _lastUpdateCount = updateCount;
                 }
-                if (updateCount >= 0 || rs != null)
+                if (updateCount >= 0 || theResultSet != null)
                 {
                     /* 
                      * Notes: the code of the following line would step thread when the result set is too large.
                      * This maybe has relations with the implementation of database driver.
                      */ 
                     moreResult = cstmt.getMoreResults();
-                    rs = null;
+                    theResultSet.close();
+                    theResultSet = null;
                     continue;
                 }
                 break;
@@ -478,6 +524,10 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
                 {
                     break;
                 }
+            } finally {
+            	if( theResultSet != null ) {
+            		theResultSet.close();
+            	}
             }
         }
 

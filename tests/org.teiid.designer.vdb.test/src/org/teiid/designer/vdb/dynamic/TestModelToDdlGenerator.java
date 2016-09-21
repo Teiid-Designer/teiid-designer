@@ -96,19 +96,19 @@ public class TestModelToDdlGenerator implements StringConstants {
     }
     
     private interface EXPECTED_BQT2_TYPE_DDL {
-    	String 	TYPE_INT = "type_int biginteger OPTIONS(NAMEINSOURCE '\"type_int\"', NATIVE_TYPE 'int', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
-    	String 	TYPE_INTEGER = "type_integer biginteger OPTIONS(NAMEINSOURCE '\"type_integer\"', NATIVE_TYPE 'int', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_INT = "type_int integer OPTIONS(NAMEINSOURCE '\"type_int\"', NATIVE_TYPE 'int', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_INTEGER = "type_integer integer OPTIONS(NAMEINSOURCE '\"type_integer\"', NATIVE_TYPE 'int', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_SMALLINT = "type_smallint short OPTIONS(NAMEINSOURCE '\"type_smallint\"', NATIVE_TYPE 'smallint', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_TINYINT = "type_tinyint byte OPTIONS(NAMEINSOURCE '\"type_tinyint\"', NATIVE_TYPE 'tinyint', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
-    	String 	TYPE_DECIMAL = "type_decimal bigdecimal(20) OPTIONS(NAMEINSOURCE '\"type_decimal\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
-    	String 	TYPE_DECIMAL_5 = "type_decimal_5 bigdecimal(20) OPTIONS(NAMEINSOURCE '\"type_decimal_5\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
-    	String 	TYPE_DECIMAL_5_5 = "type_decimal_5_5 bigdecimal(20) OPTIONS(NAMEINSOURCE '\"type_decimal_5_5\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_DECIMAL = "type_decimal bigdecimal(1) OPTIONS(NAMEINSOURCE '\"type_decimal\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_DECIMAL_5 = "type_decimal_5 bigdecimal(1) OPTIONS(NAMEINSOURCE '\"type_decimal_5\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_DECIMAL_5_5 = "type_decimal_5_5 bigdecimal(1) OPTIONS(NAMEINSOURCE '\"type_decimal_5_5\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_DECIMAL_PRECISION = "type_double_precision float OPTIONS(NAMEINSOURCE '\"type_double_precision\"', NATIVE_TYPE 'float', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_FLOAT = "type_float float OPTIONS(NAMEINSOURCE '\"type_float\"', NATIVE_TYPE 'float', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_FLOAT_10 = "type_float_10 float OPTIONS(NAMEINSOURCE '\"type_float_10\"', NATIVE_TYPE 'real', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
-    	String 	TYPE_NUMERIC = "type_numeric bigdecimal(20) OPTIONS(NAMEINSOURCE '\"type_numeric\"', NATIVE_TYPE 'numeric', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
-    	String 	TYPE_NUMERIC_5 = "type_numeric_5 bigdecimal(20) OPTIONS(NAMEINSOURCE '\"type_numeric_5\"', NATIVE_TYPE 'numeric', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
-    	String 	TYPE_NUMERIC_5_5 = "type_numeric_5_5 bigdecimal(20) OPTIONS(NAMEINSOURCE '\"type_numeric_5_5\"', NATIVE_TYPE 'numeric', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_NUMERIC = "type_numeric bigdecimal OPTIONS(NAMEINSOURCE '\"type_numeric\"', NATIVE_TYPE 'numeric', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_NUMERIC_5 = "type_numeric_5 bigdecimal OPTIONS(NAMEINSOURCE '\"type_numeric_5\"', NATIVE_TYPE 'numeric', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_NUMERIC_5_5 = "type_numeric_5_5 bigdecimal OPTIONS(NAMEINSOURCE '\"type_numeric_5_5\"', NATIVE_TYPE 'numeric', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_REAL = "type_real float OPTIONS(NAMEINSOURCE '\"type_real\"', NATIVE_TYPE 'real', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_BIT = "type_bit boolean OPTIONS(NAMEINSOURCE '\"type_bit\"', NATIVE_TYPE 'bit', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_CHARACTER = "type_character char(1) OPTIONS(NAMEINSOURCE '\"type_character\"', NATIVE_TYPE 'char', FIXED_LENGTH 'TRUE')";
@@ -122,8 +122,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     	String 	TYPE_LONG_NVARCHAR = "type_long_nvarchar string(1) OPTIONS(NAMEINSOURCE '\"type_long_nvarchar\"', NATIVE_TYPE 'nvarchar', FIXED_LENGTH 'TRUE')";
     	String 	TYPE_LONG_NVARCHAR_10 = "type_long_nvarchar_10 string(10) OPTIONS(NAMEINSOURCE '\"type_long_nvarchar_10\"', NATIVE_TYPE 'nvarchar', FIXED_LENGTH 'TRUE')";
     	String 	TYPE_TEXT = "type_text clob(2147483647) OPTIONS(NAMEINSOURCE '\"type_text\"', NATIVE_TYPE 'text', CASE_SENSITIVE 'FALSE', SEARCHABLE 'LIKE_ONLY')";
-    	String 	TYPE_MONEY = "type_money bigdecimal(20) OPTIONS(NAMEINSOURCE '\"type_money\"', NATIVE_TYPE 'money', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
-    	String 	TYPE_SMALLMONEY = "type_smallmoney bigdecimal(20) OPTIONS(NAMEINSOURCE '\"type_smallmoney\"', NATIVE_TYPE 'smallmoney', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_MONEY = "type_money bigdecimal OPTIONS(NAMEINSOURCE '\"type_money\"', NATIVE_TYPE 'money', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_SMALLMONEY = "type_smallmoney bigdecimal OPTIONS(NAMEINSOURCE '\"type_smallmoney\"', NATIVE_TYPE 'smallmoney', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_DATETIME = "type_datetime timestamp OPTIONS(NAMEINSOURCE '\"type_datetime\"', NATIVE_TYPE 'datetime', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_BINARY = "type_binary object(1) OPTIONS(NAMEINSOURCE '\"type_binary\"', NATIVE_TYPE 'binary', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'UNSEARCHABLE')";
     	String 	TYPE_BINARY_2 = "type_binary_2 object(2) OPTIONS(NAMEINSOURCE '\"type_binary_2\"', NATIVE_TYPE 'binary', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'UNSEARCHABLE')";
@@ -250,8 +250,8 @@ public class TestModelToDdlGenerator implements StringConstants {
         // TODO
         // Should these column option clauses be included if all the values are defaults???
         String expectedDdl = "CREATE VIEW StockPrices (" +
-                                             "symbol string(10)" + COMMA + SPACE +
-                                             "price bigdecimal(20)" +
+                                             "symbol string" + COMMA + SPACE +
+                                             "price bigdecimal" +
                                              ") AS SELECT * FROM Stock;"; 
 
         String generatedDdl = roundTrip(ddl, true);
@@ -273,7 +273,7 @@ public class TestModelToDdlGenerator implements StringConstants {
 
         String expectedDdl = "CREATE VIEW StockPrices (" +
                                              "symbol string(10) NOT NULL AUTO_INCREMENT" + COMMA + SPACE +
-                                             "price bigdecimal(1) DEFAULT 10" + COMMA + SPACE +
+                                             "price bigdecimal(1) DEFAULT '10'" + COMMA + SPACE +
                                              "company string(10) NOT NULL" + COMMA + SPACE +
                                              "companyID string(10) NOT NULL INDEX" + COMMA + SPACE +
                                              "CONSTRAINT STOCK_PK PRIMARY KEY(symbol)" + COMMA + SPACE +
@@ -667,6 +667,36 @@ public class TestModelToDdlGenerator implements StringConstants {
     }
     
     @Test
+    public void testFIXED_LENGTH_ON_COLUMN() throws Exception {
+        String ddl = 
+        		"CREATE FOREIGN TABLE STATUS (" +
+    			"STATUS_ID bigdecimal NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE')" +
+    			") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"')";
+        String expectedDdl = 
+        		"CREATE FOREIGN TABLE STATUS (" +
+        		"STATUS_ID bigdecimal NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE')" +
+        		") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"')";
+
+        String generatedDdl = roundTrip(ddl, false);
+        assertEquals(expectedDdl, generatedDdl);
+    }
+    
+    @Test
+    public void testStatusTable() throws Exception {
+    	String ddl = "CREATE FOREIGN TABLE STATUS (" +
+    			"\n\tSTATUS_ID bigdecimal NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE')," +
+    			"\n\tSTATUS_NAME string(30) OPTIONS(NAMEINSOURCE '\"STATUS_NAME\"', NATIVE_TYPE 'VARCHAR2')," +
+    			"\n\tCONSTRAINT PK_STATUS PRIMARY KEY(STATUS_ID)" +
+    		") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"')";
+    	String expectedDdl = "CREATE FOREIGN TABLE STATUS (STATUS_ID bigdecimal NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE'), "
+    			+ "STATUS_NAME string(30) OPTIONS(NAMEINSOURCE '\"STATUS_NAME\"', NATIVE_TYPE 'VARCHAR2'), "
+    			+ "CONSTRAINT PK_STATUS PRIMARY KEY(STATUS_ID)) OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"')";
+    	
+        String generatedDdl = roundTrip(ddl, false);
+        assertEquals(expectedDdl, generatedDdl);
+    }
+    
+    @Test
     public void testFKUseCase() throws Exception {
     	String ddl = "CREATE FOREIGN TABLE STATUS (" +
     			"\n\tSTATUS_ID bigdecimal NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE')," +
@@ -683,14 +713,17 @@ public class TestModelToDdlGenerator implements StringConstants {
     		"\n\tCONSTRAINT PK_SUPPLIER PRIMARY KEY(SUPPLIER_ID)," +
     		"\n\tCONSTRAINT FK_SPLIER_STATS FOREIGN KEY(SUPPLIER_STATUS) REFERENCES STATUS(STATUS_ID)" +
     		"\n) OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"SUPPLIER\"')";
-    	String expectedDdl = "CREATE FOREIGN TABLE STATUS (STATUS_ID bigdecimal(20) NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE'), "
-    			+ "STATUS_NAME string(30) OPTIONS(NAMEINSOURCE '\"STATUS_NAME\"', NATIVE_TYPE 'VARCHAR2', FIXED_LENGTH 'TRUE'), "
-    			+ "CONSTRAINT PK_STATUS PRIMARY KEY(STATUS_ID)) OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"') "
-    			+ "CREATE FOREIGN TABLE SUPPLIER (SUPPLIER_ID string(10) NOT NULL OPTIONS(NAMEINSOURCE '\"SUPPLIER_ID\"', NATIVE_TYPE 'VARCHAR2', FIXED_LENGTH 'TRUE'), "
-    			+ "SUPPLIER_NAME string(30) OPTIONS(NAMEINSOURCE '\"SUPPLIER_NAME\"', NATIVE_TYPE 'VARCHAR2', FIXED_LENGTH 'TRUE'), "
-    			+ "SUPPLIER_STATUS bigdecimal(20) OPTIONS(NAMEINSOURCE '\"SUPPLIER_STATUS\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE'), "
-    			+ "SUPPLIER_CITY string(30) OPTIONS(NAMEINSOURCE '\"SUPPLIER_CITY\"', NATIVE_TYPE 'VARCHAR2', FIXED_LENGTH 'TRUE'), "
-    			+ "SUPPLIER_STATE string(2) OPTIONS(NAMEINSOURCE '\"SUPPLIER_STATE\"', NATIVE_TYPE 'VARCHAR2', FIXED_LENGTH 'TRUE'), "
+    	String expectedDdl = "CREATE FOREIGN TABLE STATUS (" 
+    				+ "STATUS_ID bigdecimal NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE'), "
+    				+ "STATUS_NAME string(30) OPTIONS(NAMEINSOURCE '\"STATUS_NAME\"', NATIVE_TYPE 'VARCHAR2'), "
+    				+ "CONSTRAINT PK_STATUS PRIMARY KEY(STATUS_ID)" 
+    			+ ") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"') "
+    			+ "CREATE FOREIGN TABLE SUPPLIER (" 
+    			+ "SUPPLIER_ID string(10) NOT NULL OPTIONS(NAMEINSOURCE '\"SUPPLIER_ID\"', NATIVE_TYPE 'VARCHAR2'), "
+    			+ "SUPPLIER_NAME string(30) OPTIONS(NAMEINSOURCE '\"SUPPLIER_NAME\"', NATIVE_TYPE 'VARCHAR2'), "
+    			+ "SUPPLIER_STATUS bigdecimal OPTIONS(NAMEINSOURCE '\"SUPPLIER_STATUS\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE'), "
+    			+ "SUPPLIER_CITY string(30) OPTIONS(NAMEINSOURCE '\"SUPPLIER_CITY\"', NATIVE_TYPE 'VARCHAR2'), "
+    			+ "SUPPLIER_STATE string(2) OPTIONS(NAMEINSOURCE '\"SUPPLIER_STATE\"', NATIVE_TYPE 'VARCHAR2'), "
     			+ "CONSTRAINT PK_SUPPLIER PRIMARY KEY(SUPPLIER_ID), "
     			+ "CONSTRAINT FK_SPLIER_STATS FOREIGN KEY(SUPPLIER_STATUS) REFERENCES STATUS(STATUS_ID)) OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"SUPPLIER\"')";
     	
