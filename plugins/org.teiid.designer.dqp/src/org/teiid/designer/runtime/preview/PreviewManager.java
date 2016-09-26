@@ -514,6 +514,10 @@ public final class PreviewManager {
     	
     	// Create the target fragment info
     	ModelResource targetMR = getModelResource(targetObject);
+    	
+    	// Target MR might be a simple vdb source model
+    	if( isVdbSourceModel(targetMR)) return modelFragments;
+    	
     	modelFragments.add(new ModelFragmentInfo(targetObject, targetMR));
     	
     	
