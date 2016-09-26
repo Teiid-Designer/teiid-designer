@@ -10,6 +10,9 @@ package org.teiid.designer.runtime;
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
@@ -57,7 +60,9 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
     private boolean sleep;
 
     private Thread startTeiidServerThread = null;
-
+	
+	private Set<IServerListener> registeredParentListeners = new HashSet<IServerListener>();
+    
     private TeiidParentServerListener() {}
 
     @Override
@@ -111,8 +116,16 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                 if( StringUtilities.isEmpty(portNumber) ) {
                     JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
                     if (jb7 != null) {
-                    	portNumber = JBoss7ServerUtil.getJdbcPort(server, jb7);
-                    	teiidServer.getTeiidJdbcInfo().setPort(portNumber);
+                    	try {
+							portNumber = JBoss7ServerUtil.getJdbcPort(server, jb7);
+							teiidServer.getTeiidJdbcInfo().setPort(portNumber);
+						} catch (JBoss7ManangerException e) {
+							if( e.getMessage().contains("teiid-jdbc") ) {
+								// do nothing... the server does not have Teiid Installed
+							} else {
+								DqpPlugin.handleException(e);
+							}
+						}
                     }
                 }
                 
@@ -177,8 +190,16 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
         try {
             if (state == IServer.STATE_STOPPING || state == IServer.STATE_STOPPED) {
                 ITeiidServer teiidServer = factory.adaptServer(parentServer);
-                if (teiidServer != null)
-                    teiidServer.disconnect();
+                
+                for( IServerListener listener: registeredParentListeners ) {
+                	listener.serverChanged(event);
+                }
+                
+                if( teiidServer == null ) {
+                	return;
+                }
+                
+                teiidServer.disconnect();
                 
                 // Server config may have changed (admin port or port offset)
                 int teiidPort = teiidServer.getTeiidAdminInfo().getPortNumber();
@@ -192,6 +213,10 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
             } else if (state == IServer.STATE_STARTED) {
 
                 teiidServerStarted(parentServer);
+                
+                for( IServerListener listener: registeredParentListeners ) {
+                	listener.serverChanged(event);
+                }
             }
         } catch (Exception ex) {
             DqpPlugin.handleException(ex);
@@ -310,6 +335,18 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
 
         startTeiidServerThread = new Thread(serverStartRunnable, "Teiid Server Starting Thread"); //$NON-NLS-1$
         startTeiidServerThread.start();
+    }
+    
+    
+    public void addRegisteredParentListener(IServerListener listener) {
+        registeredParentListeners.add(listener);
+    }
+    
+    public void removeRegisteredParentListener(IServerListener listener) {
+        if (registeredParentListeners == null)
+            return;
+
+        registeredParentListeners.remove(listener);
     }
     
     private int getTimeoutPrefSecs() {
