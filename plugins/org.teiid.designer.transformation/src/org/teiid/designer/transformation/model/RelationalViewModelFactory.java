@@ -10,6 +10,7 @@ package org.teiid.designer.transformation.model;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -104,7 +105,9 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
             modelResource.save(new NullProgressMonitor(), true);
         } catch (ModelerCoreException e) {
             RelationalPlugin.Util.log(IStatus.ERROR, e, e.getMessage());
-        }
+        } catch (CoreException e) {
+        	RelationalPlugin.Util.log(IStatus.ERROR, e, e.getMessage());
+		}
     }
 
     @Override

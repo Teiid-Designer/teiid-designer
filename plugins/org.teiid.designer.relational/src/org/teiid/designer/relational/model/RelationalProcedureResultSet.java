@@ -100,7 +100,7 @@ public class RelationalProcedureResultSet extends RelationalTable {
      * @see org.teiid.designer.relational.model.RelationalTable#setMaterializedTable(org.teiid.designer.relational.model.RelationalReference)
      */
     @Override
-    public void setMaterializedTable( RelationalReference materializedTable ) {
+    public void setMaterializedTable( String materializedTableName ) {
         throw new UnsupportedOperationException("setMaterializedTable() not supported for Procedure Result Sets"); //$NON-NLS-1$
     }
 

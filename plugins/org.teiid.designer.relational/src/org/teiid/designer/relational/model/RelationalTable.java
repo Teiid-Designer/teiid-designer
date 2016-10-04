@@ -46,7 +46,8 @@ public class RelationalTable extends RelationalReference {
 
     private int  cardinality = DEFAULT_CARDINALITY;
     private boolean materialized = DEFAULT_MATERIALIZED;
-    private RelationalReference materializedTable;
+    private String materializedTableName;
+    private String materializedTableModelPath;
     private boolean supportsUpdate = DEFAULT_SUPPORTS_UPDATE;
     private boolean system = DEFAULT_SYSTEM;
     private List<RelationalColumn> columns;
@@ -119,15 +120,30 @@ public class RelationalTable extends RelationalReference {
     /**
      * @return materializedTable
      */
-    public RelationalReference getMaterializedTable() {
-        return materializedTable;
+    public String getMaterializedTable() {
+        return materializedTableName;
     }
     /**
      * @param materializedTable Sets materializedTable to the specified value.
      */
-    public void setMaterializedTable( RelationalReference materializedTable ) {
-    	if( this.materializedTable != materializedTable ) {
-    		this.materializedTable = materializedTable;
+    public void setMaterializedTable( String materializedTableName ) {
+    	if( this.materializedTableName == null || !this.materializedTableName.equalsIgnoreCase(materializedTableName) ) {
+    		this.materializedTableName = materializedTableName;
+    		handleInfoChanged();
+    	}
+    }
+    /**
+     * @return materializedTable
+     */
+    public String getMaterializedTableModelPath() {
+        return materializedTableModelPath;
+    }
+    /**
+     * @param materializedTable Sets materializedTable to the specified value.
+     */
+    public void setMaterializedTableModelPath( String materializedTableModelPath ) {
+    	if( this.materializedTableModelPath == null || !this.materializedTableModelPath.equalsIgnoreCase(materializedTableModelPath) ) {
+    		this.materializedTableModelPath = materializedTableModelPath;
     		handleInfoChanged();
     	}
     }
@@ -507,7 +523,7 @@ public class RelationalTable extends RelationalReference {
 			return;
 		}
 		
-		if( this.isMaterialized() && this.materializedTable == null ) {
+		if( this.isMaterialized() && this.materializedTableName == null ) {
 			setStatus(new Status(IStatus.WARNING, RelationalPlugin.PLUGIN_ID, 
 					Messages.validate_error_materializedTableHasNoTableDefined ));
 			return;
@@ -599,12 +615,18 @@ public class RelationalTable extends RelationalReference {
         	return false;
         }
  
-        if (materializedTable == null) {
-            if (other.materializedTable != null)
+        if (materializedTableName == null) {
+            if (other.materializedTableName != null)
                 return false;   
-        } else if (!materializedTable.equals(other.materializedTable))
+        } else if (!materializedTableName.equals(other.materializedTableName))
             return false;
 
+        if (materializedTableModelPath == null) {
+            if (other.materializedTableModelPath != null)
+                return false;   
+        } else if (!materializedTableModelPath.equals(other.materializedTableModelPath))
+            return false;
+        
         if (uniqueConstraints == null) {
             if (other.uniqueConstraints != null)
                 return false;   
@@ -699,8 +721,11 @@ public class RelationalTable extends RelationalReference {
         result = HashCodeUtil.hashCode(result, isMaterialized());
         result = HashCodeUtil.hashCode(result, isSystem());
         
-        if(materializedTable!=null) {
-            result = HashCodeUtil.hashCode(result, materializedTable);
+        if(materializedTableName!=null) {
+            result = HashCodeUtil.hashCode(result, materializedTableName);
+        }
+        if(materializedTableModelPath!=null) {
+            result = HashCodeUtil.hashCode(result, materializedTableModelPath);
         }
         if(uniqueConstraints!=null) {
             result = HashCodeUtil.hashCode(result, uniqueConstraints);

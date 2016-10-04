@@ -2,9 +2,11 @@ package org.teiid.designer.relational.ui.edit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -15,6 +17,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -28,7 +31,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.Table;
+import org.teiid.designer.metamodels.relational.View;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalTable;
@@ -42,6 +51,14 @@ import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.viewsupport.ClosedProjectFilter;
+import org.teiid.designer.ui.common.viewsupport.StatusInfo;
+import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
+import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
+import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
 
 public class RelationalViewEditorPanel  extends RelationalEditorPanel implements RelationalConstants {	
 	private List<String> MULTIPLICITY_LIST;
@@ -77,10 +94,6 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
 	@Override
 	protected RelationalTable getRelationalReference() {
 	    return (RelationalTable) super.getRelationalReference();
-	}
-
-	private boolean isPhysicalModel() {
-	    return getRelationalReference().getModelType() == ModelType.PHYSICAL;
 	}
 
 	@Override
@@ -207,7 +220,7 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
 
         Composite checkButtonPanel = new Composite(thePanel, SWT.NONE);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(checkButtonPanel);
-        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(checkButtonPanel);
+        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(checkButtonPanel);
 
         this.supportsUpdateCB = new Button(checkButtonPanel, SWT.CHECK | SWT.RIGHT);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.supportsUpdateCB);
@@ -239,48 +252,46 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
             }
         });
 
-        if (isPhysicalModel()) {
-            this.materializedCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
-            GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.materializedCB);
-            this.materializedCB.setText(Messages.materializedLabel);
-            this.materializedCB.addSelectionListener(new SelectionAdapter() {
-                /**            		
-                 * {@inheritDoc}
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    getRelationalReference().setMaterialized(materializedCB.getSelection());
-                    if (!materializedCB.getSelection()) {
-                        getRelationalReference().setMaterializedTable(null);
-                    }
-                    handleInfoChanged();
+        this.materializedCB = new Button(checkButtonPanel, SWT.CHECK | SWT.RIGHT);
+        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.materializedCB);
+        this.materializedCB.setText(Messages.materializedLabel);
+        this.materializedCB.addSelectionListener(new SelectionAdapter() {
+            /**            		
+             * {@inheritDoc}
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                getRelationalReference().setMaterialized(materializedCB.getSelection());
+                if (!materializedCB.getSelection()) {
+                    getRelationalReference().setMaterializedTable(null);
                 }
-            });
+                handleInfoChanged();
+            }
+        });
 
-            Composite materializedPanel = new Composite(thePanel, SWT.NONE);
-            GridDataFactory.fillDefaults().grab(true, false).applyTo(materializedPanel);
-            GridLayoutFactory.fillDefaults().numColumns(3).applyTo(materializedPanel);
+        Composite materializedPanel = new Composite(thePanel, SWT.NONE);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(materializedPanel);
+        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(materializedPanel);
 
-            materializedTableLabel = new Label(materializedPanel, SWT.NONE | SWT.RIGHT);
-            materializedTableLabel.setText(Messages.tableReferenceLabel);
-            GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(materializedTableLabel);
+        materializedTableLabel = new Label(materializedPanel, SWT.NONE | SWT.RIGHT);
+        materializedTableLabel.setText(Messages.tableReferenceLabel);
+        GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).applyTo(materializedTableLabel);
 
-            this.materializedTableText = new Text(materializedPanel, SWT.BORDER | SWT.SINGLE);
-            this.materializedTableText.setData("materializedTableText");
-            this.materializedTableText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().grab(true, false).applyTo(this.materializedTableText);
+        this.materializedTableText = new Text(materializedPanel, SWT.BORDER | SWT.SINGLE);
+        this.materializedTableText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(this.materializedTableText);
+        this.materializedTableText.setEditable(false);
 
-            this.findTableReferenceButton = new Button(materializedPanel, SWT.PUSH);
-            this.findTableReferenceButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ELIPSIS));
-            GridDataFactory.fillDefaults().hint(30, SWT.DEFAULT).applyTo(this.findTableReferenceButton);
-            this.findTableReferenceButton.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-
-                }
-            });
-        }
+        this.findTableReferenceButton = new Button(materializedPanel, SWT.PUSH);
+        this.findTableReferenceButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ELIPSIS));
+        GridDataFactory.fillDefaults().hint(30, SWT.DEFAULT).applyTo(this.findTableReferenceButton);
+        this.findTableReferenceButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+            	handleBrowseWorkspaceForMatTablePressed();
+            }
+        });
 
         createDescriptionPanel(thePanel);
 
@@ -509,6 +520,65 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
 		
 		return false;
 	}
+	
+	private void handleBrowseWorkspaceForMatTablePressed() {
+		ModelWorkspaceDialog sdDialog = createTableOrViewSelector();
+
+		// add filters
+		sdDialog.addFilter(new ClosedProjectFilter());
+		Properties props = new Properties();
+		DesignerPropertiesUtil.setProjectName(props, getModelFile().getProject().getName());
+		sdDialog.addFilter(new SingleProjectFilter(props));
+		
+		sdDialog.open();
+
+        if (sdDialog.getReturnCode() == Window.OK) {
+            Object[] selections = sdDialog.getResult();
+            // should be single selection
+            EObject matTableOrView = (EObject)selections[0];
+            String name = ModelerCore.getModelEditor().getName(matTableOrView);
+            this.materializedTableText.setText(name);
+            getRelationalReference().setMaterializedTable(name);
+            ModelResource mr = ModelUtilities.getModelResource(matTableOrView);
+            try {
+				getRelationalReference().setMaterializedTableModelPath(mr.getCorrespondingResource().getFullPath().toString());
+			} catch (ModelWorkspaceException e) {
+				e.printStackTrace();
+			}
+            validate();
+        }
+
+	}
+    
+	private ModelWorkspaceDialog createTableOrViewSelector() {
+		
+		ModelWorkspaceDialog result = new ModelWorkspaceDialog(getShell(), null,
+				new ModelExplorerLabelProvider(), new ModelExplorerContentProvider());
+
+		String title = "Select referenced table or view"; //$NON-NLS-1$
+		String message = "Select referenced materialized table or view"; //$NON-NLS-1$
+		result.setTitle(title);
+		result.setMessage(message);
+		result.setAllowMultiple(false);
+
+		result.setInput(ModelerCore.getWorkspace().getRoot());
+
+		result.setValidator(new ISelectionStatusValidator() {
+			@Override
+			public IStatus validate(Object[] selection) {
+				if (selection == null || selection.length == 0
+						|| selection[0] == null
+						|| (!(selection[0] instanceof Table) && !(selection[0] instanceof View)) ) {
+					String msg = "Selection is not a table or view"; //$NON-NLS-1$
+					return new StatusInfo(UiConstants.PLUGIN_ID, IStatus.ERROR,msg);
+				}
+				return new StatusInfo(UiConstants.PLUGIN_ID);
+			}
+		});
+
+
+		return result;
+	}
 
 	class ColumnDataLabelProvider extends ColumnLabelProvider {
 
@@ -566,7 +636,6 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
 			}
 			return null;
 		}
-		
 		
 	}
 }
