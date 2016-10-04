@@ -97,7 +97,6 @@ public class RelationalUniqueConstraint extends RelationalReference {
      */
     public void addColumn(RelationalColumn column) {
     	if( this.columns.add(column) ) {
-    		column.setParent(this);
     		handleInfoChanged();
     	} 
     }

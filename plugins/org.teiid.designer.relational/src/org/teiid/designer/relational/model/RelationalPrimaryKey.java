@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.HashCodeUtil;
-import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.relational.Messages;
 import org.teiid.designer.relational.RelationalPlugin;
@@ -72,7 +71,6 @@ public class RelationalPrimaryKey extends RelationalReference {
      */
     public void addColumn(RelationalColumn column) {
     	if( this.columns.add(column) ) {
-    		//column.setParent(this);
     		handleInfoChanged();
     	} 
     }
