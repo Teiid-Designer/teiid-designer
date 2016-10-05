@@ -29,6 +29,7 @@ import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
@@ -976,7 +977,14 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     		}
     	}
     	if( table.getMaterializedTable() != null ) {
-    		options.add(MATERIALIZED_TABLE, table.getMaterializedTable().getName(), null);
+    		try {
+				String tableName = table.getMaterializedTable().getName();
+				ModelResource mr = ModelUtil.getModel(table);
+				String modelName = ModelUtil.getName(mr);
+				options.add(MATERIALIZED_TABLE, modelName + StringConstants.DOT + tableName, null);
+			} catch (ModelWorkspaceException e) {
+				addIssue(IStatus.ERROR, "Error finding model for materialized table " + getName(table), e); //$NON-NLS-1$
+			}
     	}
     	
     	// Need to check with other assistants too
