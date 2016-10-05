@@ -36,6 +36,8 @@ public class Options {
 		public static final String POJO_PACKAGE_NAME = "pojo_package_name";
 		/* [Optional] The pojo jar file, with preferable, including the full path.  If path not specified, will use build_location */
 		public static final String POJO_JAR_FILE = "pojo_jar_file";
+		/* [Optional] The pojo jar file, with preferable, including the full path.  If path not specified, will use build_location */
+		public static final String POJO_CLASS_NAME = "pojo_class_name";
 		/* [Optional] The module zip name, if not specified, the module will not be created */
 		public static final String MODULE_ZIP_FILE = "module_zip_file";
 		

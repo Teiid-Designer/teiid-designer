@@ -35,7 +35,7 @@ public class ReverseEngineerFactory {
 		  metadata.loadMetadata(table, options);
 	  	
 		  PojoProcessing tp = new PojoProcessing(options);
-		  boolean success = tp.processTables(metadata);
+		  boolean success = tp.processTables(metadata, options);
 
 		  if (!success) checkErrors(tp);
 		  

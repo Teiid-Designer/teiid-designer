@@ -292,6 +292,7 @@ public class MaterializationWizard extends AbstractWizard
 			
 			String pojoJarName = this.manager.getPojoClassName() + ".jar"; //
 			newOptions.setProperty(Parms.POJO_JAR_FILE, pojoJarName);
+			newOptions.setProperty(Parms.POJO_CLASS_NAME, this.manager.getPojoClassName());
 			
 			String annotationType = manager.getAnnotationType();
 			

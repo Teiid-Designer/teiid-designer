@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.teiid.designer.core.container.Container.OPTIONS;
 import org.teiid.designer.metamodels.transformation.TransformationPlugin;
 import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.transformation.reverseeng.api.AnnotationType;
@@ -24,6 +25,7 @@ import org.teiid.designer.transformation.reverseeng.api.Column;
 import org.teiid.designer.transformation.reverseeng.api.MetadataProcessor;
 import org.teiid.designer.transformation.reverseeng.api.Options;
 import org.teiid.designer.transformation.reverseeng.api.Table;
+import org.teiid.designer.transformation.reverseeng.api.Options.Parms;
 import org.teiid.designer.transformation.reverseeng.util.Util;
 
 /**
@@ -80,12 +82,12 @@ public class PojoProcessing {
 	 * @param metadata
 	 * @return boolean true if successful
 	 */
-	public boolean processTables(MetadataProcessor metadata) {
+	public boolean processTables(MetadataProcessor metadata, Options options) {
 //		ReverseEngineerPlugin.LOGGER.info("[ReverseEngineering] Start reverse engineering process");
 
 		try {
 
-			performProcess(metadata);
+			performProcess(metadata, options);
 
 		} catch (Exception e) {
 			errors.add(e);
@@ -98,7 +100,7 @@ public class PojoProcessing {
 		return false;
 	}
 	
-	private void performProcess(MetadataProcessor metadata) throws Exception {
+	private void performProcess(MetadataProcessor metadata, Options options) throws Exception {
 		
 	
 		// remove if already exist
@@ -150,42 +152,45 @@ public class PojoProcessing {
 		}
 
 		List<Table> tables = metadata.getTableMetadata();
-		for (Table t : tables) {
+		
+		Table theTable = tables.get(0);
 			
-			if (!t.hasRequiredColumn()) {
-				String msg = "*** Table {" + t.getName() + "} doesn't have a required key column (i.e., no primary or unique key defined on the source table).  Will not be processed";
-				
-				TransformationPlugin.Util.log(IStatus.WARNING, msg);
+		if (!theTable.hasRequiredColumn()) {
+			String msg = "*** Table {" + theTable.getName() + "} doesn't have a required key column (i.e., no primary or unique key defined on the source table).  Will not be processed";
+			
+			TransformationPlugin.Util.log(IStatus.WARNING, msg);
 
-				this.errors.add( new TeiidExecutionException(IStatus.ERROR, msg));
-				continue;
-			}
-			
-			String className = t.getClassName();
-		    className = className + (this.suffixClassName != null ? this.suffixClassName : "");
-			String javaFileName = className + ".java";
-			
-			File outputFile = new File(javaFileLoc.getAbsolutePath(), javaFileName);
-						
-			FileOutputStream fileOutput = new FileOutputStream(outputFile);
-
-			PrintWriter outputStream = new PrintWriter(fileOutput);
-
-			printPackage(outputStream, packageName);
-			printHeader(outputStream, t);
-			printImports(outputStream, t);
-			
-			printClass(outputStream, t, className);
-			printAttributes(outputStream, t);
-			printGetterSetters(outputStream, t);
-			printToString(outputStream, t);
-			printFooter(outputStream, t);
-			
-			fileOutput.close();
-			
-			TransformationPlugin.Util.log(IStatus.INFO, "[ReverseEngineering] Created java file: " + outputFile.getAbsolutePath());
-
+			this.errors.add( new TeiidExecutionException(IStatus.ERROR, msg));
 		}
+		
+		String className = theTable.getClassName();
+		String userDefinedClassName = options.getProperty(Parms.POJO_CLASS_NAME);
+		if( userDefinedClassName != null ) {
+			className = userDefinedClassName;
+		}
+	    className = className + (this.suffixClassName != null ? this.suffixClassName : "");
+		String javaFileName = className + ".java";
+		
+		File outputFile = new File(javaFileLoc.getAbsolutePath(), javaFileName);
+					
+		FileOutputStream fileOutput = new FileOutputStream(outputFile);
+
+		PrintWriter outputStream = new PrintWriter(fileOutput);
+
+		printPackage(outputStream, packageName);
+		printHeader(outputStream, theTable);
+		printImports(outputStream, theTable);
+		
+		printClass(outputStream, theTable, className);
+		printAttributes(outputStream, theTable);
+		printGetterSetters(outputStream, theTable);
+		printToString(outputStream, theTable);
+		printFooter(outputStream, theTable);
+		
+		fileOutput.close();
+		
+		TransformationPlugin.Util.log(IStatus.INFO, "[ReverseEngineering] Created java file: " + outputFile.getAbsolutePath());
+
 		
 		PojoCompilation.compile(javaFileLoc, jarPackageFilePath.toString(), pojoJarFile);	
 		
