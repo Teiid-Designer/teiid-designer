@@ -52,6 +52,7 @@ public class VdbDataRoleResolver {
 	static final String WEB_SERVICES_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
 	private static final char DELIM = CoreStringUtil.Constants.DOT_CHAR;
 	private static final char B_SLASH = '/';
+	private static final String SYSADMIN = "sysadmin"; //$NON-NLS-1$
 	
 	private Vdb vdb;
 	
@@ -87,6 +88,9 @@ public class VdbDataRoleResolver {
 	private void removePermissionsForModels(Set<String> modelNames) {
 		Collection<DataRole> roles = vdb.getDataRoles();
 		
+		Collection<DataRole> removeList = new ArrayList<DataRole>();
+		Collection<DataRole> addList = new ArrayList<DataRole>();
+		
 		for( DataRole role : roles ) {
 			boolean changedPerms = false;
 			Collection<Permission> keepPermList = new ArrayList<Permission>();
@@ -101,21 +105,39 @@ public class VdbDataRoleResolver {
 				}
 			}
 			
-			if( changedPerms && ! keepPermList.isEmpty() ) {
-				// Remove the old data policy
-				vdb.removeDataRole(role.getName());
-				
-				// Create a data role
-				DataRole dr = new DataRole(role.getName());
-				dr.setDescription(role.getDescription());
-				if( !role.getRoleNames().isEmpty() ) {
-					dr.setRoleNames(role.getRoleNames());
+			if( keepPermList.size() == 1 ) {
+				if( ((Permission)keepPermList.toArray()[0]).getTargetName().equals(SYSADMIN) ) {
+					keepPermList.clear();
 				}
-				dr.setPermissions(keepPermList);
-				dr.setAnyAuthenticated(role.isAnyAuthenticated());
-
-				vdb.addDataRole(dr);				
 			}
+			
+			if( changedPerms ) {
+				if( ! keepPermList.isEmpty() ) {
+				
+					// Remove the old data policy
+					removeList.add(role);
+					
+					// Create a data role
+					DataRole dr = new DataRole(role.getName());
+					dr.setDescription(role.getDescription());
+					if( !role.getRoleNames().isEmpty() ) {
+						dr.setRoleNames(role.getRoleNames());
+					}
+					dr.setPermissions(keepPermList);
+					dr.setAnyAuthenticated(role.isAnyAuthenticated());
+	
+					addList.add(dr);
+				} else {
+					removeList.add(role);
+				}
+			}
+		}
+		
+		for( DataRole role : removeList ) {
+			vdb.removeDataRole(role.getName());
+		}
+		for( DataRole role : addList ) {
+			vdb.addDataRole(role);
 		}
 	}
 	
