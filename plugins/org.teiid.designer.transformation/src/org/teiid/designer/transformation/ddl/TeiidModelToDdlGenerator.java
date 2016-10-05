@@ -960,7 +960,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
     	options.add(NAMEINSOURCE, table.getNameInSource(), null);
     	options.add(MATERIALIZED, Boolean.toString(table.isMaterialized()), Boolean.FALSE.toString());
-    	options.add(UPDATABLE, Boolean.toString(table.isSupportsUpdate()), Boolean.TRUE.toString());
+    	options.add(UPDATABLE, Boolean.toString(table.isSupportsUpdate()), Boolean.FALSE.toString());
     	if( table.getCardinality() != 0 ) {
     		int cardValue = table.getCardinality();
 
