@@ -8,6 +8,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.transformation.reverseeng.ReverseEngConstants.Mode;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.wizards.jdg.MaterializationWizard;
@@ -50,7 +51,7 @@ public class MaterializationAction extends SortableSelectionAction {
         	final EObject eObject = SelectionUtilities.getSelectedEObject(selection);
             
             if ( isRelationalVirtualTable(eObject) && TransformationHelper.isVirtualSqlTable(eObject) ) {
-            	isValid = true;
+            	isValid = !((Table)eObject).isMaterialized();
             } else isValid = false;
 
         } else isValid = false;

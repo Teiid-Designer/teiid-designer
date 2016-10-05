@@ -287,6 +287,16 @@
          label="%materializationAction.label">
       </specialAction>
    </extension>
+   <!-- Action contributed to generate POJO from view -->
+   <extension
+		id="ClearMaterializationAction"
+		name="%clearMaterializationAction.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="org.teiid.designer.transformation.ui.actions.ClearMaterializationAction"
+         label="%clearMaterializationAction.label">
+      </specialAction>
+   </extension>
    <extension
 		id="CreatePojoAction"
 		name="%createPojoAction.name"

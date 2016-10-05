@@ -204,7 +204,7 @@ public class TableItemProvider extends ColumnSetItemProvider {
      */
     protected void addMaterializedPropertyDescriptor( Object object ) {
         // If the Table is contained within a physical model then "materialized" cannot be set
-        boolean isSettable = isVirtual(object);
+        boolean isSettable = true; //isVirtual(object);
 
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                                                                  getResourceLocator(),
