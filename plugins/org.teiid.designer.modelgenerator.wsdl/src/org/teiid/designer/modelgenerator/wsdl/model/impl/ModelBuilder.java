@@ -105,6 +105,8 @@ public class ModelBuilder {
         Definition def;
         if (SecurityType.None.equals(m_securityType)) {
             def = reader.readWSDL(m_wsdlURI);
+        } else if (SecurityType.Digest.equals(m_securityType)) {
+        	def = reader.readWSDLWithDigest(null, m_wsdlURI, m_userName, m_password);
         } else {
             def = reader.readWSDL(m_wsdlURI, m_userName, m_password);
         }

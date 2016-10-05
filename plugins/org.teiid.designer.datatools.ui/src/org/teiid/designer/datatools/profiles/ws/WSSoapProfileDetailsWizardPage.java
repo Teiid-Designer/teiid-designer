@@ -202,7 +202,7 @@ public class WSSoapProfileDetailsWizardPage extends ConnectionProfileDetailsPage
 
         profileText.setText(wizard.getProfileName());
         descriptionText.setText(wizard.getProfileDescription());
-        setProperty(ICredentialsCommon.SECURITY_TYPE_ID, SecurityType.None.name());
+       // setProperty(ICredentialsCommon.SECURITY_TYPE_ID, SecurityType.None.name());
     }
 
     /**

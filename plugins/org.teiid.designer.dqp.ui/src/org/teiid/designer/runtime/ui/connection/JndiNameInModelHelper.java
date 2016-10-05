@@ -176,7 +176,7 @@ public class JndiNameInModelHelper {
             dlgPanel.setLayoutData(pgd);
             ((GridLayout)dlgPanel.getLayout()).numColumns = COLUMN_COUNT;
             
-            String message = DqpUiConstants.UTIL.getString("EnterDataSourceJNDINameDialog.message"); //$NON-NLS-1$
+            final String message = DqpUiConstants.UTIL.getString("EnterDataSourceJNDINameDialog.message"); //$NON-NLS-1$
 
             final Label msgLabel = WidgetFactory.createLabel(dlgPanel, message);
             GridData gd = new GridData(SWT.BEGINNING, SWT.CENTER, true, true);
