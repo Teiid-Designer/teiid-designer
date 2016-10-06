@@ -309,8 +309,8 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
 //    		SELECT A.price AS price FROM (EXEC SourceModel.invokeHttp(action=>'GET', endpoint=>VARIABLES.qp, stream=>'TRUE')) AS f, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://ws.cdyne.com/'), '/decimal' PASSING XMLPARSE(DOCUMENT f.result) COLUMNS price double PATH 'text()') AS A;
 //    	END
 //    	
-    	
-    	 List<String> tokens = new ArrayList<String>();
+    	 
+		 List<String> tokens = new ArrayList<String>();
          List<ITeiidXmlColumnInfo> columnInfoList = xmlFileInfo.getColumnInfoList();
          
          boolean isJson = false;
@@ -355,8 +355,6 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         		 }
         	 }
         		 
-        	 sb.append(" || \'/' || "); //$NON-NLS-1$
-        	 sb.append(relationalViewModelName).append(DOT).append(virtualProcedureName).append(DOT).append(param.getName());
         	 c++;
          }
          
