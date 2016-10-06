@@ -840,6 +840,10 @@ public final class WsdlSelectionPage extends AbstractWizardPage
                 wsdlFile = URLHelper.createFileFromUrl(url,
                         CoreStringUtil.createFileName(filePath), WSDL_SUFFIX);
             }
+            if (SecurityType.Digest.equals(securityType)) {
+                wsdlFile = URLHelper.createFileFromUrlwithDigest(url,
+                        CoreStringUtil.createFileName(filePath), WSDL_SUFFIX);
+            }
             else {
                 wsdlFile = URLHelper.createFileFromUrl(url,
                         CoreStringUtil.createFileName(filePath), WSDL_SUFFIX,

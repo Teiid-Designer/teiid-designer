@@ -86,6 +86,48 @@ public class ExtendedWSDLReader extends WSDLReaderImpl {
                     e);
         }
     }
+    
+    /**
+     * 
+     * @param contextURI
+     * @param wsdlURI
+     * @param userName
+     * @param password
+     * @return
+     * @throws WSDLException
+     */
+    public Definition readWSDLWithDigest(String contextURI, String wsdlURI, String userName, String password)
+            throws WSDLException {
+        try {
+            if (verbose) {
+                System.out.println("Retrieving document at '" + wsdlURI + "'" //$NON-NLS-1$ //$NON-NLS-2$
+                        + (contextURI == null ? "." : ", relative to '" + contextURI + "'.")); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+            }
+
+            URL contextURL = (contextURI != null) ? StringUtils.getURL(null, contextURI) : null;
+            URL url = StringUtils.getURL(contextURL, wsdlURI);
+
+            InputStream inputStream = URLHelper.getWSDLWithDigest(new URL(wsdlURI), userName, password);
+            InputSource inputSource = new InputSource(inputStream);
+            inputSource.setSystemId(url.toString());
+            Document doc = getDocument(inputSource, url.toString());
+
+            inputStream.close();
+
+            Definition def = readWSDL(url.toString(), doc);
+
+            return def;
+        } catch (WSDLException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new WSDLException(WSDLException.OTHER_ERROR,
+                    "Unable to resolve imported document at '" + wsdlURI //$NON-NLS-1$
+                            + (contextURI == null ? "'." : "', relative to '" + contextURI + "'."), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    e);
+        }
+    }
 
     private static Document getDocument(InputSource inputSource, String desc) throws WSDLException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

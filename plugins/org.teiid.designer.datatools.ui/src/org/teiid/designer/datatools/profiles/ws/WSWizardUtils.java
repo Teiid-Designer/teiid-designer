@@ -202,7 +202,11 @@ public class WSWizardUtils {
 			String password = null;
 			userName = connProperties.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
             password = connProperties.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
-	        resolved = URLHelper.resolveUrl(url, userName, password, connPropMap, true);
+            if (connProperties.getProperty(ICredentialsCommon.SECURITY_TYPE_ID).equals(ICredentialsCommon.SecurityType.Digest.name())){
+            	resolved = URLHelper.resolveUrlWithDigest(url, userName, password, connPropMap, true);
+            }else{
+            	resolved = URLHelper.resolveUrl(url, userName, password, connPropMap, true);
+            }
         
             if (!resolved) {
                 throw new Exception(DatatoolsUiConstants.UTIL.getString("WSWizardUtils.connectionFailureMessage")); //$NON-NLS-1$

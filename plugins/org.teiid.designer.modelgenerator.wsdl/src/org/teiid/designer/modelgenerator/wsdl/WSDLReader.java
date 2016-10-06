@@ -126,6 +126,10 @@ public class WSDLReader {
      * @return true if the wsdl is valid, false otherwise
      */
 	public MultiStatus validateWSDL(IProgressMonitor monitor) {
+		
+		if (SecurityType.Digest.equals(securityType)){
+			return validateWSDLWithDigest(monitor);
+		}
     	
 		monitor.beginTask(
 				getString("WSDLReader.validating.wsdl"), //$NON-NLS-1$
@@ -229,6 +233,109 @@ public class WSDLReader {
                 } else {
                     status = buildStatus(code, messages, getString(validationErrorProperty), new WSDLValidationException());
                 }
+            }
+		} catch (Exception e) { 
+		    code = 500;
+		    String msgProperty = "WSDLReader.open.connection.error"; //$NON-NLS-1$
+		    messages.add(new WSDLValidationMessage(getString(msgProperty), IStatus.ERROR));
+		    status = buildStatus(code, messages, getString(msgProperty), e);
+
+		} finally {
+		    if (inputStream != null) {
+		        try {
+                    inputStream.close();
+                } catch (IOException ex) {
+                    code = 500;
+                    String msgProperty = "WSDLReader.close.connection.error"; //$NON-NLS-1$
+                    messages.add(new WSDLValidationMessage(getString(msgProperty), IStatus.ERROR));
+                    status = buildStatus(code, messages, getString(msgProperty), ex);
+                }
+		    }
+		}
+
+		monitor.worked(1);
+		monitor.done();
+        return status;
+    }
+	
+	/**
+     * @return true if the wsdl is valid, false otherwise
+     */
+	public MultiStatus validateWSDLWithDigest(IProgressMonitor monitor) {
+    	
+		monitor.beginTask(
+				getString("WSDLReader.validating.wsdl"), //$NON-NLS-1$
+				IProgressMonitor.UNKNOWN);
+		monitor.worked(1);
+		if (VALIDATOR == null) {
+			VALIDATOR = new WSDLValidator();
+			VALIDATOR.addURIResolver(new URIResolverWrapper());
+        }
+		
+		String wsdlUri = getWSDLUri();
+		MultiStatus status;
+		List<WSDLValidationMessage> messages = new ArrayList<WSDLValidationMessage>();
+		URL remoteURL;
+		InputStream inputStream = null;
+		int code;
+		
+		try {
+		    remoteURL = URLHelper.buildURL(wsdlUri);
+		    monitor.worked(1);
+
+            remoteURL = new URL(wsdlUri);
+
+            inputStream = URLHelper.getWSDLWithDigest(remoteURL, userName, password);
+            IValidationReport report = VALIDATOR.validate(wsdlUri, inputStream, null);
+
+            monitor.worked(1);
+            boolean success = !report.hasErrors() && report.isWSDLValid();
+
+            if (success) {
+                code = 100;
+
+                monitor.worked(1);
+                monitor.done();
+                status = buildStatus(code, null, getString("WSDLReader.validation.passed"), null); //$NON-NLS-1$
+                return status;
+            }
+
+            // Something went wrong
+            boolean warningsOnly = report.isWSDLValid();
+            code = 500;
+
+            // Log all of the report's validation messages
+            IValidationMessage[] vmessages = report.getValidationMessages();
+            for (int i = 0; i < vmessages.length; i++) {
+                String message = buildValidationMessageString(vmessages[i]);
+                int severity = vmessages[i].getSeverity();
+                if (severity == IValidationMessage.SEV_ERROR) {
+                    warningsOnly = false;
+                }
+
+                int newSeverity = (severity == IValidationMessage.SEV_ERROR ? IStatus.ERROR : IStatus.WARNING);
+                messages.add(new WSDLValidationMessage(message, newSeverity));
+            }
+
+            if (warningsOnly) {
+                monitor.worked(1);
+                monitor.done();
+
+                status = buildStatus(code, messages, getString("WSDLReader.validation.warning"), null); //$NON-NLS-1$
+                return status;
+            }
+
+            // Errors occurred
+            if (messages.size() == 0) {
+                // WSDL so invalid that the validator could not even read the file
+                String invalidMsgProperty = "WSDLReader.wsdl.invalid"; //$NON-NLS-1$
+
+                    messages.add(new WSDLValidationMessage(getString(invalidMsgProperty), IStatus.ERROR));
+                    status = buildStatus(code, messages, getString(invalidMsgProperty), new WSDLValidationException());
+            } else {
+                	// Validation report returned errors
+                	String validationErrorProperty = "WSDLReader.validation.error"; //$NON-NLS-1$
+                    status = buildStatus(code, messages, getString(validationErrorProperty), new WSDLValidationException());
             }
 		} catch (Exception e) { 
 		    code = 500;
