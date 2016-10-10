@@ -19,15 +19,15 @@ import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect;
 import org.teiid.designer.metamodels.relational.NullableType;
+import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.xsd.aspects.sql.XsdSimpleTypeDefinitionAspect;
 import org.teiid.designer.runtime.spi.TeiidExecutionException;
-import org.teiid.designer.sdt.types.AbstractDatatypeManager;
 import org.teiid.designer.transformation.reverseeng.api.Column;
+import org.teiid.designer.transformation.reverseeng.api.Column.NullType;
 import org.teiid.designer.transformation.reverseeng.api.MetadataProcessor;
 import org.teiid.designer.transformation.reverseeng.api.Options;
 import org.teiid.designer.transformation.reverseeng.api.RuntimeTypesConstants;
 import org.teiid.designer.transformation.reverseeng.api.Table;
-import org.teiid.designer.transformation.reverseeng.api.Column.NullType;
 /**
  * @author vanhalbert
  *
@@ -107,7 +107,15 @@ public final class RelationalMetadataProcessor implements MetadataProcessor {
 		relColumn.setDefaultValue(column.getDefaultValue());
 		relColumn.setIsIndexed(true); //column.isIndexed());
 		
-		relColumn.setIsRequired(true); // column.isRequired()  ); 
+		// Check if column has PK reference
+		boolean isReq = false;
+		for( Object eObj : column.getUniqueKeys().toArray() ) {
+			if( eObj instanceof PrimaryKey ) {
+				isReq = true;
+			}
+		}
+
+		relColumn.setIsRequired(isReq); 
 		
 	}
 	
