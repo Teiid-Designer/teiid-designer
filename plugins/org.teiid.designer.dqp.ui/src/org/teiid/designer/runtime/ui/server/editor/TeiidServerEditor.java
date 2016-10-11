@@ -343,7 +343,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
                         // the server whether teiid has been installed.
                         teiidServer = adapterFactory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
                         if( teiidServer != null ) {
-                            if( JBossServerUtil.isTeiidServer(parentServer, null) ) {
+                            if( !JBossServerUtil.isTeiidServer(parentServer, null) ) {
                             	getServerManager().removeServer(teiidServer);
                             	teiidServer = null;
                         	} else {

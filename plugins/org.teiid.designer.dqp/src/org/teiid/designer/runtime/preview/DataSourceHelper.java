@@ -54,7 +54,11 @@ public class DataSourceHelper {
 			// Show Error Dialog
 			// return false
 			for( String jndiName : jndiNameModelMap.keySet() ) {
-				ITeiidDataSource ds = teiidServer.getDataSource(jndiName);
+				String shortName = jndiName;
+				if( jndiName.startsWith("java:/") ) {
+					shortName = jndiName.substring(6, jndiName.length());
+				}
+				ITeiidDataSource ds = teiidServer.getDataSource(shortName);
 				if( ds == null && jndiName != null) {
 					missingJndiNames.add(jndiName);
 				}

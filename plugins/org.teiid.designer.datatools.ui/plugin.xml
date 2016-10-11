@@ -273,7 +273,6 @@
       </page>
    </extension>
  
-<!-- 
    <extension
          point="org.eclipse.ui.propertyPages">
       <page
@@ -283,7 +282,7 @@
             name="%connectionProperties.name">
          <filter
                name="org.eclipse.datatools.profile.property.id"
-               value="org.teiid.designer.datatools.profiles.jdg.JDGConnectionProfile"/>
+               value="org.teiid.designer.datatools.profiles.jdg"/>
          <enabledWhen>
             <instanceof
                   value="org.eclipse.datatools.connectivity.IConnectionProfile">
@@ -300,9 +299,9 @@
          icon="icons/full/obj16/connectionFolder.gif"
          id="org.teiid.designer.datatools.profiles.jdg.JDGConnectionProfileWizard"
          name="JDG"
-         profile="org.teiid.designer.datatools.profiles.jdg.JDGConnectionProfile"/>
+         profile="org.teiid.designer.datatools.profiles.jdg"/>
    </extension>
--->
+
    <extension point="org.eclipse.datatools.connectivity.ui.driverUIContributor">
       <driverUIContributor
             class="org.teiid.designer.datatools.profiles.modeshape.ModeShapeDriverUIContributor"

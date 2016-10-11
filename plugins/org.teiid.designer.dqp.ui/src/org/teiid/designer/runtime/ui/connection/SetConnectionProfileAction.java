@@ -167,7 +167,12 @@ public class SetConnectionProfileAction extends SortableSelectionAction  impleme
                 if( StringUtilities.isEmpty(existingJndiName)) {
                 	jndiHelper.ensureJndiNameExists(modelResc, true);
                 } else {
-                	jndiHelper.setJNDINameInTxn(modelResc, existingJndiName);
+                	// Note that a connection profile may have a JNDI name in it.. so check if it's different
+                	// If it is.. ignore the re-set of the existing jndi name
+                	String newJndiName = jndiHelper.getExistingJndiName(modelResc);
+                	if( !StringUtilities.areDifferent(newJndiName, existingJndiName)) {
+                		jndiHelper.setJNDINameInTxn(modelResc, existingJndiName);
+                	}
                 }
                 
                 return true;
