@@ -426,7 +426,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		
 		if( !isGlobalTempTable ) {
 			TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(table);
-			String sqlString = TransformationHelper.getSelectSqlString(tRoot);
+			String sqlString = TransformationHelper.getSelectSqlUserString(tRoot);
 			if( sqlString != null ) {
 	//			QueryDisplayFormatter formatter = new QueryDisplayFormatter(sqlString);
 	//			String formatedSQL = formatter.getFormattedSql();
@@ -444,7 +444,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
             return null;
         
 		TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(table);
-		String sqlString = TransformationHelper.getInsertSqlString(tRoot);
+		String sqlString = TransformationHelper.getInsertSqlUserString(tRoot);
 		
 		if( StringUtilities.isEmpty(sqlString) ) return null;
         
@@ -468,7 +468,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
             return null;
         
 		TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(table);
-		String sqlString = TransformationHelper.getUpdateSqlString(tRoot);
+		String sqlString = TransformationHelper.getUpdateSqlUserString(tRoot);
 		
 		if( StringUtilities.isEmpty(sqlString) ) return null;
         
@@ -492,7 +492,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
             return null;
         
 		TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(table);
-		String sqlString = TransformationHelper.getDeleteSqlString(tRoot);
+		String sqlString = TransformationHelper.getDeleteSqlUserString(tRoot);
 		
 		if( StringUtilities.isEmpty(sqlString) ) return null;
         
@@ -978,8 +978,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	}
     	if( table.getMaterializedTable() != null ) {
     		try {
-				String tableName = table.getMaterializedTable().getName();
-				ModelResource mr = ModelUtil.getModel(table);
+    			Table matTable = table.getMaterializedTable();
+				String tableName = matTable.getName();
+				ModelResource mr = ModelUtil.getModel(matTable);
 				String modelName = ModelUtil.getName(mr);
 				options.add(MATERIALIZED_TABLE, modelName + StringConstants.DOT + tableName, null);
 			} catch (ModelWorkspaceException e) {
@@ -992,7 +993,6 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			Map<String, String> props = getOptionsForObject(table);
 			for( String key : props.keySet() ) {
 				if( key.equals(BASE_TABLE_EXT_PROPERTIES.VIEW_TABLE_GLOBAL_TEMP_TABLE) ) continue;
-				
 				String value = props.get(key);
 				options.add(key, value, null);
 			}
@@ -1016,6 +1016,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     		ModelObjectExtensionAssistant assistant = medAggregator.getModelObjectExtensionAssistant(ns);
     		if( assistant != null ) {
     			Collection<ModelExtensionPropertyDefinition> defns = assistant.getPropertyDefinitions(modelObject);
+    			
+    			if( defns.isEmpty()) continue;
 
     			// If relational, we're handling this via getPropetyValue()...
     			if(ns.equals(RELATIONAL_PREFIX)) {
@@ -1065,6 +1067,17 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
         				if( value != null ) {
         					propId = propId.replace(EXCEL_PREFIX, TEIID_EXCEL_PREFIX);
+        					options.put(propId, value);
+        				}
+        			}
+    			} else if(ns.equals(TEIID_INFINISPAN_PREFIX)) {
+        			for( ModelExtensionPropertyDefinition ext : defns) {
+        				String propId = ext.getId();
+        				String value = assistant.getOverriddenValue(modelObject, propId);
+
+        				if( value != null ) {
+        					if( value != null ) namespaces.add(OBJECT_TEIID_SET_NAMESPACE);
+        					propId = propId.replace(TEIID_INFINISPAN_PREFIX, OBJECT_NS_PREFIX);
         					options.put(propId, value);
         				}
         			}

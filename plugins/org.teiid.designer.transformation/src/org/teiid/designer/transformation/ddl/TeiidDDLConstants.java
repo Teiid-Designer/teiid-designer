@@ -117,20 +117,25 @@ public interface TeiidDDLConstants {
 		public static final String REST_CHARSET = "REST:CHARSET"; //$NON-NLS-1$
 		public static final String REST_TEIID_SET_NAMESPACE = "SET NAMESPACE 'http://teiid.org/rest' AS REST;"; //$NON-NLS-1$
 		
-		public static String TEIID_SF_PREFIX = "teiid_sf";  //$NON-NLS-1$
-	    public static String SALESFORCE_PREFIX = "salesforce";  //$NON-NLS-1$
+		public static final String TEIID_SF_PREFIX = "teiid_sf";  //$NON-NLS-1$
+	    public static final String SALESFORCE_PREFIX = "salesforce";  //$NON-NLS-1$
 	    
-		public static String TEIID_MONGO_PREFIX = "teiid_mongo";  //$NON-NLS-1$
-	    public static String MONGODB_PREFIX = "mongodb";  //$NON-NLS-1$";  //$NON-NLS-1$
+		public static final String TEIID_MONGO_PREFIX = "teiid_mongo";  //$NON-NLS-1$
+	    public static final String MONGODB_PREFIX = "mongodb";  //$NON-NLS-1$";  //$NON-NLS-1$
 	    
 
 	    /*
 	     * Teiid's EXCEL extension properties
 	     */
-		public static String TEIID_EXCEL_PREFIX = "teiid_excel";  //$NON-NLS-1$
-	    public static String EXCEL_PREFIX = "excel";  //$NON-NLS-1$";  //$NON-NLS-1$
-	    public static String EXCEL_CELL_NUMBER = "CELL_NUMBER";  //$NON-NLS-1$";  //$NON-NLS-1$  COLUMN ONLY
-	    public static String EXCEL_FILE = "FILE";  //$NON-NLS-1$";  //$NON-NLS-1$  TABLE
-	    public static String EXCEL_FIRST_DATA_ROW_NUMBER = "FIRST_DATA_ROW_NUMBER";  //$NON-NLS-1$";  //$NON-NLS-1$  TABLE
+		public static final String TEIID_EXCEL_PREFIX = "teiid_excel";  //$NON-NLS-1$
+	    public static final String EXCEL_PREFIX = "excel";  //$NON-NLS-1$";  //$NON-NLS-1$
+	    public static final String EXCEL_CELL_NUMBER = "CELL_NUMBER";  //$NON-NLS-1$";  //$NON-NLS-1$  COLUMN ONLY
+	    public static final String EXCEL_FILE = "FILE";  //$NON-NLS-1$";  //$NON-NLS-1$  TABLE
+	    public static final String EXCEL_FIRST_DATA_ROW_NUMBER = "FIRST_DATA_ROW_NUMBER";  //$NON-NLS-1$";  //$NON-NLS-1$  TABLE
 	    
+	    public static final String OBJECT_TEIID_SET_NAMESPACE = "SET NAMESPACE 'http://www.teiid.org/translator/object/2016' AS OBJECT_NS;"; //$NON-NLS-1$
+	    public static final String OBJECT_NS_PREFIX = "OBJECT_NS"; //$NON-NLS-1$
+	    public static final String TEIID_INFINISPAN_PREFIX = "infinispan"; //$NON-NLS-1$
+	    public static final String INFINISPAN_PRIMARY_TABLE = "primary_table"; //$NON-NLS-1$
+
 }

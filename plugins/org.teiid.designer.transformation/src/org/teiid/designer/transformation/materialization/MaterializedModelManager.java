@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.ModelBuildUtil;
@@ -153,8 +154,10 @@ public class MaterializedModelManager implements ReverseEngConstants {
             // Create staging table, add to model and set extension property
             Table stagingTable =  createMaterializedSourceTable( selectedViewOrTable, true);
             addValue(newSourceModel, stagingTable, getModelResourceContents(newSourceModel));
+            
+            String modelName = ModelUtil.getName(newSourceModel);
             getExtensionAssistant().setPropertyValue(
-            		stagingTable, InfinispanCacheModelExtensionConstants.PropertyIds.PRIMARY_TABLE, matTable.getName());
+            		stagingTable, InfinispanCacheModelExtensionConstants.PropertyIds.PRIMARY_TABLE, modelName + StringConstants.DOT + selectedViewOrTable.getName());
 
             
             ModelBuildUtil.rebuildImports(targetModelResource.getEmfResource(), true);
