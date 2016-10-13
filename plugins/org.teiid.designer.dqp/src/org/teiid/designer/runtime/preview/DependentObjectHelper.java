@@ -29,8 +29,10 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.importer.Messages;
@@ -106,7 +108,31 @@ public class DependentObjectHelper {
             } 
             if(nextSourceEObject!=null) {
                 addSourceTable(nextSourceEObject);
-                if (isVirtual(nextSourceEObject)) addDependencies(nextSourceEObject);
+                if (isVirtual(nextSourceEObject)) {
+                	addDependencies(nextSourceEObject);
+                    if( nextSourceEObject instanceof Table ) {
+                    	addMaterializedTables((Table)nextSourceEObject);
+                    }
+                }
+            }
+        }
+        
+        // Check for materializedTableReferences
+        Table table = (Table)targetObject;
+        addMaterializedTables(table);
+
+    }
+    
+    private void addMaterializedTables(Table table) throws ModelWorkspaceException {
+        if( table.isMaterialized() ) {
+            EObject tableRef = table.getMaterializedTable();
+            // Get model resource and ALL tables in it
+            ModelResource mr = ModelUtil.getModel(tableRef);
+            
+            for( Object obj : mr.getAllRootEObjects()) {
+            	if( obj instanceof Table ) {
+            		addSourceTable((Table)obj);    
+            	}
             }
         }
     }
@@ -133,7 +159,7 @@ public class DependentObjectHelper {
             sourceTables.add(sourceTable); //$NON-NLS-1$
     }
 
-    private void addDependencies( EObject virtualSource ) {
+    private void addDependencies( EObject virtualSource ) throws ModelWorkspaceException {
         List<EObject> virtualSources = new ArrayList<EObject>();
 
         EObject transformationEObject = getTransformation(virtualSource);
@@ -148,7 +174,9 @@ public class DependentObjectHelper {
                     nextSourceEObject = getRealEObjectFromProxy(nextSourceEObject);
                 } 
                 if(nextSourceEObject!=null) {
-                    if (isVirtual(nextSourceEObject)) virtualSources.add(nextSourceEObject);
+                    if (isVirtual(nextSourceEObject))  {
+                    	virtualSources.add(nextSourceEObject);
+                    }
                     addSourceTable(nextSourceEObject);
                 }
             }
@@ -157,7 +185,11 @@ public class DependentObjectHelper {
         if (!virtualSources.isEmpty()) {
             Iterator<EObject> vIter = virtualSources.iterator();
             while (vIter.hasNext()) {
-                addDependencies((EObject)vIter.next());
+            	EObject eObj = (EObject)vIter.next();
+                addDependencies(eObj);
+                if( eObj instanceof Table ) {
+                	addMaterializedTables((Table)eObj);
+                }
             }
 
         }

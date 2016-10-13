@@ -360,7 +360,7 @@ public abstract class ModelObjectUtilities {
         }
 
         return hasValidQuery
-               && ((!TransformationHelper.isXmlDocument(eObject) && !TransformationHelper.tableIsMaterialized(eObject) && TransformationHelper.isSqlTable(eObject)) || TransformationHelper.isSqlProcedure(eObject));
+               && ((!TransformationHelper.isXmlDocument(eObject) /*&& !TransformationHelper.tableIsMaterialized(eObject)*/ && TransformationHelper.isSqlTable(eObject)) || TransformationHelper.isSqlProcedure(eObject));
     }
 
     /**
