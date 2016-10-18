@@ -6,6 +6,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -53,6 +54,8 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 	private Text selectedFileText;
 
 	private Button useNamesInSourceCheckBox, useNativeTypeCheckBox;
+	
+	IStatus currentStatus = Status.OK_STATUS;
 
 	public ExportTeiidDdlModelSelectionPage(TeiidDdlExporter exporter) {
 		super(ExportTeiidDdlModelSelectionPage.class.getSimpleName(), TITLE);
@@ -175,18 +178,18 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 	}
 	
 	private boolean validatePage() {
-		IStatus status = exporter.validate();
-		if( status.isOK()) {
+		currentStatus = exporter.validate();
+		if( currentStatus.isOK()) {
 			setErrorMessage(null);
 			setMessage(Messages.ExportTeiidDdlModelSelectionPage_configureOptionsAndClickNextMessage);
 			setPageComplete(true);
 			return true;
-		} else if( status.getSeverity() == IStatus.WARNING ){
-			setMessage(status.getMessage());
+		} else if( currentStatus.getSeverity() == IStatus.WARNING ){
+			setMessage(currentStatus.getMessage());
 			setPageComplete(true);
 			return true;
-		} else if( status.getSeverity() == IStatus.ERROR ) {
-			setErrorMessage(status.getMessage());
+		} else if( currentStatus.getSeverity() == IStatus.ERROR ) {
+			setErrorMessage(currentStatus.getMessage());
 			setPageComplete(false);
 			return false;
 		}
@@ -196,7 +199,7 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 	@Override
 	public boolean canFlipToNextPage() {
 		// TODO Auto-generated method stub
-		return true;
+		return currentStatus.getSeverity() < IStatus.ERROR;
 	}
 
 	final ViewerFilter modelFilter = new ModelWorkspaceViewerFilter(true) {
