@@ -2,11 +2,7 @@ package org.teiid.designer.transformation.ui.wizards.jdg;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -19,7 +15,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.StringUtilities;
-import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.transformation.materialization.MaterializedModelManager;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -31,8 +26,6 @@ import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
-import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
-import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 import org.teiid.designer.ui.viewsupport.SingleProjectOrFolderFilter;
 
 public class MaterializationWizardPage_1 extends AbstractWizardPage implements UiConstants {

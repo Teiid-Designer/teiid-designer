@@ -152,46 +152,6 @@ public class MaterializationWizard extends AbstractWizard
 		return new Composite(parent, SWT.NONE);
 	}
 
-
-//	private boolean isAllVirtualTablesSelected(final ISelection selection) {
-//		boolean isValid = true;
-//		if (SelectionUtilities.isEmptySelection(selection) || !SelectionUtilities.isAllEObjects(selection))
-//			isValid = false;
-//
-//		if (isValid) {
-//			final Collection<?> objs = SelectionUtilities.getSelectedEObjects(selection);
-//			final Iterator<?> selections = objs.iterator();
-//			while (selections.hasNext() && isValid) {
-//				final EObject next = (EObject) selections.next();
-//
-//				if (isRelationalVirtualTable(next) && TransformationHelper.isVirtualSqlTable(next)) {
-//					isValid = true;
-//				} else
-//					isValid = false;
-//
-//				// stop processing if no longer valid:
-//				if (!isValid)
-//					break;
-//			} // endwhile -- all selected
-//		} else
-//			isValid = false;
-//
-//		return isValid;
-//	}
-
-//	private boolean isRelationalVirtualTable(EObject eObject) {
-//		// Do a quick object check
-//		if (TransformationHelper.isVirtualSqlTable(eObject)) {
-//			// make sure it's a virtual relational model
-//			final Resource resource = eObject.eResource();
-//			if (resource != null) {
-//				ModelResource mr = ModelUtilities.getModelResource(resource, true);
-//				return ModelIdentifier.isRelationalViewModel(mr);
-//			}
-//		}
-//		return false;
-//	}
-
 	private boolean runAsJob() {
 		final String message = UiPlugin.getDefault().getString(I18N_PREFIX, "progressMonitorTitle"); //$NON-NLS-1$
 

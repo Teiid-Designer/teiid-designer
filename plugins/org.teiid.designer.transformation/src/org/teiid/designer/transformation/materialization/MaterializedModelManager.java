@@ -189,15 +189,17 @@ public class MaterializedModelManager implements ReverseEngConstants {
         final Table newMatTable = (Table)RelationalFactory.eINSTANCE.create(table.eClass() );
         
         //Create a uniqueName
-        String name = table.getName();
+        String name = pojoClassName;
+        
+        if( createStagingTable ) {
+        	name = "ST_" + name;
+        }
+        
         String tmp = nameValidator.createValidUniqueName(name);
         if(tmp != null) {
             name = tmp;
         }
         
-        if( createStagingTable ) {
-        	name = "ST_" + name;
-        }
         //Set table names
         newMatTable.setName(name);
         

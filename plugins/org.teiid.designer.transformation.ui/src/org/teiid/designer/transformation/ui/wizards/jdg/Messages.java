@@ -38,6 +38,8 @@ public class Messages extends org.teiid.designer.relational.ui.Messages {
     public static String MaterializationWizardPage_2_ClickFinish_MaterializeOnly;
     public static String MaterializationWizardPage_2_ClickFinish_Pojo;
     public static String MaterializationWizardPage_2_ClickFinish_PojoAndModule;
+    public static String MaterializationWizardPage_2_GeneratePojo;
+    public static String MaterializationWizardPage_2_PojoOnlyWarningMessage;
     
     public static String MaterializationWizard_Title_Pojo_Only;
     

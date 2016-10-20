@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -22,6 +23,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.StringUtilities;
@@ -90,7 +92,7 @@ public class MaterializationWizardPage_2 extends AbstractWizardPage implements U
 		
 		// ONLY SHOW WHEN mode == MATERIALIZE
 		if( !this.manager.isPojoMode() ){
-			this.createPojoCB = WidgetFactory.createButton(mainPanel, "Generate POJO", SWT.NONE, 1, SWT.CHECK);
+			this.createPojoCB = WidgetFactory.createButton(mainPanel, Messages.MaterializationWizardPage_2_GeneratePojo, SWT.NONE, 1, SWT.CHECK);
 			this.createPojoCB.addSelectionListener(new SelectionListener() {
 				
 				@Override
@@ -105,6 +107,24 @@ public class MaterializationWizardPage_2 extends AbstractWizardPage implements U
 					
 				}
 			});
+		} else {
+			// Throw up warning message up front
+	        Group helpGroup = WidgetFactory.createGroup(mainPanel, "WARNING", SWT.NONE | SWT.BORDER_DASH,2); //$NON-NLS-1$
+	        helpGroup.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+	        GridLayoutFactory.fillDefaults().margins(10, 2).applyTo(helpGroup);
+	        GridDataFactory.fillDefaults().grab(true,  false).applyTo(helpGroup);
+	    	
+	        {        	
+	        	Text warningText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);
+	        	warningText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+	        	warningText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	        	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+	        	gd.heightHint = 35;
+	        	gd.horizontalSpan=3;
+	        	warningText.setLayoutData(gd);
+	        	warningText.setText(Messages.MaterializationWizardPage_2_PojoOnlyWarningMessage);
+	        }
+
 		}
 		
 		
