@@ -269,8 +269,13 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         
         StringBuilder sb = new StringBuilder();
 
-        if( param.getDirection().getValue() != DirectionKind.IN && param.getDirection().getValue() != DirectionKind.RETURN ) {
+        if( param.getDirection().getValue() != DirectionKind.RETURN ) {
         	String directionStr = param.getDirection().getLiteral();
+        	sb.append(directionStr).append(SPACE);
+        } else {
+            //So the exporter will treat OUT's as straight OUT parameters and if a RETURN parameter exists, 
+            // then it'll be treated as an OUT parameter with a "result" added. (See below)
+        	String directionStr = DirectionKind.OUT_LITERAL.getLiteral();
         	sb.append(directionStr).append(SPACE);
         }
         
@@ -281,12 +286,13 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         sb.append(getParameterDatatypeDdl(teiidDdlDataType, param.getLength(), param.getPrecision(), param.getScale()));
         
         if( param.getNullable().getValue() == NullableType.NO_NULLS ) {
-        	sb.append(SPACE).append(param.getNullable().getLiteral());
+        	sb.append(SPACE).append(NOT_NULL);
         }
         
-        if( param.getDirection().getValue() != DirectionKind.RETURN ) {
-        	String directionStr = "result";
-        	sb.append(SPACE).append(directionStr);
+        //So the exporter will treat OUT's as straight OUT parameters and if a RETURN parameter exists, 
+        // then it'll be treated as an OUT parameter with a "result" added.
+        if( param.getDirection().getValue() == DirectionKind.RETURN) {
+        	sb.append(SPACE).append(RESULT);
         }
         
 		return sb.toString();
@@ -543,32 +549,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		int nParams = params.size();
 		int count = 0;
 		
-		// Check for an "RETURN" parameter direction and cache it's datatype
-		String returnType = null;
-		ProcedureParameter returnParam = null;
-		int returnTypeLength = 0;
-		int returnTypeScale = 0;
-		int returnTypePrecision = 0;
-		
 		for( ProcedureParameter param : params ) {
-			if( param.getDirection() == DirectionKind.RETURN_LITERAL) {
-				returnType = resolveExportedDataType(param.getType());
-				returnTypeLength = param.getLength();
-				returnTypeScale = param.getScale();
-				returnTypePrecision = param.getPrecision();
-				returnParam = param;
-				break;
-			}
-		}
-		
-		if( returnType != null ) {
-			nParams = nParams-1;
-		}
-		
-		for( ProcedureParameter param : params ) {
-			if( param.getDirection() == DirectionKind.RETURN_LITERAL) {
-				continue;
-			}
 			String paramStr = getParameterDdl(param);
 			count++;
 			sb.append(paramStr);
@@ -624,15 +605,6 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				}
 			}
 			sb.append(CLOSE_BRACKET);
-		} else if( returnType != null ) {
-			sb.append(SPACE + RETURNS);
-			
-			// Get options for RETURNS type
-			String options = getOptions(returnParam);
-			if( !StringUtilities.isEmpty(options)) {
-				sb.append(SPACE).append(options);
-			}
-			sb.append(SPACE).append(getParameterDatatypeDdl(returnType, returnTypeLength, returnTypePrecision, returnTypeScale));
 		}
 		
 		String options = getProcedureOptions(procedure);
