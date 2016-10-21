@@ -6,7 +6,7 @@ import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.lang.SingleElementSymbol;
 
 /**
@@ -31,7 +31,7 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
      * @param p
      * @param id
      */
-    public ElementSymbol(TeiidParser p, int id) {
+    public ElementSymbol(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -104,7 +104,7 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
             if (this.groupSymbol != null) {
                 throw new AssertionError("Attempt to set an invalid name"); //$NON-NLS-1$
             }
-            GroupSymbol gs = parser.createASTNode(ASTNodes.GROUP_SYMBOL);
+            GroupSymbol gs = createASTNode(ASTNodes.GROUP_SYMBOL);
             gs.setName(new String(name.substring(0, index)));
             this.setGroupSymbol(gs);
             name = new String(name.substring(index + 1));
@@ -230,7 +230,7 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
 
     @Override
     public ElementSymbol clone() {
-        ElementSymbol clone = new ElementSymbol(this.parser, this.id);
+        ElementSymbol clone = new ElementSymbol(getTeiidVersion(), this.id);
 
         if (getGroupSymbol() != null)
             clone.setGroupSymbol(getGroupSymbol().clone());

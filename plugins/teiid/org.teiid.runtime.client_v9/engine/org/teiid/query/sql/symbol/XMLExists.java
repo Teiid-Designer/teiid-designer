@@ -23,9 +23,8 @@
 package org.teiid.query.sql.symbol;
 
 import org.teiid.designer.query.sql.symbol.IXMLExists;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Criteria;
 
 /**
@@ -39,7 +38,7 @@ public class XMLExists extends Criteria implements IXMLExists<LanguageVisitor> {
      * @param p
      * @param id
      */
-    public XMLExists(TeiidParser p, int id) {
+    public XMLExists(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -64,7 +63,7 @@ public class XMLExists extends Criteria implements IXMLExists<LanguageVisitor> {
 
 	@Override
     public XMLExists clone() {
-        XMLExists clone = new XMLExists(this.parser, this.id);
+        XMLExists clone = new XMLExists(getTeiidVersion(), this.id);
 
         if(getXmlQuery() != null)
             clone.setXmlQuery(getXmlQuery().clone());

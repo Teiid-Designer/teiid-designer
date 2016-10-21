@@ -26,24 +26,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.ISPParameter;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.metadata.TempMetadataID.Type;
 import org.teiid.query.metadata.TempMetadataStore;
 import org.teiid.query.parser.QueryParser;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.ProcedureReservedWords;
@@ -52,7 +51,6 @@ import org.teiid.query.sql.lang.GroupContext;
 import org.teiid.query.sql.lang.ProcedureContainer;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.proc.CreateProcedureCommand;
-import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.proc.TriggerAction;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
@@ -119,7 +117,7 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
     protected abstract String getPlan(IQueryMetadataInterface metadata,
                            GroupSymbol group) throws Exception;
         
-	private static void addChanging(TeiidParser parser, TempMetadataStore discoveredMetadata,
+	private static void addChanging(ITeiidServerVersion teiidVersion, TempMetadataStore discoveredMetadata,
 			GroupContext externalGroups, List<ElementSymbol> elements) {
 		List<ElementSymbol> changingElements = new ArrayList<ElementSymbol>(elements.size());
         for(int i=0; i<elements.size(); i++) {
@@ -129,7 +127,7 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
             changingElements.add(changeElement);
         }
 
-        addScalarGroup(parser, ProcedureReservedWords.CHANGING, discoveredMetadata, externalGroups, changingElements, false);
+        addScalarGroup(teiidVersion, ProcedureReservedWords.CHANGING, discoveredMetadata, externalGroups, changingElements, false);
 	}
         
     /** 
@@ -220,20 +218,20 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
         }
     }
 
-    public static GroupSymbol addScalarGroup(TeiidParser teiidParser, String name, TempMetadataStore metadata, GroupContext externalGroups, List<? extends Expression> symbols) {
-    	return addScalarGroup(teiidParser, name, metadata, externalGroups, symbols, true);
+    public static GroupSymbol addScalarGroup(ITeiidServerVersion teiidVersion, String name, TempMetadataStore metadata, GroupContext externalGroups, List<? extends Expression> symbols) {
+    	return addScalarGroup(teiidVersion, name, metadata, externalGroups, symbols, true);
     }
     
-	public static GroupSymbol addScalarGroup(TeiidParser teiidParser, String name, TempMetadataStore metadata, GroupContext externalGroups, List<? extends Expression> symbols, boolean updatable) {
+	public static GroupSymbol addScalarGroup(ITeiidServerVersion teiidVersion, String name, TempMetadataStore metadata, GroupContext externalGroups, List<? extends Expression> symbols, boolean updatable) {
 		boolean[] updateArray = new boolean[symbols.size()];
 		if (updatable) {
 			Arrays.fill(updateArray, true);
 		}
-		return addScalarGroup(teiidParser, name, metadata, externalGroups, symbols, updateArray);
+		return addScalarGroup(teiidVersion, name, metadata, externalGroups, symbols, updateArray);
 	}
 	
-	public static GroupSymbol addScalarGroup(TeiidParser teiidParser, String name, TempMetadataStore metadata, GroupContext externalGroups, List<? extends Expression> symbols, boolean[] updatable) {
-	    GroupSymbol variables = teiidParser.createASTNode(ASTNodes.GROUP_SYMBOL);
+	public static GroupSymbol addScalarGroup(ITeiidServerVersion teiidVersion, String name, TempMetadataStore metadata, GroupContext externalGroups, List<? extends Expression> symbols, boolean[] updatable) {
+	    GroupSymbol variables = TeiidNodeFactory.createASTNode(teiidVersion, ASTNodes.GROUP_SYMBOL);
 		variables.setName(name);
 	    externalGroups.addGroup(variables);
 	    TempMetadataID tid = metadata.addTempGroup(name, symbols);
@@ -260,7 +258,7 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 	public static void findChildCommandMetadata(QueryResolver queryResolver, Command currentCommand,
 			GroupSymbol container, int type, IQueryMetadataInterface metadata, boolean inferProcedureResultSetColumns)
 			throws Exception {
-	    TeiidParser parser = queryResolver.getQueryParser().getTeiidParser();
+	    ITeiidServerVersion teiidVersion = queryResolver.getTeiidVersion();
 		//find the childMetadata using a clean metadata store
 	    TempMetadataStore childMetadata = new TempMetadataStore();
 	    TempMetadataAdapter tma = new TempMetadataAdapter(metadata, childMetadata);
@@ -272,11 +270,11 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 		    //TODO: it seems easier to just inline the handling here rather than have each of the resolvers check for trigger actions
 		    List<ElementSymbol> viewElements = ResolverUtil.resolveElementsInGroup(ta.getView(), metadata);
 		    if (type == ICommand.TYPE_UPDATE || type == ICommand.TYPE_INSERT) {
-		    	addChanging(parser, tma.getMetadataStore(), externalGroups, viewElements);
-		    	addScalarGroup(parser, SQLConstants.Reserved.NEW, tma.getMetadataStore(), externalGroups, viewElements, false);
+		    	addChanging(teiidVersion, tma.getMetadataStore(), externalGroups, viewElements);
+		    	addScalarGroup(teiidVersion, SQLConstants.Reserved.NEW, tma.getMetadataStore(), externalGroups, viewElements, false);
 		    }
 		    if (type == ICommand.TYPE_UPDATE || type == ICommand.TYPE_DELETE) {
-		    	addScalarGroup(parser, SQLConstants.Reserved.OLD, tma.getMetadataStore(), externalGroups, viewElements, false);
+		    	addScalarGroup(teiidVersion, SQLConstants.Reserved.OLD, tma.getMetadataStore(), externalGroups, viewElements, false);
 		    }
 		} else if (currentCommand instanceof CreateProcedureCommand) {
 			CreateProcedureCommand cupc = (CreateProcedureCommand)currentCommand;
@@ -308,9 +306,9 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 		        if (inferProcedureResultSetColumns) {
 		        	rsColumns = null;
 		        }
-		        GroupSymbol gs = addScalarGroup(parser, procName, childMetadata, externalGroups, tempElements, updatable);
+		        GroupSymbol gs = addScalarGroup(teiidVersion, procName, childMetadata, externalGroups, tempElements, updatable);
 		        if (cupc.getReturnVariable() != null) {
-		        	ResolverVisitor visitor = new ResolverVisitor(parser.getVersion());
+		        	ResolverVisitor visitor = new ResolverVisitor(teiidVersion);
 		        	visitor.resolveLanguageObject(cupc.getReturnVariable(), Arrays.asList(gs), metadata);
 		        }
 		        cupc.setResultSetColumns(rsColumns);

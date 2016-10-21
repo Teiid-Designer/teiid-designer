@@ -1539,7 +1539,7 @@ CommandStatement sqlStatement(ParseInfo info) #CommandStatement :
       {
         storedProcedure = newStoredProcedure();
         elementID = elementSymbol(var);
-        SPParameter parameter = new SPParameter(this, 1, SPParameter.RETURN_VALUE, "return"); //$NON-NLS-1$
+        SPParameter parameter = new SPParameter(getVersion(), 1, SPParameter.RETURN_VALUE, "return"); //$NON-NLS-1$
         parameter.setExpression(elementID);
 	    storedProcedure.setParameter(parameter);  
 	    storedProcedure.setCalledWithReturn(true);            
@@ -1813,7 +1813,7 @@ StoredProcedure callableStatement(ParseInfo info) :
 	<LBRACE>
 	[<QMARK> <EQ>
 	 {
-	   parameter = new SPParameter(this, parameterIndex++, SPParameter.RETURN_VALUE, "return"); //$NON-NLS-1$
+	   parameter = new SPParameter(getVersion(), parameterIndex++, SPParameter.RETURN_VALUE, "return"); //$NON-NLS-1$
 	   storedProcedure.setParameter(parameter);
 	   storedProcedure.setCalledWithReturn(true);
 	 }
@@ -1906,14 +1906,14 @@ StoredProcedure executeUnnamedParams(ParseInfo info, StoredProcedure storedProce
 
 	(value = expression(info)
 		{
-				parameter = new SPParameter(this, parameterIndex++, value);
+				parameter = new SPParameter(getVersion(), parameterIndex++, value);
 				parameter.setParameterType(SPParameter.IN);
 				storedProcedure.setParameter(parameter);
 		}
 		(	<COMMA>
 			value = expression(info)
 			{
-					parameter = new SPParameter(this, parameterIndex++, value);
+					parameter = new SPParameter(getVersion(), parameterIndex++, value);
 					parameter.setParameterType(SPParameter.IN);
 					storedProcedure.setParameter(parameter);
 			}
@@ -1943,7 +1943,7 @@ StoredProcedure executeNamedParams(ParseInfo info, StoredProcedure storedProcedu
 	 <EQ> [<GT>]
 	 value = expression(info)
 		{
-			parameter = new SPParameter(this, parameterIndex++, value);
+			parameter = new SPParameter(getVersion(), parameterIndex++, value);
 			parameter.setName(name);
 			parameter.setParameterType(SPParameter.IN);
 			storedProcedure.setParameter(parameter);
@@ -1954,7 +1954,7 @@ StoredProcedure executeNamedParams(ParseInfo info, StoredProcedure storedProcedu
 	 		<EQ> [<GT>]
 	 		value = expression(info)
 			{
-				parameter = new SPParameter(this, parameterIndex++, value);
+				parameter = new SPParameter(getVersion(), parameterIndex++, value);
 				parameter.setName(name);
 				parameter.setParameterType(SPParameter.IN);
 				storedProcedure.setParameter(parameter);

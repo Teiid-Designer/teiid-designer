@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.IInto;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
@@ -18,7 +18,7 @@ public class Into extends SimpleNode implements IInto<LanguageVisitor> {
      * @param p
      * @param id
      */
-    public Into(TeiidParser p, int id) {
+    public Into(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -67,7 +67,7 @@ public class Into extends SimpleNode implements IInto<LanguageVisitor> {
 
     @Override
     public Into clone() {
-        Into clone = new Into(this.parser, this.id);
+        Into clone = new Into(getTeiidVersion(), this.id);
 
         if(getGroup() != null)
             clone.setGroup(getGroup().clone());

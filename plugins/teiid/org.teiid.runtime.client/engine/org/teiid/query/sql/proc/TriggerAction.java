@@ -4,8 +4,8 @@ package org.teiid.query.sql.proc;
 
 import java.util.List;
 import org.teiid.designer.query.sql.proc.ITriggerAction;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -23,7 +23,7 @@ public class TriggerAction extends Command implements ITriggerAction<Expression,
      * @param p
      * @param id
      */
-    public TriggerAction(TeiidParser p, int id) {
+    public TriggerAction(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -93,7 +93,7 @@ public class TriggerAction extends Command implements ITriggerAction<Expression,
 
     @Override
     public TriggerAction clone() {
-        TriggerAction clone = new TriggerAction(this.parser, this.id);
+        TriggerAction clone = new TriggerAction(getTeiidVersion(), this.id);
 
         if(getBlock() != null)
             clone.setBlock(getBlock().clone());

@@ -4,8 +4,8 @@ package org.teiid.query.sql.lang;
 
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IQueryCommand;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -26,7 +26,7 @@ public abstract class QueryCommand extends Command
      * @param p
      * @param id
      */
-    public QueryCommand(TeiidParser p, int id) {
+    public QueryCommand(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 

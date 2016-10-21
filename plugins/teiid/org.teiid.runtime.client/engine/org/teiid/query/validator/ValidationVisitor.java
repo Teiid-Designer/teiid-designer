@@ -1102,7 +1102,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
                 Expression value = entry.getValue();    
                 if (EvaluatableVisitor.isFullyEvaluatable(value, true)) {
                     try {
-                        Constant c = getTeiidParser().createASTNode(ASTNodes.CONSTANT);
+                        Constant c = createASTNode(ASTNodes.CONSTANT);
                         c.setValue(Evaluator.assess(value));
                         value = c;
                     } catch (Exception err) {

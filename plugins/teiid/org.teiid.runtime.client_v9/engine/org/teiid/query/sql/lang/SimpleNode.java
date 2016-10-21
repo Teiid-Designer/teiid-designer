@@ -3,14 +3,21 @@
 package org.teiid.query.sql.lang;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.parser.TeiidNodeFactory;
+import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
+import org.teiid.query.parser.TeiidParserSPI;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.runtime.client.admin.StringConstants;
 
@@ -23,25 +30,31 @@ public class SimpleNode implements Node, LanguageObject, StringConstants {
     protected Node[] children;
     protected int id;
     protected Object value;
-    protected TeiidParser parser;
+    protected final ITeiidServerVersion teiidVersion;
+    private Set<Comment> comments;
 
     /**
      * @param p
      * @param i
      */
-    public SimpleNode(TeiidParser p, int i) {
+    public SimpleNode(ITeiidServerVersion teiidVersion, int i) {
         id = i;
-        parser = p;
+        this.teiidVersion = teiidVersion;
     }
 
     @Override
-    public TeiidParser getTeiidParser() {
-        return parser;
+    public DataTypeManagerService getDataTypeService() {
+        return DataTypeManagerService.getInstance(getTeiidVersion());
+    }
+
+    @Override
+    public <T extends LanguageObject> T createASTNode(ASTNodes nodeType) {
+        return TeiidNodeFactory.createASTNode(getTeiidVersion(), nodeType);
     }
 
     @Override
     public ITeiidServerVersion getTeiidVersion() {
-        return parser.getVersion();
+        return teiidVersion;
     }
 
     protected boolean isTeiidVersionOrGreater(Version teiidVersion) {
@@ -59,7 +72,12 @@ public class SimpleNode implements Node, LanguageObject, StringConstants {
      */
     @Override
     public Set<Comment> getComments() {
-        return parser.getComments();
+    	return comments != null ? comments : Collections.emptySet();
+    }
+
+    @Override
+    public void setComments(Set<Comment> comments) {
+    	this.comments = comments;
     }
 
     @Override
@@ -169,7 +187,7 @@ public class SimpleNode implements Node, LanguageObject, StringConstants {
 
     @Override
     public SimpleNode clone() {
-        SimpleNode clone = new SimpleNode(this.parser, this.id);
+        SimpleNode clone = new SimpleNode(getTeiidVersion(), this.id);
         return clone;
     }
 

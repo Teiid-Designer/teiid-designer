@@ -5,8 +5,8 @@ package org.teiid.query.sql.symbol;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.query.sql.symbol.IXMLNamespaces;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.NamespaceItem;
 import org.teiid.query.sql.lang.SimpleNode;
 
@@ -21,7 +21,7 @@ public class XMLNamespaces extends SimpleNode implements IXMLNamespaces<Language
      * @param p
      * @param id
      */
-    public XMLNamespaces(TeiidParser p, int id) {
+    public XMLNamespaces(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -67,7 +67,7 @@ public class XMLNamespaces extends SimpleNode implements IXMLNamespaces<Language
 
     @Override
     public XMLNamespaces clone() {
-        XMLNamespaces clone = new XMLNamespaces(this.parser, this.id);
+        XMLNamespaces clone = new XMLNamespaces(getTeiidVersion(), this.id);
 
         if(getNamespaceItems() != null) {
             List<NamespaceItem> cloneList = new ArrayList<NamespaceItem>();

@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.proc.ICriteriaSelector;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
 
 /**
@@ -27,7 +27,7 @@ public class CriteriaSelector extends SimpleNode implements CriteriaOperator, IC
      * @param p
      * @param id
      */
-    public CriteriaSelector(TeiidParser p, int id) {
+    public CriteriaSelector(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -113,7 +113,7 @@ public class CriteriaSelector extends SimpleNode implements CriteriaOperator, IC
 
     @Override
     public CriteriaSelector clone() {
-        CriteriaSelector clone = new CriteriaSelector(this.parser, this.id);
+        CriteriaSelector clone = new CriteriaSelector(getTeiidVersion(), this.id);
 
         if(getElements() != null)
             clone.setElements(cloneList(getElements()));

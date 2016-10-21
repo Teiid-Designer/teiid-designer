@@ -4,8 +4,8 @@ package org.teiid.query.sql.symbol;
 
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.symbol.IXMLSerialize;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
@@ -31,7 +31,7 @@ public class XMLSerialize extends SimpleNode implements Expression, IXMLSerializ
      * @param p
      * @param id
      */
-    public XMLSerialize(TeiidParser p, int id) {
+    public XMLSerialize(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -111,7 +111,7 @@ public class XMLSerialize extends SimpleNode implements Expression, IXMLSerializ
             if (typeString == null) {
                 type = DataTypeManagerService.DefaultDataTypes.CLOB.getClass();
             } else {
-                type = parser.getDataTypeService().getDataTypeClass(typeString);
+                type = getDataTypeService().getDataTypeClass(typeString);
             }
         }
         return type;
@@ -183,7 +183,7 @@ public class XMLSerialize extends SimpleNode implements Expression, IXMLSerializ
 
     @Override
     public XMLSerialize clone() {
-        XMLSerialize clone = new XMLSerialize(this.parser, this.id);
+        XMLSerialize clone = new XMLSerialize(getTeiidVersion(), this.id);
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());

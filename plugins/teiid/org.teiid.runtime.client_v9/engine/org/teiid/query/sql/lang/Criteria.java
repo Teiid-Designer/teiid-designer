@@ -9,8 +9,8 @@ import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.ICompoundCriteria;
 import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -22,7 +22,7 @@ public class Criteria extends SimpleNode implements Expression, ICriteria<Langua
      * @param p
      * @param id
      */
-    public Criteria(TeiidParser p, int id) {
+    public Criteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -77,7 +77,7 @@ public class Criteria extends SimpleNode implements Expression, ICriteria<Langua
 
     @Override
     public Criteria clone() {
-        Criteria clone = new Criteria(this.parser, this.id);
+        Criteria clone = new Criteria(getTeiidVersion(), this.id);
 
 
         return clone;

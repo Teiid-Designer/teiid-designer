@@ -194,11 +194,11 @@ public class ExpressionMappingVisitor extends LanguageVisitor {
 		Expression replacementSymbol = replaceExpression(expr);
 		
 		if (!(replacementSymbol instanceof Symbol)) {
-		    replacementSymbol = getTeiidParser().createASTNode(ASTNodes.EXPRESSION_SYMBOL);
+		    replacementSymbol = createASTNode(ASTNodes.EXPRESSION_SYMBOL);
 		    ((ExpressionSymbol) replacementSymbol).setName(name);
 		    ((ExpressionSymbol) replacementSymbol).setExpression(replacementSymbol);
 		} else if (alias && createAliases() && !Symbol.getShortName(replacementSymbol).equals(name)) {
-		    AliasSymbol aliasSymbol = getTeiidParser().createASTNode(ASTNodes.ALIAS_SYMBOL);
+		    AliasSymbol aliasSymbol = createASTNode(ASTNodes.ALIAS_SYMBOL);
 		    aliasSymbol.setName(name);
             aliasSymbol.setSymbol(replacementSymbol);
             replacementSymbol = aliasSymbol;

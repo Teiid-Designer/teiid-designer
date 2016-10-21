@@ -23,7 +23,7 @@
 package org.teiid.query.mapping.xml;
 
 import org.teiid.designer.xml.IMappingAllNode;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 
 /** 
@@ -31,8 +31,8 @@ import org.teiid.query.parser.TeiidParser;
  */
 public class MappingAllNode extends MappingBaseNode implements IMappingAllNode<MappingNode> {
 
-    public MappingAllNode(TeiidParser teiidParser) {
-        super(teiidParser);
+    public MappingAllNode(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
         setProperty(MappingNodeConstants.Properties.NODE_TYPE, MappingNodeConstants.ALL);
     }    
     

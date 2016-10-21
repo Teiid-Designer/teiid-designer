@@ -3,11 +3,10 @@
 package org.teiid.query.sql.lang;
 
 import java.util.Collection;
-
 import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.designer.query.sql.lang.IUnaryFromClause;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
@@ -23,7 +22,7 @@ public class UnaryFromClause extends FromClause implements IUnaryFromClause<Grou
      * @param p
      * @param id
      */
-    public UnaryFromClause(TeiidParser p, int id) {
+    public UnaryFromClause(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -100,7 +99,7 @@ public class UnaryFromClause extends FromClause implements IUnaryFromClause<Grou
 
     @Override
     public UnaryFromClause clone() {
-        UnaryFromClause clone = new UnaryFromClause(this.parser, this.id);
+        UnaryFromClause clone = new UnaryFromClause(getTeiidVersion(), this.id);
 
         if(getGroup() != null)
             clone.setGroup(getGroup().clone());

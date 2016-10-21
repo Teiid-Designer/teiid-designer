@@ -37,6 +37,7 @@ import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.metadata.TempMetadataStore;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.resolver.ProcedureContainerResolver;
 import org.teiid.query.resolver.QueryResolver;
@@ -296,7 +297,7 @@ public class ExecResolver extends ProcedureContainerResolver {
                         } else {
                             //zero length array
                             List<Expression> exprs = new ArrayList<Expression>(0);
-                            Array array = create(ASTNodes.ARRAY); 
+                            Array array = createASTNode(ASTNodes.ARRAY); 
                             array.setExpressions(exprs);
                             array.setImplicit(true);
                             array.setType(param.getClassType());
@@ -339,7 +340,7 @@ public class ExecResolver extends ProcedureContainerResolver {
                     }
                     exprs.addAll(positionalExpressions.values());
                     positionalExpressions.clear();
-                    Array array = create(ASTNodes.ARRAY); 
+                    Array array = createASTNode(ASTNodes.ARRAY); 
                     array.setExpressions(exprs);
                     array.setImplicit(true);
                     expr = array;
@@ -414,7 +415,7 @@ public class ExecResolver extends ProcedureContainerResolver {
         discoveredMetadata.addTempGroup(procName, tempElements, isVirtual);
 
         // Resolve tempElements against new metadata
-        GroupSymbol procGroup = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL);
+        GroupSymbol procGroup = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.GROUP_SYMBOL);
         procGroup.setName(storedProcedureInfo.getProcedureCallableName());
         procGroup.setProcedure(true);
         TempMetadataID tid = discoveredMetadata.getTempGroupID(procName);

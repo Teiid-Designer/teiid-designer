@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.IAlterProcedure;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 
@@ -18,7 +18,7 @@ public abstract class AlterProcedure<T extends Command> extends Alter<T> impleme
      * @param p
      * @param id
      */
-    public AlterProcedure(TeiidParser p, int id) {
+    public AlterProcedure(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 

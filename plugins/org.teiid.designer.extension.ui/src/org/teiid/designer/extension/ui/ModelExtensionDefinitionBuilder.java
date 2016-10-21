@@ -247,7 +247,7 @@ public final class ModelExtensionDefinitionBuilder extends AbstractTeiidProjectB
             UTIL.log(IStatus.ERROR, MED_VALIDATION_MSG + originalMessage);
         }
 
-        Map<String, Comparable> attributes = new HashMap<String, Comparable>();
+        Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put(IMarker.SEVERITY, severity);
         attributes.put(IMarker.MESSAGE, message);
         if(hasLegacyNames) attributes.put(HAS_LEGACY_NAMES, true);

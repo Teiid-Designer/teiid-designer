@@ -5,9 +5,9 @@ package org.teiid.query.sql.proc;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.proc.IRaiseStatement;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -22,7 +22,7 @@ public class RaiseErrorStatement extends Statement implements ExpressionStatemen
      * @param p
      * @param id
      */
-    public RaiseErrorStatement(TeiidParser p, int id) {
+    public RaiseErrorStatement(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -82,7 +82,7 @@ public class RaiseErrorStatement extends Statement implements ExpressionStatemen
 
     @Override
     public RaiseErrorStatement clone() {
-        RaiseErrorStatement clone = new RaiseErrorStatement(this.parser, this.id);
+        RaiseErrorStatement clone = new RaiseErrorStatement(getTeiidVersion(), this.id);
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());

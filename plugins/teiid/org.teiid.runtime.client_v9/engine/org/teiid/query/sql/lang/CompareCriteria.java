@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.ICompareCriteria;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -24,7 +24,7 @@ public class CompareCriteria extends AbstractCompareCriteria implements ICompare
      * @param p
      * @param id
      */
-    public CompareCriteria(TeiidParser p, int id) {
+    public CompareCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -98,7 +98,7 @@ public class CompareCriteria extends AbstractCompareCriteria implements ICompare
 
     @Override
     public CompareCriteria clone() {
-        CompareCriteria clone = new CompareCriteria(this.parser, this.id);
+        CompareCriteria clone = new CompareCriteria(getTeiidVersion(), this.id);
 
         if(getRightExpression() != null)
             clone.setRightExpression(getRightExpression().clone());

@@ -4,9 +4,8 @@ package org.teiid.query.sql.lang;
 
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IWithQueryCommand;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
@@ -33,7 +32,7 @@ public class WithQueryCommand extends SimpleNode
      * @param p
      * @param id
      */
-    public WithQueryCommand(TeiidParser p, int id) {
+    public WithQueryCommand(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -138,7 +137,7 @@ public class WithQueryCommand extends SimpleNode
 
     @Override
     public WithQueryCommand clone() {
-        WithQueryCommand clone = new WithQueryCommand(this.parser, this.id);
+        WithQueryCommand clone = new WithQueryCommand(getTeiidVersion(), this.id);
 
         if(getColumns() != null)
             clone.setColumns(cloneList(getColumns()));

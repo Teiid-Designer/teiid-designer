@@ -38,10 +38,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
+
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
+
 import org.teiid.adminapi.impl.DataPolicyMetadata;
 import org.teiid.adminapi.impl.VDBMetaData;
 import org.teiid.core.types.BlobImpl;
@@ -55,7 +57,6 @@ import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.metadata.Column;
@@ -149,7 +150,6 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 
     public static Properties EMPTY_PROPS = new Properties();
 
-    private final TeiidParser teiidParser;
     private final CompositeMetadataStore store;
     private DataTypeManagerService dataTypeManager;
     private Map<String, VDBResources.Resource> vdbEntries;
@@ -174,17 +174,16 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 
     /**
      * TransformationMetadata constructor
-     * @param teiidParser
+     * @param teiidVersion
      * @param vdbMetadata
      * @param store
      * @param vdbEntries
      * @param systemFunctions 
      * @param functionTrees
      */
-    public TransformationMetadata(TeiidParser teiidParser, VDBMetaData vdbMetadata, final CompositeMetadataStore store, Map<String, VDBResources.Resource> vdbEntries, FunctionTree systemFunctions, Collection<FunctionTree> functionTrees) {
-        super(teiidParser.getVersion());
+    public TransformationMetadata(ITeiidServerVersion teiidVersion, VDBMetaData vdbMetadata, final CompositeMetadataStore store, Map<String, VDBResources.Resource> vdbEntries, FunctionTree systemFunctions, Collection<FunctionTree> functionTrees) {
+        super(teiidVersion);
     	ArgCheck.isNotNull(store);
-    	this.teiidParser = teiidParser;
     	this.vdbMetaData = vdbMetadata;
     	if (this.vdbMetaData !=null) {
     		this.scriptEngineManager = vdbMetadata.getAttachment(ScriptEngineManager.class);
@@ -208,26 +207,17 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
         	this.vdbEntries = vdbEntries;
         }
         if (functionTrees == null) {
-        	this.functionLibrary = new FunctionLibrary(teiidParser.getVersion(), systemFunctions);
+            this.functionLibrary = new FunctionLibrary(teiidVersion, systemFunctions);
         } else {
-            this.functionLibrary = new FunctionLibrary(teiidParser.getVersion(), systemFunctions, functionTrees.toArray(new FunctionTree[functionTrees.size()]));
+            this.functionLibrary = new FunctionLibrary(teiidVersion, systemFunctions, functionTrees.toArray(new FunctionTree[functionTrees.size()]));
         }
     }
 
-    private TransformationMetadata(TeiidParser teiidParser, final CompositeMetadataStore store, FunctionLibrary functionLibrary) {
-        super(teiidParser.getVersion());
-        this.teiidParser = teiidParser;
+    private TransformationMetadata(ITeiidServerVersion teiidVersion, final CompositeMetadataStore store, FunctionLibrary functionLibrary) {
+        super(teiidVersion);
         this.store = store;
     	this.vdbEntries = Collections.emptyMap();
         this.functionLibrary = functionLibrary;
-    }
-
-    public TeiidParser getTeiidParser() {
-        return teiidParser;
-    }
-
-    public ITeiidServerVersion getTeiidVersion() {
-        return teiidParser.getVersion();
     }
 
     /**
@@ -403,7 +393,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
                     String runtimeType = paramRecord.getRuntimeType();
                     int direction = this.convertParamRecordTypeToStoredProcedureType(paramRecord.getType());
                     // create a parameter and add it to the procedure object
-                    SPParameter spParam = new SPParameter(getTeiidParser(), paramRecord.getPosition(), direction, paramRecord.getFullName());
+                    SPParameter spParam = new SPParameter(getTeiidVersion(), paramRecord.getPosition(), direction, paramRecord.getFullName());
                     spParam.setMetadataID(paramRecord);
                     spParam.setClassType(getDataTypeManager().getDataTypeClass(runtimeType));
                     if (paramRecord.isVarArg()) {
@@ -418,7 +408,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
                     ColumnSet<Procedure> resultRecord = procRecord.getResultSet();
                     // resultSet is the last parameter in the procedure
                     int lastParamIndex = procInfo.getParameters().size() + 1;
-                    SPParameter param = new SPParameter(getTeiidParser(), lastParamIndex, SPParameter.RESULT_SET, resultRecord.getFullName());
+                    SPParameter param = new SPParameter(getTeiidVersion(), lastParamIndex, SPParameter.RESULT_SET, resultRecord.getFullName());
                     param.setClassType(java.sql.ResultSet.class);
                     param.setMetadataID(resultRecord);
 
@@ -782,7 +772,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
             // get mapping transform
             String document = tableRecord.getSelectTransformation();            
             InputStream inputStream = new ByteArrayInputStream(document.getBytes());
-            MappingLoader reader = new MappingLoader(getTeiidParser());
+            MappingLoader reader = new MappingLoader(getTeiidVersion());
             try{
                 mappingDoc = reader.loadDocument(inputStream);
                 mappingDoc.setName(groupName);
@@ -1116,7 +1106,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 	
 	@Override
 	public IQueryMetadataInterface getDesignTimeMetadata() {
-		TransformationMetadata tm = new TransformationMetadata(getTeiidParser(), store, functionLibrary);
+		TransformationMetadata tm = new TransformationMetadata(getTeiidVersion(), store, functionLibrary);
 		tm.groupInfoCache = this.groupInfoCache;
 		tm.metadataCache = this.metadataCache;
 		tm.partialNameToFullNameCache = this.partialNameToFullNameCache;

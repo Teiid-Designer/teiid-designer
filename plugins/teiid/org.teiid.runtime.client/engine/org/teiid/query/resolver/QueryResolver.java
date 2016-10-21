@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.api.exception.query.QueryValidatorException;
 import org.teiid.core.types.DataTypeManagerService;
@@ -43,6 +44,7 @@ import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.metadata.TempMetadataStore;
 import org.teiid.query.parser.QueryParser;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.resolver.command.AlterResolver;
@@ -305,13 +307,13 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
 		    	elementSymbol.setIsExternalReference(true);
 		    	if (!positional) {
 		    	    if (isTeiid87OrGreater()) {
-		    	        ElementSymbol inputSymbol = teiidParser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+		    	        ElementSymbol inputSymbol = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.ELEMENT_SYMBOL);
 		    	        inputSymbol.setName("INPUT" + Symbol.SEPARATOR + name); //$NON-NLS-1$
 		    	        inputSymbol.setType(elementSymbol.getType());
 		    	        symbolMap.put(inputSymbol, elementSymbol.clone());
 		    	    }
 		    	    
-		    	    ElementSymbol keySymbol = teiidParser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+		    	    ElementSymbol keySymbol = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.ELEMENT_SYMBOL);
 		    	    keySymbol.setName(BINDING_GROUP + Symbol.SEPARATOR + name);
 		    		symbolMap.put(keySymbol, elementSymbol.clone());
 		    		elementSymbol.setShortName(name);
@@ -338,8 +340,8 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
 		        
 		        GroupContext externalGroups = new GroupContext();
 		        
-		        ProcedureContainerResolver.addScalarGroup(parser.getTeiidParser(), "INPUT", rootExternalStore, externalGroups, elements); //$NON-NLS-1$
-		        ProcedureContainerResolver.addScalarGroup(parser.getTeiidParser(), BINDING_GROUP, rootExternalStore, externalGroups, elements);
+		        ProcedureContainerResolver.addScalarGroup(getTeiidVersion(), "INPUT", rootExternalStore, externalGroups, elements); //$NON-NLS-1$
+		        ProcedureContainerResolver.addScalarGroup(getTeiidVersion(), BINDING_GROUP, rootExternalStore, externalGroups, elements);
 		        setChildMetadata(currentCommand, rootExternalStore, externalGroups);
 		    }
 		}
@@ -599,7 +601,7 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
 				String insertPlan = qmi.getInsertPlan(virtualGroup.getMetadataID());
 				//the elements must be against the view and not the alias
 				if (virtualGroup.getDefinition() != null) {
-					GroupSymbol group = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL);
+					GroupSymbol group = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.GROUP_SYMBOL);
 					group.setName(virtualGroup.getNonCorrelationName());
 					group.setMetadataID(virtualGroup.getMetadataID());
 					virtualGroup = group;

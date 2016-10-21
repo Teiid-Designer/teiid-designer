@@ -22,8 +22,8 @@
 
 package org.teiid.query.mapping.xml;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.xml.IMappingCriteriaNode;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Criteria;
 
 
@@ -36,15 +36,15 @@ public class MappingCriteriaNode extends MappingBaseNode implements IMappingCrit
     boolean defalt;
     Criteria criteriaNode;
     
-    public MappingCriteriaNode(TeiidParser teiidParser, String criteria, boolean defalt) {
-        super(teiidParser);
+    public MappingCriteriaNode(ITeiidServerVersion teiidVersion, String criteria, boolean defalt) {
+        super(teiidVersion);
         setCriteria(criteria);
         setAsDefault(defalt);
         setProperty(MappingNodeConstants.Properties.NODE_TYPE, MappingNodeConstants.CRITERIA);
     }
          
-    public MappingCriteriaNode(TeiidParser teiidParser) {
-        super(teiidParser);
+    public MappingCriteriaNode(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
         setAsDefault(true);
         setProperty(MappingNodeConstants.Properties.NODE_TYPE, MappingNodeConstants.CRITERIA);
     }

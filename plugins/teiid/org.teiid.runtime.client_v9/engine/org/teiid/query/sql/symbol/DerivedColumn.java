@@ -3,8 +3,8 @@
 package org.teiid.query.sql.symbol;
 
 import org.teiid.designer.query.sql.symbol.IDerivedColumn;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
@@ -22,7 +22,7 @@ public class DerivedColumn extends SimpleNode implements IDerivedColumn<Language
      * @param p
      * @param id
      */
-    public DerivedColumn(TeiidParser p, int id) {
+    public DerivedColumn(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -102,7 +102,7 @@ public class DerivedColumn extends SimpleNode implements IDerivedColumn<Language
 
     @Override
     public DerivedColumn clone() {
-        DerivedColumn clone = new DerivedColumn(this.parser, this.id);
+        DerivedColumn clone = new DerivedColumn(getTeiidVersion(), this.id);
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());

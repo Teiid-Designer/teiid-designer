@@ -9,10 +9,9 @@ package org.teiid.query.sql.symbol;
 
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.symbol.ISymbol;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 import org.teiid.runtime.client.Messages;
 
@@ -70,7 +69,7 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
      * @param p
      * @param i
      */
-    public Symbol(TeiidParser p, int i) {
+    public Symbol(ITeiidServerVersion p, int i) {
         super(p, i);
     }
 
@@ -180,7 +179,7 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
 
     @Override
     public Symbol clone() {
-        Symbol clone = new Symbol(this.parser, this.id);
+        Symbol clone = new Symbol(getTeiidVersion(), this.id);
 
         if(getShortCanonicalName() != null)
             clone.setShortCanonicalName(getShortCanonicalName());

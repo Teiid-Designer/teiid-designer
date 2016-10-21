@@ -7,9 +7,9 @@ import java.util.List;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
@@ -39,7 +39,7 @@ public class CreateProcedureCommand extends Command
      * @param p
      * @param id
      */
-    public CreateProcedureCommand(TeiidParser p, int id) {
+    public CreateProcedureCommand(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -187,7 +187,7 @@ public class CreateProcedureCommand extends Command
 
     @Override
     public CreateProcedureCommand clone() {
-        CreateProcedureCommand clone = new CreateProcedureCommand(this.parser, this.id);
+        CreateProcedureCommand clone = new CreateProcedureCommand(getTeiidVersion(), this.id);
 
         if(getBlock() != null)
             clone.setBlock(getBlock().clone());

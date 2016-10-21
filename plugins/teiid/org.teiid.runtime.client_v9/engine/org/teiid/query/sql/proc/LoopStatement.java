@@ -3,8 +3,8 @@
 package org.teiid.query.sql.proc;
 
 import org.teiid.designer.query.sql.proc.ILoopStatement;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Labeled;
 import org.teiid.query.sql.lang.Query;
@@ -28,7 +28,7 @@ public class LoopStatement extends Statement
      * @param p
      * @param id
      */
-    public LoopStatement(TeiidParser p, int id) {
+    public LoopStatement(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -143,7 +143,7 @@ public class LoopStatement extends Statement
 
     @Override
     public LoopStatement clone() {
-        LoopStatement clone = new LoopStatement(this.parser, this.id);
+        LoopStatement clone = new LoopStatement(getTeiidVersion(), this.id);
 
         if(getLabel() != null)
             clone.setLabel(getLabel());

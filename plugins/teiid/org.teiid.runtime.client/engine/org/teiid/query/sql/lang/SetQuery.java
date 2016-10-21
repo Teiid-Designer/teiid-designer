@@ -10,8 +10,9 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.query.parser.LanguageVisitor;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.Expression;
@@ -40,7 +41,7 @@ public class SetQuery extends QueryCommand
      * @param p
      * @param id
      */
-    public SetQuery(TeiidParser p, int id) {
+    public SetQuery(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -184,8 +185,8 @@ public class SetQuery extends QueryCommand
                 }
 
                 if (originalSymbol instanceof Symbol) {
-                    TeiidParser teiidParser = originalSymbol.getTeiidParser();
-                    AliasSymbol aliasSymbol = teiidParser.createASTNode(ASTNodes.ALIAS_SYMBOL);
+                    ITeiidServerVersion teiidVersion = originalSymbol.getTeiidVersion();
+                    AliasSymbol aliasSymbol = TeiidNodeFactory.createASTNode(teiidVersion, ASTNodes.ALIAS_SYMBOL);
                     aliasSymbol.setName(Symbol.getShortName(originalSymbol));
                     aliasSymbol.setSymbol(symbol);
                     symbol = aliasSymbol;
@@ -232,7 +233,7 @@ public class SetQuery extends QueryCommand
 
     @Override
     public SetQuery clone() {
-        SetQuery clone = new SetQuery(this.parser, this.id);
+        SetQuery clone = new SetQuery(getTeiidVersion(), this.id);
 
         this.copyMetadataState(clone);
 

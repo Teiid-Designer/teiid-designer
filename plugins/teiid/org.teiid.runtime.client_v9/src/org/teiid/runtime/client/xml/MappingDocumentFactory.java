@@ -28,32 +28,32 @@ import org.teiid.query.mapping.xml.MappingNodeConstants;
 import org.teiid.query.mapping.xml.MappingRecursiveElement;
 import org.teiid.query.mapping.xml.MappingSequenceNode;
 import org.teiid.query.mapping.xml.Namespace;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
  *
  */
 public class MappingDocumentFactory implements IMappingDocumentFactory {
 
-    private final TeiidParser teiidParser;
+    private final ITeiidServerVersion teiidVersion;
 
     /**
-     * @param teiidParser
+     * @param teiidVersion
      */
-    public MappingDocumentFactory(TeiidParser teiidParser) {
-        this.teiidParser = teiidParser;
+    public MappingDocumentFactory(ITeiidServerVersion teiidVersion) {
+        this.teiidVersion = teiidVersion;
     }
 
     /**
      * @return the queryFactory
      */
-    public TeiidParser getTeiidParser() {
-        return this.teiidParser;
+    public ITeiidServerVersion getTeiidVersion() {
+        return this.teiidVersion;
     }
 
     @Override
     public IMappingDocument loadMappingDocument(InputStream inputStream, String documentName) throws Exception {
-        MappingLoader reader = new MappingLoader(getTeiidParser());
+        MappingLoader reader = new MappingLoader(getTeiidVersion());
         MappingDocument mappingDoc = null;
         mappingDoc = reader.loadDocument(inputStream);
         mappingDoc.setName(documentName);
@@ -63,7 +63,7 @@ public class MappingDocumentFactory implements IMappingDocumentFactory {
     
     @Override
     public IMappingDocument createMappingDocument(String encoding, boolean formatted) {
-        return new MappingDocument(getTeiidParser(), encoding, formatted);
+        return new MappingDocument(getTeiidVersion(), encoding, formatted);
     }
     
     private Namespace getNamespace(final String prefix) {
@@ -86,7 +86,7 @@ public class MappingDocumentFactory implements IMappingDocumentFactory {
     @Override
     public IMappingElement createMappingElement(String name, String nsPrefix) {
         Namespace namespace = getNamespace(nsPrefix);
-        return new MappingElement(getTeiidParser(), name, namespace);
+        return new MappingElement(getTeiidVersion(), name, namespace);
     }
 
     @Override
@@ -94,33 +94,33 @@ public class MappingDocumentFactory implements IMappingDocumentFactory {
                                                                   String nsPrefix,
                                                                   String recursionMappingClass) {
         Namespace namespace = getNamespace(nsPrefix);
-        return new MappingRecursiveElement(getTeiidParser(), name, namespace, recursionMappingClass);
+        return new MappingRecursiveElement(getTeiidVersion(), name, namespace, recursionMappingClass);
     }
 
     @Override
     public IMappingAttribute createMappingAttribute(String name, String nsPrefix) {
         Namespace namespace = getNamespace(nsPrefix);
-        return new MappingAttribute(getTeiidParser(), name, namespace);
+        return new MappingAttribute(getTeiidVersion(), name, namespace);
     }
 
     @Override
     public IMappingCriteriaNode createMappingCriteriaNode(String criteria, boolean isDefault) {
-        return new MappingCriteriaNode(getTeiidParser(), criteria, isDefault); 
+        return new MappingCriteriaNode(getTeiidVersion(), criteria, isDefault); 
     }
 
     @Override
     public IMappingChoiceNode createMappingChoiceNode(boolean exceptionOnDefault) {
-        return new MappingChoiceNode(getTeiidParser(), exceptionOnDefault);
+        return new MappingChoiceNode(getTeiidVersion(), exceptionOnDefault);
     }
     
     @Override
     public IMappingAllNode createMappingAllNode() {
-        return new MappingAllNode(getTeiidParser());
+        return new MappingAllNode(getTeiidVersion());
     }
     
     @Override
     public IMappingSequenceNode createMappingSequenceNode() {
-        return new MappingSequenceNode(getTeiidParser());
+        return new MappingSequenceNode(getTeiidVersion());
     }
   
 }

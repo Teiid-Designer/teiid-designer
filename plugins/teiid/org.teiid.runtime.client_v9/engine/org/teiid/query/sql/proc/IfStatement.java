@@ -3,8 +3,8 @@
 package org.teiid.query.sql.proc;
 
 import org.teiid.designer.query.sql.proc.IIfStatement;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Criteria;
 
 /**
@@ -25,7 +25,7 @@ public class IfStatement extends Statement implements IIfStatement<LanguageVisit
      * @param p
      * @param id
      */
-    public IfStatement(TeiidParser p, int id) {
+    public IfStatement(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -131,7 +131,7 @@ public class IfStatement extends Statement implements IIfStatement<LanguageVisit
 
     @Override
     public IfStatement clone() {
-        IfStatement clone = new IfStatement(this.parser, this.id);
+        IfStatement clone = new IfStatement(getTeiidVersion(), this.id);
 
         if(getCondition() != null)
             clone.setCondition(getCondition().clone());

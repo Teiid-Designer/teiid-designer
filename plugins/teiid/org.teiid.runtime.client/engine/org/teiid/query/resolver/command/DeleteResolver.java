@@ -59,7 +59,7 @@ public class DeleteResolver extends ProcedureContainerResolver {
         Set<GroupSymbol> groups = new HashSet<GroupSymbol>();
         groups.add(delete.getGroup());
         getQueryResolver().resolveSubqueries(command, metadata, groups);
-        ResolverVisitor visitor = new ResolverVisitor(getTeiidParser().getVersion());
+        ResolverVisitor visitor = new ResolverVisitor(getTeiidVersion());
         visitor.resolveLanguageObject(delete, groups, delete.getExternalGroupContexts(), metadata);
     }
     

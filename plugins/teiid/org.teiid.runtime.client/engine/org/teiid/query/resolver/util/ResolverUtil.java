@@ -58,8 +58,9 @@ import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.metadata.TempMetadataStore;
 import org.teiid.query.parser.QueryParser;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
@@ -284,7 +285,7 @@ public class ResolverUtil {
 	        //try to get the converted constant, if this fails then it is not in a valid format
 	        Constant result = getProperlyTypedConstant(constant.getValue(),
 	                                                   DataTypeManagerService.getInstance(constant.getTeiidVersion()).getDataTypeClass(targetTypeName),
-	                                                   constant.getTeiidParser());
+	                                                   constant.getTeiidVersion());
 
 	        if (DataTypeManagerService.DefaultDataTypes.STRING.getId().equals(sourceTypeName)) {
 	        	if (DataTypeManagerService.DefaultDataTypes.CHAR.getId().equals(targetTypeName)) {
@@ -305,7 +306,7 @@ public class ResolverUtil {
 	        	return null; //this is the case for xml constants
 	        }
 	        
-	        Constant reverse = getProperlyTypedConstant(result.getValue(), constant.getType(), constant.getTeiidParser());
+	        Constant reverse = getProperlyTypedConstant(result.getValue(), constant.getType(), constant.getTeiidVersion());
 	        
 	        if (((Comparable)constant.getValue()).compareTo(reverse.getValue()) == 0) {
 	            return result;
@@ -333,10 +334,10 @@ public class ResolverUtil {
 
         FunctionDescriptor fd = library.findTypedConversionFunction(srcType, dataTypeManagerService.getDataTypeClass(targetTypeName));
 
-        Constant constant = sourceExpression.getTeiidParser().createASTNode(ASTNodes.CONSTANT);
+        ITeiidServerVersion teiidVersion = sourceExpression.getTeiidVersion();
+        Constant constant = TeiidNodeFactory.createASTNode(teiidVersion, ASTNodes.CONSTANT);
         constant.setValue(targetTypeName);
-        TeiidParser teiidParser = sourceExpression.getTeiidParser();
-        Function conversion = teiidParser.createASTNode(ASTNodes.FUNCTION);
+        Function conversion = TeiidNodeFactory.createASTNode(teiidVersion, ASTNodes.FUNCTION);
         conversion.setName(fd.getName());
         conversion.setArgs(new Expression[] { sourceExpression, constant });
         conversion.setType(dataTypeManagerService.getDataTypeClass(targetTypeName));
@@ -584,7 +585,7 @@ public class ResolverUtil {
             return ResolverUtil.convertExpression(ex, DataTypeManagerService.getInstance(teiidVersion).getDataTypeName(type), metadata);
         }
 
-        return getProperlyTypedConstant(defaultValue, type, symbol.getTeiidParser());
+        return getProperlyTypedConstant(defaultValue, type, symbol.getTeiidVersion());
 	}    
 	
 	public static boolean hasDefault(Object mid, IQueryMetadataInterface metadata) throws Exception {
@@ -599,31 +600,30 @@ public class ResolverUtil {
      * Exception if the String can't be transformed.
      * @param defaultValue either null or a String
      * @param parameterType modeled type of parameter (MetaMatrix runtime type)
-     * @param teiidParser parser for creation of the new AST Constant node
+     * @param teiidVersion version for creation of the new AST Constant node
      * @return Constant with proper type and default value Object of proper Class.  Will
      * be null Constant if defaultValue is null.
      * @throws Exception if TransformationException is encountered
      * @since 4.3
      */
-    public static Constant getProperlyTypedConstant(Object defaultValue, Class<?> parameterType, TeiidParser teiidParser)
+    public static Constant getProperlyTypedConstant(Object defaultValue, Class<?> parameterType, ITeiidServerVersion teiidVersion)
         throws QueryResolverException{
-        ITeiidServerVersion version = teiidParser.getVersion();
-        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(version);
+        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
 
         try {            
             Object newValue = dataTypeManager.transformValue(defaultValue, parameterType);
-            Constant constant = teiidParser.createASTNode(ASTNodes.CONSTANT);
+            Constant constant = TeiidNodeFactory.createASTNode(teiidVersion, ASTNodes.CONSTANT);
             constant.setValue(newValue);
             constant.setType(parameterType);
             return constant;
         } catch (Exception e) {
-            if (version.isGreaterThanOrEqualTo(Version.TEIID_8_12_4)) {
+            if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_12_4)) {
                 //timestamp literals also allow date format
                 if (parameterType == DataTypeManagerService.DefaultDataTypes.TIMESTAMP.getTypeClass()) {
                     try {
                         Object newValue = dataTypeManager.transformValue(defaultValue,
                                                                          DataTypeManagerService.DefaultDataTypes.DATE);
-                        Constant constant = teiidParser.createASTNode(ASTNodes.CONSTANT);
+                        Constant constant = TeiidNodeFactory.createASTNode(teiidVersion, ASTNodes.CONSTANT);
                         constant.setValue(new Timestamp(((Date)newValue).getTime()));
                         constant.setType(parameterType);
                         return constant;
@@ -662,14 +662,14 @@ public class ResolverUtil {
 
     		LinkedHashMap<Object, ElementSymbol> symbols = new LinkedHashMap<Object, ElementSymbol>(elementIDs.size());
 
-    		TeiidParser parser = group.getTeiidParser();
+    		ITeiidServerVersion teiidVersion = group.getTeiidVersion();
             for (Object elementID : elementIDs) {
             	String elementName = metadata.getName(elementID);
             	String elementType = metadata.getElementType(elementID);
-            	Class<?> elementTypeClass = DataTypeManagerService.getInstance(group.getTeiidVersion()).getDataTypeClass(elementType);
+            	Class<?> elementTypeClass = DataTypeManagerService.getInstance(teiidVersion).getDataTypeClass(elementType);
 
                 // Form an element symbol from the ID
-            	ElementSymbol element = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+            	ElementSymbol element = TeiidNodeFactory.createASTNode(teiidVersion, ASTNodes.ELEMENT_SYMBOL);
             	element.setShortName(elementName);
             	element.setGroupSymbol(group);
                 element.setMetadataID(elementID);
@@ -928,7 +928,7 @@ public class ResolverUtil {
 
 	public static ResolvedLookup resolveLookup(Function lookup, IQueryMetadataInterface metadata) throws Exception {
 		Expression[] args = lookup.getArgs();
-		TeiidParser parser = lookup.getTeiidParser();
+		ITeiidServerVersion teiidVersion = lookup.getTeiidVersion();
 
 		ResolvedLookup result = new ResolvedLookup();
 	    // Special code to handle setting return type of the lookup function to match the type of the return element
@@ -936,7 +936,7 @@ public class ResolverUtil {
 		     throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30095));
 	    }
         // If code table name in lookup function refers to temp group throw exception
-		GroupSymbol groupSym = parser.createASTNode(ASTNodes.GROUP_SYMBOL);
+		GroupSymbol groupSym = TeiidNodeFactory.createASTNode(teiidVersion, ASTNodes.GROUP_SYMBOL);
 		groupSym.setName((String) ((Constant)args[0]).getValue());
 		try {
 			groupSym.setMetadataID(metadata.getGroupID((String) ((Constant)args[0]).getValue()));
@@ -951,9 +951,9 @@ public class ResolverUtil {
 		List<GroupSymbol> groups = Arrays.asList(groupSym);
 		
 		String returnElementName = (String) ((Constant)args[0]).getValue() + "." + (String) ((Constant)args[1]).getValue(); //$NON-NLS-1$
-		ElementSymbol returnElement = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+		ElementSymbol returnElement = TeiidNodeFactory.createASTNode(teiidVersion, ASTNodes.ELEMENT_SYMBOL);
 		returnElement.setName(returnElementName);
-		ResolverVisitor visitor = new ResolverVisitor(parser.getVersion());
+		ResolverVisitor visitor = new ResolverVisitor(teiidVersion);
         try {
             visitor.resolveLanguageObject(returnElement, groups, metadata);
         } catch(Exception e) {
@@ -962,7 +962,7 @@ public class ResolverUtil {
 		result.setReturnElement(returnElement);
         
         String keyElementName = (String) ((Constant)args[0]).getValue() + "." + (String) ((Constant)args[2]).getValue(); //$NON-NLS-1$
-        ElementSymbol keyElement = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+        ElementSymbol keyElement = TeiidNodeFactory.createASTNode(teiidVersion, ASTNodes.ELEMENT_SYMBOL);
         keyElement.setName(keyElementName);
         try {
             visitor.resolveLanguageObject(keyElement, groups, metadata);

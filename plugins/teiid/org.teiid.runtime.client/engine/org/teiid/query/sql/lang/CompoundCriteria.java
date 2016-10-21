@@ -5,8 +5,8 @@ package org.teiid.query.sql.lang;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.ICompoundCriteria;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.runtime.client.Messages;
 
 /**
@@ -30,7 +30,7 @@ public class CompoundCriteria extends Criteria implements ICompoundCriteria<Crit
      * @param p
      * @param id
      */
-    public CompoundCriteria(TeiidParser p, int id) {
+    public CompoundCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -134,7 +134,7 @@ public class CompoundCriteria extends Criteria implements ICompoundCriteria<Crit
 
     @Override
     public CompoundCriteria clone() {
-        CompoundCriteria clone = new CompoundCriteria(this.parser, this.id);
+        CompoundCriteria clone = new CompoundCriteria(getTeiidVersion(), this.id);
 
         clone.setOperator(getOperator());
         if(getCriteria() != null)

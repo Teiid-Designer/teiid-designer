@@ -33,7 +33,7 @@ import org.teiid.metadata.Column;
 import org.teiid.metadata.Table;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -54,7 +54,7 @@ public class Create extends Command
      * @param p
      * @param id
      */
-    public Create(TeiidParser p, int id) {
+    public Create(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -97,9 +97,9 @@ public class Create extends Command
     	if (columnSymbols == null) {
     		columnSymbols = new ArrayList<ElementSymbol>(columns.size());
     		for (Column column : columns) {
-				ElementSymbol es = getTeiidParser().createASTNode(ASTNodes.ELEMENT_SYMBOL); 
+				ElementSymbol es = createASTNode(ASTNodes.ELEMENT_SYMBOL); 
 				es.setName(column.getName());
-				es.setType(getTeiidParser().getDataTypeService().getDataTypeClass(column.getRuntimeType()));
+				es.setType(getDataTypeService().getDataTypeClass(column.getRuntimeType()));
 				es.setGroupSymbol(table);
 				columnSymbols.add(es);
 			}
@@ -141,7 +141,7 @@ public class Create extends Command
     		else
     		    c.setName(elementSymbol.getName());
 
-    		c.setRuntimeType(getTeiidParser().getDataTypeService().getDataTypeName(elementSymbol.getType()));
+    		c.setRuntimeType(getDataTypeService().getDataTypeName(elementSymbol.getType()));
     		c.setNullType(NullType.Nullable);
     		this.columns.add(c);
 		}
@@ -162,7 +162,7 @@ public class Create extends Command
     public void setTableMetadata(Table tableMetadata) {
     	if (tableMetadata != null) {
     		this.columns = tableMetadata.getColumns();
-    		this.table = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL); 
+    		this.table = createASTNode(ASTNodes.GROUP_SYMBOL); 
     		table.setName(tableMetadata.getName());
     	}
 		this.tableMetadata = tableMetadata;
@@ -206,7 +206,7 @@ public class Create extends Command
             for (int i = 0; i < this.columns.size(); i++) {
                 Column c = this.columns.get(i);
                 Column o = other.columns.get(i);
-                DataTypeManagerService dataTypeManager = getTeiidParser().getDataTypeService();
+                DataTypeManagerService dataTypeManager = getDataTypeService();
                 if (!c.getName().equalsIgnoreCase(o.getName()) 
                     || dataTypeManager.getDataTypeClass(c.getRuntimeType().toLowerCase()) != dataTypeManager.getDataTypeClass(o.getRuntimeType().toLowerCase())
                     || c.isAutoIncremented() != o.isAutoIncremented()
@@ -254,7 +254,7 @@ public class Create extends Command
 
     @Override
     public Create clone() {
-        Create clone = new Create(this.parser, this.id);
+        Create clone = new Create(getTeiidVersion(), this.id);
 
         if(getTable() != null)
             clone.setTable(getTable().clone());

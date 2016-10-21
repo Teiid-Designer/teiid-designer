@@ -30,12 +30,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.metadata.TempMetadataAdapter;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.resolver.ProcedureContainerResolver;
 import org.teiid.query.resolver.QueryResolver;
@@ -111,7 +113,7 @@ public class InsertResolver extends ProcedureContainerResolver implements Variab
                 }
             } else {
                 for (int i = 0; i < values.size(); i++) {
-                    ElementSymbol es = getTeiidParser().createASTNode(ASTNodes.ELEMENT_SYMBOL);
+                    ElementSymbol es = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.ELEMENT_SYMBOL);
                 	if (usingQuery) {
                 		Expression ses = (Expression)values.get(i);
                     	es.setName(Symbol.getShortName(ses));
@@ -140,7 +142,7 @@ public class InsertResolver extends ProcedureContainerResolver implements Variab
         if (insert.getQueryExpression() != null && metadata.isVirtualGroup(insert.getGroup().getMetadataID())) {
         	List<Reference> references = new ArrayList<Reference>(insert.getVariables().size());
         	for (int i = 0; i < insert.getVariables().size(); i++) {
-        	    Reference ref = getTeiidParser().createASTNode(ASTNodes.REFERENCE);
+        	    Reference ref = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.REFERENCE);
         	    ref.setIndex(i);
         	    ref.setPositional(true);
         		ref.setType(insert.getVariables().get(i).getType());
@@ -271,7 +273,7 @@ public class InsertResolver extends ProcedureContainerResolver implements Variab
             varSymbol.getGroupSymbol().setName(ProcedureReservedWords.CHANGING);
             varSymbol.setType(DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass());
             
-            Constant constant = getTeiidParser().createASTNode(ASTNodes.CONSTANT);
+            Constant constant = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.CONSTANT);
             constant.setValue(Boolean.TRUE);
             if (!changingOnly) {
             	varSymbol = next.clone();
@@ -291,7 +293,7 @@ public class InsertResolver extends ProcedureContainerResolver implements Variab
             varSymbol.getGroupSymbol().setName(ProcedureReservedWords.CHANGING);
             varSymbol.setType(DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass());
             
-            Constant constant = getTeiidParser().createASTNode(ASTNodes.CONSTANT);
+            Constant constant = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.CONSTANT);
             constant.setValue(Boolean.FALSE);
             result.put(varSymbol, constant);
             if (!changingOnly) {

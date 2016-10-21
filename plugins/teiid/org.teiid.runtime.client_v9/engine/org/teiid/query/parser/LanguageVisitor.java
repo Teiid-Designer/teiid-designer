@@ -280,10 +280,6 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         return this.parser;
     }
 
-    protected TeiidParser getTeiidParser() {
-        return parser.getTeiidParser();
-    }
-
     protected DataTypeManagerService getDataTypeManager() {
         if (dataTypeManager == null)
             dataTypeManager = DataTypeManagerService.getInstance(getTeiidVersion());
@@ -291,8 +287,8 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         return dataTypeManager;
     }
 
-    protected <T extends LanguageObject> T createNode(ASTNodes nodeType) {
-        return getTeiidParser().createASTNode(nodeType);
+    protected <T extends LanguageObject> T createASTNode(ASTNodes nodeType) {
+        return TeiidNodeFactory.createASTNode(getTeiidVersion(), nodeType);
     }
 
     public void setAbort(boolean abort) {

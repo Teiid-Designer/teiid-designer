@@ -4,8 +4,8 @@ package org.teiid.query.sql.symbol;
 
 import java.util.List;
 import org.teiid.designer.query.sql.symbol.IWindowSpecification;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.OrderBy;
 import org.teiid.query.sql.lang.SimpleNode;
 
@@ -22,7 +22,7 @@ public class WindowSpecification extends SimpleNode implements IWindowSpecificat
      * @param p
      * @param id
      */
-    public WindowSpecification(TeiidParser p, int id) {
+    public WindowSpecification(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -86,7 +86,7 @@ public class WindowSpecification extends SimpleNode implements IWindowSpecificat
 
     @Override
     public WindowSpecification clone() {
-        WindowSpecification clone = new WindowSpecification(this.parser, this.id);
+        WindowSpecification clone = new WindowSpecification(getTeiidVersion(), this.id);
 
         if(getOrderBy() != null)
             clone.setOrderBy(getOrderBy().clone());

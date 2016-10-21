@@ -30,7 +30,7 @@ import org.teiid.core.util.ArgCheck;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.xml.IMappingDocument;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.runtime.client.Messages;
 
 
@@ -45,12 +45,12 @@ public class MappingDocument extends MappingBaseNode implements IMappingDocument
     String encoding;
     String name;
     
-    public MappingDocument(TeiidParser teiidParser, boolean formatted) {
-        this(teiidParser, MappingNodeConstants.Defaults.DEFAULT_DOCUMENT_ENCODING, formatted);
+    public MappingDocument(ITeiidServerVersion teiidVersion, boolean formatted) {
+        this(teiidVersion, MappingNodeConstants.Defaults.DEFAULT_DOCUMENT_ENCODING, formatted);
     }
             
-    public MappingDocument(TeiidParser teiidParser, String encoding, boolean formatted) {
-        super(teiidParser);
+    public MappingDocument(ITeiidServerVersion teiidVersion, String encoding, boolean formatted) {
+        super(teiidVersion);
         if (encoding == null) {
             encoding = MappingNodeConstants.Defaults.DEFAULT_DOCUMENT_ENCODING;
         }

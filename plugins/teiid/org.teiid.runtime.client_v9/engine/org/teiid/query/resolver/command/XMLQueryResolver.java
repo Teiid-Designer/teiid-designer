@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
+
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
@@ -40,6 +41,7 @@ import org.teiid.query.mapping.xml.Navigator;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID.Type;
 import org.teiid.query.metadata.TempMetadataStore;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.resolver.CommandResolver;
 import org.teiid.query.resolver.QueryResolver;
@@ -305,7 +307,7 @@ public class XMLQueryResolver extends CommandResolver {
         		}
         		if (StringUtil.startsWithIgnoreCase(baseNode.getFullyQualifiedName(), prefix)) {
         			try {
-        			    GroupSymbol gs = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL);
+        			    GroupSymbol gs = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.GROUP_SYMBOL);
         			    gs.setName(baseNode.getFullyQualifiedName());
 						ResolverUtil.addTempGroup(metadata, gs, Collections.EMPTY_LIST, false).setMetadataType(Type.XML);
 					} catch (Exception e) {
@@ -358,7 +360,7 @@ public class XMLQueryResolver extends CommandResolver {
 						 throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30133));
 					}
 					select.clearSymbols();
-                    MultipleElementSymbol all = getTeiidParser().createASTNode(ASTNodes.MULTIPLE_ELEMENT_SYMBOL);
+                    MultipleElementSymbol all = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.MULTIPLE_ELEMENT_SYMBOL);
                     all.setElementSymbols(validElements.values());
 					select.addSymbol(all);
 					query.setSelect(select);
@@ -377,7 +379,7 @@ public class XMLQueryResolver extends CommandResolver {
     				return;
                 }
                 // resovlve the node which is specified
-                ElementSymbol elementSymbol = getTeiidParser().createASTNode(ASTNodes.ELEMENT_SYMBOL); 
+                ElementSymbol elementSymbol = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.ELEMENT_SYMBOL); 
                 elementSymbol.setName(all.getGroup().getName());
                 resolveElement(elementSymbol, validElements, externalGroups, metadata);
 
@@ -406,7 +408,7 @@ public class XMLQueryResolver extends CommandResolver {
         Collection<?> tempGroups = metadata.getXMLTempGroups(group.getMetadataID());
         for (Object tempGroupID : tempGroups) {
             String name = metadata.getFullName(tempGroupID);
-            GroupSymbol tempGroup = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL);
+            GroupSymbol tempGroup = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.GROUP_SYMBOL);
             tempGroup.setName(name);
             tempGroup.setMetadataID(tempGroupID);
 

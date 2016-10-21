@@ -243,8 +243,7 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
         assert (file != null) : "file is null"; //$NON-NLS-1$
         assert ((message != null) && !message.isEmpty()) : "message is empty"; //$NON-NLS-1$
 
-        @SuppressWarnings("rawtypes")
-		Map<String, Comparable> attributes = new HashMap<String, Comparable>();
+		Map<String, Object> attributes = new HashMap<String, Object>();
         attributes.put(IMarker.SEVERITY, severity);
         attributes.put(IMarker.MESSAGE, message);
         

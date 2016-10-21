@@ -5,7 +5,7 @@ package org.teiid.query.sql.proc;
 import org.teiid.designer.query.sql.proc.IAssignmentStatement;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.QueryCommand;
@@ -27,7 +27,7 @@ public class AssignmentStatement extends Statement implements ExpressionStatemen
      * @param p
      * @param id
      */
-    public AssignmentStatement(TeiidParser p, int id) {
+    public AssignmentStatement(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -63,7 +63,7 @@ public class AssignmentStatement extends Statement implements ExpressionStatemen
      */
     public void setCommand(Command command) {
         if (command instanceof QueryCommand) {
-            ScalarSubquery ssq = parser.createASTNode(ASTNodes.SCALAR_SUBQUERY);
+            ScalarSubquery ssq = createASTNode(ASTNodes.SCALAR_SUBQUERY);
             ssq.setCommand((QueryCommand) command);
             this.value = ssq;
         } else
@@ -162,7 +162,7 @@ public class AssignmentStatement extends Statement implements ExpressionStatemen
 
     @Override
     public AssignmentStatement clone() {
-        AssignmentStatement clone = new AssignmentStatement(this.parser, this.id);
+        AssignmentStatement clone = new AssignmentStatement(getTeiidVersion(), this.id);
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());

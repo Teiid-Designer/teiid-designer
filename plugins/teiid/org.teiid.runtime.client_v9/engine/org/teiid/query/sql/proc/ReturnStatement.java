@@ -3,9 +3,8 @@
 package org.teiid.query.sql.proc;
 
 import org.teiid.designer.query.sql.proc.IReturnStatement;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -17,7 +16,7 @@ public class ReturnStatement extends AssignmentStatement implements IReturnState
      * @param p
      * @param id
      */
-    public ReturnStatement(TeiidParser p, int id) {
+    public ReturnStatement(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -40,7 +39,7 @@ public class ReturnStatement extends AssignmentStatement implements IReturnState
     @SuppressWarnings( "deprecation" )
     @Override
     public ReturnStatement clone() {
-        ReturnStatement clone = new ReturnStatement(this.parser, this.id);
+        ReturnStatement clone = new ReturnStatement(getTeiidVersion(), this.id);
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());

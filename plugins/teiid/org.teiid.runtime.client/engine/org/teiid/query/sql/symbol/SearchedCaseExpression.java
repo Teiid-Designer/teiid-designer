@@ -5,8 +5,8 @@ package org.teiid.query.sql.symbol;
 import java.util.Collections;
 import java.util.List;
 import org.teiid.designer.query.sql.symbol.ISearchedCaseExpression;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.SimpleNode;
 import org.teiid.runtime.client.Messages;
@@ -34,7 +34,7 @@ public class SearchedCaseExpression extends SimpleNode
      * @param p
      * @param id
      */
-    public SearchedCaseExpression(TeiidParser p, int id) {
+    public SearchedCaseExpression(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -177,7 +177,7 @@ public class SearchedCaseExpression extends SimpleNode
 
     @Override
     public SearchedCaseExpression clone() {
-        SearchedCaseExpression clone = new SearchedCaseExpression(this.parser, this.id);
+        SearchedCaseExpression clone = new SearchedCaseExpression(getTeiidVersion(), this.id);
 
         if(getWhen() != null)
             clone.setWhen(cloneList(getWhen()), cloneList(getThen()));

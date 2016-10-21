@@ -74,7 +74,7 @@ public class CloneGenerator {
 
     private static final String RETURN = "return";
 
-    private static final String CONSTRUCTOR_PARAMS = "(this.parser, this.id)";
+    private static final String CONSTRUCTOR_PARAMS = "(getTeiidVersion(), this.id)";
 
     private static final String NEW = "new";
 

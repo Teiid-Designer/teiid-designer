@@ -324,7 +324,7 @@ public class SQLStringVisitor extends LanguageVisitor
     }
 
     private Constant newConstant(Object value) {
-        Constant constant = createNode(ASTNodes.CONSTANT);
+        Constant constant = createASTNode(ASTNodes.CONSTANT);
         constant.setValue(value);
         return constant;
     }
@@ -827,7 +827,7 @@ public class SQLStringVisitor extends LanguageVisitor
             append(REFERENCES);
             if (key.getReferenceTableName() != null) {
                 append(SPACE);
-                GroupSymbol gs = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL);
+                GroupSymbol gs = createASTNode(ASTNodes.GROUP_SYMBOL);
                 gs.setName(key.getReferenceTableName());
                 append(gs.getName());
             }
@@ -1076,7 +1076,7 @@ public class SQLStringVisitor extends LanguageVisitor
             sb.append(COMMA).append(SPACE);
         }
 
-        Constant c = getTeiidParser().createASTNode(ASTNodes.CONSTANT);
+        Constant c = createASTNode(ASTNodes.CONSTANT);
         c.setValue(value);
         value = c;
 
@@ -3337,8 +3337,7 @@ public class SQLStringVisitor extends LanguageVisitor
             append(NonReserved.DELIMITER);
             append(SPACE);
 
-            TeiidNodeFactory factory = new TeiidNodeFactory();
-            Constant constant = factory.create(getTeiidParser(), ASTNodes.CONSTANT);
+            Constant constant = createASTNode(ASTNodes.CONSTANT);
             constant.setValue(obj.getRowDelimiter());
             visitNode(constant);
         }
@@ -3550,8 +3549,7 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
         }
 
-        TeiidNodeFactory factory = new TeiidNodeFactory();
-        Constant constant = factory.create(getTeiidParser(), ASTNodes.CONSTANT);
+        Constant constant = createASTNode(ASTNodes.CONSTANT);
         constant.setValue(obj.getXquery());
         visitNode(constant);
 

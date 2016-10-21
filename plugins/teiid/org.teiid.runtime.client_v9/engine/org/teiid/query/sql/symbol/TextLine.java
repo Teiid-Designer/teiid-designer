@@ -3,11 +3,9 @@
 package org.teiid.query.sql.symbol;
 
 import java.util.List;
-import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.symbol.ITextLine;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
@@ -33,7 +31,7 @@ public class TextLine extends SimpleNode implements Expression, ITextLine<Langua
      * @param p
      * @param id
      */
-    public TextLine(TeiidParser p, int id) {
+    public TextLine(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -162,7 +160,7 @@ public class TextLine extends SimpleNode implements Expression, ITextLine<Langua
 
     @Override
     public TextLine clone() {
-        TextLine clone = new TextLine(this.parser, this.id);
+        TextLine clone = new TextLine(getTeiidVersion(), this.id);
 
         if(getDelimiter() != null)
             clone.setDelimiter(getDelimiter());

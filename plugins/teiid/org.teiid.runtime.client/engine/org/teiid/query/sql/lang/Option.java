@@ -12,7 +12,6 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants.Reserved;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
 
 /**
@@ -136,7 +135,7 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
      * @param p
      * @param id
      */
-    public Option(TeiidParser p, int id) {
+    public Option(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -336,7 +335,7 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
 
     @Override
     public Option clone() {
-        Option clone = new Option(this.parser, this.id);
+        Option clone = new Option(getTeiidVersion(), this.id);
 
         clone.setNoCache(isNoCache());
 

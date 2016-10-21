@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.symbol.v7;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.v7.Teiid7Parser;
 import org.teiid.query.sql.symbol.AggregateSymbol;
@@ -23,7 +24,7 @@ public class Window7Function extends Symbol implements WindowFunction {
      * @param p
      * @param id
      */
-    public Window7Function(Teiid7Parser p, int id) {
+    public Window7Function(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -97,7 +98,7 @@ public class Window7Function extends Symbol implements WindowFunction {
 
     @Override
     public Window7Function clone() {
-        Window7Function clone = new Window7Function((Teiid7Parser) this.parser, this.id);
+        Window7Function clone = new Window7Function(getTeiidVersion(), this.id);
 
         if(getFunction() != null)
             clone.setFunction(getFunction().clone());

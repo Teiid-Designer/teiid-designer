@@ -2,11 +2,11 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang;
 
-import net.sf.saxon.sxpath.XPathExpression;
 import org.teiid.designer.query.sql.lang.IXMLColumn;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
+import net.sf.saxon.sxpath.XPathExpression;
 
 /**
  *
@@ -25,7 +25,7 @@ public class XMLColumn extends ProjectedColumn implements IXMLColumn<LanguageVis
      * @param p
      * @param id
      */
-    public XMLColumn(TeiidParser p, int id) {
+    public XMLColumn(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -123,7 +123,7 @@ public class XMLColumn extends ProjectedColumn implements IXMLColumn<LanguageVis
 
     @Override
     public XMLColumn clone() {
-        XMLColumn clone = new XMLColumn(this.parser, this.id);
+        XMLColumn clone = new XMLColumn(getTeiidVersion(), this.id);
 
         if(getPath() != null)
             clone.setPath(getPath());

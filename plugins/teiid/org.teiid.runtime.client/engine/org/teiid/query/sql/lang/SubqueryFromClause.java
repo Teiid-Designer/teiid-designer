@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.teiid.designer.query.sql.lang.ISubqueryFromClause;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
@@ -25,7 +25,7 @@ public class SubqueryFromClause extends FromClause
      * @param p
      * @param id
      */
-    public SubqueryFromClause(TeiidParser p, int id) {
+    public SubqueryFromClause(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -61,7 +61,7 @@ public class SubqueryFromClause extends FromClause
      */
     @Override
     public void setName(String name) {
-        this.symbol = parser.createASTNode(ASTNodes.GROUP_SYMBOL);
+        this.symbol = createASTNode(ASTNodes.GROUP_SYMBOL);
         this.symbol.setName(name);
     }
 
@@ -129,7 +129,7 @@ public class SubqueryFromClause extends FromClause
 
     @Override
     public SubqueryFromClause clone() {
-        SubqueryFromClause clone = new SubqueryFromClause(this.parser, this.id);
+        SubqueryFromClause clone = new SubqueryFromClause(getTeiidVersion(), this.id);
 
         if(getCommand() != null)
             clone.setCommand(getCommand().clone());

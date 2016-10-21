@@ -5,8 +5,8 @@ package org.teiid.query.sql.symbol;
 import java.util.LinkedList;
 import java.util.List;
 import org.teiid.designer.query.sql.symbol.IMultipleElementSymbol;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.SimpleNode;
 
@@ -24,7 +24,7 @@ public class MultipleElementSymbol extends SimpleNode
      * @param p
      * @param id
      */
-    public MultipleElementSymbol(TeiidParser p, int id) {
+    public MultipleElementSymbol(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -39,7 +39,7 @@ public class MultipleElementSymbol extends SimpleNode
      * @param name New name
      */
     public void setName(String name) {
-        this.group = this.parser.createASTNode(ASTNodes.GROUP_SYMBOL);
+        this.group = createASTNode(ASTNodes.GROUP_SYMBOL);
         this.group.setName(name);
     }
 
@@ -122,7 +122,7 @@ public class MultipleElementSymbol extends SimpleNode
 
     @Override
     public MultipleElementSymbol clone() {
-        MultipleElementSymbol clone = new MultipleElementSymbol(this.parser, this.id);
+        MultipleElementSymbol clone = new MultipleElementSymbol(getTeiidVersion(), this.id);
 
         if(getGroup() != null)
             clone.setGroup(getGroup().clone());

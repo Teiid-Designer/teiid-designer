@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.ISetClause;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 
@@ -21,7 +21,7 @@ public class SetClause extends SimpleNode implements ISetClause<LanguageVisitor>
      * @param p
      * @param id
      */
-    public SetClause(TeiidParser p, int id) {
+    public SetClause(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -85,7 +85,7 @@ public class SetClause extends SimpleNode implements ISetClause<LanguageVisitor>
 
     @Override
     public SetClause clone() {
-        SetClause clone = new SetClause(this.parser, this.id);
+        SetClause clone = new SetClause(getTeiidVersion(), this.id);
 
         if(getSymbol() != null)
             clone.setSymbol(getSymbol().clone());

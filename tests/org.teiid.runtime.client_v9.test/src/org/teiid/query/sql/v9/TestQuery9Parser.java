@@ -10,7 +10,6 @@ package org.teiid.query.sql.v9;
 import java.util.Arrays;
 import org.junit.Test;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.parser.QueryParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.AbstractTestQueryParser;
 import org.teiid.query.sql.lang.CompareCriteria;

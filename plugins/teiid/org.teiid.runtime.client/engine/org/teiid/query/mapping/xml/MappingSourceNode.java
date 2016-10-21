@@ -25,9 +25,8 @@ package org.teiid.query.mapping.xml;
 import java.util.HashMap;
 import java.util.Map;
 import org.teiid.core.util.ArgCheck;
-import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
@@ -41,12 +40,12 @@ public class MappingSourceNode extends MappingBaseNode {
     private transient ResultSetInfo resultSetInfo;
     private Map symbolMap = new HashMap();
     
-    protected MappingSourceNode(TeiidParser teiidParser) {
-        super(teiidParser);
+    protected MappingSourceNode(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
     }
     
-    public MappingSourceNode(TeiidParser teiidParser, String source) {
-        this(teiidParser);
+    public MappingSourceNode(ITeiidServerVersion teiidVersion, String source) {
+        this(teiidVersion);
         setProperty(MappingNodeConstants.Properties.NODE_TYPE, MappingNodeConstants.SOURCE);
         setSource(source);
     }
@@ -127,7 +126,7 @@ public class MappingSourceNode extends MappingBaseNode {
     public void updateSymbolMapDependentValues() {
         // based on the symbol map modify the getalias name
         if (getAliasResultName() != null) {
-            GroupSymbol groupSymbol = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL);
+            GroupSymbol groupSymbol = createASTNode(ASTNodes.GROUP_SYMBOL);
             groupSymbol.setName(getActualResultSetName());
 
             GroupSymbol newGroup = getMappedSymbol(groupSymbol);
@@ -142,7 +141,7 @@ public class MappingSourceNode extends MappingBaseNode {
     }
     
     public String getActualResultSetName() {
-        GroupSymbol groupSymbol = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL);
+        GroupSymbol groupSymbol = createASTNode(ASTNodes.GROUP_SYMBOL);
         groupSymbol.setName(getResultName());
 
         GroupSymbol group = getMappedSymbol(groupSymbol);

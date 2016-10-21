@@ -5,8 +5,8 @@ package org.teiid.query.sql.symbol;
 import java.util.Collections;
 import java.util.List;
 import org.teiid.designer.query.sql.symbol.ICaseExpression;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 import org.teiid.runtime.client.Messages;
 
@@ -37,7 +37,7 @@ public class CaseExpression extends SimpleNode implements Expression, ICaseExpre
      * @param p
      * @param id
      */
-    public CaseExpression(TeiidParser p, int id) {
+    public CaseExpression(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -213,7 +213,7 @@ public class CaseExpression extends SimpleNode implements Expression, ICaseExpre
 
     @Override
     public CaseExpression clone() {
-        CaseExpression clone = new CaseExpression(this.parser, this.id);
+        CaseExpression clone = new CaseExpression(getTeiidVersion(), this.id);
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());

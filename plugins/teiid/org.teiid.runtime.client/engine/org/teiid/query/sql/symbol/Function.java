@@ -9,7 +9,7 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
@@ -34,7 +34,7 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
      * @param p
      * @param id
      */
-    public Function(TeiidParser p, int id) {
+    public Function(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -146,15 +146,15 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
     public void insertConversion(int index, FunctionDescriptor functionDescriptor) { 
         // Get target type for conversion
         Class<?> t = functionDescriptor.getReturnType();
-        String typeName = getTeiidParser().getDataTypeService().getDataTypeName(t);
+        String typeName = getDataTypeService().getDataTypeName(t);
         
         // Pull old expression at index
-        Constant constant = getTeiidParser().createASTNode(ASTNodes.CONSTANT);
+        Constant constant = createASTNode(ASTNodes.CONSTANT);
         constant.setValue(typeName);
         Expression newArg[] = new Expression[] { args[index],  constant};
         
         // Replace old expression with new expression, using old as arg
-        Function func = getTeiidParser().createASTNode(ASTNodes.FUNCTION);
+        Function func = createASTNode(ASTNodes.FUNCTION);
         func.setName(functionDescriptor.getName());
         func.setArgs(newArg);
         args[index] = func;
@@ -228,7 +228,7 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
 
     @Override
     public Function clone() {
-        Function clone = new Function(this.parser, this.id);
+        Function clone = new Function(getTeiidVersion(), this.id);
 
         if(getArgs() != null) {
             Expression[] cloned = new Expression[getArgs().length];
