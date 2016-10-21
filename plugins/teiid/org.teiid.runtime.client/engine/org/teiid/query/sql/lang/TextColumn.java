@@ -4,9 +4,9 @@ package org.teiid.query.sql.lang;
 
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.ITextColumn;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 
 /**
  *
@@ -31,7 +31,7 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
      * @param p
      * @param id
      */
-    public TextColumn(TeiidParser p, int id) {
+    public TextColumn(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -174,7 +174,7 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
 
     @Override
     public TextColumn clone() {
-        TextColumn clone = new TextColumn(this.parser, this.id);
+        TextColumn clone = new TextColumn(getTeiidVersion(), this.id);
 
         if(getSelector() != null)
             clone.setSelector(getSelector());

@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.IAlterView;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -16,7 +16,7 @@ public class AlterView extends Alter<QueryCommand> implements IAlterView<Express
      * @param p
      * @param id
      */
-    public AlterView(TeiidParser p, int id) {
+    public AlterView(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -33,7 +33,7 @@ public class AlterView extends Alter<QueryCommand> implements IAlterView<Express
 
     @Override
     public AlterView clone() {
-        AlterView clone = new AlterView(this.parser, this.id);
+        AlterView clone = new AlterView(getTeiidVersion(), this.id);
 
         if(getDefinition() != null)
             clone.setDefinition(getDefinition().clone());

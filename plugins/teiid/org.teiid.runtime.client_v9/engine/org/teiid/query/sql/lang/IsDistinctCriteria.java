@@ -8,9 +8,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.IIsDistinctCriteria;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
@@ -32,7 +31,7 @@ public class IsDistinctCriteria extends Criteria
      * @param p
      * @param id
      */
-    public IsDistinctCriteria(TeiidParser p, int id) {
+    public IsDistinctCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -113,7 +112,7 @@ public class IsDistinctCriteria extends Criteria
      */
     @Override
     public IsDistinctCriteria clone() {
-        IsDistinctCriteria clone = new IsDistinctCriteria(this.parser, this.id);
+        IsDistinctCriteria clone = new IsDistinctCriteria(getTeiidVersion(), this.id);
 
         clone.setNegated(isNegated());
         clone.setLeftRowValue(this.getLeftRowValue().clone());

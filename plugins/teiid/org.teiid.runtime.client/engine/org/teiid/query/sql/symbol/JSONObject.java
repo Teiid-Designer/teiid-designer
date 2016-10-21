@@ -5,8 +5,8 @@ package org.teiid.query.sql.symbol;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.symbol.IJSONObject;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
@@ -20,7 +20,7 @@ public class JSONObject extends SimpleNode implements Expression, IJSONObject<La
      * @param p
      * @param id
      */
-    public JSONObject(TeiidParser p, int id) {
+    public JSONObject(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -71,7 +71,7 @@ public class JSONObject extends SimpleNode implements Expression, IJSONObject<La
 
     @Override
     public JSONObject clone() {
-        JSONObject clone = new JSONObject(this.parser, this.id);
+        JSONObject clone = new JSONObject(getTeiidVersion(), this.id);
 
         if(getArgs() != null)
             clone.setArgs(cloneList(getArgs()));

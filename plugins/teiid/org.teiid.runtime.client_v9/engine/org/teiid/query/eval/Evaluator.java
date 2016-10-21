@@ -72,7 +72,7 @@ import org.teiid.query.function.source.XMLSystemFunctions.XmlConcat;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.processor.relational.XMLTableNode;
 import org.teiid.query.sql.lang.AbstractSetCriteria;
 import org.teiid.query.sql.lang.CollectionValueIterator;
@@ -83,6 +83,7 @@ import org.teiid.query.sql.lang.ExistsCriteria;
 import org.teiid.query.sql.lang.ExpressionCriteria;
 import org.teiid.query.sql.lang.IsDistinctCriteria;
 import org.teiid.query.sql.lang.IsNullCriteria;
+import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.MatchCriteria;
 import org.teiid.query.sql.lang.NamespaceItem;
 import org.teiid.query.sql.lang.NotCriteria;
@@ -342,7 +343,7 @@ public class Evaluator {
             if (cols.size() != colsOther.size()) {
                 return !idc.isNegated();
             }
-            SyntaxFactory factory = new SyntaxFactory(criteria.getTeiidParser());
+            SyntaxFactory factory = new SyntaxFactory(criteria.getTeiidVersion());
             for (int i = 0; i < cols.size(); i++) {
                 IElementSymbol symbol1 = factory.createElementSymbol(cols.get(i).getName());
                 symbol1.setGroupSymbol(idc.getLeftRowValue());
@@ -534,7 +535,7 @@ public class Evaluator {
 	private Boolean evaluate(AbstractSetCriteria criteria)
 		throws Exception {
 
-	    TeiidParser teiidParser = criteria.getTeiidParser();
+		ITeiidServerVersion teiidVersion = criteria.getTeiidVersion();
 
 		// Evaluate expression
 		Object leftValue = null;
@@ -557,12 +558,12 @@ public class Evaluator {
     			return criteria.isNegated();
         	}
         	if (set.isAllConstants()) {
-        	    Constant c = teiidParser.createASTNode(ASTNodes.CONSTANT);
+        	    Constant c = TeiidNodeFactory.createASTNode(teiidVersion, ASTNodes.CONSTANT);
         	    c.setValue(leftValue);
         	    c.setType(criteria.getExpression().getType());
         		boolean exists = set.getValues().contains(c);
         		if (!exists) {
-        			if (set.getValues().contains(Constant.getNullConstant(teiidParser))) {
+        			if (set.getValues().contains(Constant.getNullConstant(teiidVersion))) {
         				return null;
         			}
         			return criteria.isNegated();
@@ -862,7 +863,7 @@ public class Evaluator {
         Object val = internalEvaluate(expression.getExpression());
         if (val == null) {
             TeiidNodeFactory factory = new TeiidNodeFactory();
-            Constant constant = factory.create(expression.getTeiidParser(), ASTNodes.CONSTANT);
+            Constant constant = factory.create(expression.getTeiidVersion(), ASTNodes.CONSTANT);
             constant.setValue(null);
             constant.setType(expression.getType());
             return constant;

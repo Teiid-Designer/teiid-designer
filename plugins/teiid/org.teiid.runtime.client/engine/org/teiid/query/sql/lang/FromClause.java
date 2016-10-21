@@ -6,9 +6,9 @@ import java.util.Collection;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IFromClause;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Option.MakeDep;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
@@ -52,7 +52,7 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
      * @param p
      * @param id
      */
-    public FromClause(TeiidParser p, int id) {
+    public FromClause(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 

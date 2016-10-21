@@ -33,7 +33,9 @@ import java.util.List;
 import java.util.Map;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.xml.IMappingNode;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.parser.TeiidNodeFactory;
+import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
+import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.runtime.client.Messages;
 
@@ -57,26 +59,23 @@ public abstract class MappingNode implements Cloneable, Serializable, IMappingNo
     private Map<MappingNodeConstants.Properties, Object> nodeProperties;
 
     /**
-     * Parser used for constructing ast nodes
+     * Version used for constructing ast nodes
      */
-    private final TeiidParser teiidParser;
+    private final ITeiidServerVersion teiidVersion;
 
     /** 
-     * @param teiidParser
+     * @param teiidVersion
      */
-    public MappingNode(TeiidParser teiidParser){
-        this.teiidParser = teiidParser;
-    }
-
-    /**
-     * @return the queryFactory
-     */
-    protected TeiidParser getTeiidParser() {
-        return this.teiidParser;
+    public MappingNode(ITeiidServerVersion teiidVersion){
+        this.teiidVersion = teiidVersion;
     }
 
     protected ITeiidServerVersion getTeiidVersion() {
-        return getTeiidParser().getVersion();
+        return teiidVersion;
+    }
+
+    protected <T extends LanguageObject> T createASTNode(ASTNodes nodeType) {
+        return TeiidNodeFactory.getInstance().create(getTeiidVersion(), nodeType);
     }
 
     /**

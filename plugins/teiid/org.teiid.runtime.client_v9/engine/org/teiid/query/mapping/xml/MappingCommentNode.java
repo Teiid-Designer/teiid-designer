@@ -23,7 +23,7 @@
 package org.teiid.query.mapping.xml;
 
 import org.teiid.designer.xml.IMappingCommentNode;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 
 /** 
@@ -31,8 +31,8 @@ import org.teiid.query.parser.TeiidParser;
  */
 public class MappingCommentNode extends MappingNode implements IMappingCommentNode {
 
-    public MappingCommentNode(TeiidParser teiidParser, String comment) {
-        super(teiidParser);
+    public MappingCommentNode(ITeiidServerVersion teiidVersion, String comment) {
+        super(teiidVersion);
         setProperty(MappingNodeConstants.Properties.NODE_TYPE, MappingNodeConstants.COMMENT);
         if (comment != null) {
             setProperty(MappingNodeConstants.Properties.COMMENT_TEXT, comment);

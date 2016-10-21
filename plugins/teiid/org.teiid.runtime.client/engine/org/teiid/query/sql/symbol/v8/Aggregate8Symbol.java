@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.v8.Teiid8Parser;
@@ -89,7 +90,7 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
      * @param p
      * @param id
      */
-    public Aggregate8Symbol(Teiid8Parser p, int id) {
+    public Aggregate8Symbol(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -151,7 +152,7 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
                     return null;
                 }
 
-                DefaultDataTypes dataType = getTeiidParser().getDataTypeService().getDataType(this.getArg(0).getType());
+                DefaultDataTypes dataType = getDataTypeService().getDataType(this.getArg(0).getType());
                 return dataType.getTypeArrayClass();
             case TEXTAGG:
                 return DataTypeManagerService.DefaultDataTypes.BLOB.getTypeClass();
@@ -301,7 +302,7 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
 
     @Override
     public Aggregate8Symbol clone() {
-        Aggregate8Symbol clone = new Aggregate8Symbol((Teiid8Parser) this.parser, this.id);
+        Aggregate8Symbol clone = new Aggregate8Symbol(getTeiidVersion(), this.id);
 
         if(getAggregateFunction() != null)
             clone.setAggregateFunction(getAggregateFunction());

@@ -22,8 +22,8 @@
 
 package org.teiid.query.mapping.xml;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.xml.IMappingRecursiveElement;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Criteria;
 
 
@@ -37,14 +37,14 @@ public class MappingRecursiveElement extends MappingElement
     implements IMappingRecursiveElement<MappingAttribute, MappingNode> {
     Criteria criteriaNode;    
     
-    public MappingRecursiveElement(TeiidParser teiidParser, String name, String mappingClass) {
-        super(teiidParser, name);
+    public MappingRecursiveElement(ITeiidServerVersion teiidVersion, String name, String mappingClass) {
+        super(teiidVersion, name);
         setProperty(MappingNodeConstants.Properties.IS_RECURSIVE, Boolean.TRUE);
         setProperty(MappingNodeConstants.Properties.RECURSION_ROOT_MAPPING_CLASS, mappingClass);         
     }
     
-    public MappingRecursiveElement(TeiidParser teiidParser, String name, Namespace namespace, String mappingClass) {
-        super(teiidParser, name, namespace);
+    public MappingRecursiveElement(ITeiidServerVersion teiidVersion, String name, Namespace namespace, String mappingClass) {
+        super(teiidVersion, name, namespace);
         setProperty(MappingNodeConstants.Properties.IS_RECURSIVE, Boolean.TRUE);
         setProperty(MappingNodeConstants.Properties.RECURSION_ROOT_MAPPING_CLASS, mappingClass);         
     }    

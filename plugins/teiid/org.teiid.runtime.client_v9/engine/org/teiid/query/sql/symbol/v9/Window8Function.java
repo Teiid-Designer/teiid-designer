@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.symbol.v9;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.v9.Teiid9Parser;
 import org.teiid.query.sql.lang.SimpleNode;
@@ -22,7 +23,7 @@ public class Window8Function extends SimpleNode implements WindowFunction {
      * @param p
      * @param id
      */
-    public Window8Function(Teiid9Parser p, int id) {
+    public Window8Function(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -106,7 +107,7 @@ public class Window8Function extends SimpleNode implements WindowFunction {
 
     @Override
     public Window8Function clone() {
-        Window8Function clone = new Window8Function((Teiid9Parser) this.parser, this.id);
+        Window8Function clone = new Window8Function(getTeiidVersion(), this.id);
 
         if(getFunction() != null)
             clone.setFunction(getFunction().clone());

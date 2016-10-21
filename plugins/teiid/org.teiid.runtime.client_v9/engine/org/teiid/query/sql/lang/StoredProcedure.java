@@ -14,7 +14,7 @@ import org.teiid.designer.query.sql.lang.ISPParameter.ParameterInfo;
 import org.teiid.designer.query.sql.lang.IStoredProcedure;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -58,7 +58,7 @@ public class StoredProcedure extends ProcedureContainer
      * @param p
      * @param id
      */
-    public StoredProcedure(TeiidParser p, int id) {
+    public StoredProcedure(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -245,7 +245,7 @@ public class StoredProcedure extends ProcedureContainer
      */
     public GroupSymbol getGroupSymbol() {
         if(groupSymbol == null) {
-            groupSymbol = parser.createASTNode(ASTNodes.GROUP_SYMBOL);
+            groupSymbol = createASTNode(ASTNodes.GROUP_SYMBOL);
             groupSymbol.setName(getProcedureCallableName());
         }
         return groupSymbol;
@@ -395,7 +395,7 @@ public class StoredProcedure extends ProcedureContainer
 
     @Override
     public StoredProcedure clone() {
-        StoredProcedure clone = new StoredProcedure(this.parser, this.id);
+        StoredProcedure clone = new StoredProcedure(getTeiidVersion(), this.id);
 
         if(getProcedureName() != null)
             clone.setProcedureName(getProcedureName());

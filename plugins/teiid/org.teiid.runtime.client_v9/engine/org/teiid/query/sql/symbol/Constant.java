@@ -17,8 +17,9 @@ import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.function.FunctionMethods;
 import org.teiid.query.parser.LanguageVisitor;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.lang.SimpleNode;
 import org.teiid.runtime.client.Messages;
 
@@ -34,14 +35,14 @@ public class Constant extends SimpleNode implements Expression, IConstant<Langua
     private static Map<ITeiidServerVersion, Constant> nullCache = new HashMap<ITeiidServerVersion, Constant>();
     
     /**
-     * @param teiidParser
+     * @param teiidVersion
      * @return a null constant for the given teiid parser if one has not already been created
      */
-    public static Constant getNullConstant(TeiidParser teiidParser) {
-        Constant constant = nullCache.get(teiidParser.getVersion());
+    public static Constant getNullConstant(ITeiidServerVersion teiidVersion) {
+        Constant constant = nullCache.get(teiidVersion);
         if (constant == null) {
-            constant = teiidParser.createASTNode(ASTNodes.CONSTANT);
-            nullCache.put(teiidParser.getVersion(), constant);
+        	constant = TeiidNodeFactory.createASTNode(teiidVersion, ASTNodes.CONSTANT);
+            nullCache.put(teiidVersion, constant);
         }
 
         return constant;
@@ -127,7 +128,7 @@ public class Constant extends SimpleNode implements Expression, IConstant<Langua
      * @param p
      * @param id
      */
-    public Constant(TeiidParser p, int id) {
+    public Constant(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -176,7 +177,7 @@ public class Constant extends SimpleNode implements Expression, IConstant<Langua
                 type = type.getComponentType();
             }
 
-            DefaultDataTypes dataType = getTeiidParser().getDataTypeService().getDataType(type);
+            DefaultDataTypes dataType = getDataTypeService().getDataType(type);
             if (dataType != null) {
                 //array of a runtime-type
                 this.type = originalType;
@@ -286,7 +287,7 @@ public class Constant extends SimpleNode implements Expression, IConstant<Langua
 
     @Override
     public Constant clone() {
-        Constant clone = new Constant(this.parser, this.id);
+        Constant clone = new Constant(getTeiidVersion(), this.id);
 
         if(getType() != null)
             clone.setType(getType());

@@ -118,16 +118,16 @@ public abstract class AbstractTestValidator extends AbstractTest {
         vGroupE2.get(3).setSearchType(SearchType.All_Except_Like);
 
         // Create virtual documents
-        MappingDocument doc = new MappingDocument(getTeiidParser(), false);
-        MappingElement complexRoot = new MappingElement(getTeiidParser(), "a0"); //$NON-NLS-1$
+        MappingDocument doc = new MappingDocument(getTeiidVersion(), false);
+        MappingElement complexRoot = new MappingElement(getTeiidVersion(), "a0"); //$NON-NLS-1$
         doc.addChildElement(complexRoot);
 
-        MappingElement sourceNode = new MappingElement(getTeiidParser(), "a1"); //$NON-NLS-1$
+        MappingElement sourceNode = new MappingElement(getTeiidVersion(), "a1"); //$NON-NLS-1$
         complexRoot.addChildElement(sourceNode);
         sourceNode.setSource("test.group"); //$NON-NLS-1$
-        sourceNode.addChildElement(new MappingElement(getTeiidParser(), "a2", "test.group.e1")); //$NON-NLS-1$ //$NON-NLS-2$
-        sourceNode.addChildElement(new MappingElement(getTeiidParser(), "b2", "test.group.e2")); //$NON-NLS-1$ //$NON-NLS-2$
-        sourceNode.addChildElement(new MappingElement(getTeiidParser(), "c2", "test.group.e3")); //$NON-NLS-1$ //$NON-NLS-2$
+        sourceNode.addChildElement(new MappingElement(getTeiidVersion(), "a2", "test.group.e1")); //$NON-NLS-1$ //$NON-NLS-2$
+        sourceNode.addChildElement(new MappingElement(getTeiidVersion(), "b2", "test.group.e2")); //$NON-NLS-1$ //$NON-NLS-2$
+        sourceNode.addChildElement(new MappingElement(getTeiidVersion(), "c2", "test.group.e3")); //$NON-NLS-1$ //$NON-NLS-2$
 
         Schema docModel = getMetadataFactory().createVirtualModel("vm1", metadataStore); //$NON-NLS-1$
         Table doc1 = getMetadataFactory().createXmlDocument("doc1", docModel, doc); //$NON-NLS-1$

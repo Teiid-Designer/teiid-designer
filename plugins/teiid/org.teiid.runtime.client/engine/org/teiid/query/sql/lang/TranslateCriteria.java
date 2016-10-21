@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.proc.ITranslateCriteria;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 
 /**
  *
@@ -27,7 +27,7 @@ public class TranslateCriteria extends Criteria implements PredicateCriteria, IT
      * @param p
      * @param id
      */
-    public TranslateCriteria(TeiidParser p, int id) {
+    public TranslateCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -119,7 +119,7 @@ public class TranslateCriteria extends Criteria implements PredicateCriteria, IT
 
     @Override
     public TranslateCriteria clone() {
-        TranslateCriteria clone = new TranslateCriteria(this.parser, this.id);
+        TranslateCriteria clone = new TranslateCriteria(getTeiidVersion(), this.id);
 
         if(getSelector() != null)
             clone.setSelector(getSelector().clone());

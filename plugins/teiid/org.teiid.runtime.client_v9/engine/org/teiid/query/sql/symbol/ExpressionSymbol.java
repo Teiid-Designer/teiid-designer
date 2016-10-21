@@ -3,8 +3,8 @@
 package org.teiid.query.sql.symbol;
 
 import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SingleElementSymbol;
 
 /**
@@ -20,7 +20,7 @@ public class ExpressionSymbol extends Symbol
      * @param p
      * @param id
      */
-    public ExpressionSymbol(TeiidParser p, int id) {
+    public ExpressionSymbol(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -79,7 +79,7 @@ public class ExpressionSymbol extends Symbol
 
     @Override
     public ExpressionSymbol clone() {
-        ExpressionSymbol clone = new ExpressionSymbol(this.parser, this.id);
+        ExpressionSymbol clone = new ExpressionSymbol(getTeiidVersion(), this.id);
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());

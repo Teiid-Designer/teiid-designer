@@ -5,8 +5,8 @@ package org.teiid.query.sql.lang;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IArrayTable;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -22,7 +22,7 @@ public class ArrayTable extends TableFunctionReference implements IArrayTable<La
      * @param p
      * @param id
      */
-    public ArrayTable(TeiidParser p, int id) {
+    public ArrayTable(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -93,7 +93,7 @@ public class ArrayTable extends TableFunctionReference implements IArrayTable<La
 
     @Override
     public ArrayTable clone() {
-        ArrayTable clone = new ArrayTable(this.parser, this.id);
+        ArrayTable clone = new ArrayTable(getTeiidVersion(), this.id);
 
         if(getColumns() != null)
             clone.setColumns(cloneList(getColumns()));

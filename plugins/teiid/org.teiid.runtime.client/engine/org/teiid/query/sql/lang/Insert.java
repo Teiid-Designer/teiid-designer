@@ -6,8 +6,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IInsert;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -36,7 +36,7 @@ public class Insert extends ProcedureContainer
      * @param p
      * @param id
      */
-    public Insert(TeiidParser p, int id) {
+    public Insert(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -254,7 +254,7 @@ public class Insert extends ProcedureContainer
 
     @Override
     public Insert clone() {
-        Insert clone = new Insert(this.parser, this.id);
+        Insert clone = new Insert(getTeiidVersion(), this.id);
 
         if(getGroup() != null)
             clone.setGroup(getGroup().clone());

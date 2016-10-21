@@ -9,7 +9,7 @@ import org.teiid.designer.query.sql.lang.IJoinPredicate;
 import org.teiid.designer.query.sql.lang.IJoinType.Types;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
@@ -30,9 +30,9 @@ public class JoinPredicate extends FromClause
      * @param p
      * @param id
      */
-    public JoinPredicate(TeiidParser p, int id) {
+    public JoinPredicate(ITeiidServerVersion p, int id) {
         super(p, id);
-        joinType = p.createASTNode(ASTNodes.JOIN_TYPE);
+        joinType = createASTNode(ASTNodes.JOIN_TYPE);
         joinType.setKind(Types.JOIN_INNER);
     }
 
@@ -159,7 +159,7 @@ public class JoinPredicate extends FromClause
 
     @Override
     public JoinPredicate clone() {
-        JoinPredicate clone = new JoinPredicate(this.parser, this.id);
+        JoinPredicate clone = new JoinPredicate(getTeiidVersion(), this.id);
 
         if(getLeftClause() != null)
             clone.setLeftClause(getLeftClause().clone());

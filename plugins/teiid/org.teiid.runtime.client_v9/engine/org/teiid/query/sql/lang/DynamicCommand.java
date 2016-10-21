@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IDynamicCommand;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -33,7 +33,7 @@ public class DynamicCommand extends Command implements IDynamicCommand<Expressio
      * @param p
      * @param id
      */
-    public DynamicCommand(TeiidParser p, int id) {
+    public DynamicCommand(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -205,7 +205,7 @@ public class DynamicCommand extends Command implements IDynamicCommand<Expressio
 
     @Override
     public DynamicCommand clone() {
-        DynamicCommand clone = new DynamicCommand(this.parser, this.id);
+        DynamicCommand clone = new DynamicCommand(getTeiidVersion(), this.id);
 
         if(getAsColumns() != null && ! getAsColumns().isEmpty())
             clone.setAsColumns(cloneList(getAsColumns()));

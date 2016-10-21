@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang.v9;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.v9.Teiid9Parser;
 import org.teiid.query.sql.lang.AlterProcedure;
@@ -16,7 +17,7 @@ public class Alter9Procedure extends AlterProcedure<CreateProcedureCommand> {
      * @param p
      * @param id
      */
-    public Alter9Procedure(Teiid9Parser p, int id) {
+    public Alter9Procedure(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -33,7 +34,7 @@ public class Alter9Procedure extends AlterProcedure<CreateProcedureCommand> {
 
     @Override
     public Alter9Procedure clone() {
-        Alter9Procedure clone = new Alter9Procedure((Teiid9Parser) this.parser, this.id);
+        Alter9Procedure clone = new Alter9Procedure(getTeiidVersion(), this.id);
 
         if(getDefinition() != null)
             clone.setDefinition(getDefinition().clone());

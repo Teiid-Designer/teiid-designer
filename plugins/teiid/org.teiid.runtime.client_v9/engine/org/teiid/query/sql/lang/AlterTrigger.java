@@ -3,9 +3,9 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.IAlterTrigger;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.metadata.Table.TriggerEvent;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.proc.TriggerAction;
 import org.teiid.query.sql.symbol.Expression;
 
@@ -24,7 +24,7 @@ public class AlterTrigger extends Alter<TriggerAction> implements IAlterTrigger<
      * @param p
      * @param id
      */
-    public AlterTrigger(TeiidParser p, int id) {
+    public AlterTrigger(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -107,7 +107,7 @@ public class AlterTrigger extends Alter<TriggerAction> implements IAlterTrigger<
 
     @Override
     public AlterTrigger clone() {
-        AlterTrigger clone = new AlterTrigger(this.parser, this.id);
+        AlterTrigger clone = new AlterTrigger(getTeiidVersion(), this.id);
 
         if(getDefinition() != null)
             clone.setDefinition(getDefinition().clone());

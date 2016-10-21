@@ -25,7 +25,7 @@ package org.teiid.query.mapping.xml;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.xml.IMappingAttribute;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.ElementSymbol;
 
 
@@ -39,17 +39,17 @@ public class MappingAttribute extends MappingNode implements IMappingAttribute {
     // namespace of the attribute
     Namespace namespace;
     
-    public MappingAttribute(TeiidParser teiidParser, String name) {
-        this(teiidParser, name, MappingNodeConstants.NO_NAMESPACE);
+    public MappingAttribute(ITeiidServerVersion teiidVersion, String name) {
+        this(teiidVersion, name, MappingNodeConstants.NO_NAMESPACE);
     }
     
-    public MappingAttribute(TeiidParser teiidParser, String name, String nameInSource) {
-        this(teiidParser, name, MappingNodeConstants.NO_NAMESPACE);
+    public MappingAttribute(ITeiidServerVersion teiidVersion, String name, String nameInSource) {
+        this(teiidVersion, name, MappingNodeConstants.NO_NAMESPACE);
         setNameInSource(nameInSource);
     }    
         
-    public MappingAttribute(TeiidParser teiidParser, String name, Namespace namespace) {
-        super(teiidParser);
+    public MappingAttribute(ITeiidServerVersion teiidVersion, String name, Namespace namespace) {
+        super(teiidVersion);
         setProperty(MappingNodeConstants.Properties.NAME, name);
         setProperty(MappingNodeConstants.Properties.NODE_TYPE, MappingNodeConstants.ATTRIBUTE);
 

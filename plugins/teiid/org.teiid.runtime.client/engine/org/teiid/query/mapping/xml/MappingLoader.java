@@ -35,7 +35,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.runtime.client.Messages;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -62,20 +62,20 @@ public class MappingLoader {
     
     private HashMap unresolvedNamespaces = new HashMap();
 
-    private final TeiidParser teiidParser;
+    private final ITeiidServerVersion teiidVersion;
     
     /**
-     * @param teiidParser
+     * @param teiidVersion
      */
-    public MappingLoader(TeiidParser teiidParser) {
-        this.teiidParser = teiidParser;
+    public MappingLoader(ITeiidServerVersion teiidVersion) {
+        this.teiidVersion = teiidVersion;
     }
 
     /**
-     * @return the teiidParser
+     * @return the teiidVersion
      */
-    public TeiidParser getTeiidParser() {
-        return this.teiidParser;
+    public ITeiidServerVersion getTeiidVersion() {
+        return this.teiidVersion;
     }
 
     /**
@@ -106,7 +106,7 @@ public class MappingLoader {
      * Load contents into temporary structures.
      */
     MappingDocument loadContents(Document document) throws MappingException {
-        MappingDocument doc = new MappingDocument(getTeiidParser(), false);
+        MappingDocument doc = new MappingDocument(getTeiidVersion(), false);
         
         loadDocumentProperties(doc, document.getDocumentElement());
         
@@ -160,7 +160,7 @@ public class MappingLoader {
      * @return a sequence node
      */
     MappingSequenceNode loadSequenceNode(Element element, MappingBaseNode parentNode) {
-        MappingSequenceNode node = new MappingSequenceNode(getTeiidParser());
+        MappingSequenceNode node = new MappingSequenceNode(getTeiidVersion());
         node.setMinOccurrs(getMinOccurrences(element));
         node.setMaxOccurrs(getMaxOccurrences(element));        
         node.setSource(getSource(element));
@@ -191,14 +191,14 @@ public class MappingLoader {
         // There are effectively three types of elements, recursive, criteria and regular..
         if (isRecursive(element)) {
             // first check if this is a "recursive" element
-            MappingRecursiveElement elem = new MappingRecursiveElement(getTeiidParser(), name, namespace, getRecursionMappingClass(element));
+            MappingRecursiveElement elem = new MappingRecursiveElement(getTeiidVersion(), name, namespace, getRecursionMappingClass(element));
             elem.setCriteria(getRecursionCriteria(element));
             elem.setRecursionLimit(getRecursionLimit(element), throwExceptionOnRecursionLimit(element));
             node = elem;
         }
         else {
             // this regular element
-            node = new MappingElement(getTeiidParser(), name, namespace);
+            node = new MappingElement(getTeiidVersion(), name, namespace);
         }
         
         // now load all other common properties.
@@ -267,7 +267,7 @@ public class MappingLoader {
         // if this not any namespace specific attribute then it is any normal attribute on the
         // tree; treat it as such.
         if (normalAttribute) {
-            MappingAttribute attribute = new MappingAttribute(getTeiidParser(), getName(element), namespace);
+            MappingAttribute attribute = new MappingAttribute(getTeiidVersion(), getName(element), namespace);
             // now get all other properties for the attribute.
             attribute.setNameInSource(getNameInSource(element));
             attribute.setDefaultValue(getDefaultValue(element));
@@ -286,7 +286,7 @@ public class MappingLoader {
      * @return
      */
     MappingChoiceNode loadChoiceNode(Element element, MappingBaseNode parentNode) {
-        MappingChoiceNode node = new MappingChoiceNode(getTeiidParser(), exceptionOnDefault(element));
+        MappingChoiceNode node = new MappingChoiceNode(getTeiidVersion(), exceptionOnDefault(element));
         node.setMinOccurrs(getMinOccurrences(element));
         node.setMaxOccurrs(getMaxOccurrences(element));        
         node.setSource(getSource(element));
@@ -299,7 +299,7 @@ public class MappingLoader {
      * Load the "all" node
      */
     MappingAllNode loadAllNode(Element element, MappingBaseNode parentNode) {
-        MappingAllNode node = new MappingAllNode(getTeiidParser());
+        MappingAllNode node = new MappingAllNode(getTeiidVersion());
         node.setMinOccurrs(getMinOccurrences(element));
         node.setMaxOccurrs(getMaxOccurrences(element));        
         node.setSource(getSource(element));
@@ -312,7 +312,7 @@ public class MappingLoader {
      * Load the comment node
      */
     void loadCommentNode(Element element, MappingElement parent) {
-        MappingCommentNode comment = new MappingCommentNode(getTeiidParser(), getCommentText(element));
+        MappingCommentNode comment = new MappingCommentNode(getTeiidVersion(), getCommentText(element));
         parent.addCommentNode(comment);
     }
     
@@ -337,7 +337,7 @@ public class MappingLoader {
     MappingCriteriaNode loadCriteriaNode(Element element, MappingBaseNode parentNode) throws MappingException{
         if (getCriteria(element) != null || isDefaultOnChoiceNode(element)) {
             // add this criteria node to the parent and make it the parent itself for rest of the information.
-            return new MappingCriteriaNode(getTeiidParser(), getCriteria(element), isDefaultOnChoiceNode(element));
+            return new MappingCriteriaNode(getTeiidVersion(), getCriteria(element), isDefaultOnChoiceNode(element));
         }
         throw new MappingException(Messages.getString(Messages.Mapping.invalid_criteria_node));
     }
@@ -372,7 +372,7 @@ public class MappingLoader {
         if (nodeType.equalsIgnoreCase(MappingNodeConstants.ELEMENT)
                         && (getCriteria(element) != null || isDefaultOnChoiceNode(element))) {
             // add this criteria node to the parent and make it the parent itself for rest of the information.
-            MappingCriteriaNode node = new MappingCriteriaNode(getTeiidParser(), getCriteria(element), isDefaultOnChoiceNode(element));
+            MappingCriteriaNode node = new MappingCriteriaNode(getTeiidVersion(), getCriteria(element), isDefaultOnChoiceNode(element));
             parentNode.addCriteriaNode(node);
             parentNode = node;
         }

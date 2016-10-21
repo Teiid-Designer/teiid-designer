@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang.v7;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.v7.Teiid7Parser;
 import org.teiid.query.sql.lang.AlterProcedure;
@@ -17,7 +18,7 @@ public class Alter7Procedure extends AlterProcedure<CreateUpdateProcedureCommand
      * @param p
      * @param id
      */
-    public Alter7Procedure(Teiid7Parser p, int id) {
+    public Alter7Procedure(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -34,7 +35,7 @@ public class Alter7Procedure extends AlterProcedure<CreateUpdateProcedureCommand
 
     @Override
     public Alter7Procedure clone() {
-        Alter7Procedure clone = new Alter7Procedure((Teiid7Parser) this.parser, this.id);
+        Alter7Procedure clone = new Alter7Procedure(getTeiidVersion(), this.id);
 
         if(getDefinition() != null)
             clone.setDefinition(getDefinition().clone());

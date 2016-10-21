@@ -10,7 +10,7 @@ import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.visitor.AggregateSymbolCollectorVisitor;
@@ -55,7 +55,7 @@ public class Query extends QueryCommand
      * @param p
      * @param id
      */
-    public Query(TeiidParser p, int id) {
+    public Query(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -248,7 +248,7 @@ public class Query extends QueryCommand
         }
         if(selectList == null){
             selectList = new ArrayList<Expression>(1);
-            ElementSymbol xmlElement = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+            ElementSymbol xmlElement = createASTNode(ASTNodes.ELEMENT_SYMBOL);
             xmlElement.setName("xml"); //$NON-NLS-1$
             xmlElement.setType(DataTypeManagerService.DefaultDataTypes.XML.getTypeClass());
             selectList.add(xmlElement);
@@ -321,7 +321,7 @@ public class Query extends QueryCommand
 
     @Override
     public Query clone() {
-        Query clone = new Query(this.parser, this.id);
+        Query clone = new Query(getTeiidVersion(), this.id);
 
         if(getCriteria() != null)
             clone.setCriteria(getCriteria().clone());

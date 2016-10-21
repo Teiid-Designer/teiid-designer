@@ -31,6 +31,7 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.resolver.CommandResolver;
 import org.teiid.query.resolver.QueryResolver;
@@ -81,13 +82,13 @@ public class DynamicCommandResolver extends CommandResolver {
             resolvedColumns = true;
             while (columns.hasNext()) {
                 ElementSymbol column = (ElementSymbol)columns.next();
-                GroupSymbol gs = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL);
+                GroupSymbol gs = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.GROUP_SYMBOL);
                 gs.setName(dynamicCmd.getIntoGroup().getName());
                 column.setGroupSymbol(gs);
             }
         }
         
-        ResolverVisitor visitor = new ResolverVisitor(getTeiidParser().getVersion());
+        ResolverVisitor visitor = new ResolverVisitor(getTeiidVersion());
         visitor.resolveLanguageObject(dynamicCmd, groups, dynamicCmd.getExternalGroupContexts(), metadata);
         String sqlType = getDataTypeManager().getDataTypeName(dynamicCmd.getSql().getType());
         String targetType = DataTypeManagerService.DefaultDataTypes.STRING.getId();
@@ -99,7 +100,7 @@ public class DynamicCommandResolver extends CommandResolver {
         if (dynamicCmd.getUsing() != null && !dynamicCmd.getUsing().isEmpty()) {
             for (SetClause clause : dynamicCmd.getUsing().getClauses()) {
                 ElementSymbol id = clause.getSymbol();
-                GroupSymbol gs = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL);
+                GroupSymbol gs = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.GROUP_SYMBOL);
                 gs.setName(ProcedureReservedWords.DVARS);
                 id.setGroupSymbol(gs);
                 id.setType(clause.getValue().getType());

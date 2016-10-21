@@ -8,7 +8,7 @@ import java.util.List;
 import org.teiid.designer.query.sql.lang.ISelect;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
@@ -30,7 +30,7 @@ public class Select extends SimpleNode implements ISelect<Expression, LanguageVi
      * @param p
      * @param id
      */
-    public Select(TeiidParser p, int id) {
+    public Select(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -56,7 +56,7 @@ public class Select extends SimpleNode implements ISelect<Expression, LanguageVi
     @Override
     public void addSymbol( Expression symbol ) {
         if (!(symbol instanceof Symbol) && !(symbol instanceof MultipleElementSymbol)) {
-            ExpressionSymbol exSymbol = parser.createASTNode(ASTNodes.EXPRESSION_SYMBOL);
+            ExpressionSymbol exSymbol = createASTNode(ASTNodes.EXPRESSION_SYMBOL);
             exSymbol.setName("expr" + (this.symbols.size() + 1)); //$NON-NLS-1$
             exSymbol.setExpression(symbol);
             symbol = exSymbol;
@@ -175,7 +175,7 @@ public class Select extends SimpleNode implements ISelect<Expression, LanguageVi
 
     @Override
     public Select clone() {
-        Select clone = new Select(this.parser, this.id);
+        Select clone = new Select(getTeiidVersion(), this.id);
 
         clone.setDistinct(isDistinct());
         if(getSymbols() != null)

@@ -13,7 +13,7 @@ import java.util.List;
 import org.teiid.designer.query.sql.lang.ITableFunctionReference;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.util.SymbolMap;
@@ -32,7 +32,7 @@ public abstract class TableFunctionReference extends FromClause
      * @param p
      * @param id
      */
-    public TableFunctionReference(TeiidParser p, int id) {
+    public TableFunctionReference(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -96,7 +96,7 @@ public abstract class TableFunctionReference extends FromClause
      * @since 4.3
      */
     public void setName(String name) {
-        this.symbol = this.parser.createASTNode(ASTNodes.GROUP_SYMBOL);
+        this.symbol = createASTNode(ASTNodes.GROUP_SYMBOL);
         this.symbol.setName(name);
     }
 

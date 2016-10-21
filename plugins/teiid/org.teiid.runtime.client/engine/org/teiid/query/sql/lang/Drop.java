@@ -4,8 +4,8 @@ package org.teiid.query.sql.lang;
 
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IDrop;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
@@ -22,7 +22,7 @@ public class Drop extends Command
      * @param p
      * @param id
      */
-    public Drop(TeiidParser p, int id) {
+    public Drop(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -83,7 +83,7 @@ public class Drop extends Command
 
     @Override
     public Drop clone() {
-        Drop clone = new Drop(this.parser, this.id);
+        Drop clone = new Drop(getTeiidVersion(), this.id);
 
         if(getTable() != null)
             clone.setTable(getTable().clone());

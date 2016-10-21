@@ -14,7 +14,9 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.IJoinType.Types;
 import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.designer.query.sql.lang.ISetQuery.Operation;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.QueryParser;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.ArrayTable;
 import org.teiid.query.sql.lang.BetweenCriteria;
@@ -113,8 +115,12 @@ public abstract class AbstractTestFactory {
         this.parser = parser;
     }
 
+    public ITeiidServerVersion getTeiidVersion() {
+    	return parser.getTeiidVersion();
+    }
+
     public <T> T newNode(ASTNodes nodeType) {
-        return parser.getTeiidParser().createASTNode(nodeType);
+        return TeiidNodeFactory.createASTNode(getTeiidVersion(), nodeType);
     }
 
     public GroupSymbol newGroupSymbol(String... groupSymbolProps) {
@@ -502,12 +508,12 @@ public abstract class AbstractTestFactory {
     }
 
     public SPParameter newSPParameter(int index, Expression expression) {
-        SPParameter parameter = new SPParameter(parser.getTeiidParser(), index, expression);
+        SPParameter parameter = new SPParameter(getTeiidVersion(), index, expression);
         return parameter;
     }
 
     public SPParameter newSPParameter(int index, ISPParameter.ParameterInfo paramType, String name) {
-        SPParameter parameter = new SPParameter(parser.getTeiidParser(), index, paramType.index(), name);
+        SPParameter parameter = new SPParameter(getTeiidVersion(), index, paramType.index(), name);
         return parameter;
     }
 

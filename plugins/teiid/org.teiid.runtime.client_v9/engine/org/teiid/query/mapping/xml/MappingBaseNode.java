@@ -29,7 +29,6 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.xml.IMappingBaseNode;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.runtime.client.Messages;
 
 
@@ -43,8 +42,8 @@ public abstract class MappingBaseNode extends MappingNode implements IMappingBas
     // An ID on the recursive parent as to who the recursive child node is?  
     String recursionId;
     
-    protected MappingBaseNode(TeiidParser teiidParser) {
-        super(teiidParser);
+    protected MappingBaseNode(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
     }
     
     @Override

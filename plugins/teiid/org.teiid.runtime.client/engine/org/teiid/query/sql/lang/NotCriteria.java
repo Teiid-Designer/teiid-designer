@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.INotCriteria;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 
 /**
  *
@@ -18,7 +18,7 @@ public class NotCriteria extends Criteria implements INotCriteria<LanguageVisito
      * @param p
      * @param id
      */
-    public NotCriteria(TeiidParser p, int id) {
+    public NotCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -67,7 +67,7 @@ public class NotCriteria extends Criteria implements INotCriteria<LanguageVisito
 
     @Override
     public NotCriteria clone() {
-        NotCriteria clone = new NotCriteria(this.parser, this.id);
+        NotCriteria clone = new NotCriteria(getTeiidVersion(), this.id);
 
         if(getCriteria() != null)
             clone.setCriteria(getCriteria().clone());

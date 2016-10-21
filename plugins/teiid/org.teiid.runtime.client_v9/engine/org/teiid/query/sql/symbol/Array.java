@@ -25,8 +25,8 @@ package org.teiid.query.sql.symbol;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.util.ArgCheck;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
@@ -42,7 +42,7 @@ public class Array extends SimpleNode implements Expression {
      * @param p
      * @param id
      */
-    public Array(TeiidParser p, int id) {
+    public Array(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 	
@@ -76,7 +76,7 @@ public class Array extends SimpleNode implements Expression {
 	 */
 	public void setComponentType(Class<?> baseType) {
 		if (baseType != null) {
-		    DefaultDataTypes dataType = getTeiidParser().getDataTypeService().getDataType(baseType);
+		    DefaultDataTypes dataType = getDataTypeService().getDataType(baseType);
 		    this.type = dataType.getTypeArrayClass();
 		} else {
 			this.type = null;
@@ -155,7 +155,7 @@ public class Array extends SimpleNode implements Expression {
     
     @Override
     public Array clone() {
-        Array clone = new Array(this.parser, this.id);
+        Array clone = new Array(getTeiidVersion(), this.id);
 
         if(getExpressions() != null)
             clone.setExpressions(cloneList(getExpressions()));

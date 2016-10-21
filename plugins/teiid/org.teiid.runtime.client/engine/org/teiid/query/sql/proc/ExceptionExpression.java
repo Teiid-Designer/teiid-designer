@@ -9,8 +9,8 @@ package org.teiid.query.sql.proc;
 
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.proc.IExceptionExpression;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 import org.teiid.query.sql.symbol.Expression;
 
@@ -23,8 +23,8 @@ public class ExceptionExpression extends SimpleNode implements Expression, IExce
      * @param teiidParser 
      * @param i
      */
-    public ExceptionExpression(TeiidParser teiidParser, int i) {
-        super(teiidParser, i);
+    public ExceptionExpression(ITeiidServerVersion teiidVersion, int i) {
+        super(teiidVersion, i);
     }
 
     private Expression message;
@@ -147,7 +147,7 @@ public class ExceptionExpression extends SimpleNode implements Expression, IExce
 
     @Override
     public ExceptionExpression clone() {
-        ExceptionExpression clone = new ExceptionExpression(this.parser, this.id);
+        ExceptionExpression clone = new ExceptionExpression(getTeiidVersion(), this.id);
 
         if(getErrorCode() != null)
             clone.setErrorCode(getErrorCode().clone());

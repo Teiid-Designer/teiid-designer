@@ -7,7 +7,7 @@ import java.util.List;
 import org.teiid.designer.query.sql.lang.IOrderBy;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.runtime.client.Messages;
 
@@ -23,7 +23,7 @@ public class OrderBy extends SimpleNode
      * @param p
      * @param id
      */
-    public OrderBy(TeiidParser p, int id) {
+    public OrderBy(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -61,7 +61,7 @@ public class OrderBy extends SimpleNode
         if(element == null)
             throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0021));
 
-        OrderByItem orderByItem = parser.createASTNode(ASTNodes.ORDER_BY_ITEM);
+        OrderByItem orderByItem = createASTNode(ASTNodes.ORDER_BY_ITEM);
         orderByItem.setSymbol(element);
         orderByItem.setAscending(type);
         orderByItems.add(orderByItem);
@@ -116,7 +116,7 @@ public class OrderBy extends SimpleNode
 
     @Override
     public OrderBy clone() {
-        OrderBy clone = new OrderBy(this.parser, this.id);
+        OrderBy clone = new OrderBy(getTeiidVersion(), this.id);
         clone.getOrderByItems().addAll(cloneList(orderByItems));
         return clone;
     }

@@ -26,9 +26,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+
+import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
+import org.teiid.query.parser.TeiidParserSPI;
 
 
 /**
@@ -37,15 +40,28 @@ import org.teiid.query.parser.TeiidParser;
 public interface LanguageObject extends ILanguageObject<LanguageVisitor> {
 
     /**
-     * @return associated parser
+     * @return the data type manager service
      */
-    TeiidParser getTeiidParser();
+	DataTypeManagerService getDataTypeService();
+
+	/**
+	 * @param nodeType
+	 * @return new instance of an AST Node for the given node type
+	 */
+	<T extends LanguageObject> T createASTNode(ASTNodes nodeType);
 
     /**
      * @return ALL the comments related to this and all related objects
      */
     @Override
     Set<Comment> getComments();
+
+    /**
+     * Set the comments of this language object
+     *
+     * @param comments
+     */
+    void setComments(Set<Comment> comments);
 
     /**
      * @return copy of this language object
@@ -78,6 +94,5 @@ public interface LanguageObject extends ILanguageObject<LanguageVisitor> {
 			}
 			return copy;
 		}
-    	
-}
+    }
 }

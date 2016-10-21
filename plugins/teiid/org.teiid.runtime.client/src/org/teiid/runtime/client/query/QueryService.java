@@ -185,7 +185,7 @@ public class QueryService implements IQueryService {
     @Override
     public IQueryFactory createQueryFactory() {
         if (factory == null)
-            factory = new SyntaxFactory(((QueryParser)getQueryParser()).getTeiidParser());
+            factory = new SyntaxFactory(teiidVersion);
 
         return factory;
     }
@@ -193,7 +193,7 @@ public class QueryService implements IQueryService {
     @Override
     public IMappingDocumentFactory getMappingDocumentFactory() {
         getQueryParser();
-        return new MappingDocumentFactory(queryParser.getTeiidParser());
+        return new MappingDocumentFactory(teiidVersion);
     }
 
     @Override

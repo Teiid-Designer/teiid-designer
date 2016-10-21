@@ -79,6 +79,13 @@ public class QueryParser implements IQueryParser {
 	    return teiidParser;
 	}
 
+	/**
+	 * @return the teiid version
+	 */
+	public ITeiidServerVersion getTeiidVersion() {
+		return teiidVersion;
+	}
+
     /**
      * @return the teiidParser
      */

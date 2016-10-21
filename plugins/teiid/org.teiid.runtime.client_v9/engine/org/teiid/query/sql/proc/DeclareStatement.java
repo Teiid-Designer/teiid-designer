@@ -3,8 +3,8 @@
 package org.teiid.query.sql.proc;
 
 import org.teiid.designer.query.sql.proc.IDeclareStatement;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -19,7 +19,7 @@ public class DeclareStatement extends AssignmentStatement implements IDeclareSta
      * @param p
      * @param id
      */
-    public DeclareStatement(TeiidParser p, int id) {
+    public DeclareStatement(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -79,7 +79,7 @@ public class DeclareStatement extends AssignmentStatement implements IDeclareSta
     @SuppressWarnings( "deprecation" )
     @Override
     public DeclareStatement clone() {
-        DeclareStatement clone = new DeclareStatement(this.parser, this.id);
+        DeclareStatement clone = new DeclareStatement(getTeiidVersion(), this.id);
 
         if(getVariableType() != null)
             clone.setVariableType(getVariableType());

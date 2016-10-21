@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.IExistsCriteria;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 
 /**
  *
@@ -24,7 +24,7 @@ public class ExistsCriteria extends Criteria
      * @param p
      * @param id
      */
-    public ExistsCriteria(TeiidParser p, int id) {
+    public ExistsCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -121,7 +121,7 @@ public class ExistsCriteria extends Criteria
 
     @Override
     public ExistsCriteria clone() {
-        ExistsCriteria clone = new ExistsCriteria(this.parser, this.id);
+        ExistsCriteria clone = new ExistsCriteria(getTeiidVersion(), this.id);
 
         if (getCommand() != null)
             clone.setCommand(getCommand().clone());

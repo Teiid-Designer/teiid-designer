@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.IProjectedColumn;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.symbol.ElementSymbol;
 
@@ -23,7 +23,7 @@ public class ProjectedColumn extends SimpleNode implements IProjectedColumn<Lang
      * @param p
      * @param id
      */
-    public ProjectedColumn(TeiidParser p, int id) {
+    public ProjectedColumn(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -32,10 +32,10 @@ public class ProjectedColumn extends SimpleNode implements IProjectedColumn<Lang
      */
     public ElementSymbol getSymbol() {
         if (symbol == null) {
-            this.symbol = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+            this.symbol = createASTNode(ASTNodes.ELEMENT_SYMBOL);
         }        
         this.symbol.setName(name);
-        this.symbol.setType(parser.getDataTypeService().getDataTypeClass(type));
+        this.symbol.setType(getDataTypeService().getDataTypeClass(type));
 
         return symbol;
     }
@@ -106,7 +106,7 @@ public class ProjectedColumn extends SimpleNode implements IProjectedColumn<Lang
 
     @Override
     public ProjectedColumn clone() {
-        ProjectedColumn clone = new ProjectedColumn(this.parser, this.id);
+        ProjectedColumn clone = new ProjectedColumn(getTeiidVersion(), this.id);
 
         if(getName() != null)
             clone.setName(getName());

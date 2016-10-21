@@ -4,8 +4,8 @@ package org.teiid.query.sql.symbol;
 
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.symbol.IXMLParse;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
@@ -23,7 +23,7 @@ public class XMLParse extends SimpleNode implements Expression, IXMLParse<Langua
      * @param p
      * @param id
      */
-    public XMLParse(TeiidParser p, int id) {
+    public XMLParse(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -106,7 +106,7 @@ public class XMLParse extends SimpleNode implements Expression, IXMLParse<Langua
 
     @Override
     public XMLParse clone() {
-        XMLParse clone = new XMLParse(this.parser, this.id);
+        XMLParse clone = new XMLParse(getTeiidVersion(), this.id);
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());

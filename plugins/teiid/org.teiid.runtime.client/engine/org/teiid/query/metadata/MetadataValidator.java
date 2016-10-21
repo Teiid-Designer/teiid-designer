@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.adminapi.impl.ModelMetaData.Message.Severity;
 import org.teiid.adminapi.impl.VDBMetaData;
@@ -61,6 +62,7 @@ import org.teiid.metadata.Table;
 import org.teiid.query.function.metadata.FunctionMetadataValidator;
 import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.parser.QueryParser;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.report.ActivityReport;
 import org.teiid.query.report.ReportItem;
@@ -120,7 +122,7 @@ public class MetadataValidator {
 	}
 
 	private <T extends LanguageObject> T createASTNode(ASTNodes nodeType) {
-	    return queryParser.getTeiidParser().createASTNode(nodeType);
+	    return TeiidNodeFactory.createASTNode(teiidVersion, nodeType);
 	}
 
 	public ValidatorReport validate(VDBMetaData vdb, MetadataStore store) {
@@ -484,7 +486,7 @@ public class MetadataValidator {
         QueryResolver queryResolver = new QueryResolver(queryParser);
         if (isTeiidOrGreater(Version.TEIID_8_12_4)) {
             command = queryParser.parseProcedure(plan, true);
-            SyntaxFactory factory = new SyntaxFactory(queryParser.getTeiidParser());
+            SyntaxFactory factory = new SyntaxFactory(queryParser.getTeiidVersion());
             IGroupSymbol groupSymbol = factory.createGroupSymbol(t.getFullName());
             queryResolver.resolveCommand(command, (GroupSymbol) groupSymbol, type, metadata, false);
         } else {

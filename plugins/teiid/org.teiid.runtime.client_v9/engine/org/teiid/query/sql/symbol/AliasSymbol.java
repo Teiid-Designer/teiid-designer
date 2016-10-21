@@ -4,8 +4,8 @@ package org.teiid.query.sql.symbol;
 
 import org.teiid.core.util.ArgCheck;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SingleElementSymbol;
 import org.teiid.runtime.client.Messages;
 
@@ -26,7 +26,7 @@ public class AliasSymbol extends Symbol
      * @param p
      * @param id
      */
-    public AliasSymbol(TeiidParser p, int id) {
+    public AliasSymbol(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -85,7 +85,7 @@ public class AliasSymbol extends Symbol
 
     @Override
     public AliasSymbol clone() {
-        AliasSymbol clone = new AliasSymbol(this.parser, this.id);
+        AliasSymbol clone = new AliasSymbol(getTeiidVersion(), this.id);
 
         if(getSymbol() != null)
             clone.setSymbol(getSymbol().clone());

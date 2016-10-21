@@ -147,7 +147,7 @@ public class SystemMetadata {
 		systemStore.addDataTypes(dataTypes);
 		loadSchema(vdb, p, baseResourceLocation, "SYSADMIN", parser).mergeInto(systemStore); //$NON-NLS-1$
 		SystemFunctionManager systemFunctionManager = new SystemFunctionManager(teiidVersion, getClass().getClassLoader(), typeMap);
-        TransformationMetadata tm = new TransformationMetadata(parser.getTeiidParser(), vdb, new CompositeMetadataStore(systemStore), null, systemFunctionManager.getSystemFunctions(), null);
+        TransformationMetadata tm = new TransformationMetadata(teiidVersion, vdb, new CompositeMetadataStore(systemStore), null, systemFunctionManager.getSystemFunctions(), null);
         vdb.addAttchment(IQueryMetadataInterface.class, tm);
 //		MetadataValidator validator = new MetadataValidator(this.teiidVersion, this.typeMap);
 //		ValidatorReport report = validator.validate(vdb, systemStore);

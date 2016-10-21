@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.IBetweenCriteria;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -25,7 +25,7 @@ public class BetweenCriteria extends Criteria implements PredicateCriteria, IBet
      * @param p
      * @param id
      */
-    public BetweenCriteria(TeiidParser p, int id) {
+    public BetweenCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -128,7 +128,7 @@ public class BetweenCriteria extends Criteria implements PredicateCriteria, IBet
 
     @Override
     public BetweenCriteria clone() {
-        BetweenCriteria clone = new BetweenCriteria(this.parser, this.id);
+        BetweenCriteria clone = new BetweenCriteria(getTeiidVersion(), this.id);
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());

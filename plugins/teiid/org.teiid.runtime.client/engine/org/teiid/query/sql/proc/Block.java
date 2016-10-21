@@ -8,7 +8,7 @@ import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.query.sql.proc.IBlock;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Labeled;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -33,7 +33,7 @@ public class Block extends Statement implements Labeled, IBlock<Statement, Langu
      * @param p
      * @param id
      */
-    public Block(TeiidParser p, int id) {
+    public Block(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -74,7 +74,7 @@ public class Block extends Statement implements Labeled, IBlock<Statement, Langu
             AssignmentStatement stmt = (AssignmentStatement)statement;
             Command cmd = stmt.getCommand();
             if (cmd != null) {
-                CommandStatement cs = parser.createASTNode(ASTNodes.COMMAND_STATEMENT);
+                CommandStatement cs = createASTNode(ASTNodes.COMMAND_STATEMENT);
                 cs.setCommand(cmd);
                 internalAddStatement(cs, exception);
                 stmt.setCommand(null);
@@ -85,7 +85,7 @@ public class Block extends Statement implements Labeled, IBlock<Statement, Langu
                     return;
                 }
                 String fullName = ISQLConstants.VARIABLES + Symbol.SEPARATOR + ISQLConstants.ROWCOUNT;
-                ElementSymbol es = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+                ElementSymbol es = createASTNode(ASTNodes.ELEMENT_SYMBOL);
                 es.setName(fullName);
                 stmt.setExpression(es);
             }
@@ -205,7 +205,7 @@ public class Block extends Statement implements Labeled, IBlock<Statement, Langu
 
     @Override
     public Block clone() {
-        Block clone = new Block(this.parser, this.id);
+        Block clone = new Block(getTeiidVersion(), this.id);
 
         clone.setAtomic(isAtomic());
         if(getLabel() != null)

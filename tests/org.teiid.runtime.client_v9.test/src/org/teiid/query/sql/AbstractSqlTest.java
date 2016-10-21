@@ -9,6 +9,7 @@ package org.teiid.query.sql;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.ParseInfo;
 import org.teiid.query.sql.lang.CacheHint;
@@ -48,7 +49,7 @@ public abstract class AbstractSqlTest extends AbstractTest<Command> {
                 actualCommand = parser.parseDesignerCommand(sql);
             else
                 actualCommand = parser.parseCommand(sql, info);
-    
+
             actualString = actualCommand.toString();
         } catch (Throwable e) {
             fail(e.getMessage());

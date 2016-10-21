@@ -3,8 +3,8 @@
 package org.teiid.query.sql.proc;
 
 import org.teiid.designer.query.sql.proc.ICommandStatement;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.SubqueryContainer;
 
@@ -23,7 +23,7 @@ public class CommandStatement extends Statement
      * @param p
      * @param id
      */
-    public CommandStatement(TeiidParser p, int id) {
+    public CommandStatement(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -98,7 +98,7 @@ public class CommandStatement extends Statement
 
     @Override
     public CommandStatement clone() {
-        CommandStatement clone = new CommandStatement(this.parser, this.id);
+        CommandStatement clone = new CommandStatement(getTeiidVersion(), this.id);
 
         clone.setReturnable(isReturnable());
         if(getCommand() != null)

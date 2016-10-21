@@ -8,9 +8,9 @@ import javax.script.CompiledScript;
 import javax.script.ScriptEngine;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IObjectTable;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.DerivedColumn;
 
 /**
@@ -40,7 +40,7 @@ public class ObjectTable extends TableFunctionReference implements IObjectTable<
      * @param p
      * @param id
      */
-    public ObjectTable(TeiidParser p, int id) {
+    public ObjectTable(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -179,7 +179,7 @@ public class ObjectTable extends TableFunctionReference implements IObjectTable<
 
     @Override
     public ObjectTable clone() {
-        ObjectTable clone = new ObjectTable(this.parser, this.id);
+        ObjectTable clone = new ObjectTable(getTeiidVersion(), this.id);
 
         if(getColumns() != null)
             clone.setColumns(cloneList(getColumns()));

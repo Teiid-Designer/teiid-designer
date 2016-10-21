@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.parser.LanguageVisitor;
@@ -70,7 +71,7 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
      * @param p
      * @param id
      */
-    public Aggregate7Symbol(Teiid7Parser p, int id) {
+    public Aggregate7Symbol(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -254,7 +255,7 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
 
     @Override
     public Aggregate7Symbol clone() {
-        Aggregate7Symbol clone = new Aggregate7Symbol((Teiid7Parser) this.parser, this.id);
+        Aggregate7Symbol clone = new Aggregate7Symbol(getTeiidVersion(), this.id);
 
         if(getAggregateFunction() != null)
             clone.setAggregateFunction(getAggregateFunction());

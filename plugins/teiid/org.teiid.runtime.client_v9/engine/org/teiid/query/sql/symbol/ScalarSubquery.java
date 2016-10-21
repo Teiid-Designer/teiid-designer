@@ -3,9 +3,8 @@
 package org.teiid.query.sql.symbol;
 
 import org.teiid.designer.query.sql.symbol.IScalarSubquery;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SimpleNode;
 import org.teiid.query.sql.lang.SubqueryContainer;
@@ -29,7 +28,7 @@ public class ScalarSubquery extends SimpleNode
      * @param p
      * @param id
      */
-    public ScalarSubquery(TeiidParser p, int id) {
+    public ScalarSubquery(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -134,7 +133,7 @@ public class ScalarSubquery extends SimpleNode
 
     @Override
     public ScalarSubquery clone() {
-        ScalarSubquery clone = new ScalarSubquery(this.parser, this.id);
+        ScalarSubquery clone = new ScalarSubquery(getTeiidVersion(), this.id);
 
         if(getType() != null)
             clone.setType(getType());

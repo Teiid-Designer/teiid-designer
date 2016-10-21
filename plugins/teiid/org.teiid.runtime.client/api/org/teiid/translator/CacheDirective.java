@@ -24,6 +24,7 @@ package org.teiid.translator;
 
 import java.io.Serializable;
 import java.util.Set;
+
 import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.core.util.HashCodeUtil;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -56,7 +57,7 @@ public class CacheDirective implements Serializable {
 
 	private static final long serialVersionUID = -4119606289701982511L;
 
-	private final TeiidParser teiidParser;
+	private final ITeiidServerVersion teiidVersion;
 
 	private Boolean prefersMemory;
 	private Boolean updatable;
@@ -65,35 +66,21 @@ public class CacheDirective implements Serializable {
 	private Scope scope;
 	private Invalidation invalidation = Invalidation.NONE;
 	
-	public CacheDirective(TeiidParser teiidParser) {
-	    this.teiidParser = teiidParser;
+	public CacheDirective(ITeiidServerVersion teiidVersion) {
+		this.teiidVersion = teiidVersion;
 	}
 	
-	public CacheDirective(TeiidParser teiidParser, Boolean prefersMemory, Long ttl) {
-	    this(teiidParser);
+	public CacheDirective(ITeiidServerVersion teiidVersion, Boolean prefersMemory, Long ttl) {
+	    this(teiidVersion);
 		this.prefersMemory = prefersMemory;
 		this.ttl = ttl;
 	}
-
-	/**
-     * @return the teiidParser
-     */
-    public TeiidParser getTeiidParser() {
-        return this.teiidParser;
-    }
 
     /**
      * @return version
      */
     public ITeiidServerVersion getTeiidVersion() {
-        return this.getTeiidParser().getVersion();
-    }
-
-    /**
-     * @return comments from parser
-     */
-    public Set<Comment> getComments() {
-        return getTeiidParser().getComments();
+        return this.teiidVersion;
     }
 
 	public Boolean getPrefersMemory() {

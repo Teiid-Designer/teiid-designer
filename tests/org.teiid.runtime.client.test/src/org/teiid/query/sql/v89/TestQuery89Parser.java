@@ -7,7 +7,6 @@
 */
 package org.teiid.query.sql.v89;
 
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.sql.v88.TestQuery88Parser;
 

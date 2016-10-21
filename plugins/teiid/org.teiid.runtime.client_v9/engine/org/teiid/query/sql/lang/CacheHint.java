@@ -24,7 +24,7 @@ package org.teiid.query.sql.lang;
 
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod.Determinism;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.translator.CacheDirective;
 
@@ -41,12 +41,12 @@ public class CacheHint extends CacheDirective {
 
     private Long minRows;
 
-	public CacheHint(TeiidParser parser) {
-	    super(parser);
+	public CacheHint(ITeiidServerVersion teiidVersion) {
+	    super(teiidVersion);
 	}
 	
-	public CacheHint(TeiidParser teiidParser, Boolean prefersMemory, Long ttl) {
-		super(teiidParser, prefersMemory, ttl);
+	public CacheHint(ITeiidServerVersion teiidVersion, Boolean prefersMemory, Long ttl) {
+		super(teiidVersion, prefersMemory, ttl);
 	}
 	
 	public boolean isPrefersMemory() {
@@ -58,7 +58,7 @@ public class CacheHint extends CacheDirective {
 
 	@Override
 	public String toString() {
-	    SQLStringVisitor ssv = new SQLStringVisitor(getTeiidParser().getVersion());
+	    SQLStringVisitor ssv = new SQLStringVisitor(getTeiidVersion());
 	    ssv.addCacheHint(this);
 		return ssv.getSQLString();
 	}
@@ -92,7 +92,7 @@ public class CacheHint extends CacheDirective {
 	}
 	
 	public CacheHint clone() {
-		CacheHint copy = new CacheHint(getTeiidParser());
+		CacheHint copy = new CacheHint(getTeiidVersion());
 		copy.setInvalidation(this.getInvalidation());
 		copy.setPrefersMemory(this.getPrefersMemory());
 		copy.setReadAll(this.getReadAll());

@@ -5,10 +5,9 @@ package org.teiid.query.sql.lang;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
-
 import org.teiid.designer.query.sql.lang.ISetCriteria;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -25,7 +24,7 @@ public class SetCriteria extends AbstractSetCriteria implements ISetCriteria<Exp
      * @param p
      * @param id
      */
-    public SetCriteria(TeiidParser p, int id) {
+    public SetCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -97,7 +96,7 @@ public class SetCriteria extends AbstractSetCriteria implements ISetCriteria<Exp
 
     @Override
     public SetCriteria clone() {
-        SetCriteria clone = new SetCriteria(this.parser, this.id);
+        SetCriteria clone = new SetCriteria(getTeiidVersion(), this.id);
 
         Collection copyValues = null;
 	    if (isAllConstants()) {

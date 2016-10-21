@@ -4,9 +4,8 @@ package org.teiid.query.sql.proc;
 
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.proc.IRaiseStatement;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -23,7 +22,7 @@ public class RaiseStatement extends Statement
      * @param p
      * @param id
      */
-    public RaiseStatement(TeiidParser p, int id) {
+    public RaiseStatement(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -102,7 +101,7 @@ public class RaiseStatement extends Statement
 
     @Override
     public RaiseStatement clone() {
-        RaiseStatement clone = new RaiseStatement(this.parser, this.id);
+        RaiseStatement clone = new RaiseStatement(getTeiidVersion(), this.id);
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());

@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.ISubquerySetCriteria;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -21,7 +21,7 @@ implements SubqueryContainer<QueryCommand>, ISubquerySetCriteria<Expression, Lan
      * @param p
      * @param id
      */
-    public SubquerySetCriteria(TeiidParser p, int id) {
+    public SubquerySetCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -89,7 +89,7 @@ implements SubqueryContainer<QueryCommand>, ISubquerySetCriteria<Expression, Lan
 
     @Override
     public SubquerySetCriteria clone() {
-        SubquerySetCriteria clone = new SubquerySetCriteria(this.parser, this.id);
+        SubquerySetCriteria clone = new SubquerySetCriteria(getTeiidVersion(), this.id);
 
         if(getCommand() != null)
             clone.setCommand(getCommand().clone());

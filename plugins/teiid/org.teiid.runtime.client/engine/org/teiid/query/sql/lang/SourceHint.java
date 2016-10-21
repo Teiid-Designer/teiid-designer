@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import org.teiid.designer.query.sql.lang.ISourceHint;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
  *
@@ -65,7 +65,7 @@ public class SourceHint implements ISourceHint {
         }
     }
 
-    private final TeiidParser teiidParser;
+    private final ITeiidServerVersion teiidVersion;
 
     private boolean useAliases;
 
@@ -73,29 +73,22 @@ public class SourceHint implements ISourceHint {
 
     private Map<String, SpecificHint> sourceHints;
 
-    public SourceHint(TeiidParser teiidParser) {
-        this.teiidParser = teiidParser;
-    }
-
-    /**
-     * @return the teiidParser
-     */
-    public TeiidParser getTeiidParser() {
-        return this.teiidParser;
+    public SourceHint(ITeiidServerVersion teiidVersion) {
+        this.teiidVersion = teiidVersion;
     }
 
     /**
      * @return version
      */
     public ITeiidServerVersion getTeiidVersion() {
-        return this.getTeiidParser().getVersion();
+        return this.teiidVersion;
     }
 
     /**
      * @return comments from parser
      */
     public Set<Comment> getComments() {
-        return getTeiidParser().getComments();
+    	throw new UnsupportedOperationException();
     }
 
     /**

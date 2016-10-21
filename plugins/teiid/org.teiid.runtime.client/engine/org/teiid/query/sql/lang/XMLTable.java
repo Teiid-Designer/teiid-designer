@@ -9,7 +9,7 @@ import org.teiid.designer.query.sql.lang.IXMLTable;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.DerivedColumn;
 import org.teiid.query.sql.symbol.XMLNamespaces;
 import org.teiid.query.xquery.saxon.SaxonXQueryExpression;
@@ -35,7 +35,7 @@ public class XMLTable extends TableFunctionReference implements IXMLTable<Langua
      * @param p
      * @param id
      */
-    public XMLTable(TeiidParser p, int id) {
+    public XMLTable(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -94,7 +94,7 @@ public class XMLTable extends TableFunctionReference implements IXMLTable<Langua
     public void setColumns(List<XMLColumn> columns) {
         if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0) && columns.isEmpty()) {
             usingDefaultColumn = true;
-            XMLColumn xmlColumn = parser.createASTNode(ASTNodes.XML_COLUMN);
+            XMLColumn xmlColumn = createASTNode(ASTNodes.XML_COLUMN);
             xmlColumn.setName("OBJECT_VALUE"); //$NON-NLS-1$
             xmlColumn.setType(DataTypeManagerService.DefaultDataTypes.XML.getId());
             xmlColumn.setPath("."); //$NON-NLS-1$
@@ -185,7 +185,7 @@ public class XMLTable extends TableFunctionReference implements IXMLTable<Langua
 
     @Override
     public XMLTable clone() {
-        XMLTable clone = new XMLTable(this.parser, this.id);
+        XMLTable clone = new XMLTable(getTeiidVersion(), this.id);
 
         if(getColumns() != null)
             clone.setColumns(cloneList(getColumns()));
