@@ -224,7 +224,7 @@ public class ResolverVisitor extends LanguageVisitor
                     //assume that this is fully qualified
                     Object groupID = this.metadata.getGroupID(groupContext);
                     // No groups specified, so any group is valid
-                    GroupSymbol groupSymbol = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL);
+                    GroupSymbol groupSymbol = createASTNode(ASTNodes.GROUP_SYMBOL);
                     groupSymbol.setName(groupContext);
                     groupSymbol.setMetadataID(groupID);
                     matchedGroups.add(groupSymbol);
@@ -811,7 +811,7 @@ public class ResolverVisitor extends LanguageVisitor
 		            if (types[i] != null && newType != DefaultDataTypes.OBJECT.getTypeClass()) {
 	                      //directly resolve constants
                         if (args[i] instanceof Constant && newType == DefaultDataTypes.TIMESTAMP.getTypeClass()) {
-                            args[i] = ResolverUtil.getProperlyTypedConstant(((Constant)args[i]).getValue(), newType, getTeiidParser());
+                            args[i] = ResolverUtil.getProperlyTypedConstant(((Constant)args[i]).getValue(), newType, getTeiidVersion());
                         } else {
                             function.insertConversion(i, conversions[i]);
                         }

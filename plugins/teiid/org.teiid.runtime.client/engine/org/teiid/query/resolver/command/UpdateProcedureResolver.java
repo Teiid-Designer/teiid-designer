@@ -95,23 +95,23 @@ public class UpdateProcedureResolver extends CommandResolver {
     public UpdateProcedureResolver(QueryResolver queryResolver) {
         super(queryResolver);
 
-        ElementSymbol es1 = create(ASTNodes.ELEMENT_SYMBOL);
+        ElementSymbol es1 = createASTNode(ASTNodes.ELEMENT_SYMBOL);
         es1.setName("STATE"); //$NON-NLS-1$
         es1.setType(DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass());
 
-        ElementSymbol es2 = create(ASTNodes.ELEMENT_SYMBOL);
+        ElementSymbol es2 = createASTNode(ASTNodes.ELEMENT_SYMBOL);
         es2.setName("ERRORCODE"); //$NON-NLS-1$
         es2.setType(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass());
 
-        ElementSymbol es3 = create(ASTNodes.ELEMENT_SYMBOL);
+        ElementSymbol es3 = createASTNode(ASTNodes.ELEMENT_SYMBOL);
         es3.setName("TEIIDCODE"); //$NON-NLS-1$
         es3.setType(DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass());
 
-        ElementSymbol es4 = create(ASTNodes.ELEMENT_SYMBOL);
+        ElementSymbol es4 = createASTNode(ASTNodes.ELEMENT_SYMBOL);
         es4.setName(NonReserved.EXCEPTION);
         es4.setType(Exception.class);
 
-        ElementSymbol es5 = create(ASTNodes.ELEMENT_SYMBOL);
+        ElementSymbol es5 = createASTNode(ASTNodes.ELEMENT_SYMBOL);
         es5.setName(NonReserved.CHAIN);
         es5.setType(Exception.class);
 
@@ -147,7 +147,7 @@ public class UpdateProcedureResolver extends CommandResolver {
 
             //add the default variables
             String countVar = ProcedureReservedWords.VARIABLES + Symbol.SEPARATOR + ProcedureReservedWords.ROWS_UPDATED;
-            ElementSymbol updateCount = create(ASTNodes.ELEMENT_SYMBOL);
+            ElementSymbol updateCount = createASTNode(ASTNodes.ELEMENT_SYMBOL);
             updateCount.setName(countVar);
             updateCount.setType(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass());
             symbols.add(updateCount);
@@ -157,12 +157,12 @@ public class UpdateProcedureResolver extends CommandResolver {
         //
 
         String countVar = ProcedureReservedWords.VARIABLES + Symbol.SEPARATOR + ProcedureReservedWords.ROWCOUNT;
-        ElementSymbol updateCount = create(ASTNodes.ELEMENT_SYMBOL);
+        ElementSymbol updateCount = createASTNode(ASTNodes.ELEMENT_SYMBOL);
         updateCount.setName(countVar);
         updateCount.setType(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass());
         symbols.add(updateCount);
 
-        ProcedureContainerResolver.addScalarGroup(getTeiidParser(),
+        ProcedureContainerResolver.addScalarGroup(getTeiidVersion(),
                                                   ProcedureReservedWords.VARIABLES,
                                                   metadata.getMetadataStore(),
                                                   externalGroups,
@@ -173,9 +173,9 @@ public class UpdateProcedureResolver extends CommandResolver {
 
         ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> cmd;
         if (getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
-            cmd = create(ASTNodes.CREATE_UPDATE_PROCEDURE_COMMAND);
+            cmd = createASTNode(ASTNodes.CREATE_UPDATE_PROCEDURE_COMMAND);
         } else {
-            cmd = create(ASTNodes.CREATE_PROCEDURE_COMMAND);
+            cmd = createASTNode(ASTNodes.CREATE_PROCEDURE_COMMAND);
             //TODO: this is not generally correct - we should update the api to set the appropriate type
             ((CreateProcedureCommand)cmd).setUpdateType(ICommand.TYPE_INSERT);
         }
@@ -258,7 +258,7 @@ public class UpdateProcedureResolver extends CommandResolver {
         GroupContext externalGroups = new GroupContext(originalExternalGroups, null);
 
         //create a new variables group for this block
-        GroupSymbol variables = ProcedureContainerResolver.addScalarGroup(getTeiidParser(),
+        GroupSymbol variables = ProcedureContainerResolver.addScalarGroup(getTeiidVersion(),
                                                                           ProcedureReservedWords.VARIABLES,
                                                                           store,
                                                                           externalGroups,
@@ -275,7 +275,7 @@ public class UpdateProcedureResolver extends CommandResolver {
             externalGroups = new GroupContext(originalExternalGroups, null);
 
             //create a new variables group for this block
-            variables = ProcedureContainerResolver.addScalarGroup(getTeiidParser(),
+            variables = ProcedureContainerResolver.addScalarGroup(getTeiidVersion(),
                                                                   ProcedureReservedWords.VARIABLES,
                                                                   store,
                                                                   externalGroups,
@@ -283,7 +283,7 @@ public class UpdateProcedureResolver extends CommandResolver {
             isValidGroup(metadata, block.getExceptionGroup());
 
             if (block.getExceptionStatements() != null) {
-                ProcedureContainerResolver.addScalarGroup(getTeiidParser(),
+                ProcedureContainerResolver.addScalarGroup(getTeiidVersion(),
                                                           block.getExceptionGroup(),
                                                           store,
                                                           externalGroups,
@@ -443,7 +443,7 @@ public class UpdateProcedureResolver extends CommandResolver {
                 metadata = new TempMetadataAdapter(metadata.getMetadata(), store);
                 externalGroups = new GroupContext(externalGroups, null);
 
-                ProcedureContainerResolver.addScalarGroup(getTeiidParser(), groupName, store, externalGroups, symbols, false);
+                ProcedureContainerResolver.addScalarGroup(getTeiidVersion(), groupName, store, externalGroups, symbols, false);
 
                 resolveBlock(command, loopStmt.getBlock(), externalGroups, metadata);
                 break;
@@ -603,7 +603,7 @@ public class UpdateProcedureResolver extends CommandResolver {
                 metadata = new TempMetadataAdapter(metadata.getMetadata(), store);
                 externalGroups = new GroupContext(externalGroups, null);
 
-                ProcedureContainerResolver.addScalarGroup(getTeiidParser(), groupName, store, externalGroups, symbols, false);
+                ProcedureContainerResolver.addScalarGroup(getTeiidVersion(), groupName, store, externalGroups, symbols, false);
 
                 resolveBlock(command, loopStmt.getBlock(), externalGroups, metadata);
                 break;
@@ -658,7 +658,7 @@ public class UpdateProcedureResolver extends CommandResolver {
         GroupSymbol gs = variable.getGroupSymbol();
         if (gs == null) {
             String outputName = variable.getShortName();
-            gs = create(ASTNodes.GROUP_SYMBOL);
+            gs = createASTNode(ASTNodes.GROUP_SYMBOL);
             gs.setName(ProcedureReservedWords.VARIABLES);
             variable.setGroupSymbol(gs);
             variable.setOutputName(outputName);

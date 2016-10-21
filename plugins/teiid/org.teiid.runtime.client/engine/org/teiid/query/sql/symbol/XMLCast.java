@@ -24,9 +24,9 @@ package org.teiid.query.sql.symbol;
 
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.symbol.IXMLCast;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
 
@@ -43,7 +43,7 @@ public class XMLCast extends SimpleNode implements Expression, IXMLCast<Language
      * @param p
      * @param id
      */
-    public XMLCast(TeiidParser p, int id) {
+    public XMLCast(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 	
@@ -68,7 +68,7 @@ public class XMLCast extends SimpleNode implements Expression, IXMLCast<Language
 
 	@Override
 	public XMLCast clone() {
-	    XMLCast clone = new XMLCast(this.parser, this.id);
+	    XMLCast clone = new XMLCast(getTeiidVersion(), this.id);
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());

@@ -4,8 +4,8 @@ package org.teiid.query.sql.lang;
 
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IDelete;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
@@ -25,7 +25,7 @@ public class Delete extends ProcedureContainer
      * @param p
      * @param id
      */
-    public Delete(TeiidParser p, int id) {
+    public Delete(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -117,7 +117,7 @@ public class Delete extends ProcedureContainer
 
     @Override
     public Delete clone() {
-        Delete clone = new Delete(this.parser, this.id);
+        Delete clone = new Delete(getTeiidVersion(), this.id);
 
         if(getCriteria() != null)
             clone.setCriteria(getCriteria().clone());

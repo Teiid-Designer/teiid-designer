@@ -129,7 +129,7 @@ public class SimpleQueryResolver extends CommandResolver {
                     public Expression replaceExpression(Expression element) {
 						if (element instanceof Function && !(element instanceof AggregateSymbol) && ((Function) element).isAggregate()) {
 							Function f = (Function)element;
-							AggregateSymbol as = create(ASTNodes.AGGREGATE_SYMBOL);
+							AggregateSymbol as = createASTNode(ASTNodes.AGGREGATE_SYMBOL);
 							as.setName(f.getName());
 							as.setDistinct(false);
 							as.setArgs(f.getArgs());
@@ -584,21 +584,21 @@ public class SimpleQueryResolver extends CommandResolver {
 			
 			IStoredProcedureInfo storedProcedureInfo = metadata.getStoredProcedureInfoForProcedure(fullName);
 
-			StoredProcedure storedProcedureCommand = getTeiidParser().createASTNode(ASTNodes.STORED_PROCEDURE);
+			StoredProcedure storedProcedureCommand = createASTNode(ASTNodes.STORED_PROCEDURE);
 			storedProcedureCommand.setProcedureRelational(true);
 			storedProcedureCommand.setProcedureName(fullName);
 			
 			List<SPParameter> metadataParams = storedProcedureInfo.getParameters();
 			
-			Query procQuery = getTeiidParser().createASTNode(ASTNodes.QUERY);
-			From from = getTeiidParser().createASTNode(ASTNodes.FROM);
-			SubqueryFromClause subqueryFromClause = getTeiidParser().createASTNode(ASTNodes.SUBQUERY_FROM_CLAUSE);
+			Query procQuery = createASTNode(ASTNodes.QUERY);
+			From from = createASTNode(ASTNodes.FROM);
+			SubqueryFromClause subqueryFromClause = createASTNode(ASTNodes.SUBQUERY_FROM_CLAUSE);
 			subqueryFromClause.setName("X"); //$NON-NLS-1$
 			subqueryFromClause.setCommand(storedProcedureCommand);
 			from.addClause(subqueryFromClause);
 			procQuery.setFrom(from);
-			Select select = getTeiidParser().createASTNode(ASTNodes.SELECT);
-			MultipleElementSymbol mes = getTeiidParser().createASTNode(ASTNodes.MULTIPLE_ELEMENT_SYMBOL);
+			Select select = createASTNode(ASTNodes.SELECT);
+			MultipleElementSymbol mes = createASTNode(ASTNodes.MULTIPLE_ELEMENT_SYMBOL);
 			mes.setName("X"); //$NON-NLS-1$
 			select.addSymbol(mes);
 			procQuery.setSelect(select);
@@ -611,7 +611,7 @@ public class SimpleQueryResolver extends CommandResolver {
 			    SPParameter clonedParam = metadataParameter.clone();
 			    if (clonedParam.getParameterType()==ISPParameter.ParameterInfo.IN.index() || metadataParameter.getParameterType()==ISPParameter.ParameterInfo.INOUT.index()) {
 			        ElementSymbol paramSymbol = clonedParam.getParameterSymbol();
-			        Reference ref = getTeiidParser().createASTNode(ASTNodes.REFERENCE);
+			        Reference ref = createASTNode(ASTNodes.REFERENCE);
 			        ref.setExpression(paramSymbol);
 			        clonedParam.setExpression(ref);
 			        clonedParam.setIndex(paramIndex++);
@@ -623,10 +623,10 @@ public class SimpleQueryResolver extends CommandResolver {
 			            aliasName += "_IN"; //$NON-NLS-1$
 			        }
 
-			        ExpressionSymbol es = getTeiidParser().createASTNode(ASTNodes.EXPRESSION_SYMBOL);
+			        ExpressionSymbol es = createASTNode(ASTNodes.EXPRESSION_SYMBOL);
 			        es.setName(paramSymbol.getShortName());
 			        es.setExpression(ref);
-			        AliasSymbol newSymbol = getTeiidParser().createASTNode(ASTNodes.ALIAS_SYMBOL);
+			        AliasSymbol newSymbol = createASTNode(ASTNodes.ALIAS_SYMBOL);
 			        newSymbol.setName(aliasName);
 			        newSymbol.setSymbol(es);
 

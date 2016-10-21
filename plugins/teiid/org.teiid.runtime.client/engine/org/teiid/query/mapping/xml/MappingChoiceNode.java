@@ -24,8 +24,8 @@ package org.teiid.query.mapping.xml;
 
 import java.util.Iterator;
 import java.util.List;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.xml.IMappingChoiceNode;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.runtime.client.Messages;
 
 
@@ -39,12 +39,12 @@ import org.teiid.runtime.client.Messages;
 public class MappingChoiceNode extends MappingBaseNode
     implements IMappingChoiceNode<MappingCriteriaNode, MappingNode> {
 
-    public MappingChoiceNode(TeiidParser teiidParser) {
-        this(teiidParser, false);
+    public MappingChoiceNode(ITeiidServerVersion teiidVersion) {
+        this(teiidVersion, false);
     }
     
-    public MappingChoiceNode(TeiidParser teiidParser, boolean exceptionOnDefault) {
-        super(teiidParser);
+    public MappingChoiceNode(ITeiidServerVersion teiidVersion, boolean exceptionOnDefault) {
+        super(teiidVersion);
         //setProperty(MappingNodeConstants.Properties.NAME, "{ChoiceNode}"); //$NON-NLS-1$
         setProperty(MappingNodeConstants.Properties.NODE_TYPE, MappingNodeConstants.CHOICE);
         setProperty(MappingNodeConstants.Properties.EXCEPTION_ON_DEFAULT, Boolean.valueOf(exceptionOnDefault));

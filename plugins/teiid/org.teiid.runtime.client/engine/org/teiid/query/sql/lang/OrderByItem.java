@@ -7,7 +7,7 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SortSpecification;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
@@ -31,7 +31,7 @@ public class OrderByItem extends SimpleNode
      * @param p
      * @param id
      */
-    public OrderByItem(TeiidParser p, int id) {
+    public OrderByItem(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -56,7 +56,7 @@ public class OrderByItem extends SimpleNode
     public void setSymbol(Expression symbol) {
         if (isTeiidVersionOrGreater(Version.TEIID_8_6) && symbol != null
                 && !(symbol instanceof Symbol) && !(symbol instanceof Constant)) {
-            ExpressionSymbol ex = getTeiidParser().createASTNode(ASTNodes.EXPRESSION_SYMBOL);
+            ExpressionSymbol ex = createASTNode(ASTNodes.EXPRESSION_SYMBOL);
             ex.setName("expr"); //$NON-NLS-1$
             ex.setExpression(symbol);
             symbol = ex;
@@ -133,7 +133,7 @@ public class OrderByItem extends SimpleNode
 
     @Override
     public OrderByItem clone() {
-        OrderByItem clone = new OrderByItem(this.parser, this.id);
+        OrderByItem clone = new OrderByItem(getTeiidVersion(), this.id);
 
         if(getSymbol() != null)
             clone.setSymbol(getSymbol().clone());

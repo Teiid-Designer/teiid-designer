@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.ILimit;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -29,7 +29,7 @@ public class Limit extends SimpleNode implements ILimit<LanguageVisitor> {
      * @param p
      * @param id
      */
-    public Limit(TeiidParser p, int id) {
+    public Limit(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -125,7 +125,7 @@ public class Limit extends SimpleNode implements ILimit<LanguageVisitor> {
 
     @Override
     public Limit clone() {
-        Limit clone = new Limit(this.parser, this.id);
+        Limit clone = new Limit(getTeiidVersion(), this.id);
 
         clone.setStrict(isStrict());
         clone.setImplicit(isImplicit());

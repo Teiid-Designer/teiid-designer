@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.IIsNullCriteria;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -21,7 +21,7 @@ public class IsNullCriteria extends Criteria implements PredicateCriteria, IIsNu
      * @param p
      * @param id
      */
-    public IsNullCriteria(TeiidParser p, int id) {
+    public IsNullCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -87,7 +87,7 @@ public class IsNullCriteria extends Criteria implements PredicateCriteria, IIsNu
 
     @Override
     public IsNullCriteria clone() {
-        IsNullCriteria clone = new IsNullCriteria(this.parser, this.id);
+        IsNullCriteria clone = new IsNullCriteria(getTeiidVersion(), this.id);
 
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());

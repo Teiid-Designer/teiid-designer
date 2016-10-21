@@ -33,6 +33,7 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.metadata.TempMetadataAdapter;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.resolver.ProcedureContainerResolver;
 import org.teiid.query.resolver.QueryResolver;
@@ -112,7 +113,7 @@ public class UpdateResolver extends ProcedureContainerResolver implements Variab
             leftSymbol.getGroupSymbol().setName(ProcedureReservedWords.CHANGING);
             leftSymbol.setType(DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass());
             
-            Constant constant = getTeiidParser().createASTNode(ASTNodes.CONSTANT);
+            Constant constant = createASTNode(ASTNodes.CONSTANT);
             constant.setValue(Boolean.TRUE);
             result.put(leftSymbol, constant);
             if (!changingOnly) {
@@ -132,7 +133,7 @@ public class UpdateResolver extends ProcedureContainerResolver implements Variab
             varSymbol.getGroupSymbol().setName(ProcedureReservedWords.CHANGING);
             varSymbol.setType(DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass());
             
-            Constant constant = getTeiidParser().createASTNode(ASTNodes.CONSTANT);
+            Constant constant = TeiidNodeFactory.createASTNode(getTeiidVersion(), ASTNodes.CONSTANT);
             constant.setValue(Boolean.FALSE);
             result.put(varSymbol, constant);
         }

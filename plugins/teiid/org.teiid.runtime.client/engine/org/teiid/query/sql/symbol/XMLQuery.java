@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.symbol.IXMLQuery;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 import org.teiid.query.xquery.saxon.SaxonXQueryExpression;
 
@@ -30,7 +30,7 @@ public class XMLQuery extends SimpleNode implements Expression, IXMLQuery<Langua
      * @param p
      * @param id
      */
-    public XMLQuery(TeiidParser p, int id) {
+    public XMLQuery(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -144,7 +144,7 @@ public class XMLQuery extends SimpleNode implements Expression, IXMLQuery<Langua
 
     @Override
     public XMLQuery clone() {
-        XMLQuery clone = new XMLQuery(this.parser, this.id);
+        XMLQuery clone = new XMLQuery(getTeiidVersion(), this.id);
 
         if(getPassing() != null)
             clone.setPassing(cloneList(getPassing()));

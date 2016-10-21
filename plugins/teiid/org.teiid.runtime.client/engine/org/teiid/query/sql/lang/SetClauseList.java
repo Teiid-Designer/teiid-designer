@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.ISetClauseList;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 
@@ -22,7 +22,7 @@ public class SetClauseList extends SimpleNode implements ISetClauseList<Language
      * @param p
      * @param id
      */
-    public SetClauseList(TeiidParser p, int id) {
+    public SetClauseList(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -86,7 +86,7 @@ public class SetClauseList extends SimpleNode implements ISetClauseList<Language
 
     @Override
     public SetClauseList clone() {
-        SetClauseList clone = new SetClauseList(this.parser, this.id);
+        SetClauseList clone = new SetClauseList(getTeiidVersion(), this.id);
         clone.getClauses().addAll(cloneList(getClauses()));
         return clone;
     }

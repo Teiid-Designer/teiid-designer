@@ -2,8 +2,8 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -20,7 +20,7 @@ public abstract class AbstractSetCriteria extends Criteria implements PredicateC
      * @param p
      * @param id
      */
-    public AbstractSetCriteria(TeiidParser p, int id) {
+    public AbstractSetCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 

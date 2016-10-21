@@ -4,9 +4,9 @@ package org.teiid.query.sql.lang;
 
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.proc.IHasCriteria;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 
 /**
  *
@@ -22,7 +22,7 @@ public class HasCriteria extends Criteria implements PredicateCriteria, IHasCrit
      * @param p
      * @param id
      */
-    public HasCriteria(TeiidParser p, int id) {
+    public HasCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -70,7 +70,7 @@ public class HasCriteria extends Criteria implements PredicateCriteria, IHasCrit
 
     @Override
     public HasCriteria clone() {
-        HasCriteria clone = new HasCriteria(this.parser, this.id);
+        HasCriteria clone = new HasCriteria(getTeiidVersion(), this.id);
 
         if(getSelector() != null)
             clone.setSelector(getSelector().clone());

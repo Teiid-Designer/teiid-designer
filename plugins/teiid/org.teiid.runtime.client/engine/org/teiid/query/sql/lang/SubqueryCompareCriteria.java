@@ -8,7 +8,7 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ScalarSubquery;
 
@@ -64,7 +64,7 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
      * @param p
      * @param id
      */
-    public SubqueryCompareCriteria(TeiidParser p, int id) {
+    public SubqueryCompareCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -121,7 +121,7 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
 
     @Override
     public Expression getRightExpression() {
-        ScalarSubquery scalarSubquery = parser.createASTNode(ASTNodes.SCALAR_SUBQUERY);
+        ScalarSubquery scalarSubquery = createASTNode(ASTNodes.SCALAR_SUBQUERY);
         scalarSubquery.setCommand(getCommand());
         return scalarSubquery;
     }
@@ -165,7 +165,7 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
 
     @Override
     public SubqueryCompareCriteria clone() {
-        SubqueryCompareCriteria clone = new SubqueryCompareCriteria(this.parser, this.id);
+        SubqueryCompareCriteria clone = new SubqueryCompareCriteria(getTeiidVersion(), this.id);
 
         if(getCommand() != null)
             clone.setCommand(getCommand().clone());

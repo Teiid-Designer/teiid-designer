@@ -3,8 +3,8 @@
 package org.teiid.query.sql.proc;
 
 import org.teiid.designer.query.sql.proc.IBranchingStatement;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 
 /**
  *
@@ -37,7 +37,7 @@ public class BranchingStatement extends Statement implements IBranchingStatement
      * @param p
      * @param id
      */
-    public BranchingStatement(TeiidParser p, int id) {
+    public BranchingStatement(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -116,7 +116,7 @@ public class BranchingStatement extends Statement implements IBranchingStatement
 
     @Override
     public BranchingStatement clone() {
-        BranchingStatement clone = new BranchingStatement(this.parser, this.id);
+        BranchingStatement clone = new BranchingStatement(getTeiidVersion(), this.id);
 
         if(getLabel() != null)
             clone.setLabel(getLabel());

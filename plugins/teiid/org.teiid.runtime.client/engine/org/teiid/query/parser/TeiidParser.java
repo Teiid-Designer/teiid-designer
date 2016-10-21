@@ -52,13 +52,6 @@ public interface TeiidParser {
     void reset(Reader sql);
 
     /**
-     * @param nodeType
-     * 
-     * @return instance of commonly used node
-     */
-    <T extends LanguageObject> T createASTNode(ASTNodes nodeType);
-
-    /**
      * @param parseInfo
      *
      * @return command for trigger action
@@ -139,16 +132,6 @@ public interface TeiidParser {
     
     @Since(Version.TEIID_8_0)
     CacheHint getQueryCacheOption(String sql);
-
-    /**
-     * @return comments collected from the parser
-     */
-    Set<Comment> getComments();
-
-    /**
-     * @param comment
-     */
-    void addComment(Comment comment);
 
     /**
      * @param text

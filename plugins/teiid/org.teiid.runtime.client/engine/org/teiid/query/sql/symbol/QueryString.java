@@ -5,8 +5,8 @@ package org.teiid.query.sql.symbol;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.designer.query.sql.symbol.IQueryString;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
@@ -22,7 +22,7 @@ public class QueryString extends SimpleNode implements Expression, IQueryString<
      * @param p
      * @param id
      */
-    public QueryString(TeiidParser p, int id) {
+    public QueryString(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -91,7 +91,7 @@ public class QueryString extends SimpleNode implements Expression, IQueryString<
 
     @Override
     public QueryString clone() {
-        QueryString clone = new QueryString(this.parser, this.id);
+        QueryString clone = new QueryString(getTeiidVersion(), this.id);
 
         if(getArgs() != null)
             clone.setArgs(cloneList(getArgs()));

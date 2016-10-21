@@ -9,8 +9,8 @@ import java.util.regex.PatternSyntaxException;
 import org.teiid.core.util.LRUCache;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.designer.query.sql.lang.IMatchCriteria;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
@@ -43,7 +43,7 @@ public class MatchCriteria extends Criteria
      * @param p
      * @param id
      */
-    public MatchCriteria(TeiidParser p, int id) {
+    public MatchCriteria(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -174,7 +174,7 @@ public class MatchCriteria extends Criteria
 
     @Override
     public MatchCriteria clone() {
-        MatchCriteria clone = new MatchCriteria(this.parser, this.id);
+        MatchCriteria clone = new MatchCriteria(getTeiidVersion(), this.id);
 
         if(getRightExpression() != null)
             clone.setRightExpression(getRightExpression().clone());

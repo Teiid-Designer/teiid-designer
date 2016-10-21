@@ -22,8 +22,8 @@
 
 package org.teiid.query.mapping.xml;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.xml.IMappingSequenceNode;
-import org.teiid.query.parser.TeiidParser;
 
 
 /** 
@@ -31,8 +31,8 @@ import org.teiid.query.parser.TeiidParser;
  */
 public class MappingSequenceNode extends MappingBaseNode implements IMappingSequenceNode<MappingNode> {
     
-    public MappingSequenceNode(TeiidParser teiidParser) {
-        super(teiidParser);
+    public MappingSequenceNode(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
         //setProperty(MappingNodeConstants.Properties.NAME, "{SequenceNode}"); //$NON-NLS-1$
         setProperty(MappingNodeConstants.Properties.NODE_TYPE, MappingNodeConstants.SEQUENCE);
     }    

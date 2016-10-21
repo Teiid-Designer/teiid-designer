@@ -13,7 +13,7 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.metadata.TempMetadataStore;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -51,7 +51,7 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
      * @param p
      * @param id
      */
-    public Command(TeiidParser p, int id) {
+    public Command(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -91,7 +91,7 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
      */
     @Override
     public List<? extends Expression> getResultSetColumns() {
-        if (returnsResultSet() || parser.getVersion().isLessThan(Version.TEIID_8_0)) {
+        if (returnsResultSet() || getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
             return getProjectedSymbols();
         }
         return Collections.emptyList();
@@ -130,7 +130,7 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
      */
     public List<Expression> getUpdateCommandSymbol() {
         if (updateCommandSymbol == null ) {
-            ElementSymbol symbol = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+            ElementSymbol symbol = createASTNode(ASTNodes.ELEMENT_SYMBOL);
             symbol.setName("Count"); //$NON-NLS-1$
             symbol.setType(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass());
             updateCommandSymbol = Arrays.asList((Expression)symbol);

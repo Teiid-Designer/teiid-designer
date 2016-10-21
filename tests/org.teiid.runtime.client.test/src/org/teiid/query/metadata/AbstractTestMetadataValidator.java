@@ -11,9 +11,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import java.io.StringReader;
 import java.util.Map;
 import java.util.Properties;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.teiid.adminapi.Model;
@@ -59,8 +61,7 @@ public abstract class AbstractTestMetadataValidator extends AbstractTest {
     }
 
     private void buildTransformationMetadata() {
-        TeiidParser parser = getQueryParser().getTeiidParser();
-        TransformationMetadata metadata = new TransformationMetadata(parser, this.vdb, new CompositeMetadataStore(this.store),
+        TransformationMetadata metadata = new TransformationMetadata(getTeiidVersion(), this.vdb, new CompositeMetadataStore(this.store),
                                                                      null, SFM.getSystemFunctions(), null);
         this.vdb.addAttchment(IQueryMetadataInterface.class, metadata);
         this.vdb.addAttchment(TransformationMetadata.class, metadata);

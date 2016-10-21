@@ -73,7 +73,7 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 
-public abstract class AbstractTeiidParser implements TeiidParser {
+public abstract class AbstractTeiidParser implements TeiidParserSPI {
 
     protected static final Pattern udtPattern = Pattern.compile("(\\w+)\\s*\\(\\s*(\\d+),\\s*(\\d+),\\s*(\\d+)\\)"); //$NON-NLS-1$
 
@@ -94,7 +94,9 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 
     private MetadataFactory metadataFactory;
 
-    private Set<Comment> comments = new LinkedHashSet<Comment>();
+    private LanguageObject currentNode;
+
+    private Set<Comment> commentCache;
 
     /**
      * Access to the javacc-generated Reinit method
@@ -109,7 +111,14 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     @Override
     public void reset(Reader sql) {
         this.ReInit(sql);
-        this.comments.clear();
+        if (commentCache != null) {
+            //
+            // Do not clear as the language objects created during parsing
+            // have references to the same instance. This decouples this
+            // parser from that instance
+            //
+            commentCache = null;
+        }
     }
 
     /**
@@ -155,26 +164,37 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         return DataTypeManagerService.getInstance(getVersion());
     }
 
-    @Override
-    public <T extends LanguageObject> T createASTNode(ASTNodes nodeType) {
-        return TeiidNodeFactory.getInstance().create(this, nodeType);
+    protected <T extends LanguageObject> T createASTNode(ASTNodes nodeType) {
+        return TeiidNodeFactory.jjtCreate(this, nodeType);
     }
 
-    /**
-     * @return comments
-     */
-    @Override
-    public Set<Comment> getComments() {
-        return Collections.unmodifiableSet(comments);
-    }
+	/**
+	 * @param comment
+	 */
+	public void addComment(Comment comment) {
+		if (commentCache == null)
+			commentCache = new LinkedHashSet<Comment>();
 
-    /**
-     * @param comment
-     */
-    @Override
-    public void addComment(Comment comment) {
-        comments.add(comment);
-    }
+		commentCache.add(comment);
+
+		if (currentNode != null) {
+			// Have a current node so set the comments collection
+			currentNode.setComments(commentCache);
+		}
+	}
+
+	@Override
+	public void setCurrentNode(LanguageObject currentNode) {
+		if (currentNode == null)
+			return;
+
+		this.currentNode = currentNode;
+
+		if (commentCache == null)
+			commentCache = new LinkedHashSet<Comment>();
+
+		this.currentNode.setComments(commentCache);
+	}
 
 	protected String prependSign(String sign, String literal) {
 		if (sign != null && sign.charAt(0) == '-') {
@@ -186,7 +206,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 	@Since(Version.TEIID_8_0)
 	protected void convertToParameters(List<Expression> values, StoredProcedure storedProcedure, int paramIndex) {
 		for (Expression value : values) {
-			SPParameter parameter = new SPParameter(this, paramIndex++, value);
+			SPParameter parameter = new SPParameter(getVersion(), paramIndex++, value);
 			parameter.setParameterType(SPParameter.IN);
 			storedProcedure.setParameter(parameter);
 		}
@@ -387,7 +407,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
             return null;
         }
 
-        SourceHint sourceHint = new SourceHint(this);
+        SourceHint sourceHint = new SourceHint(getVersion());
         if (matcher.group(1) != null) {
             sourceHint.setUseAliases(true);
         }
@@ -406,7 +426,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 
         return sourceHint;
     }
-    
+
 	@Override
     public CacheHint getQueryCacheOption(String query) {
 	    Pattern cacheHint = CACHE_HINT;
@@ -415,7 +435,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 
     	Matcher match = cacheHint.matcher(query);
     	if (match.matches()) {
-    	    CacheHint hint = new CacheHint(this);
+            CacheHint hint = new CacheHint(getVersion());
     		if (match.group(2) !=null) {
     			hint.setPrefersMemory(true);
     		}

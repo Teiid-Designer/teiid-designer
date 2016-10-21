@@ -65,7 +65,7 @@ import org.teiid.query.metadata.StoredProcedureInfo;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
@@ -135,24 +135,24 @@ public class SyntaxFactory implements IQueryFactory <Expression,
                                                                                                  GroupSymbol,
                                                                                                  JoinType> {
 
-    private TeiidParser teiidParser;
+	private ITeiidServerVersion teiidVersion;
 
     private final TeiidNodeFactory nodeFactory = TeiidNodeFactory.getInstance();
 
     /**
-     * @param teiidParser
+     * @param teiidVersion
      */
-    public SyntaxFactory(TeiidParser teiidParser) {
-        this.teiidParser = teiidParser;
+    public SyntaxFactory(ITeiidServerVersion teiidVersion) {
+        this.teiidVersion = teiidVersion;
     }
 
     private boolean isGreaterThanOrEqualTo(Version teiidVersion) {
-        ITeiidServerVersion minVersion = teiidParser.getVersion().getMinimumVersion();
+        ITeiidServerVersion minVersion = this.teiidVersion.getMinimumVersion();
         return minVersion.equals(teiidVersion.get()) || minVersion.isGreaterThan(teiidVersion.get());
     }
 
     private <T extends LanguageObject> T create(ASTNodes nodeType) {
-        return nodeFactory.create(teiidParser, nodeType);
+        return nodeFactory.create(teiidVersion, nodeType);
     }
 
     @Override
@@ -552,12 +552,12 @@ public class SyntaxFactory implements IQueryFactory <Expression,
 
     @Override
     public ISPParameter createSPParameter(int index, Expression expression) {
-        return new SPParameter(teiidParser, index, expression);
+        return new SPParameter(teiidVersion, index, expression);
     }
 
     @Override
     public ISPParameter createSPParameter(int index, ParameterInfo parameterType, String name) {
-        return new SPParameter(teiidParser, index, parameterType.index(), name);
+        return new SPParameter(teiidVersion, index, parameterType.index(), name);
     }
 
     @Override

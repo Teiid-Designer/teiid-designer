@@ -5,8 +5,8 @@ package org.teiid.query.sql.symbol;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.symbol.IXMLElement;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
@@ -26,7 +26,7 @@ public class XMLElement extends SimpleNode implements Expression, IXMLElement<La
      * @param p
      * @param id
      */
-    public XMLElement(TeiidParser p, int id) {
+    public XMLElement(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -131,7 +131,7 @@ public class XMLElement extends SimpleNode implements Expression, IXMLElement<La
 
     @Override
     public XMLElement clone() {
-        XMLElement clone = new XMLElement(this.parser, this.id);
+        XMLElement clone = new XMLElement(getTeiidVersion(), this.id);
 
         if(getContent() != null)
             clone.setContent(cloneList(getContent()));

@@ -4,8 +4,8 @@ package org.teiid.query.sql.symbol;
 
 import java.util.List;
 import org.teiid.designer.query.sql.symbol.IXMLAttributes;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
@@ -19,7 +19,7 @@ public class XMLAttributes extends SimpleNode implements IXMLAttributes<Language
      * @param p
      * @param id
      */
-    public XMLAttributes(TeiidParser p, int id) {
+    public XMLAttributes(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -65,7 +65,7 @@ public class XMLAttributes extends SimpleNode implements IXMLAttributes<Language
 
     @Override
     public XMLAttributes clone() {
-        XMLAttributes clone = new XMLAttributes(this.parser, this.id);
+        XMLAttributes clone = new XMLAttributes(getTeiidVersion(), this.id);
 
         if(getArgs() != null)
             clone.setArgs(cloneList(getArgs()));

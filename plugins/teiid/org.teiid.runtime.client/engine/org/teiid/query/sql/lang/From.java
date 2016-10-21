@@ -7,7 +7,7 @@ import java.util.List;
 import org.teiid.designer.query.sql.lang.IFrom;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
@@ -22,7 +22,7 @@ public class From extends SimpleNode
      * @param p
      * @param id
      */
-    public From(TeiidParser p, int id) {
+    public From(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -70,7 +70,7 @@ public class From extends SimpleNode
         if( group == null )
             return;
 
-        UnaryFromClause unaryFromClause = parser.createASTNode(ASTNodes.UNARY_FROM_CLAUSE);
+        UnaryFromClause unaryFromClause = createASTNode(ASTNodes.UNARY_FROM_CLAUSE);
         unaryFromClause.setGroup(group);
         addClause(unaryFromClause);
     }  
@@ -121,7 +121,7 @@ public class From extends SimpleNode
 
     @Override
     public From clone() {
-        From clone = new From(this.parser, this.id);
+        From clone = new From(getTeiidVersion(), this.id);
 
         if(getClauses() != null)
             clone.setClauses(cloneList(getClauses()));

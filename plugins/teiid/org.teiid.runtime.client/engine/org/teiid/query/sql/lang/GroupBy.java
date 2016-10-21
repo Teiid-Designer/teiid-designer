@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IGroupBy;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 
@@ -27,7 +27,7 @@ public class GroupBy extends SimpleNode implements IGroupBy<Expression, Language
      * @param p
      * @param id
      */
-    public GroupBy(TeiidParser p, int id) {
+    public GroupBy(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -96,7 +96,7 @@ public class GroupBy extends SimpleNode implements IGroupBy<Expression, Language
 
     @Override
     public GroupBy clone() {
-        GroupBy clone = new GroupBy(this.parser, this.id);
+        GroupBy clone = new GroupBy(getTeiidVersion(), this.id);
 
         if(getSymbols() != null)
             clone.setSymbols(cloneList(getSymbols()));

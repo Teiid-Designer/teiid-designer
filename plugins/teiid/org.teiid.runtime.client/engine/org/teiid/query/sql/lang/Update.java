@@ -6,7 +6,7 @@ import java.util.List;
 import org.teiid.designer.query.sql.lang.IUpdate;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -29,7 +29,7 @@ public class Update extends ProcedureContainer
      * @param p
      * @param id
      */
-    public Update(TeiidParser p, int id) {
+    public Update(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -57,9 +57,9 @@ public class Update extends ProcedureContainer
      */
     public void addChange(ElementSymbol id, Expression value) {
         if (changeList == null)
-            changeList = parser.createASTNode(ASTNodes.SET_CLAUSE_LIST);
+            changeList = createASTNode(ASTNodes.SET_CLAUSE_LIST);
 
-        SetClause setClause = parser.createASTNode(ASTNodes.SET_CLAUSE);
+        SetClause setClause = createASTNode(ASTNodes.SET_CLAUSE);
         setClause.setSymbol(id);
         setClause.setValue(value);
         changeList.addClause(setClause);
@@ -145,7 +145,7 @@ public class Update extends ProcedureContainer
 
     @Override
     public Update clone() {
-        Update clone = new Update(this.parser, this.id);
+        Update clone = new Update(getTeiidVersion(), this.id);
 
         if(getCriteria() != null)
             clone.setCriteria(getCriteria().clone());

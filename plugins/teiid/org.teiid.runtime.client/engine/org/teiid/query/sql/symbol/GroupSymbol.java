@@ -5,10 +5,9 @@ package org.teiid.query.sql.symbol;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.query.sql.symbol.ISymbol;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.runtime.client.Messages;
 
 /**
@@ -39,7 +38,7 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
      * @param p
      * @param id
      */
-    public GroupSymbol(TeiidParser p, int id) {
+    public GroupSymbol(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -282,7 +281,7 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
 
     @Override
     public GroupSymbol clone() {
-        GroupSymbol clone = new GroupSymbol(this.parser, this.id);
+        GroupSymbol clone = new GroupSymbol(getTeiidVersion(), this.id);
 
         if(getDefinition() != null)
             clone.setDefinition(getDefinition());

@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import org.teiid.designer.xml.IMappingElement;
-import org.teiid.query.parser.TeiidParser;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.ElementSymbol;
 
 
@@ -43,17 +43,17 @@ public class MappingElement extends MappingBaseNode
     
     Namespace namespace;
     
-    public MappingElement(TeiidParser teiidParser, String name) {
-        this(teiidParser, name, MappingNodeConstants.NO_NAMESPACE);
+    public MappingElement(ITeiidServerVersion teiidVersion, String name) {
+        this(teiidVersion, name, MappingNodeConstants.NO_NAMESPACE);
     }
     
-    public MappingElement(TeiidParser teiidParser, String name, String nameInSource) {
-        this(teiidParser, name, MappingNodeConstants.NO_NAMESPACE);
+    public MappingElement(ITeiidServerVersion teiidVersion, String name, String nameInSource) {
+        this(teiidVersion, name, MappingNodeConstants.NO_NAMESPACE);
         setNameInSource(nameInSource);
     }    
     
-    public MappingElement(TeiidParser teiidParser, String name, Namespace namespace) {
-        super(teiidParser);
+    public MappingElement(ITeiidServerVersion teiidVersion, String name, Namespace namespace) {
+        super(teiidVersion);
         setProperty(MappingNodeConstants.Properties.NAME, name);
         setProperty(MappingNodeConstants.Properties.NODE_TYPE, MappingNodeConstants.ELEMENT);
 
@@ -123,7 +123,7 @@ public class MappingElement extends MappingBaseNode
     
     @Override
     public void addCommentNode(String text) {
-        addChild(new MappingCommentNode(getTeiidParser(), text));
+        addChild(new MappingCommentNode(getTeiidVersion(), text));
     }
     
     /**

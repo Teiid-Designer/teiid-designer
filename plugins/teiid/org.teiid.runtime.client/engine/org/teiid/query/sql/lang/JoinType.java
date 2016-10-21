@@ -3,8 +3,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.IJoinType;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 
 /**
  *
@@ -17,7 +17,7 @@ public class JoinType extends SimpleNode implements IJoinType<LanguageVisitor>{
      * @param p
      * @param id
      */
-    public JoinType(TeiidParser p, int id) {
+    public JoinType(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -79,7 +79,7 @@ public class JoinType extends SimpleNode implements IJoinType<LanguageVisitor>{
 
     @Override
     public JoinType clone() {
-        JoinType clone = new JoinType(this.parser, this.id);
+        JoinType clone = new JoinType(getTeiidVersion(), this.id);
 
         if(getKind() != null)
             clone.setKind(getKind());

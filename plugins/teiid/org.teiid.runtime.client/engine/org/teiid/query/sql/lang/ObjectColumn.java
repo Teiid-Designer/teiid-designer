@@ -4,8 +4,8 @@ package org.teiid.query.sql.lang;
 
 import javax.script.CompiledScript;
 import org.teiid.designer.query.sql.lang.IObjectColumn;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
@@ -23,7 +23,7 @@ public class ObjectColumn extends ProjectedColumn implements IObjectColumn<Langu
      * @param p
      * @param id
      */
-    public ObjectColumn(TeiidParser p, int id) {
+    public ObjectColumn(ITeiidServerVersion p, int id) {
         super(p, id);
     }
 
@@ -101,7 +101,7 @@ public class ObjectColumn extends ProjectedColumn implements IObjectColumn<Langu
 
     @Override
     public ObjectColumn clone() {
-        ObjectColumn clone = new ObjectColumn(this.parser, this.id);
+        ObjectColumn clone = new ObjectColumn(getTeiidVersion(), this.id);
 
         if(getPath() != null)
             clone.setPath(getPath());
