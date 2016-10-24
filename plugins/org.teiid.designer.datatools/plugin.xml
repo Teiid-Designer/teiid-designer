@@ -64,7 +64,7 @@
             id="org.teiid.designer.import.category"
             name="%teiidImporterConnectionsCategory"/>
       <connectionProfile
-            category="org.teiid.deodatasigner.import.category"
+            category="org.teiid.designer.import.category"
             id="org.teiid.designer.datatools.profiles.ws.WSConnectionProfile"
             name="Web Service (REST)"/>
    </extension>
