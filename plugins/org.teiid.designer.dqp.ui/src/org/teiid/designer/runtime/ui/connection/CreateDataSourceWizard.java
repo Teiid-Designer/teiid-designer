@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -419,15 +420,8 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
             connectionProfilesCombo.setEnabled(false);
         } else {
             this.connectionProfilesCombo.select(0);
-            handleConnectionProfileSelected();
         }
-
-        if (profileWorker.getProfiles().isEmpty() && !hasModelResources) {
-            setErrorMessage(getString("noConnectionDataError.message")); //$NON-NLS-1$
-        } else {
-            setConnectionProperties();
-        }
-        
+  
         sizeScrolledPanel();
         
         resetComboBoxes();
@@ -486,8 +480,11 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
     }
 
     void validateInputs() {
+    	boolean enable = false;
         // Check that name != null
-        if (this.dataSourceName == null || this.dataSourceName.length() == 0) {
+        if (profileWorker.getProfiles().isEmpty() && !hasModelResources) {
+            setErrorMessage(getString("noConnectionDataError.message")); //$NON-NLS-1$
+        } else if (this.dataSourceName == null || this.dataSourceName.length() == 0) {
             setErrorMessage(getString("nullNameError.message")); //$NON-NLS-1$
         } else if (useModelCheckBox != null && useModelCheckBox.getSelection() && teiidDataSourceProperties.isEmpty()) {
             setErrorMessage(getString("noValidTeiidPropertiesInModelError.message")); //$NON-NLS-1$
@@ -502,7 +499,10 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
         } else {
             setErrorMessage(null);
             setMessage(getString("finish.message")); //$NON-NLS-1$
+            enable = true;
         }
+        
+        getButton(IDialogConstants.OK_ID).setEnabled(enable);
 
     }
 
@@ -561,7 +561,16 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
         validateInputs();
     }
 
-    private IConnectionInfoProvider getProvider( Object obj ) throws Exception {
+    @Override
+	protected void createButtonsForButtonBar(Composite parent) {
+		// TODO Auto-generated method stub
+		super.createButtonsForButtonBar(parent);
+		if (! profileWorker.getProfiles().isEmpty()) {
+			handleConnectionProfileSelected();
+		}
+	}
+
+	private IConnectionInfoProvider getProvider( Object obj ) throws Exception {
         IConnectionInfoProvider provider = null;
         if (obj instanceof ModelResource) {
             provider = providerFactory.getProvider((ModelResource)obj);
