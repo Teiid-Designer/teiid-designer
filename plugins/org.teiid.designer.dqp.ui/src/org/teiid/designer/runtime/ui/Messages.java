@@ -108,6 +108,7 @@ public class Messages extends NLS {
     public static String PreviewDataWorker_dataSourceMissingTitle;
     public static String PreviewDataWorker_dataSourceCreationErrorTitle;
     public static String PreviewDataWorker_vdbDeploymentErrorTitle;
+    public static String PreviewDataWorker_previewVdbJndiMissingErrorTitle;
     
     static {
         NLS.initializeMessages("org.teiid.designer.runtime.ui.messages", Messages.class); //$NON-NLS-1$

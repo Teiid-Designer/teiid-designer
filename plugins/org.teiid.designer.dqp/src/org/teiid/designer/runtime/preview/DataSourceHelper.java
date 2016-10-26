@@ -8,14 +8,17 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.TeiidDataSourceFactory;
+import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 
@@ -23,6 +26,7 @@ public class DataSourceHelper {
 	Map<String, ModelResource> jndiNameModelMap;
 	Set<String> missingJndiNames;
 	IStatus status;
+	Properties teiidRelatedProperties = new Properties();
 
 	public DataSourceHelper() {
 		jndiNameModelMap =  new HashMap<String, ModelResource>();
@@ -77,52 +81,89 @@ public class DataSourceHelper {
 	}
 	
 	public IStatus createMissingDataSources() {
-	
+		IStatus status = Status.OK_STATUS;
 		for( String jndiName : missingJndiNames ) {
 			try {
-				handleCreateDataSource(jndiNameModelMap.get(jndiName), jndiName);
+				String shortJndiName = jndiName;
+				if( jndiName.startsWith("java:/") ) {
+					shortJndiName = jndiName.substring(6, jndiName.length());
+				}
+				status = handleCreateDataSource(jndiNameModelMap.get(jndiName), shortJndiName);
 			} catch (Exception e) {
 				return new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.DataSourceHelper_dataSourceFailedToDeploy, jndiName));
 			}
 		}
 		
-		return Status.OK_STATUS;
+		return status;
 	}
 	
-    public boolean handleCreateDataSource(ModelResource modelResource, String jndiName) throws Exception {
-    	boolean didDeployDS = false;
+    public IStatus handleCreateDataSource(ModelResource modelResource, String jndiName) throws Exception {
+    	IStatus status = Status.OK_STATUS;
     	
-    	DataSourceConnectionHelper helper = new DataSourceConnectionHelper(modelResource, null);
+    	DataSourceConnectionHelper helper = new DataSourceConnectionHelper(modelResource);
 
-        Properties connProps = getModelConnectionProperties(modelResource);
+        IStatus propertiesStatus = passwordOk(helper);
+        
+        if( propertiesStatus.getSeverity() == IStatus.ERROR ) return propertiesStatus;
         	
         String dsType = helper.getDataSourceType();
 			
-		getServer().getOrCreateDataSource(jndiName, jndiName, dsType, connProps);
-		didDeployDS = true;
+		getServer().getOrCreateDataSource(jndiName, jndiName, dsType, teiidRelatedProperties);
     	
-    	return didDeployDS;
+    	return status;
     }
     
-    public Properties getModelConnectionProperties(ModelResource mr) throws ModelWorkspaceException {
+    private IStatus passwordOk(DataSourceConnectionHelper helper) throws Exception {
+    	IConnectionInfoProvider provider = helper.getProvider();
+    	if( provider == null ) 
+    		return new Status(IStatus.WARNING, DqpPlugin.PLUGIN_ID, "No Connection Info Provider");
+    	
+    	IConnectionProfile profile = helper.getConnectionProfile();
+    	if( profile == null )
+    		return new Status(IStatus.WARNING, DqpPlugin.PLUGIN_ID, "No Connection Profile");
+    	
+        // The data source property key represents what's needed as a property for the Teiid Data Source
+        // This is provided by the getDataSourcePasswordPropertyKey() method.
+        String dsPasswordKey = helper.getProvider().getDataSourcePasswordPropertyKey();
+        boolean requiresPassword = (dsPasswordKey != null && provider.requiresPassword(profile));
+        String pwd = null;
+        
+        teiidRelatedProperties = provider.getTeiidRelatedProperties(profile);
 
-        IConnectionInfoProvider provider = null;
+        // Check Password
+        if (requiresPassword) {
+            // Check connection info provider. Property will be coming in with a key = "password"
+            pwd = profile.getBaseProperties().getProperty(provider.getPasswordPropertyKey());
 
-        try {
-            provider = getProvider(mr);
-        } catch (Exception e) {
-            // If provider throws exception its OK because some models may not have connection info.
-        }
+            if (pwd == null) {
+                IConnectionProfile existingConnectionProfile = ProfileManager.getInstance().getProfileByName(profile.getName());
 
-        if (provider != null) {
-            Properties properties = provider.getConnectionProperties(mr);
-            
-            if (properties != null && !properties.isEmpty()) {
-                return properties;
+                if (existingConnectionProfile != null) {
+                    // make sure the password property is there. if not get from connection profile.
+                    // Use DTP's constant for profile: IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID =
+                    // org.eclipse.datatools.connectivity.db.password
+                    // DTP's connection profile "password" key, if exists for a profile type, is returned via the
+                    // provider's getPasswordPropertyKey() method. This can be different than
+                    // getDataSourcePasswordPropertyKey().
+                    if (teiidRelatedProperties.getProperty(provider.getPasswordPropertyKey()) == null) {
+                        pwd = existingConnectionProfile.getBaseProperties().getProperty(provider.getPasswordPropertyKey());
+                    }
+                }
+
+                IPasswordProvider passwordProvider = TeiidDataSourceFactory.getPasswordProvider();
+                if ((pwd == null) && (passwordProvider != null)) {
+                    pwd = passwordProvider.getPassword(helper.getModelResource().getItemName(), profile.getName());
+                }
+            }
+
+            if (pwd != null) {
+            	teiidRelatedProperties.setProperty(dsPasswordKey, pwd);
+            } else {
+            	return new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, Messages.DataSourceHelper_requiredPasswordWasNotSet);
             }
         }
         
-        return null;
+        return Status.OK_STATUS;
     }
     
     private IConnectionInfoProvider getProvider(ModelResource mr) throws Exception {

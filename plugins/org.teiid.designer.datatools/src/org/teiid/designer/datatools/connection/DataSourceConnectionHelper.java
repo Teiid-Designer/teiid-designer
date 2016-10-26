@@ -9,7 +9,8 @@ import org.teiid.designer.runtime.spi.ITeiidServer;
 
 public class DataSourceConnectionHelper {
 	final ModelResource mr;
-	final IConnectionProfile cp;
+	private IConnectionProfile cp;
+	private IConnectionInfoProvider provider;
 
 	public DataSourceConnectionHelper(ModelResource mr, IConnectionProfile connectionProfile) {
 		super();
@@ -18,16 +19,20 @@ public class DataSourceConnectionHelper {
 		this.cp = connectionProfile;
 	}
 	
+	public DataSourceConnectionHelper(ModelResource mr) {
+		super();
+		
+		this.mr = mr;
+		this.cp = null;
+		try {
+			this.cp = this.getProvider().getConnectionProfile(this.mr);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
     public Properties getModelConnectionProperties() {
-
-        IConnectionInfoProvider provider = null;
-
-        try {
-            provider = getProvider();
-        } catch (Exception e) {
-            // If provider throws exception its OK because some models may not have connection info.
-        }
-
         if (provider != null) {
             Properties properties = provider.getTeiidRelatedProperties(cp);
             
@@ -55,15 +60,11 @@ public class DataSourceConnectionHelper {
         return null;
     }
     
+    public IConnectionProfile getConnectionProfile() {
+    	return this.cp;
+    }
+    
     public String getTranslatorType() {
-        IConnectionInfoProvider provider = null;
-
-        try {
-            provider = getProvider();
-        } catch (Exception e) {
-            // If provider throws exception its OK because some models may not have connection info.
-        }
-
         if (provider != null) {
             return provider.getTranslatorName(mr);
         }
@@ -71,11 +72,15 @@ public class DataSourceConnectionHelper {
         return null;
     }
     
-    private IConnectionInfoProvider getProvider(  ) throws Exception {
-        ConnectionInfoProviderFactory providerFactory = new ConnectionInfoProviderFactory();
-
-        return providerFactory.getProvider(mr);
-
+    public IConnectionInfoProvider getProvider(  ) throws Exception {
+    	if( provider == null ) {
+    		provider = new ConnectionInfoProviderFactory().getProvider(this.mr);
+    	}
+        return provider;
+    }
+    
+    public ModelResource getModelResource() {
+    	return this.mr;
     }
     
 	public static boolean isServerDefined() {

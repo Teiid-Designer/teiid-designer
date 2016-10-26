@@ -110,7 +110,9 @@ public class JndiNameInModelHelper {
 		if( !queryOnlyIfEmpty || (queryOnlyIfEmpty && StringUtilities.isEmpty(existingName)) ) {
 			String newJNDIName = queryUserForJNDIName(existingName);
 	        
-	        if( existingName == null || !existingName.equals(newJNDIName)) {
+			if( StringUtilities.isEmpty(newJNDIName) ) {
+				setJNDINameInTxn(mr, null);
+			} else if( existingName == null || !existingName.equals(newJNDIName)) {
 	        	setJNDINameInTxn(mr, JNDI_PREFIX + newJNDIName);
 	        	return true;
 	        }

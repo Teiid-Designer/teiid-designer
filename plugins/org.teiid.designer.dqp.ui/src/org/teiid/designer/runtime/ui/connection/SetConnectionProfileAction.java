@@ -154,7 +154,7 @@ public class SetConnectionProfileAction extends SortableSelectionAction  impleme
 
         if (dialog.getReturnCode() == Window.OK) {
             Object[] result = dialog.getResult();
-            if (result != null && result.length == 1) {
+            if (result != null && result.length == 1 && result[0] instanceof IConnectionProfile) {
                 IConnectionProfile profile = (IConnectionProfile)result[0];
                 
                 // Cache existing jndi Name

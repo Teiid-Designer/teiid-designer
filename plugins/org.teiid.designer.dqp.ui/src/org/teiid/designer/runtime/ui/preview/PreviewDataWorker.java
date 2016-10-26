@@ -320,8 +320,15 @@ public class PreviewDataWorker {
     	    return;
     	}
     	
+    	// Check JNDI name is not null
+    	
+    	
     	// Check data source deployments
-    	String dynVdbXml = manager.getDynamicVdbString();
+    	IStatus vdbStatus = manager.getDynamicVdbStatus();
+    	if( vdbStatus.getSeverity() == IStatus.ERROR ) {
+    		MessageDialog.openError(getShell(), Messages.PreviewDataWorker_previewVdbJndiMissingErrorTitle, vdbStatus.getMessage());
+			return;
+    	}
     	IStatus dsStatus = manager.getDataSourcesStatus();
     	if( dsStatus.getSeverity() == IStatus.ERROR ) {
     		boolean result = MessageDialog.openQuestion(getShell(), Messages.PreviewDataWorker_dataSourceMissingTitle, dsStatus.getMessage());
@@ -335,6 +342,8 @@ public class PreviewDataWorker {
     			return;
     		}
     	}
+    	
+    	String dynVdbXml = manager.getDynamicVdbStatus().getMessage();
     	
         PreviewDataInputDialog dialog = new PreviewDataInputDialog(getShell(), sql, dynVdbXml);
         
