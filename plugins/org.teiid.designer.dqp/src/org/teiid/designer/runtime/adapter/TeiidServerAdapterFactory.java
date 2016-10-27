@@ -17,6 +17,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.core.server.internal.JBossServer;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.TeiidParentServerListener;
 import org.teiid.designer.runtime.TeiidServerFactory;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
@@ -50,7 +51,11 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
                 return adaptServer((IServer) adaptableObject, ServerOptions.ADD_TO_REGISTRY, ServerOptions.CONNECT);
             }
         } catch (Exception ex) {
-            DqpPlugin.Util.log(IStatus.ERROR, ex, "Failed to determine if server supports teiid"); //$NON-NLS-1$
+        	if(! ex.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+        		// Teiid really isn't installed and this is called as part of this factory's extension point.
+        		// So look for the 
+        		DqpPlugin.Util.log(IStatus.ERROR, ex, "Failed to determine if server supports teiid"); //$NON-NLS-1$
+        	}
         }
         
         return null;
