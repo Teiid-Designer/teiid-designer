@@ -128,7 +128,7 @@ public class ModulePackaging {
 						|| files[i].isDirectory())
 					continue; // Just in case..
 
-				String fname = packageName + files[i].getName();
+				String fname = files[i].getName();
 				ZipEntry ze= new ZipEntry(fname);
 				ze.setTime(files[i].lastModified());
 				
