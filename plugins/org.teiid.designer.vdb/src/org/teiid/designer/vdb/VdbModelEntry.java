@@ -116,8 +116,8 @@ public class VdbModelEntry extends VdbIndexedEntry {
             // Description. From a UI standpoint, if the description contains multiple lines, then the row height
             // is way too high. User can always copy/paste from model to VDB AND the description for a model is always
             // available in the model itself.
-            // if (emfModel.getModelAnnotation().getDescription() != null)
-            // description.set(emfModel.getModelAnnotation().getDescription());
+            if (emfModel.getDescription() != null) setDescription(emfModel.getDescription());
+
             if (ModelUtil.isPhysical(model)) {
                 final String defaultName = createDefaultSourceName(path);
                 final ConnectionInfoHelper helper = new ConnectionInfoHelper();

@@ -116,6 +116,8 @@ public class ModelElement extends EntryElement {
         name = (ndx < 0 ? lastSeg : lastSeg.substring(0, ndx));
         type = entry.getType();
         visible = entry.isVisible();
+        description = entry.getDescription();
+
         for( VdbSource source : entry.getSourceInfo().getSources() ) {
         	getSources().add(new SourceElement(source));
         }
