@@ -516,16 +516,13 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
         serverVersions.add(teiidServer.getServerVersion().toString());
         try {
             Collection<ITeiidServerVersion> registeredServerVersions = TeiidRuntimeRegistry.getInstance().getSupportedVersions();
-            for (ITeiidServerVersion version : registeredServerVersions) {
-                serverVersions.add(version.toString());
-            }
+            serverVersions = TeiidServerVersion.orderVersions(registeredServerVersions, true);
         } catch (Exception ex) {
             for (VersionID versionId : VersionID.values()) {
                 serverVersions.add(versionId.toString());
             }
         }
 
-        Collections.sort(serverVersions, Collections.reverseOrder());
         versionValueCombo.setItems(serverVersions.toArray(new String[0]));
         versionValueCombo.setText(teiidServer.getServerVersion().toString());
         versionValueCombo.addModifyListener(dirtyModifyListener);

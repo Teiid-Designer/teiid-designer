@@ -7,6 +7,10 @@
 */
 package org.teiid.designer.runtime.version.spi;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 /**
@@ -127,6 +131,7 @@ public class TestTeiidServerVersion extends TestCase {
         assertFalse(version("8.10.1").isGreaterThan(version("8.11.0"))); //$NON-NLS-1$ //$NON-NLS-2$
 
         assertFalse(version("8.7.1").isGreaterThan(version("8.7.x")));  //$NON-NLS-1$//$NON-NLS-2$
+        assertTrue(version("8.12.4").isGreaterThan(version("8.9.0"))); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -191,5 +196,32 @@ public class TestTeiidServerVersion extends TestCase {
 	    assertTrue(version("8.8.0").isLessThan(version("8.10.0"))); //$NON-NLS-1$ //$NON-NLS-2$
 
 	    assertFalse(version("8.7.1").isLessThan(version("8.7.x")));  //$NON-NLS-1$//$NON-NLS-2$
+    }
+    
+    /**
+     * Test {@link TeiidServerVersion#orderedVersions(Collection<ITeiidServerVersion>, boolean)}
+     */
+    public void testOrderVersions() {
+    	List<ITeiidServerVersion> versions = new ArrayList<ITeiidServerVersion>();
+    	versions.add(version("7.1.0"));
+    	versions.add(version("7.0.0"));
+    	versions.add(version("8.0.1"));
+    	versions.add(version("8.12.4"));
+    	versions.add(version("8.1.0"));
+    	versions.add(version("7.2.0"));
+    	
+    	List<String> result = TeiidServerVersion.orderVersions(versions, false);
+    	for( String val : result ) {
+    		System.out.println("  Server Version = " + val);
+    	}
+    	
+    	assertTrue(result.get(0).equalsIgnoreCase("7.0.0"));
+    	
+    	result = TeiidServerVersion.orderVersions(versions, true);
+    	for( String val : result ) {
+    		System.out.println("  Server Version = " + val);
+    	}
+    	
+    	assertTrue(result.get(0).equalsIgnoreCase("8.12.4"));
     }
 }
