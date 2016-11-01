@@ -118,8 +118,10 @@ public class DependentObjectHelper {
         }
         
         // Check for materializedTableReferences
-        Table table = (Table)targetObject;
-        addMaterializedTables(table);
+        if( targetObject instanceof Table ) {
+	        Table table = (Table)targetObject;
+	        addMaterializedTables(table);
+        }
 
     }
     
