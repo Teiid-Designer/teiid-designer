@@ -7,11 +7,14 @@
  */
 package org.teiid.designer.transformation.reverseeng;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -64,14 +67,13 @@ public class PojoCompilation implements ReverseEngConstants {
 		
 		compileFiles(javaFiles);
 
-		File[] files = Util.findAllFilesInDirectoryHavingExtension(
-				loc.getCanonicalPath(), ".class");
-
 		File parent = pojoJarFile.getParentFile();
+
 		if (!parent.exists()) {
 			parent.mkdirs();
 		}
-		createJarArchive(pojoJarFile, files, packageName);
+		
+		createJar(pojoJarFile, loc, packageName);
 
 //		ReverseEngineerPlugin.LOGGER.info("[ReverseEngineering] Created jar file: " + pojoJarFile.getAbsolutePath());
 
@@ -134,49 +136,61 @@ public class PojoCompilation implements ReverseEngConstants {
 	}
 
 	public static int BUFFER_SIZE = 10240;
+    
+    public static void createJar(File archiveFile, File topDir, String packagePath) throws IOException
+    {
+      FileOutputStream fos = new FileOutputStream(archiveFile);
+      Manifest manifest = new Manifest();
+      manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+      JarOutputStream target = new JarOutputStream(fos, manifest);
+      add(topDir, target, packagePath);
+      target.close();
+    }
 
-	protected static void createJarArchive(File archiveFile, File[] tobeJared,
-			String packageName) throws Exception {
-		
-		try {
-			byte buffer[] = new byte[BUFFER_SIZE];
-			// Open archive file
-			FileOutputStream stream = new FileOutputStream(archiveFile);
-			JarOutputStream out = new JarOutputStream(stream, new Manifest());
+    private static void add(File source, JarOutputStream target, String packagePath) throws IOException
+    {
+      BufferedInputStream in = null;
+      try
+      {
+        if (source.isDirectory())
+        {
+          String name = source.getPath().replace("\\", "/");
+          if (!name.isEmpty())
+          {
+            if (!name.endsWith("/"))
+              name += "/";
+            JarEntry entry = new JarEntry(name);
+            entry.setTime(source.lastModified());
+            target.putNextEntry(entry);
+            target.closeEntry();
+          }
+          for (File nestedFile: source.listFiles())
+            add(nestedFile, target, packagePath);
+          return;
+        }
 
-			for (int i = 0; i < tobeJared.length; i++) {
-				if (tobeJared[i] == null || !tobeJared[i].exists()
-						|| tobeJared[i].isDirectory())
-					continue; // Just in case...
+        if( source.exists() && !source.getPath().endsWith(".class" )) {
+        	return;
+        }
+        JarEntry entry = new JarEntry(packagePath + source.getName());
+        entry.setTime(source.lastModified());
+        target.putNextEntry(entry);
+        in = new BufferedInputStream(new FileInputStream(source));
 
-				// Add archive entry
-				String fname = packageName + tobeJared[i].getName();
-				JarEntry jarAdd = new JarEntry(fname);
-
-//				ReverseEngineerPlugin.LOGGER.debug("[ReverseEngineering] Added class: " + fname + " to jar: " + archiveFile);
-
-				jarAdd.setTime(tobeJared[i].lastModified());
-				out.putNextEntry(jarAdd);
-
-				// Write file to archive
-				FileInputStream in = new FileInputStream(tobeJared[i]);
-				while (true) {
-					int nRead = in.read(buffer, 0, buffer.length);
-					if (nRead <= 0)
-						break;
-					out.write(buffer, 0, nRead);
-				}
-				in.close();
-			}
-
-			out.close();
-			stream.close();
-		} catch (Exception ex) {
-			System.out.println("Error: " + ex.getMessage());
-			ex.printStackTrace();
-			throw ex;
-		}
-		
-	}
-
+        byte[] buffer = new byte[1024];
+        while (true)
+        {
+          int count = in.read(buffer);
+          if (count == -1)
+            break;
+          target.write(buffer, 0, count);
+        }
+        target.closeEntry();
+      }
+      finally
+      {
+        if (in != null)
+          in.close();
+      }
+    }
 }
