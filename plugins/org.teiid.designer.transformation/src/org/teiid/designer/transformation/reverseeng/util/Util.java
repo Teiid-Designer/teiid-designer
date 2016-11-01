@@ -165,9 +165,9 @@ public class Util {
 	      if (x != 0 && input[x] != '_') {
 	        output.append(input[x]);
 	      } else { 
-	        if (input[x] == '_') {
-	          x++;  //skip over it
-	        }
+//	        if (input[x] == '_') {
+//	          x++;  //skip over it
+//	        }
 	        //The first character and any character following the _ 
 	        //need to be capitalized  
 	        output.append(Character.toUpperCase(input[x]));
