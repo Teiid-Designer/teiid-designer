@@ -445,7 +445,7 @@ public class RelationalViewEditorPanel  extends RelationalEditorPanel implements
         
         column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.lengthLabel);
-        column.setLabelProvider(new ColumnDataLabelProvider(1));
+        column.setLabelProvider(new ColumnDataLabelProvider(2));
 
         if( getRelationalReference() != null ) {
 	        for( RelationalColumn row : getRelationalReference().getColumns() ) {
