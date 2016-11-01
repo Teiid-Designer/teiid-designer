@@ -190,6 +190,11 @@ public class JDGConnectionInfoProvider  extends ConnectionInfoHelper implements 
 		connectionProps.setProperty(CLASS_NAME, IJDGProfileConstants.REQUIRED_CLASS_NAME);
 
 		getHelper().setProperties(modelResource, connectionProps);
+		
+		result = props.getProperty(IJBossDsProfileConstants.JNDI_PROP_ID);
+		if (null != result) {
+			setJNDIName(modelResource, result);
+		}
 	}
 
 	@Override

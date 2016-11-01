@@ -601,10 +601,10 @@ public class JDGProfileDetailsWizardPage extends ConnectionProfileDetailsPage im
         	properties.remove(REMOTE_SERVER_LIST);
         	remoteServerListText.setText(StringConstants.EMPTY_STRING);
         } 
-        if( value != null ) {
-        	properties.setProperty(id, value);
-        } else {
+        if( StringUtilities.isEmpty(value) ) {
         	properties.remove(id);
+        } else {
+        	properties.setProperty(id, value);
         }
         updateState();
         settingProperty = false;
