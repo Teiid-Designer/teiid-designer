@@ -10,7 +10,6 @@ package org.teiid.designer.datatools.profiles.jdg;
 import java.util.List;
 import java.util.Properties;
 
-import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -32,9 +31,10 @@ import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+import org.teiid.designer.datatools.ui.dialogs.ScrolledConnectionProfileDetailsPage;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
-public class JDGProfileDetailsWizardPage extends ConnectionProfileDetailsPage implements IJDGProfileConstants.PropertyKeys, Listener, DatatoolsUiConstants {
+public class JDGProfileDetailsWizardPage extends ScrolledConnectionProfileDetailsPage implements IJDGProfileConstants.PropertyKeys, Listener, DatatoolsUiConstants {
     private static final String JNDI_PREFIX = "java:/";  //$NON-NLS-1$
     private Composite scrolled;
 

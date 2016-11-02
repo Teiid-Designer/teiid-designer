@@ -444,6 +444,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                         dataRoleResolver.modelSynchronized(element);
                         VdbEditor.this.doSave(new NullProgressMonitor());
                         showImportVdbsButton.setEnabled(!getVdb().getImports().isEmpty());
+                        pnlTranslatorOverrides.refresh();
                     }
                 });
 

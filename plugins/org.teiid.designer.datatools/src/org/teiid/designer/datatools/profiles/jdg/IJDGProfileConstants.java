@@ -83,7 +83,8 @@ public interface IJDGProfileConstants {
 	    // ------------------------------------------------------------------------
 	    
 	    String CLASS_NAME = "class-name";
+	    
+    	String SUPPORTS_DIRECT_QUERY_PROCEDURE = "SupportsDirectQueryProcedure";
+    	String SUPPORTS_NATIVE_QUERIES = "SupportsNativeQueries";
     }
-    
-    
 }

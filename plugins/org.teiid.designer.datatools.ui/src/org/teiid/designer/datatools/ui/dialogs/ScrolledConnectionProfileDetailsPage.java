@@ -166,6 +166,8 @@ public abstract class ScrolledConnectionProfileDetailsPage extends ConnectionPro
 		}
 		
 		scrolledComposite.sizeScrolledPanel();
+		
+        setControl(hostPanel);
 	}
 
 	protected void setPingButtonEnabled(boolean enabled)

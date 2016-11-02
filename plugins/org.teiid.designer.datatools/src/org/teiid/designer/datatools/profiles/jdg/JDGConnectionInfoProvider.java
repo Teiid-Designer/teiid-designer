@@ -189,12 +189,15 @@ public class JDGConnectionInfoProvider  extends ConnectionInfoHelper implements 
 		getHelper().removeProperties(modelResource, CONNECTION_NAMESPACE);
 		connectionProps.setProperty(CLASS_NAME, IJDGProfileConstants.REQUIRED_CLASS_NAME);
 
+
 		getHelper().setProperties(modelResource, connectionProps);
 		
 		result = props.getProperty(IJBossDsProfileConstants.JNDI_PROP_ID);
 		if (null != result) {
 			setJNDIName(modelResource, result);
 		}
+
+		addMaterializationTranslatorOverrideProperties(modelResource);
 	}
 
 	@Override
@@ -222,5 +225,12 @@ public class JDGConnectionInfoProvider  extends ConnectionInfoHelper implements 
 	@Override
 	public boolean requiresPassword(IConnectionProfile connectionProfile) {
 		return false;
+	}
+	
+	private void addMaterializationTranslatorOverrideProperties(ModelResource mr) {
+		Properties props = new Properties();
+		props.setProperty(SUPPORTS_DIRECT_QUERY_PROCEDURE, Boolean.toString(true));
+		props.setProperty(SUPPORTS_NATIVE_QUERIES, Boolean.toString(true));
+		replaceTranlatorOverrideProperties(mr,  props);
 	}
 }
