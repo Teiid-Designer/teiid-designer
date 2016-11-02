@@ -37,6 +37,8 @@ public interface ReverseEngConstants {
     
     String INFINISPAN_EXT_ASSISTANT_NS = "infinispan"; //$NON-NLS-1$
     
+    String RELATIONAL_EXT_ASSISTANT_NS = "relational"; //$NON-NLS-1$
+    
     public enum Mode  {
     	MATERIALIZE,
     	POJO

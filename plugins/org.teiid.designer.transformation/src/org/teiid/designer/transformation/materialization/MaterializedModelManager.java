@@ -45,6 +45,7 @@ import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.metamodels.relational.extension.InfinispanCacheModelExtensionConstants;
+import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.reverseeng.ReverseEngConstants;
 
@@ -159,6 +160,21 @@ public class MaterializedModelManager implements ReverseEngConstants {
             getExtensionAssistant().setPropertyValue(
             		stagingTable, InfinispanCacheModelExtensionConstants.PropertyIds.PRIMARY_TABLE, modelName + StringConstants.DOT + selectedViewOrTable.getName());
 
+            /*
+            	"teiid_rel:MATVIEW_AFTER_LOAD_SCRIPT" 'execute {jdgsourcemodelname}.native(''swap cache names'');'
+				"teiid_rel:MATVIEW_BEFORE_LOAD_SCRIPT" 'execute {jdgsourcemodelname}.native(''truncate cache'');',
+				"teiid_rel:MATERIALIZED_STAGE_TABLE" '{jdgsourcemodelname}.{stagingTable}')
+
+				where {jdgsourcemodelname} as the new JDG Source Model that is created.
+             */
+            String afterLoadScriptStr = "execute " + sourceModelName + ".native(\'\'swap cache names\'\');";
+            String beforeLoadScriptStr = "execute " + sourceModelName + ".native(\'\'truncate cache\'\');";
+            String stageTableStr = sourceModelName + "." + stagingTable.getName();
+            
+            ModelObjectExtensionAssistant assistant = getRelationalExtensionAssistant();
+            assistant.setPropertyValue(selectedViewOrTable, RelationalModelExtensionConstants.PropertyIds.MATVIEW_AFTER_LOAD_SCRIPT, afterLoadScriptStr);
+            assistant.setPropertyValue(selectedViewOrTable, RelationalModelExtensionConstants.PropertyIds.MATVIEW_BEFORE_LOAD_SCRIPT, beforeLoadScriptStr);
+            assistant.setPropertyValue(selectedViewOrTable, RelationalModelExtensionConstants.PropertyIds.MATERIALIZED_STAGE_TABLE, stageTableStr);
             
             ModelBuildUtil.rebuildImports(targetModelResource.getEmfResource(), true);
             
@@ -243,7 +259,7 @@ public class MaterializedModelManager implements ReverseEngConstants {
     }
     
     protected void copyTableValues(final Table orig, final Table copy) {
-        copy.setNameInSource( orig.getNameInSource() );
+        //copy.setNameInSource( orig.getNameInSource() ); // Materialized Tables do not represent DB schema or tables so DO NOT SET
         copy.setCardinality(orig.getCardinality() );
         copy.setSystem(orig.isSystem() );
         // Defect 16941 - the supportsUpdate flag should always be true for a materialization table
@@ -264,7 +280,7 @@ public class MaterializedModelManager implements ReverseEngConstants {
         copy.setMaximumValue(orig.getMaximumValue() );
         copy.setMinimumValue(orig.getMinimumValue() );
         copy.setName(orig.getName() );
-        copy.setNameInSource(orig.getNameInSource() );
+        // copy.setNameInSource(orig.getNameInSource() ); // Materialized Tables do not represent DB schema or tables so DO NOT SET
         copy.setNativeType(orig.getNativeType() );
         copy.setNullable(orig.getNullable() );
         copy.setPrecision(orig.getPrecision() );
@@ -522,5 +538,10 @@ public class MaterializedModelManager implements ReverseEngConstants {
     private ModelObjectExtensionAssistant getExtensionAssistant() {
         final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
         return (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(INFINISPAN_EXT_ASSISTANT_NS);
+    }
+    
+    private ModelObjectExtensionAssistant getRelationalExtensionAssistant() {
+        final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+        return (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(RELATIONAL_EXT_ASSISTANT_NS);
     }
 }
