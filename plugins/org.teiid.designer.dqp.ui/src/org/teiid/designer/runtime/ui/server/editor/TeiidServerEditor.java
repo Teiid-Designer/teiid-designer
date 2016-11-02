@@ -363,7 +363,9 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
                         }
                     }
                 } catch (Exception ex) {
-                    ErrorHandler.toExceptionDialog(ex);
+                	if(! ex.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+                		ErrorHandler.toExceptionDialog(ex);
+                	}
                 }
 
                 if (teiidServer != null) {
@@ -1012,7 +1014,9 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
 
         			}
         		} catch (Exception e) {
-        			e.printStackTrace();
+        			if(! e.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+        				e.printStackTrace();
+        			}
         		}
             }
         };

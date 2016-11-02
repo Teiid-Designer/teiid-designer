@@ -78,7 +78,9 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
         try {
             factory.adaptServer(server, ServerOptions.NO_CHECK_CONNECTION, ServerOptions.ADD_TO_REGISTRY);
         } catch (final Exception ex) {
-            DqpPlugin.handleException(ex);
+        	if(! ex.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+        		DqpPlugin.handleException(ex);
+        	}
         }
     }
 
@@ -151,7 +153,9 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
              */
             factory.adaptServer(server, ServerOptions.ADD_TO_REGISTRY);
         } catch (Exception ex) {
-            DqpPlugin.handleException(ex);
+        	if(! ex.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+        		DqpPlugin.handleException(ex);
+        	}
         }
     }
    
@@ -219,7 +223,9 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                 }
             }
         } catch (Exception ex) {
-            DqpPlugin.handleException(ex);
+        	if(! ex.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+        		DqpPlugin.handleException(ex);
+        	}
         }
     }
 
@@ -240,8 +246,9 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                     try {
                         tryConnecting(parentServer);
                     } catch (Exception ex) {
-                        DqpPlugin.handleException(ex);
-
+                    	if( ! ex.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+                    		DqpPlugin.handleException(ex);
+                    	}
                     }
             }
 
