@@ -131,7 +131,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 
 	static int DEFAULT_NULL_VALUE_COUNT = -1;
 	
-	private Map<AstNode, RelationalViewTable> deferredMatViewReferences = new HashMap<AstNode, RelationalViewTable>();
+	private Map<AstNode, RelationalTable> deferredMatViewReferences = new HashMap<AstNode, RelationalTable>();
 
 	/*
 	 *         return !(type == Types.LONGVARBINARY || type == Types.LONGVARCHAR || type == Types.VARBINARY || type == Types.VARCHAR
@@ -858,7 +858,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 		// Make first pass to create the PKs
 		Set<AstNode> astNodes = deferredNodes.keySet();
 		for(AstNode node:astNodes) {
-			if (is(node, TeiidDdlLexicon.Constraint.TABLE_ELEMENT)) {
+			if (is(node, TeiidDdlLexicon.Constraint.TABLE_ELEMENT) || is(node, TeiidDdlLexicon.Constraint.INDEX_CONSTRAINT)) {
 				RelationalTable table = (RelationalTable)deferredNodes.get(node);
 				createConstraint(node, table, model, allRefs);
 			}
@@ -866,8 +866,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 
 		// Second pass create FKs, options, others
 		for(AstNode node:astNodes) {
-			if (is(node, TeiidDdlLexicon.Constraint.FOREIGN_KEY_CONSTRAINT)
-					|| is(node, TeiidDdlLexicon.Constraint.INDEX_CONSTRAINT)) {
+			if (is(node, TeiidDdlLexicon.Constraint.FOREIGN_KEY_CONSTRAINT) ) {
 				RelationalTable table = (RelationalTable)deferredNodes.get(node);
 				createConstraint(node, table, model, allRefs);
 			} else if (is(node, TeiidDdlLexicon.AlterOptions.TABLE_STATEMENT)) {
@@ -996,7 +995,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 						table.setMaterialized(isTrue(optionValueStr));
 						nodeIter.remove();
 					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MATERIALIZED_TABLE)) {
-						deferredMatViewReferences.put(optionNode, (RelationalViewTable)table);
+						deferredMatViewReferences.put(optionNode, table);
 						nodeIter.remove();
 					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATABLE)) {
 						table.setSupportsUpdate(isTrue(optionValueStr));
@@ -1532,7 +1531,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 			String tableName = fullTableName.substring(modelNameLength+1, fullTableNameLength);
 
 			if(!CoreStringUtil.isEmpty(tableName) && optionName.equalsIgnoreCase(TeiidDDLConstants.MATERIALIZED_TABLE) ) {
-				RelationalViewTable table = deferredMatViewReferences.get(tableRefNode);
+				RelationalTable table = deferredMatViewReferences.get(tableRefNode);
 				
 				matTableReferences.add(new MaterializedTableReferenceInfo(getImporterManager().getModelName(), sourceModelName, table.getName(), tableName));
 			}
