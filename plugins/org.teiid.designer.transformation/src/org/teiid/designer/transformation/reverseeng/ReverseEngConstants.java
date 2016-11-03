@@ -39,6 +39,8 @@ public interface ReverseEngConstants {
     
     String RELATIONAL_EXT_ASSISTANT_NS = "relational"; //$NON-NLS-1$
     
+    String SOURCE_MODEL_NAME_SUFFIX = "JDGSource"; //$NON-NLS-1$
+    
     public enum Mode  {
     	MATERIALIZE,
     	POJO

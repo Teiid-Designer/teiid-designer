@@ -102,7 +102,7 @@ public class MaterializedModelManager implements ReverseEngConstants {
 	        this.sourceTableName = ModelerCore.getModelEditor().getName(this.selectedViewOrTable);
 	        this.pojoClassName = this.sourceTableName;
 	        this.pojoPackageName = DEFAULT_PACKAGE_NAME;
-	        this.sourceModelName = this.sourceTableName;
+	        this.sourceModelName = this.sourceTableName + SOURCE_MODEL_NAME_SUFFIX;
 	        
 	        try {
 	            this.targetModelResource = ModelUtil.getModel(this.selectedViewOrTable);
