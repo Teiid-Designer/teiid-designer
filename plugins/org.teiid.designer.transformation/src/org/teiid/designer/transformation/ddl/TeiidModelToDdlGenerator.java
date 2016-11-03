@@ -598,11 +598,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				String columnStr = getColumnDdl(nextCol);
 				sb.append(columnStr);
 				if( count < nCols ) sb.append(COMMA + SPACE);
-				
-				options = getColumnOptions(nextCol);
-				if( !StringUtilities.isEmpty(options)) {
-					sb.append(SPACE).append(options);
-				}
+
 			}
 			sb.append(CLOSE_BRACKET);
 		}
