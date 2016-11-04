@@ -111,8 +111,8 @@ public class PojoProcessing {
 		buildLocation.mkdir();
 			
 		// Location for the .java and .class files
-		File classFileLocaton = new File(buildLocation, "class");
-		classFileLocaton.mkdir();
+		File classDirLocaton = new File(buildLocation, "class");
+		classDirLocaton.mkdir();
 		
 		// location for created kits, example: .jar or .zip
 		File kitLocation = new File(buildLocation, "kit"); 
@@ -135,7 +135,7 @@ public class PojoProcessing {
 			modulePackagePath.append(n).append(File.separator);
 		}
 		
-		File javaFileLoc = new File(classFileLocaton.getAbsolutePath() + File.separator + jarPackageFilePath.toString());
+		File javaFileLoc = new File(classDirLocaton.getAbsolutePath() + File.separator + jarPackageFilePath.toString());
 		javaFileLoc.mkdirs();
 		
 		File pojoJarFile = null;
@@ -192,7 +192,7 @@ public class PojoProcessing {
 		TransformationPlugin.Util.log(IStatus.INFO, "[ReverseEngineering] Created java file: " + outputFile.getAbsolutePath());
 
 		
-		PojoCompilation.compile(javaFileLoc, jarPackageFilePath.toString(), pojoJarFile);	
+		PojoCompilation.compile(javaFileLoc, classDirLocaton, jarPackageFilePath.toString(), pojoJarFile);	
 		
 		if (module != null) {
 			try {

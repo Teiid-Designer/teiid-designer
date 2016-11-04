@@ -193,7 +193,6 @@ public class TeiidServerVersion implements ITeiidServerVersion {
      * @return {@link ITeiidServerVersion} default version
      */
     public static ITeiidServerVersion deriveUltimateDefaultServerVersion() {
-        System.out.println("  TeiidServerVersion.deriveUltimateDefaultServerVersion() START");
         ITeiidServerVersion lastTestedDefault = Version.TEIID_DEFAULT.get();
 
         Collection<ITeiidServerVersion> serverVersions = null;
