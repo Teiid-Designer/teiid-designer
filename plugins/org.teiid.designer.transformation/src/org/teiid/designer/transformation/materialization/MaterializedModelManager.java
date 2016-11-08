@@ -158,7 +158,7 @@ public class MaterializedModelManager implements ReverseEngConstants {
             
             String modelName = ModelUtil.getName(newSourceModel);
             getExtensionAssistant().setPropertyValue(
-            		stagingTable, InfinispanCacheModelExtensionConstants.PropertyIds.PRIMARY_TABLE, modelName + StringConstants.DOT + selectedViewOrTable.getName());
+            		stagingTable, InfinispanCacheModelExtensionConstants.PropertyIds.PRIMARY_TABLE, modelName + StringConstants.DOT + matTable.getName());
 
             /*
             	"teiid_rel:MATVIEW_AFTER_LOAD_SCRIPT" 'execute {jdgsourcemodelname}.native(''swap cache names'');'
