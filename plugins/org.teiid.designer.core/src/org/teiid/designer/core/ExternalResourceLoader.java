@@ -155,8 +155,10 @@ public class ExternalResourceLoader {
                 }
              } else {
             	//System.out.println("First Check: " + resourceFile.getAbsolutePath());
+            	FileInputStream fis = null;
             	try {
-					if (!(contentEquals(new FileInputStream(resourceFile),new URL(resourceUrl).openStream()))){
+            		fis = new FileInputStream(resourceFile);
+					if (!(contentEquals(fis, new URL(resourceUrl).openStream()))){
 						//System.out.println("contents mismatch: trying to write new resource");
 						FileUtils.write(new URL(resourceUrl).openStream(), resourceFile);
 					}
@@ -164,6 +166,14 @@ public class ExternalResourceLoader {
 					e.printStackTrace();
 					throw new ModelerCoreException(
 							ModelerCore.Util.getString("ExternalResourceLoader.An_existing_resource_with_the_name_cannot_retrieved_from_{1}._7", resourceName, resourceUrl)); //$NON-NLS-1$
+				} finally {
+					if( fis != null) {
+						try {
+							fis.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
 				}
             }
         } else {
@@ -379,6 +389,8 @@ public class ExternalResourceLoader {
                     outputStream.flush();
                     outputStream.close();
 
+                    inputStream.close();
+                    
                     return entryFile;
                 }
             }

@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.datatools.ui.actions;
+package org.teiid.designer.runtime.ui.connection;
 
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +28,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -59,6 +60,7 @@ public class SetConnectionProfileAction extends SortableSelectionAction  impleme
     
     private Properties designerProperties;
     private IConnectionProfile connectionProfile;
+    private static JndiNameInModelHelper jndiHelper = new JndiNameInModelHelper();
 
     /**
      * @since 5.0
@@ -100,7 +102,7 @@ public class SetConnectionProfileAction extends SortableSelectionAction  impleme
             if (editor != null) {
                 boolean isDirty = editor.isDirty();
 
-                SetConnectionProfileAction.setConnectionProfile(modelFile);
+                setConnectionProfile(modelFile);
 
                 if (!isDirty && editor.isDirty()) {
                     editor.doSave(new NullProgressMonitor());
@@ -152,12 +154,27 @@ public class SetConnectionProfileAction extends SortableSelectionAction  impleme
 
         if (dialog.getReturnCode() == Window.OK) {
             Object[] result = dialog.getResult();
-            if (result != null && result.length == 1) {
+            if (result != null && result.length == 1 && result[0] instanceof IConnectionProfile) {
                 IConnectionProfile profile = (IConnectionProfile)result[0];
-                 
+                
+                // Cache existing jndi Name
+                ModelResource modelResc = ModelUtil.getModelResource(modelFile, true);
+                String existingJndiName = jndiHelper.getExistingJndiName(modelResc);
                 // Update the JdbcSource properties (if exist) with the new profile.  User is prompted if the driver class will be changed.
                 updateJdbcSourceAndConnectionInfo(modelFile,profile);
-
+                
+                // Check for JNDI name in model
+                if( StringUtilities.isEmpty(existingJndiName)) {
+                	jndiHelper.ensureJndiNameExists(modelResc, true);
+                } else {
+                	// Note that a connection profile may have a JNDI name in it.. so check if it's different
+                	// If it is.. ignore the re-set of the existing jndi name
+                	String newJndiName = jndiHelper.getExistingJndiName(modelResc);
+                	if( !StringUtilities.areDifferent(newJndiName, existingJndiName)) {
+                		jndiHelper.setJNDINameInTxn(modelResc, existingJndiName);
+                	}
+                }
+                
                 return true;
             }
         }

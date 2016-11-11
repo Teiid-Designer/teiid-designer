@@ -311,7 +311,7 @@ public class EditUniqueConstraintDialog extends TitleAreaDialog {
 		}
 		
 		creatingContents = false;
-
+		
 		return composite;
 	}
 
@@ -330,7 +330,9 @@ public class EditUniqueConstraintDialog extends TitleAreaDialog {
 		} else {
 			if (editedConstraint.getStatus().getSeverity() < IStatus.ERROR) {
 				setErrorMessage(null);
-			} else if (editedConstraint.getStatus().getSeverity() == IStatus.WARNING) {
+			}
+
+			if (editedConstraint.getStatus().getSeverity() == IStatus.WARNING) {
 				setMessage(editedConstraint.getStatus().getMessage(), IMessageProvider.WARNING);
 			} else if (editedConstraint.getStatus().getSeverity() == IStatus.ERROR) {
 				setErrorMessage(editedConstraint.getStatus().getMessage());
@@ -344,7 +346,7 @@ public class EditUniqueConstraintDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		getButton(IDialogConstants.OK_ID).setEnabled(true);
+		validate();
 	}
 
 	@Override

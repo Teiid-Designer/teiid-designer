@@ -57,8 +57,10 @@ public abstract class VdbEntry extends VdbUnit {
         long propChecksum = -1;
         for (final PropertyElement property : element.getProperties()) {
             final String name = property.getName();
-            if (EntryElement.CHECKSUM.equals(name))
+            if (EntryElement.CHECKSUM.equals(name)) {
                 propChecksum = Long.parseLong(property.getValue());
+                break;
+            }
         }
 
         if (Synchronization.Synchronized.equals(getSynchronization())) {

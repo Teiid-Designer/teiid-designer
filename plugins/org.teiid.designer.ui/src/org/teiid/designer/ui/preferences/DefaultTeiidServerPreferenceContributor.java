@@ -228,9 +228,7 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
 
         try {
             Collection<ITeiidServerVersion> registeredServerVersions = TeiidRuntimeRegistry.getInstance().getSupportedVersions();
-            for (ITeiidServerVersion version : registeredServerVersions) {
-                items.add(version.toString());
-            }
+            items = TeiidServerVersion.orderVersions(registeredServerVersions, true);
         } catch (Exception ex) {
             Util.log(ex);
             for (VersionID versionId : VersionID.values()) {
@@ -238,7 +236,6 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
             }
         }
 
-        Collections.sort(items, Collections.reverseOrder());
         versionCombo.setItems(items.toArray(new String[0]));
         versionCombo.setText(value);
     }

@@ -53,16 +53,22 @@ public class WSDLSchemaExtractor {
         schemas = new HashSet();
     }
 
-    public void findSchema( String wsdlUriString, SecurityType securityType, String userName, String password ) throws IOException {
+    public void findSchema( String wsdlUriString, SecurityType securityType, String userName, String password ) throws Exception {
         URI uri;
         InputStream inputStream = null;
 
         /*
          * Only if the wsdl uri starts with http, will it be necessary
-         * to set http-basic security credentials
+         * to set http-basic security credentials or use digest
          */
         if (wsdlUriString.startsWith("http")) { //$NON-NLS-1$
             uri = URI.createURI(wsdlUriString);
+            
+            if (SecurityType.Digest.equals(securityType)){
+            	
+            	inputStream = URLHelper.getWSDLWithDigest(new URL(wsdlUriString), userName, password);
+            	
+            }else{
 
             /*
              * Loading the wsdl resource fails if authentication of
@@ -80,6 +86,8 @@ public class WSDLSchemaExtractor {
             }
 
             inputStream = urlConn.getInputStream();
+            
+            }
         }
         else {
         	// if the uri file string starts with 'file:', remove it

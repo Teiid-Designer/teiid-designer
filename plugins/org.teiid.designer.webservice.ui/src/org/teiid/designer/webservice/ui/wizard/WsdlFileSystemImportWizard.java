@@ -79,6 +79,7 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
     private static final ImageDescriptor IMAGE = WebServiceUiPlugin.getDefault().getImageDescriptor(Images.IMPORT_WSDL);
     private static final String NOT_LICENSED_MSG = getString("notLicensedMessage"); //$NON-NLS-1$
     private static final String WEB_SERVICES_CLASS_ID = "Web Service"; //$NON-NLS-1$
+    private static final String DEPRECATED_SUFFIX = " (Deprecated)"; //$NON-NLS-1$
 
     private static boolean importLicensed = true;
 
@@ -482,14 +483,18 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
         Iterator it = mmdescs.iterator();
         while (it.hasNext() && wsmmd == null) {
             MetamodelDescriptor mmd = (MetamodelDescriptor)it.next();
-
+            String baseDisplayName = mmd.getDisplayName();
+            if( baseDisplayName.endsWith(DEPRECATED_SUFFIX) ) {
+            	int length = baseDisplayName.length();
+            	baseDisplayName = baseDisplayName.substring(0, length - DEPRECATED_SUFFIX.length());
+            }
             if (UiPlugin.getDefault().isProductContextValueSupported(Metamodel.URI, mmd.getNamespaceURI())
                 && mmd.supportsNewModel()) {
                 List typeList = new ArrayList(Arrays.asList(mmd.getAllowableModelTypes()));
                 typeList.remove(ModelType.METAMODEL_LITERAL);
 
-                if (mmd.getName().equalsIgnoreCase(WEB_SERVICES_CLASS_ID)
-                    || mmd.getDisplayName().equalsIgnoreCase(WEB_SERVICES_CLASS_ID)) {
+                if (mmd.getName().equalsIgnoreCase(WEB_SERVICES_CLASS_ID )
+                    || baseDisplayName.equalsIgnoreCase(WEB_SERVICES_CLASS_ID)) {
                     wsmmd = mmd;
                 }
             }

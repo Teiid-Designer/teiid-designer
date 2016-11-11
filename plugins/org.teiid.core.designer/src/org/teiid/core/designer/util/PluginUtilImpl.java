@@ -130,8 +130,10 @@ public class PluginUtilImpl extends BundleUtil implements PluginUtil {
                     file = new File(file, PRODUCT_PROPERTIES);
 
                     if (file.exists()) {
-                        BundleUtil.productProps = new PropertyResourceBundle(new FileInputStream(file));
+                    	FileInputStream fis = new FileInputStream(file);
+                        BundleUtil.productProps = new PropertyResourceBundle(fis);
                         PluginUtilImpl.productPropsLoaded = true;
+                        fis.close();
                     }
                 } catch (Exception theException) {
                     log(theException);

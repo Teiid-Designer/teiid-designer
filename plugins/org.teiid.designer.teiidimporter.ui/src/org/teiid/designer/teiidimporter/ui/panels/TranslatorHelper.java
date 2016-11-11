@@ -54,6 +54,7 @@ public class TranslatorHelper implements UiConstants {
     public static final String H2 = "h2"; //$NON-NLS-1$
     public static final String HIVE = "hive"; //$NON-NLS-1$
     public static final String HSQL = "hsql"; //$NON-NLS-1$
+    public static final String HANA = "hana"; //$NON-NLS-1$
     public static final String INFINISPAN = "infinispan-cache"; //$NON-NLS-1$
 	public static final String INFORMIX = "informix"; //$NON-NLS-1$
     public static final String INGRES = "ingres"; //$NON-NLS-1$
@@ -211,6 +212,10 @@ public class TranslatorHelper implements UiConstants {
         
         if(driverNameLC.contains("hive")) { //$NON-NLS-1$
             return HIVE;
+        }
+        
+        if(driverNameLC.contains("ngdbc")) { //$NON-NLS-1$
+            return HANA;
         }
 
         return JDBC_ANSI; 

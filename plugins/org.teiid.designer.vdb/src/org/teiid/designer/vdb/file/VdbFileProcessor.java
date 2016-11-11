@@ -51,8 +51,10 @@ public class VdbFileProcessor {
                 InputStream entryStream = archive.getInputStream(zipEntry);
                 if (callback.getFilesOfInterest().contains(zipEntry.getName())) {
                     callback.processStream(zipEntry.getName(), entryStream);
+                    entryStream.close();
                     break;
                 }
+                entryStream.close();
             }
         } catch (Exception ex) {
             callback.exceptionThrown(ex);

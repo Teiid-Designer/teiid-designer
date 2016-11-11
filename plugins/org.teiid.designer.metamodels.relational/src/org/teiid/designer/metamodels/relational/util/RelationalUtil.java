@@ -7,15 +7,25 @@
  */
 package org.teiid.designer.metamodels.relational.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.resource.xmi.MtkXmiResourceImpl;
 import org.teiid.designer.core.util.ModelVisitor;
 import org.teiid.designer.core.util.ModelVisitorProcessor;
+import org.teiid.designer.core.workspace.DotProjectUtils;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.relational.AccessPattern;
@@ -30,6 +40,7 @@ import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.ProcedureResult;
+import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.RelationalPlugin;
 import org.teiid.designer.metamodels.relational.Schema;
 import org.teiid.designer.metamodels.relational.Table;
@@ -85,9 +96,34 @@ public class RelationalUtil {
      * @param depth how deep to search beneath the container, see {@link ModelVisitorProcessor}
      * @return the keys that were found; may not be null
      */
-    public static List findUniqueKeys( final Object container,
+    @SuppressWarnings({ "unused", "rawtypes", "unchecked" })
+	public static List findUniqueKeys( final Object container,
                                        final int depth ) {
         final UniqueKeyFinder finder = new UniqueKeyFinder();
+        // TODO:  TEIIDDES-2660
+        // Foreign keys can now reference PK/UC outside of a resource (i.e. another model)
+        // So need to get the "project" for the initial container (if MtkXmiResourceImpl) and find other resources of like metamodel 
+        // i.e. source or view models and add any other PK/UC's in like models that can be referenced.
+        // 
+        if( container instanceof MtkXmiResourceImpl ) {
+			List allObjects = new ArrayList();
+        	try {
+				Collection<MtkXmiResourceImpl> allProjectRelationalModels = getProjectsOtherModels((MtkXmiResourceImpl)container);
+
+				
+				for( MtkXmiResourceImpl nextContainer : allProjectRelationalModels ) {
+					List tempObjects = findObjects(finder, nextContainer, depth);
+					allObjects.addAll(tempObjects);
+				}
+				
+			} catch (ModelWorkspaceException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	
+        	return allObjects;
+        }
+        
         return findObjects(finder, container, depth);
     }
 
@@ -495,5 +531,26 @@ public class RelationalUtil {
         final RelationalModelExtensionAssistant assistant = (RelationalModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
         
         return assistant;
+    }
+    
+    private static Collection<MtkXmiResourceImpl> getProjectsOtherModels(MtkXmiResourceImpl containerModel) throws ModelWorkspaceException {
+    	List<MtkXmiResourceImpl> projectRelationalModels = new ArrayList<MtkXmiResourceImpl>();
+    	
+    	ModelResource mr = ModelUtil.getModel(containerModel);
+    	
+    	IProject proj = mr.getCorrespondingResource().getProject();
+    	
+    	Collection<IFile> allProjectFiles = DotProjectUtils.getAllProjectResources(proj);
+    	
+    	for( IFile res : allProjectFiles ) {
+    		if ( ModelUtil.isModelFile(res) ) {
+    			ModelResource theMR = ModelUtil.getModel(res);
+    			if( theMR != null && theMR.getPrimaryMetamodelUri().equals(RelationalPackage.eNS_URI)) {
+    				projectRelationalModels.add((MtkXmiResourceImpl)theMR.getEmfResource());
+    			}
+    		}
+    	}
+    	
+    	return projectRelationalModels;
     }
 }

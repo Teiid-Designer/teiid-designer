@@ -16,6 +16,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.jdbc.JdbcException;
 import org.teiid.designer.jdbc.JdbcPlugin;
 import org.teiid.designer.jdbc.data.MetadataRequest;
+import org.teiid.designer.jdbc.data.MethodRequest;
 import org.teiid.designer.jdbc.data.Request;
 import org.teiid.designer.jdbc.metadata.JdbcCatalog;
 import org.teiid.designer.jdbc.metadata.JdbcDatabase;
@@ -312,7 +313,7 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
 
         // Disable what is not to be loaded ...
         if (!this.getJdbcDatabase().getIncludes().includeProcedures()) {
-            requests[1] = new DisabledRequest((MetadataRequest)requests[1]);
+            requests[1] = new DisabledRequest((MethodRequest)requests[1]);
         }
 
         return requests;

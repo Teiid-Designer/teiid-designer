@@ -8,8 +8,6 @@
 package org.teiid.designer.transformation.ui.editors;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -22,7 +20,9 @@ import org.eclipse.jface.text.source.VerticalRuler;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -46,7 +46,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -57,7 +56,8 @@ import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalParameter;
 import org.teiid.designer.relational.model.RelationalProcedureResultSet;
 import org.teiid.designer.relational.model.RelationalViewProcedure;
-import org.teiid.designer.relational.ui.UiConstants;
+import org.teiid.designer.relational.ui.edit.EditColumnDialog;
+import org.teiid.designer.relational.ui.edit.EditParameterDialog;
 import org.teiid.designer.relational.ui.edit.RelationalEditorPanel;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
 import org.teiid.designer.transformation.ui.Messages;
@@ -68,13 +68,11 @@ import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
 import org.teiid.designer.ui.common.graphics.ColorManager;
-import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.properties.extension.VdbFileDialogUtil;
-import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 
 
 /**
@@ -328,6 +326,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 			public void widgetSelected(SelectionEvent e) {
 	    		getRelationalReference().getResultSet().createColumn();
 				handleInfoChanged();
+				setColumnButtonsState();
 			}
     		
 		});
@@ -352,9 +351,9 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 				}
 				if( column != null ) {
 					getRelationalReference().getResultSet().removeColumn(column);
-					deleteColumnButton.setEnabled(false);
 					handleInfoChanged();
 				}
+				setColumnButtonsState();
 			}
     		
 		});
@@ -381,6 +380,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 					dialog.open();
 					handleInfoChanged();
 				}
+				setColumnButtonsState();
 			}
     		
 		});
@@ -407,10 +407,8 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 					getRelationalReference().getResultSet().moveColumnUp(info);
 					handleInfoChanged();
 					columnsViewer.getTable().select(selectedIndex-1);
-					downColumnButton.setEnabled(getRelationalReference().getResultSet().canMoveColumnDown(info));
-					upColumnButton.setEnabled(getRelationalReference().getResultSet().canMoveColumnUp(info));
-					
 				}
+				setColumnButtonsState();
 			}
     		
 		});
@@ -436,11 +434,9 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 					int selectedIndex = columnsViewer.getTable().getSelectionIndex();
 					getRelationalReference().getResultSet().moveColumnDown(info);
 					handleInfoChanged();
-					columnsViewer.getTable().select(selectedIndex+1);
-					downColumnButton.setEnabled(getRelationalReference().getResultSet().canMoveColumnDown(info));
-					upColumnButton.setEnabled(getRelationalReference().getResultSet().canMoveColumnUp(info));
-					
+					columnsViewer.getTable().select(selectedIndex+1);					
 				}
+				setColumnButtonsState();
 			}
     		
 		});
@@ -457,15 +453,10 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         column = columnsViewer.createColumn(SWT.LEFT, 30, 30, true);
         column.getColumn().setText(Messages.dataTypeLabel + "          "); //$NON-NLS-1$
         column.setLabelProvider(new ColumnDataLabelProvider(1));
-        column.setEditingSupport(new DatatypeEditingSupport(this.columnsViewer.getTableViewer()));
-
         
         column = columnsViewer.createColumn(SWT.LEFT, 30, 30, true);
         column.getColumn().setText(Messages.lengthLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(2));
-        column.setEditingSupport(new ColumnWidthEditingSupport(this.columnsViewer.getTableViewer()));
-
-        
     	
         if( this.getRelationalReference().getResultSet() != null ) {
 	        for( RelationalColumn row : this.getRelationalReference().getResultSet().getColumns() ) {
@@ -477,42 +468,44 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
+				setColumnButtonsState();
+			}
+		});
+        
+    	
+        this.columnsViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
-				
-				if( sel.isEmpty()) {
-					deleteColumnButton.setEnabled(false);
-					editColumnButton.setEnabled(false);
-					upColumnButton.setEnabled(false);
-					downColumnButton.setEnabled(false);
-				} else {
-					boolean enable = true;
-					Object[] objs = sel.toArray();
-					RelationalColumn columnInfo = null;
-					for( Object obj : objs) {
-						if(  !(obj instanceof RelationalColumn)) {
-							enable = false;
-							break;
-						} else {
-							columnInfo = (RelationalColumn)obj;
-						}
-					} 
-					if( objs.length == 0 ) {
-						enable = false;
-					}
-					deleteColumnButton.setEnabled(enable);
-					editColumnButton.setEnabled(enable);
-					if( enable ) {
-						upColumnButton.setEnabled(getRelationalReference().getResultSet().canMoveColumnUp(columnInfo));
-						downColumnButton.setEnabled(getRelationalReference().getResultSet().canMoveColumnDown(columnInfo));
-					}
-					
+				Object[] objs = sel.toArray();
+				if( objs.length == 1 && objs[0] instanceof RelationalColumn) {
+					EditColumnDialog dialog = new EditColumnDialog(getShell(), (RelationalColumn)objs[0]);
+					dialog.open();
+					handleInfoChanged();
 				}
-				
 			}
 		});
     	
     	return thePanel;
 	}
+	
+	private void setColumnButtonsState() {
+		IStructuredSelection selection = (IStructuredSelection)this.columnsViewer.getSelection();
+		boolean enable = selection != null && !selection.isEmpty();
+		deleteColumnButton.setEnabled(enable);
+		editColumnButton.setEnabled(enable);
+		if( enable ) {
+			Object[] objs = selection.toArray();
+			RelationalColumn columnInfo = (RelationalColumn)objs[0];
+			upColumnButton.setEnabled(getRelationalReference().getResultSet().canMoveColumnUp(columnInfo));
+			downColumnButton.setEnabled(getRelationalReference().getResultSet().canMoveColumnDown(columnInfo));
+		} else {
+			upColumnButton.setEnabled(false);
+			downColumnButton.setEnabled(false);
+		}
+	}
+
 
 	@SuppressWarnings("unused")
 	private Composite createPropertiesPanel(Composite parent) {
@@ -939,6 +932,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 			public void widgetSelected(SelectionEvent e) {
 	    		getRelationalReference().createParameter();
 				handleInfoChanged();
+				setParameterButtonsState();
 			}
     		
 		});
@@ -962,9 +956,9 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 				}
 				if( parameter != null ) {
 					getRelationalReference().removeParameter(parameter);
-					deleteParameterButton.setEnabled(false);
 					handleInfoChanged();
 				}
+				setParameterButtonsState();
 			}
     		
 		});
@@ -991,6 +985,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 					dialog.open();
 					handleInfoChanged();
 				}
+				setParameterButtonsState();
 			}
     		
 		});
@@ -1017,10 +1012,8 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 					getRelationalReference().moveParameterUp(info);
 					handleInfoChanged();
 					parametersViewer.getTable().select(selectedIndex-1);
-					downParameterButton.setEnabled(getRelationalReference().canMoveParameterDown(info));
-					upParameterButton.setEnabled(getRelationalReference().canMoveParameterUp(info));
-					
 				}
+				setParameterButtonsState();
 			}
     		
 		});
@@ -1047,10 +1040,8 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 					getRelationalReference().moveParameterDown(info);
 					handleInfoChanged();
 					parametersViewer.getTable().select(selectedIndex+1);
-					downParameterButton.setEnabled(getRelationalReference().canMoveParameterDown(info));
-					upParameterButton.setEnabled(getRelationalReference().canMoveParameterUp(info));
-					
 				}
+				setParameterButtonsState();
 			}
     		
 		});
@@ -1061,29 +1052,21 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         // create columns
         TableViewerColumn column = parametersViewer.createColumn(SWT.LEFT, 30, 30, true);
         column.getColumn().setText(Messages.parameterNameLabel + "        "); //$NON-NLS-1$
-        column.setEditingSupport(new ParameterNameEditingSupport(this.parametersViewer.getTableViewer()));
         column.setLabelProvider(new ParameterDataLabelProvider(0));
 
 
         column = parametersViewer.createColumn(SWT.LEFT, 20, 30, true);
         column.getColumn().setText(Messages.dataTypeLabel + "          "); //$NON-NLS-1$
         column.setLabelProvider(new ParameterDataLabelProvider(1));
-        column.setEditingSupport(new DatatypeEditingSupport(this.parametersViewer.getTableViewer()));
 
-        
         column = parametersViewer.createColumn(SWT.LEFT, 20, 30, true);
         column.getColumn().setText(Messages.lengthLabel + "        ");
         column.setLabelProvider(new ParameterDataLabelProvider(2));
-        column.setEditingSupport(new ParameterWidthEditingSupport(this.parametersViewer.getTableViewer()));
-
         
         column = parametersViewer.createColumn(SWT.LEFT, 30, 30, true);
         column.getColumn().setText(Messages.directionLabel);
         column.setLabelProvider(new ParameterDataLabelProvider(3));
-        column.setEditingSupport(new DirectionEditingSupport(this.parametersViewer.getTableViewer()));
-
         
-    	
         if( getRelationalReference() != null ) {
 	        for( RelationalParameter row : this.getRelationalReference().getParameters() ) {
 	        	this.parametersViewer.add(row);
@@ -1096,42 +1079,42 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 			
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
+				setParameterButtonsState();
+			}
+		});
+        
+        this.parametersViewer.addDoubleClickListener(new IDoubleClickListener() {
+			
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
-				
-				if( sel.isEmpty()) {
-					deleteParameterButton.setEnabled(false);
-					editParameterButton.setEnabled(false);
-					upParameterButton.setEnabled(false);
-					downParameterButton.setEnabled(false);
-				} else {
-					boolean enable = true;
-					Object[] objs = sel.toArray();
-					RelationalParameter columnInfo = null;
-					for( Object obj : objs) {
-						if(  !(obj instanceof RelationalParameter)) {
-							enable = false;
-							break;
-						} else {
-							columnInfo = (RelationalParameter)obj;
-						}
-					} 
-					if( objs.length == 0 ) {
-						enable = false;
-					}
-					editParameterButton.setEnabled(enable);
-					deleteParameterButton.setEnabled(enable);
-					if( enable ) {
-						upParameterButton.setEnabled(getRelationalReference().canMoveParameterUp(columnInfo));
-						downParameterButton.setEnabled(getRelationalReference().canMoveParameterDown(columnInfo));
-					}
-					
+				Object[] objs = sel.toArray();
+				if( objs.length == 1 && objs[0] instanceof RelationalParameter) {
+					EditParameterDialog dialog = new EditParameterDialog(getShell(), (RelationalParameter)objs[0]);
+					dialog.open();
+					handleInfoChanged();
 				}
-				
 			}
 		});
         
         return thePanel;
     }
+	
+	private void setParameterButtonsState() {
+		IStructuredSelection selection = (IStructuredSelection)this.parametersViewer.getSelection();
+		boolean enable = selection != null && !selection.isEmpty();
+		deleteParameterButton.setEnabled(enable);
+		editParameterButton.setEnabled(enable);
+		if( enable ) {
+			Object[] objs = selection.toArray();
+			RelationalParameter parameterInfo = (RelationalParameter)objs[0];
+			upParameterButton.setEnabled(getRelationalReference().canMoveParameterUp(parameterInfo));
+			downParameterButton.setEnabled(getRelationalReference().canMoveParameterDown(parameterInfo));
+		} else {
+			upParameterButton.setEnabled(false);
+			downParameterButton.setEnabled(false);
+		}
+	}
 	
     /*
      * Create the SQL Display tab panel
@@ -1373,239 +1356,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 		
 		
 	}
-    
-    class ParameterNameEditingSupport extends EditingSupport {
-    	
-		private TextCellEditor editor;
 
-		/**
-		 * Create a new instance of the receiver.
-		 * 
-		 * @param viewer the column viewer
-		 */
-		public ParameterNameEditingSupport(ColumnViewer viewer) {
-			super(viewer);
-			this.editor = new TextCellEditor((Composite) viewer.getControl());
-		}
-		
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-		 */
-		@Override
-		protected boolean canEdit(Object element) {
-			return false;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-		 */
-		@Override
-		protected CellEditor getCellEditor(Object element) {
-			return editor;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
-		 */
-		@Override
-		protected Object getValue(Object element) {
-			if( element instanceof RelationalParameter ) {
-				return ((RelationalParameter)element).getName();
-			}
-			return 0;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
-		 *      java.lang.Object)
-		 */
-		@Override
-		protected void setValue(Object element, Object value) {
-			if( element instanceof RelationalParameter ) {
-				String oldValue = ((RelationalParameter)element).getName();
-				String newValue = (String)value;
-				if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-					((RelationalParameter)element).setName(newValue);
-					parametersViewer.refresh(element);
-					handleInfoChanged();
-				}
-			}
-		}
-
-	}
-    
-    class ParameterWidthEditingSupport extends EditingSupport {
-    	
-		private TextCellEditor editor;
-
-		/**
-		 * Create a new instance of the receiver.
-		 * 
-		 * @param viewer the column viewer
-		 */
-		public ParameterWidthEditingSupport(ColumnViewer viewer) {
-			super(viewer);
-			this.editor = new TextCellEditor((Composite) viewer.getControl());
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-		 */
-		@Override
-		protected boolean canEdit(Object element) {
-			return false;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-		 */
-		@Override
-		protected CellEditor getCellEditor(Object element) {
-			return editor;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
-		 */
-		@Override
-		protected Object getValue(Object element) {
-			if( element instanceof RelationalParameter ) {
-				return Integer.toString(((RelationalParameter)element).getLength());
-			}
-			return 0;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
-		 *      java.lang.Object)
-		 */
-		@Override
-		protected void setValue(Object element, Object value) {
-			if( element instanceof RelationalParameter ) {
-				int oldValue = ((RelationalParameter)element).getLength();
-				int newValue = oldValue;
-				try {
-					newValue = Integer.parseInt((String)value);
-				} catch (NumberFormatException ex) {
-					return;
-				}
-				if( newValue != oldValue ) {
-					((RelationalParameter)element).setLength(newValue);
-					parametersViewer.refresh(element);
-					handleInfoChanged();
-				}
-			}
-		}
-
-	}
-    
-    class DatatypeEditingSupport extends ComboBoxEditingSupport {
-    	
-    	private String[] datatypes;
-        /**
-         * @param viewer the column viewer
-         */
-        public DatatypeEditingSupport( ColumnViewer viewer ) {
-            super(viewer);
-            
-            Collection<String> unsortedTypes = new ArrayList<String>();
-            try {
-				unsortedTypes = DatatypeUtilities.getAllDesignTimeTypeNames();
-			} catch (ModelerCoreException e) {
-				UiConstants.Util.log(e);
-			}
-    		Collection<String> dTypes = new ArrayList<String>();
-    		
-    		String[] sortedStrings = unsortedTypes.toArray(new String[unsortedTypes.size()]);
-    		Arrays.sort(sortedStrings);
-    		for( String dType : sortedStrings ) {
-    			dTypes.add(dType);
-    		}
-    		
-    		datatypes = dTypes.toArray(new String[dTypes.size()]);
-    		
-        }
-        
-        @Override
-		protected boolean canEdit(Object element) {
-			return false;
-		}
-
-		@Override
-        protected String getElementValue( Object element ) {
-        	if( element instanceof RelationalParameter ) {
-        		return ((RelationalParameter)element).getDatatype();
-        	} else if( element instanceof RelationalColumn ) {
-        		return ((RelationalColumn)element).getDatatype();
-        	}
-        	
-        	return EMPTY_STRING;
-        }
-
-        @Override
-        protected String[] refreshItems( Object element ) {
-            return datatypes;
-        }
-
-        @Override
-        protected void setElementValue( Object element,
-                                        String newValue ) {
-            if( element instanceof RelationalParameter ) {
-            	((RelationalParameter)element).setDatatype(newValue);
-        	} else if( element instanceof RelationalColumn ) {
-        		((RelationalColumn)element).setDatatype(newValue);
-        	}
-        }
-    }
-    
-    class DirectionEditingSupport extends ComboBoxEditingSupport {
-        /**
-         * @param viewer the column viewer
-         */
-        public DirectionEditingSupport( ColumnViewer viewer ) {
-            super(viewer);
-        }
-
-
-        @Override
-        protected String getElementValue( Object element ) {
-        	return ((RelationalParameter)element).getDirection();
-        }
-        
-        @Override
-      	protected boolean canEdit(Object element) {
-      		return false;
-      	}
-
-        @Override
-        protected String[] refreshItems( Object element ) {
-            return DIRECTION.AS_ARRAY;
-        }
-
-        @Override
-        protected void setElementValue( Object element,
-                                        String newValue ) {
-            ((RelationalParameter)element).setDirection(newValue);
-            handleInfoChanged();
-        }
-    }
-    
 	class ColumnDataLabelProvider extends ColumnLabelProvider {
 
 		private final int columnNumber;

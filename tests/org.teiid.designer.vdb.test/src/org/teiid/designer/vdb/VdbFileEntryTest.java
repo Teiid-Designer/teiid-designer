@@ -95,6 +95,7 @@ public class VdbFileEntryTest {
         // construct entry so that checksum will be computed
         VdbFileEntry entry = vdb.addEntry(path);
         assertThat(entry.getChecksum(), not(is(0L)));
+        fileInputStream.close();
     }
 
     @Test
@@ -131,6 +132,9 @@ public class VdbFileEntryTest {
 
         // test
         assertThat(entry.getChecksum(), not(is(originalChecksum)));
+        
+        fis1.close();
+        fis2.close();
     }
 
     @Test
@@ -222,6 +226,9 @@ public class VdbFileEntryTest {
         final List<PropertyChangeEvent> values = arg.getAllValues();
         assertThat(values.get(0).getPropertyName(), is(ENTRY_CHECKSUM));
         assertThat(values.get(1).getPropertyName(), is(ENTRY_SYNCHRONIZATION));
+        
+        fis1.close();
+        fis2.close();
     }
 
     @Test

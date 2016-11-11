@@ -50,6 +50,15 @@
    </extension>
    
    <extension
+       id="org.teiid.designer.datatools.profiles.ws.ConnectionInfoProvider"
+       name="%odataConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoProvider
+            profile="org.teiid.designer.datatools.profiles.ws.ODataConnectionProfile"
+            class="org.teiid.designer.datatools.profiles.ws.ODataConnectionInfoProvider"/>
+   </extension>
+   
+   <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">
       <category
             id="org.teiid.designer.import.category"
@@ -113,6 +122,17 @@
             category="org.teiid.designer.import.category"
             id="org.teiid.designer.datatools.profiles.flatfile.fileurl"
             name="Flat File URL Source"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+      <category
+            id="org.teiid.designer.import.category"
+            name="%teiidImporterConnectionsCategory"/>
+      <connectionProfile
+            category="org.teiid.designer.import.category"
+            id="org.teiid.designer.datatools.profiles.jdg"
+            name="JDG Source"/>
    </extension>
 
 	<extension point="org.eclipse.datatools.connectivity.driverExtension">
@@ -237,6 +257,15 @@
        <ConnectionInfoProvider
             profile="org.eclipse.birt.data.oda.mongodb"
             class="org.teiid.designer.datatools.profiles.mongodb.MongoDbConnectionInfoProvider"/>
+   </extension>
+   
+   <extension
+       id="org.teiid.designer.datatools.profiles.jdg.JDGConnectionInfoProvider"
+       name="%jdgConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoProvider
+            profile="org.teiid.designer.datatools.profiles.jdg"
+            class="org.teiid.designer.datatools.profiles.jdg.JDGConnectionInfoProvider"/>
    </extension>
    
    <extension

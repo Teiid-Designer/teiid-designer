@@ -211,6 +211,13 @@
             path="core.mxd">
       </extensionDefinition>
    </extension>
+   <extension
+         point="org.teiid.designer.extension.modelExtensionProvider">
+      <extensionDefinition
+            className="org.teiid.designer.metamodels.relational.extension.InfinispanCacheModelExtensionAssistant"
+            path="infinispan.mxd">
+      </extensionDefinition>
+   </extension>
    
 <!-- Designates valid extensible metamodel -->
    <extension

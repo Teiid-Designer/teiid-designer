@@ -385,6 +385,7 @@ public class VdbUtil implements VdbConstants {
                     InputStream fileStream = new FileInputStream(dynamicVdbFile);
                     
                     manifest[0] = (VdbElement)unmarshaller.unmarshal(fileStream);
+                    fileStream.close();
                 }
             });
         } catch (Exception ex) {

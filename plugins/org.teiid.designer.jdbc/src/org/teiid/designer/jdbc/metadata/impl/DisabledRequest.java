@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.teiid.designer.jdbc.JdbcPlugin;
 import org.teiid.designer.jdbc.JdbcUtil;
 import org.teiid.designer.jdbc.data.MetadataRequest;
+import org.teiid.designer.jdbc.data.MethodRequest;
 import org.teiid.designer.jdbc.data.Response;
 
 /**
@@ -24,7 +25,7 @@ public class DisabledRequest extends MetadataRequest {
      * Construct an instance of DisabledRequest.
      * 
      */
-    public DisabledRequest( final MetadataRequest request ) {
+    public DisabledRequest( final MethodRequest request ) {
         super(request.getName(),request.getTarget(),request.getMethodName(),request.getParameters());
     }
 

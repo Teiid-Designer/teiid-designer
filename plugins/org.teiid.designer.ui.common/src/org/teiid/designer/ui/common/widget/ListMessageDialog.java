@@ -367,7 +367,6 @@ public class ListMessageDialog extends MessageDialog {
         } else {
         	list.setLayoutData(new GridData(GridData.FILL_BOTH));
         }
-        list.setBackground(UiUtil.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         
         // set label provider
         if (this.labelProvider != null) {

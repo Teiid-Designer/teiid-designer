@@ -553,6 +553,12 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
         } catch (Exception e) {
             ErrorHandler.toExceptionDialog(Messages.registerMedActionFailedMsg, e);
             return false;
+        } finally {
+        	try {
+				fileContents.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
 
         // Continue checks on parsable MED

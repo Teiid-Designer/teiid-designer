@@ -112,5 +112,19 @@ public interface RelationalModelProcessor {
      * @return the string jdbc processor type (i.e. jdbc, oracle, mysql, etc...)
      */
     String getType();
+    
+    /**
+     * Set whether to allow updatable tables and views
+     * 
+     * @param updatable value
+     */
+    void setUpdatable( boolean value );
+
+    /**
+     * Gets the boolean flag for setting updatable table property
+     * 
+     * @return 'true' if allow updates, 'false' if not.
+     */
+    boolean isUpdatable();
 
 }

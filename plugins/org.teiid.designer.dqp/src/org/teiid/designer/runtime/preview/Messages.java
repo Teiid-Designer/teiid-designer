@@ -65,6 +65,14 @@ public final class Messages extends NLS {
     public static String JarDeploymentJarNotFound;
     public static String JarDeploymentFailed;
     public static String JarDeploymentJarNotReadable;
+    
+    public static String DataSourceHelper_noServerDefined;
+    public static String DataSourceHelper_errorCheckingDataSourceDeployments;
+    public static String DataSourceHelper_requiredDataSourcesMissing;
+    public static String DataSourceHelper_dataSourceFailedToDeploy;
+    public static String DataSourceHelper_requiredPasswordWasNotSet;
+    
+    public static String PreviewManager_jndiNameMissingMessage;
 
     static {
         NLS.initializeMessages("org.teiid.designer.runtime.preview.messages", Messages.class); //$NON-NLS-1$

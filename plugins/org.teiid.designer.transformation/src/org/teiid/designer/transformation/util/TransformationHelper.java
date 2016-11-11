@@ -3435,7 +3435,7 @@ public class TransformationHelper implements ISQLConstants {
      * @param transMappingRoot the transformation mapping root
      * @return the SQL Select String
      */
-    private static String getSelectSqlUserString( Object transMappingRoot ) {
+    public static String getSelectSqlUserString( Object transMappingRoot ) {
         SqlTransformation sqlTrans = getUserSqlTransformation(transMappingRoot);
         String result = null;
         if (sqlTrans != null) {
@@ -3450,7 +3450,7 @@ public class TransformationHelper implements ISQLConstants {
      * @param transMappingRoot the transformation mapping root
      * @return the SQL Insert String
      */
-    private static String getInsertSqlUserString( Object transMappingRoot ) {
+    public static String getInsertSqlUserString( Object transMappingRoot ) {
         SqlTransformation sqlTrans = getUserSqlTransformation(transMappingRoot);
         String result = null;
         if (sqlTrans != null) {
@@ -3465,7 +3465,7 @@ public class TransformationHelper implements ISQLConstants {
      * @param transMappingRoot the transformation mapping root
      * @return the SQL Update String
      */
-    private static String getUpdateSqlUserString( Object transMappingRoot ) {
+    public static String getUpdateSqlUserString( Object transMappingRoot ) {
         SqlTransformation sqlTrans = getUserSqlTransformation(transMappingRoot);
         String result = null;
         if (sqlTrans != null) {
@@ -3480,7 +3480,7 @@ public class TransformationHelper implements ISQLConstants {
      * @param transMappingRoot the transformation mapping root
      * @return the SQL Delete String
      */
-    private static String getDeleteSqlUserString( Object transMappingRoot ) {
+    public static String getDeleteSqlUserString( Object transMappingRoot ) {
         SqlTransformation sqlTrans = getUserSqlTransformation(transMappingRoot);
         String result = null;
         if (sqlTrans != null) {

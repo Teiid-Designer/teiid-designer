@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.compare.ui.structure;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.Collections;
@@ -209,6 +210,14 @@ public class ModelObjectStructureViewer extends StructuredViewer /*StructureDiff
             getDifferenceReportsPanel().setObjectNames(getLeftObjectName(), getRightObjectName());
         } else if (iCompareType == RESOURCE_NODE_TO_INPUT_STREAM) {
             getDifferenceReportsPanel().setObjectNames(getRightObjectName(), getLeftObjectName());
+        }
+        
+        if( isRight != null ) {
+        	try {
+				isRight.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
         }
     }
 

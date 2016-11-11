@@ -196,6 +196,7 @@ public class ModelUserDefinedPropertiesPanel extends Composite {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
+        this.addPropertyButton.setEnabled(false);
         
         this.removePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
         this.removePropertyButton.setImage(VdbUiPlugin.singleton.getImage(REMOVE));
@@ -223,6 +224,7 @@ public class ModelUserDefinedPropertiesPanel extends Composite {
 		this.modelEntry = entry;
 
 		this.propertiesViewer.setInput(this);
+		this.addPropertyButton.setEnabled(this.modelEntry != null);
 	}
 	
 

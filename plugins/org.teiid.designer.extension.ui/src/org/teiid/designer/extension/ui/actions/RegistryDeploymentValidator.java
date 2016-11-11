@@ -9,6 +9,8 @@ package org.teiid.designer.extension.ui.actions;
 
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.ui.UiConstants.Util;
+
+import java.io.IOException;
 import java.io.InputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -250,13 +252,26 @@ public class RegistryDeploymentValidator {
                 if (!parser.getErrors().isEmpty()) {
                     MessageDialog.openError(getShell(), Messages.registerMedActionFailedTitle,
                                             NLS.bind(Messages.medFileParseErrorMsg, medToDeploy.getName()));
+                    fileContents.close();
                     return;
                 }
             } catch (Exception e) {
                 UTIL.log(e);
                 MessageDialog.openError(getShell(), Messages.registerMedActionFailedTitle, Messages.registerMedActionFailedMsg);
+                try {
+					fileContents.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
                 return;
             }
+            
+            try {
+				fileContents.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 
             // Continue checks on parsable MED
             if (med != null) {

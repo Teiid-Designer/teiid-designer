@@ -10,6 +10,7 @@ package org.teiid.designer.transformation.ui.wizards.file;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.types.DatatypeManager;
@@ -21,6 +22,7 @@ import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.metamodels.transformation.TransformationFactory;
 import org.teiid.designer.query.proc.ITeiidColumnInfo;
@@ -61,10 +63,15 @@ public class FlatFileViewModelFactory extends FlatFileRelationalModelFactory {
     @SuppressWarnings("unchecked")
     private void createColumns(ITeiidMetadataFileInfo info, BaseTable baseTable) throws ModelerCoreException {
     	EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
+    	RelationalStringNameValidator validator = new RelationalStringNameValidator();
     	
     	for (ITeiidColumnInfo columnInfo : info.getColumnInfoList()) {
     		Column column = factory.createColumn();
-    		column.setName(columnInfo.getName());
+    		String name = columnInfo.getName();
+    		if( ! validator.isValidName(name) ) {
+    			name = StringConstants.DQUOTE + name + StringConstants.DQUOTE;
+    		}
+    		column.setName(name);
     		column.setNameInSource(columnInfo.getSymbolName());
     		column.setLength(columnInfo.getWidth());
     		column.setDefaultValue(columnInfo.getDefaultValue());

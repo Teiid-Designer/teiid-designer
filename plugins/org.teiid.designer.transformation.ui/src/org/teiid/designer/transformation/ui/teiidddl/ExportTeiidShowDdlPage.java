@@ -100,7 +100,6 @@ public class ExportTeiidShowDdlPage extends AbstractWizardPage implements UiCons
 
         ddlContentsBox = WidgetFactory.createTextBox(theGroup);
         ddlContentsBox.setEditable(false);
-        ddlContentsBox.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
     }
 
     /**

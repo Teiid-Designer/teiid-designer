@@ -18,18 +18,23 @@ import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -90,6 +95,9 @@ public class RelationalModelFactory implements RelationalConstants {
     
     private Map<RelationalForeignKey, BaseTable> fkTableMap = new HashMap<RelationalForeignKey, BaseTable>();
     private Collection<RelationalIndex> indexes = new ArrayList<RelationalIndex>();
+    
+    //      Map<base table, reference table>
+    private Map<Table, RelationalTable> matTableRefMap = new HashMap<Table, RelationalTable>();
 
 	private Map<String, Collection<ModelObjectExtensionAssistant>> classNameToMedAssistantsMap = new HashMap<String,Collection<ModelObjectExtensionAssistant>>();
 
@@ -176,16 +184,19 @@ public class RelationalModelFactory implements RelationalConstants {
             modelResource.save(new NullProgressMonitor(), true);
         } catch (ModelerCoreException e) {
             RelationalPlugin.Util.log(IStatus.ERROR, e, e.getMessage());
-        }
+        } catch (CoreException e) {
+			// TODO Auto-generated catch block
+        	RelationalPlugin.Util.log(IStatus.ERROR, e, e.getMessage());
+		}
     }
     
     /**
      * @param model the relational model structure
      * @param modelResource the model resource
      * @param progressMonitor progress monitor
-     * @throws ModelerCoreException if problems building model
+     * @throws CoreException 
      */
-    public void buildFullModel(RelationalModel model, ModelResource modelResource, IProgressMonitor progressMonitor) throws ModelerCoreException {
+    public void buildFullModel(RelationalModel model, ModelResource modelResource, IProgressMonitor progressMonitor) throws CoreException {
         
         progressMonitor.setTaskName(Messages.relationalModelFactory_creatingModelChildren);
         for( RelationalReference child : model.getChildren() ) {
@@ -218,7 +229,13 @@ public class RelationalModelFactory implements RelationalConstants {
         progressMonitor.setTaskName(Messages.relationalModelFactory_creatingIndexes);
         progressMonitor.worked(1);
         for( RelationalIndex indexRef : indexes ) {
-            EObject index = createIndex(indexRef, modelResource);
+            createIndex(indexRef, modelResource);
+        }
+        
+        progressMonitor.setTaskName(Messages.relationalModelFactory_settingMaterializedReferences);
+        progressMonitor.worked(1);
+        for( Table table : matTableRefMap.keySet() ) {
+            setMatTableReference(table, (RelationalTable)matTableRefMap.get(table), modelResource);
         }
     }
     
@@ -349,6 +366,10 @@ public class RelationalModelFactory implements RelationalConstants {
             fkTableMap.put(fk, baseTable);
         }
         
+        if( tableRef.isMaterialized() && tableRef.getMaterializedTable() != null ) {
+        	matTableRefMap.put(baseTable, (RelationalTable)tableRef);
+        }
+        
         // Apply Extension Properties
         processExtensionProperties(modelResource,tableRef,baseTable);
         
@@ -387,6 +408,10 @@ public class RelationalModelFactory implements RelationalConstants {
         
         for( RelationalAccessPattern uc : viewRef.getAccessPatterns()) {
             createAccessPattern(uc, view, modelResource);
+        }
+        
+        if( viewRef.isMaterialized() && viewRef.getMaterializedTable() != null ) {
+        	matTableRefMap.put(view, (RelationalTable)viewRef);
         }
 
         // Apply Extension Properties
@@ -946,7 +971,7 @@ public class RelationalModelFactory implements RelationalConstants {
         
         Index index = FACTORY.createIndex();
         index.setName(indexRef.getName());
-        index.setNameInSource(index.getNameInSource());
+        index.setNameInSource(indexRef.getNameInSource());
         index.setFilterCondition(indexRef.getFilterCondition());
         index.setAutoUpdate(indexRef.isAutoUpdate());
         index.setNullable(indexRef.isNullable());
@@ -974,6 +999,28 @@ public class RelationalModelFactory implements RelationalConstants {
         processExtensionProperties(modelResource,indexRef,index);
 
         return index;
+    }
+    
+    public void setMatTableReference( Table table, RelationalTable tableRef, ModelResource modelResource) throws CoreException {
+    	IProject project = modelResource.getCorrespondingResource().getProject();
+    	IPath modelPath = new Path(tableRef.getMaterializedTableModelPath());
+    	
+    	ModelResource[] mResources = ModelerCore.getModelWorkspace().getModelResources();
+    	ModelResource referencedMR = null;
+    	for( ModelResource mr : mResources ) {
+    		IPath fullPath = mr.getCorrespondingResource().getFullPath();
+    		if( fullPath.equals(modelPath) ) {
+    			referencedMR = mr;
+    			break;
+    		}
+    	}
+    	if( referencedMR != null ) {
+	    	BaseTable matTable = getTable(tableRef.getMaterializedTable(), referencedMR);
+	        
+	    	if( matTable != null) {
+	    		table.setMaterializedTable(matTable);
+	    	}
+    	}
     }
     
     private DirectionKind getDirectionKind(String value) {

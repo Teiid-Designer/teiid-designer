@@ -154,6 +154,19 @@ public class ResourceAnnotationHelper {
 		}
 	}
 	
+	public void removeProperty(final ModelResource modelResource, final String key) throws ModelWorkspaceException {
+		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+		CoreArgCheck.isNotNull(key, "key"); //$NON-NLS-1$
+
+		Annotation annotation = getResourceAnnotation(modelResource, false);
+		
+		if( annotation != null ) {
+			EMap tags = annotation.getTags();
+			Set<Object> keys = new HashSet(tags.keySet());
+			tags.remove(key);
+		}
+	}
+	
 	/**
 	 * Sets the value of an object stored on an <code>Annotation</code> in the tags map based on the input key
 	 * 
@@ -165,7 +178,12 @@ public class ResourceAnnotationHelper {
 	public void setProperty(final ModelResource modelResource, final String key, final Object value) throws ModelWorkspaceException {
 		CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
 		CoreArgCheck.isNotNull(key, "key"); //$NON-NLS-1$
-		CoreArgCheck.isNotNull(value, "value"); //$NON-NLS-1$
+		
+		if( value == null ) {
+			removeProperty(modelResource, key);
+			return;
+		}
+		
 		Annotation annotation = getResourceAnnotation(modelResource, true);
 		
 		annotation.getTags().put(key, value);

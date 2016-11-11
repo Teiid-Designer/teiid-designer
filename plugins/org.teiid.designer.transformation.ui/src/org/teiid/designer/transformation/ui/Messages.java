@@ -16,10 +16,6 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends org.teiid.designer.relational.ui.Messages {
     public static String Browse;
     public static String Edit;
-    public static String EditColumnTitle;
-    public static String EditParameterTitle;
-    public static String EditingParameterInformation;
-    public static String EditingColumnInformation;
     public static String Name;
     public static String Path;
     public static String RootPath;
@@ -224,6 +220,8 @@ public class Messages extends org.teiid.designer.relational.ui.Messages {
     public static String ExportTeiidDdlModelSelectionPage_nativeTypeOption;
     public static String ExportTeiidDdlModelSelectionPage_selectModelDialogTitle;
     public static String ExportTeiidDdlModelSelectionPage_selectModelDialogMessage;
+    public static String ExportTeiidDdlModelSelectionPage_configureOptionsAndClickNextMessage;
+    public static String ExportTeiidDdlModelSelectionPage_initialMessage;
     
     static {
         NLS.initializeMessages("org.teiid.designer.transformation.ui.messages", Messages.class); //$NON-NLS-1$

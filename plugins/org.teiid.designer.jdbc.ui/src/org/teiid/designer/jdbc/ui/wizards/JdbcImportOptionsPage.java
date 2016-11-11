@@ -142,6 +142,8 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private static final String READ_ONLY_MODEL_MESSAGE = getString("readOnlyModelMessage"); //$NON-NLS-1$
     private static final String VIRTUAL_MODEL_MESSAGE = getString("virtualModelMessage"); //$NON-NLS-1$
     private static final String PHYSICAL_MODEL_MESSAGE = "The model to update is not a virtual model."; //$NON-NLS-1$
+    private static final String UPDATABLE_LABEL = getString("setUpdatableLabel");  //$NON-NLS-1$
+    private static final String UPDATABLE_TOOLTIP = getString("setUpdatableTooltip");  //$NON-NLS-1$
 
     // ===========================================================================================================================
     // Static Methods
@@ -182,6 +184,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private Text jndiNameField;
     private String jndiName;
     private Button autoCreateDataSource;
+    private Button setUpdatableCB;
     
     private JdbcImporter importer;
 
@@ -458,11 +461,11 @@ public class JdbcImportOptionsPage extends WizardPage implements
      * Create the SQL Display tab panel
      */
     private Composite createNameOptionsPanel( Composite parent ) {
-        Composite caseOptionsGroup = new Composite(parent, SWT.NONE);
-        GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(1).applyTo(caseOptionsGroup);
-        GridDataFactory.fillDefaults().grab(true,  false).applyTo(caseOptionsGroup);
+        Composite caseOptionsPanel = new Composite(parent, SWT.NONE);
+        GridLayoutFactory.fillDefaults().margins(10, 10).numColumns(1).applyTo(caseOptionsPanel);
+        GridDataFactory.fillDefaults().grab(true,  false).applyTo(caseOptionsPanel);
         
-        this.fullyQualifiedNamesCheckBox = WidgetFactory.createCheckBox(caseOptionsGroup, FULLY_QUALIFIED_CHECKBOX, 0, 1);
+        this.fullyQualifiedNamesCheckBox = WidgetFactory.createCheckBox(caseOptionsPanel, FULLY_QUALIFIED_CHECKBOX, 0, 1);
         this.fullyQualifiedNamesCheckBox.setToolTipText(FULLY_QUALIFIED_CHECKBOX_TOOLTIP);
         this.fullyQualifiedNamesCheckBox.addSelectionListener(new SelectionAdapter() {
 
@@ -475,10 +478,10 @@ public class JdbcImportOptionsPage extends WizardPage implements
         
         GridDataFactory.fillDefaults().grab(true,  false).applyTo(fullyQualifiedNamesCheckBox);
 
-        Label spacer = new Label(caseOptionsGroup, SWT.NONE);
+        Label spacer = new Label(caseOptionsPanel, SWT.NONE);
         spacer.setText(""); //$NON-NLS-1$
         
-        this.modifyCaseCheckBox = WidgetFactory.createCheckBox(caseOptionsGroup, MODIFY_CASE_CHECKBOX, 0, 1);
+        this.modifyCaseCheckBox = WidgetFactory.createCheckBox(caseOptionsPanel, MODIFY_CASE_CHECKBOX, 0, 1);
         this.modifyCaseCheckBox.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -489,7 +492,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
         this.modifyCaseCheckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
         GridDataFactory.fillDefaults().grab(true,  false).applyTo(modifyCaseCheckBox);
         
-        changeCaseGroup = WidgetFactory.createGroup(caseOptionsGroup,
+        changeCaseGroup = WidgetFactory.createGroup(caseOptionsPanel,
                 CHANGE_CASE_GROUP,
                 GridData.HORIZONTAL_ALIGN_FILL,
                 1, 1);
@@ -512,7 +515,19 @@ public class JdbcImportOptionsPage extends WizardPage implements
             }
         });
         
-        return caseOptionsGroup;
+        
+        setUpdatableCB = WidgetFactory.createCheckBox(caseOptionsPanel, UPDATABLE_LABEL, 0, COLUMN_COUNT);
+		this.setUpdatableCB.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(final SelectionEvent event) {
+				((JdbcImportWizard)getWizard()).setUpdatable(setUpdatableCB.getSelection());;
+			}
+		});
+		setUpdatableCB.setToolTipText(UPDATABLE_TOOLTIP);
+		setUpdatableCB.setSelection(true);
+        
+        return caseOptionsPanel;
     }
 
     /**

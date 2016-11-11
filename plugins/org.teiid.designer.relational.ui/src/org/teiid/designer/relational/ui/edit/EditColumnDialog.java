@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.transformation.ui.editors;
+package org.teiid.designer.relational.ui.edit;
 
 
 import java.util.ArrayList;
@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -34,25 +36,23 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
-import org.teiid.designer.relational.RelationalConstants.DIRECTION;
-import org.teiid.designer.relational.model.RelationalParameter;
-import org.teiid.designer.transformation.ui.Messages;
-import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.designer.transformation.ui.UiPlugin;
+import org.teiid.designer.relational.model.RelationalColumn;
+import org.teiid.designer.relational.ui.Messages;
+import org.teiid.designer.relational.ui.UiConstants;
+import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  *
  */
-public class EditParameterDialog extends TitleAreaDialog {
+public class EditColumnDialog extends TitleAreaDialog {
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
 	// =============================================================
 	// Instance variables
 	// =============================================================
-	RelationalParameter origParameter;
-	RelationalParameter tempParameter;
+	RelationalColumn column;
 	
 	// =============================================================
 	// Constructors
@@ -67,20 +67,15 @@ public class EditParameterDialog extends TitleAreaDialog {
 	 * @param relationalViewProcedure
 	 *            the columnInfo table object
 	 */
-	public EditParameterDialog(Shell parent, RelationalParameter parameter) {
+	public EditColumnDialog(Shell parent, RelationalColumn column) {
 		super(parent);
-		this.origParameter = parameter;
-		tempParameter = new RelationalParameter();
-		tempParameter.setDatatype(origParameter.getDatatype());
-		tempParameter.setName(origParameter.getName());
-		tempParameter.setLength(origParameter.getLength());
-		tempParameter.setDirection(origParameter.getDirection());
+		this.column = column;
 	}
 
 	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		shell.setText(Messages.EditParameterTitle);
+		shell.setText(Messages.EditColumnTitle);
 	}
 
 	/*
@@ -100,8 +95,8 @@ public class EditParameterDialog extends TitleAreaDialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		setTitle(Messages.EditParameterTitle);
-		setMessage(NLS.bind(Messages.EditingParameterInformation, origParameter.getName()), IMessageProvider.INFORMATION);
+		setTitle(Messages.EditColumnTitle);
+		setMessage(NLS.bind(Messages.EditingColumnInformation, column.getName()), IMessageProvider.INFORMATION);
 
 		Composite dialogComposite = (Composite) super.createDialogArea(parent);
 
@@ -129,7 +124,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 		label.setLayoutData(new GridData());
 
 		final Text columnNameText = new Text(composite, SWT.BORDER | SWT.NONE);
-		columnNameText.setText(origParameter.getName());
+		columnNameText.setText(column.getName());
 		columnNameText.setForeground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_BLUE));
 		columnNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -140,7 +135,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 				if (value == null) {
 					value = EMPTY_STRING;
 				}
-				tempParameter.setName(value);
+				column.setName(value);
 				validate();
 			}
 		});
@@ -153,7 +148,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 		datatype.setLayoutData(new GridData());
 
 		final Combo datatypeCombo = new Combo(composite,
-				SWT.NONE);
+				SWT.READ_ONLY);
 		datatypeCombo.setForeground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_BLUE));
 		datatypeCombo.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, true));
@@ -165,18 +160,22 @@ public class EditParameterDialog extends TitleAreaDialog {
 		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);
 		Arrays.sort(sortedStrings);
 		for( String dType : sortedStrings ) {
-			dTypes.add(dType);
+			if (dType.equalsIgnoreCase("integer")){
+				//skip
+			}else{
+				dTypes.add(dType);
+			}
 		}
 		
 		String[] datatypes = dTypes.toArray(new String[dTypes.size()]);
 		datatypeCombo.setItems(datatypes);
 		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(datatypeCombo);
-		datatypeCombo.setText(origParameter.getDatatype());
+		datatypeCombo.setText(column.getDatatype());
 		datatypeCombo.redraw();
 		datatypeCombo.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(final ModifyEvent event) {
-				tempParameter.setDatatype(datatypeCombo.getText());
+				column.setDatatype(datatypeCombo.getText());
 				validate();
 			}
 		});
@@ -189,7 +188,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 		label1.setLayoutData(new GridData());
 
 		final Text lengthValueText = new Text(composite, SWT.BORDER | SWT.NONE);
-		lengthValueText.setText(String.valueOf(origParameter.getLength()));
+		lengthValueText.setText(String.valueOf(column.getLength()));
 		lengthValueText.setForeground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_BLUE));
 		lengthValueText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -200,40 +199,40 @@ public class EditParameterDialog extends TitleAreaDialog {
 				if (value == null) {
 					value = EMPTY_STRING;
 				}
-				tempParameter.setLength(Integer.parseInt(value));
-				validate();
+				IStatus lengthCheck = validateLength(value);
+				if( lengthCheck.isOK() ) {
+					column.setLength(Integer.parseInt(value));
+					validate();
+				} else {
+					setErrorMessage(lengthCheck.getMessage());
+					getButton(IDialogConstants.OK_ID).setEnabled(false);
+				}
 			}
 		});
 		
-		// ------------------------------
-		// Direction value
-		// ------------------------------
-		Label label2 = new Label(composite, SWT.NONE | SWT.NONE);
-		label2.setText(Messages.directionLabel);
-		label2.setLayoutData(new GridData());
-
-		final Combo directionCombo = new Combo(composite, SWT.NONE);
-		directionCombo.setForeground(Display.getCurrent().getSystemColor(
-				SWT.COLOR_DARK_BLUE));
-		directionCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true));
-		directionCombo.setItems(DIRECTION.AS_ARRAY);
-		directionCombo.setText(origParameter.getDirection());
-		directionCombo.redraw();
-		directionCombo.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(final ModifyEvent event) {
-				tempParameter.setDirection(directionCombo.getText());
-				validate();
-			}
-		});
-
 		return composite;
 	}
 	
 	private void validate() {
-
-		boolean enable = true;
-		getButton(IDialogConstants.OK_ID).setEnabled(enable);
+		this.column.validate();
+		IStatus status = this.column.getStatus();
+		if( status.getSeverity() == IStatus.ERROR ) {
+			setErrorMessage(status.getMessage());
+			getButton(IDialogConstants.OK_ID).setEnabled(false);
+		} else {
+			setErrorMessage(null);
+			setMessage(Messages.ClickOkToAcceptChanges);
+			getButton(IDialogConstants.OK_ID).setEnabled(true);
+		}
+	}
+	
+	private IStatus validateLength(String lengthStr) {
+		try {
+			Integer.parseInt(lengthStr);
+		} catch (NumberFormatException e) {
+			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, NLS.bind(Messages.ColumnLengthError, lengthStr));
+		}
+		return Status.OK_STATUS;
 	}
 
 	@Override
@@ -244,10 +243,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 
 	@Override
 	protected void okPressed() {
-		origParameter.setDatatype(tempParameter.getDatatype());
-		origParameter.setName(tempParameter.getName());
-		origParameter.setLength(tempParameter.getLength());
-		origParameter.setDirection(tempParameter.getDirection());
+
 		super.okPressed();
 	}
 

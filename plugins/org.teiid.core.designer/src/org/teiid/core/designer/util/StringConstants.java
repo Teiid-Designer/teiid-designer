@@ -330,5 +330,15 @@ public interface StringConstants {
      * A dash.
      */
     String DASH = "-"; //$NON-NLS-1$
+    
+    /**
+     * A single quote.
+     */
+    String SQUOTE = "'";  //$NON-NLS-1$
+    
+    /**
+     * A double quote.
+     */
+    String DQUOTE = "\"";  //$NON-NLS-1$
 
 }

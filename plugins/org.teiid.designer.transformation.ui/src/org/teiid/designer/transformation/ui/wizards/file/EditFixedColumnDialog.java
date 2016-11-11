@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.transformation.ui.editors;
+package org.teiid.designer.transformation.ui.wizards.file;
 
 
 import java.util.ArrayList;
@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -34,23 +36,22 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
-import org.teiid.designer.relational.model.RelationalColumn;
-import org.teiid.designer.transformation.ui.Messages;
-import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.designer.transformation.ui.UiPlugin;
+import org.teiid.designer.relational.ui.Messages;
+import org.teiid.designer.relational.ui.UiConstants;
+import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  *
  */
-public class EditColumnDialog extends TitleAreaDialog {
+public class EditFixedColumnDialog extends TitleAreaDialog {
 	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
 	// =============================================================
 	// Instance variables
 	// =============================================================
-	RelationalColumn column;
+	TeiidColumnInfo column;
 	
 	// =============================================================
 	// Constructors
@@ -65,7 +66,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 	 * @param relationalViewProcedure
 	 *            the columnInfo table object
 	 */
-	public EditColumnDialog(Shell parent, RelationalColumn column) {
+	public EditFixedColumnDialog(Shell parent, TeiidColumnInfo column) {
 		super(parent);
 		this.column = column;
 	}
@@ -146,7 +147,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 		datatype.setLayoutData(new GridData());
 
 		final Combo datatypeCombo = new Combo(composite,
-				SWT.NONE);
+				SWT.READ_ONLY);
 		datatypeCombo.setForeground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_BLUE));
 		datatypeCombo.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, true));
@@ -163,7 +164,6 @@ public class EditColumnDialog extends TitleAreaDialog {
 			}else{
 				dTypes.add(dType);
 			}
-			dTypes.add(dType);
 		}
 		
 		String[] datatypes = dTypes.toArray(new String[dTypes.size()]);
@@ -183,33 +183,83 @@ public class EditColumnDialog extends TitleAreaDialog {
 		// Length value
 		// ------------------------------
 		Label label1 = new Label(composite, SWT.NONE | SWT.SINGLE);
-		label1.setText(Messages.lengthLabel);
+		label1.setText("width"); //Messages.lengthLabel);
 		label1.setLayoutData(new GridData());
 
-		final Text lengthValueText = new Text(composite, SWT.BORDER | SWT.NONE);
-		lengthValueText.setText(String.valueOf(column.getLength()));
-		lengthValueText.setForeground(Display.getCurrent().getSystemColor(
+		final Text widthValueText = new Text(composite, SWT.BORDER | SWT.NONE);
+		widthValueText.setText(String.valueOf(column.getDatatype()));
+		widthValueText.setForeground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_BLUE));
-		lengthValueText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		lengthValueText.addModifyListener(new ModifyListener() {
+		widthValueText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		widthValueText.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(final ModifyEvent event) {
-				String value = lengthValueText.getText();
+				String value = widthValueText.getText();
 				if (value == null) {
 					value = EMPTY_STRING;
 				}
-				column.setLength(Integer.parseInt(value));
+				IStatus lengthCheck = validateLength(value);
+				if( lengthCheck.isOK() ) {
+					column.setWidth(Integer.parseInt(value));
+					validate();
+				} else {
+					setErrorMessage(lengthCheck.getMessage());
+					getButton(IDialogConstants.OK_ID).setEnabled(false);
+				}
+			}
+		});
+		
+		// ------------------------------
+		// NO TRIM VALUE
+		// ------------------------------
+		Label noTrim = new Label(composite, SWT.BORDER | SWT.NONE);
+		noTrim.setText("No Trim Option"); //Messages.dataTypeLabel);
+		noTrim.setLayoutData(new GridData());
+
+		final Combo noTrimCombo = new Combo(composite,
+				SWT.READ_ONLY);
+		noTrimCombo.setForeground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_DARK_BLUE));
+		noTrimCombo.setLayoutData(new GridData(SWT.LEFT, SWT.LEFT, true, true));
+		
+		String[] noTrimValues = {"TRUE", "FALSE"};
+		noTrimCombo.setItems(noTrimValues);
+		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(noTrimCombo);
+		noTrimCombo.setText(Boolean.toString(column.isNoTrim()).toUpperCase());
+		noTrimCombo.redraw();
+		noTrimCombo.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(final ModifyEvent event) {
+				boolean value = Boolean.valueOf(noTrimCombo.getText().toUpperCase());
+				column.setNoTrim(value);
 				validate();
 			}
 		});
+
+
 		
 		return composite;
 	}
 	
 	private void validate() {
-
-		boolean enable = true;
-		getButton(IDialogConstants.OK_ID).setEnabled(enable);
+		IStatus status = this.column.getStatus();
+		if( status.getSeverity() == IStatus.ERROR ) {
+			setErrorMessage(status.getMessage());
+			getButton(IDialogConstants.OK_ID).setEnabled(false);
+		} else {
+			setErrorMessage(null);
+			setMessage(Messages.ClickOkToAcceptChanges);
+			getButton(IDialogConstants.OK_ID).setEnabled(true);
+		}
+	}
+	
+	private IStatus validateLength(String lengthStr) {
+		try {
+			Integer.parseInt(lengthStr);
+		} catch (NumberFormatException e) {
+			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, NLS.bind(Messages.ColumnWidthError, lengthStr));
+		}
+		return Status.OK_STATUS;
 	}
 
 	@Override
@@ -251,9 +301,9 @@ public class EditColumnDialog extends TitleAreaDialog {
 				case 2: {
 					return ((ITeiidXmlColumnInfo) element).getDatatype();
 				}
-				case 3: {
-					return (((ITeiidXmlColumnInfo) element).getRelativePath());
-				}
+//				case 3: {
+//					return (((ITeiidXmlColumnInfo) element).getRelativePath());
+//				}
 				}
 			}
 			return EMPTY_STRING;

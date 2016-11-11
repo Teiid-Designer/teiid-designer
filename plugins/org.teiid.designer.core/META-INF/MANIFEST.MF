@@ -66,6 +66,18 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.11.1,4.0.0)",
  org.jdom;bundle-version="[1.1.1,2.0.0)",
  org.teiid.designer.legacy;bundle-version="[10.0.0,11.0.0)",
  org.teiid.designer.extension;bundle-version="[10.0.0,11.0.0)",
- org.teiid.designer.spi;bundle-version="[10.0.0,11.0.0)"
+ org.teiid.designer.spi;bundle-version="[10.0.0,11.0.0)",
+ org.apache.httpcomponents.httpcore,
+ org.apache.httpcomponents.httpclient
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: 
+ org.apache.commons.io,
+ org.apache.http.auth;version="4.3.6",
+ org.apache.http.client;version="4.3.6",
+ org.apache.http.client.methods;version="4.3.6",
+ org.apache.http.client.protocol;version="4.3.6",
+ org.apache.http.impl.auth;version="4.3.6",
+ org.apache.http.impl.client;version="4.3.6",
+ org.apache.http.protocol;version="4.3.3",
+ org.apache.http.util;version="4.3.3"

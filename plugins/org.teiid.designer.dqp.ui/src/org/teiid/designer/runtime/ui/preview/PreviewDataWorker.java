@@ -75,6 +75,7 @@ import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.runtime.ui.dialogs.AccessPatternColumnsDialog;
 import org.teiid.designer.runtime.ui.dialogs.ParameterInputDialog;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
@@ -319,7 +320,32 @@ public class PreviewDataWorker {
     	    return;
     	}
     	
-        PreviewDataInputDialog dialog = new PreviewDataInputDialog(getShell(), sql, manager.getDynamicVdbString());
+    	// Check JNDI name is not null
+    	
+    	
+    	// Check data source deployments
+    	IStatus vdbStatus = manager.getDynamicVdbStatus();
+    	if( vdbStatus.getSeverity() == IStatus.ERROR ) {
+    		MessageDialog.openError(getShell(), Messages.PreviewDataWorker_previewVdbJndiMissingErrorTitle, vdbStatus.getMessage());
+			return;
+    	}
+    	IStatus dsStatus = manager.getDataSourcesStatus();
+    	if( dsStatus.getSeverity() == IStatus.ERROR ) {
+    		boolean result = MessageDialog.openQuestion(getShell(), Messages.PreviewDataWorker_dataSourceMissingTitle, dsStatus.getMessage());
+    		if( result ) {
+    			IStatus dsCreateStatus = manager.doCreateMissingDataSources();
+    			if( dsCreateStatus.getSeverity() == IStatus.ERROR ) {
+    				MessageDialog.openError(getShell(), Messages.PreviewDataWorker_dataSourceCreationErrorTitle, dsCreateStatus.getMessage());
+    				return;
+    			}
+    		} else {
+    			return;
+    		}
+    	}
+    	
+    	String dynVdbXml = manager.getDynamicVdbStatus().getMessage();
+    	
+        PreviewDataInputDialog dialog = new PreviewDataInputDialog(getShell(), sql, dynVdbXml);
         
         if( dialog.open() != Window.OK ) return;
 
@@ -327,7 +353,7 @@ public class PreviewDataWorker {
 		if( status.isOK() ) {
             sql = dialog.getSQL();
 		} else {
-			MessageDialog.openError(getShell(), "VDB Deployment Error", status.getMessage());
+			MessageDialog.openError(getShell(), Messages.PreviewDataWorker_vdbDeploymentErrorTitle, status.getMessage());
 		}
     	
 

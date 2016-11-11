@@ -11,6 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.Driver;
@@ -458,16 +459,25 @@ public class ExecutionAdmin implements IExecutionAdmin {
                         adminSpec.deploy(admin, fileName, iStream);
                         
                         // call admin.refresh() to clear cached resource info
-                        this.admin.refresh();
-                        
+                        this.admin.refresh();                    
                     } catch (Exception ex) {
                         // Jar deployment failed
                         TeiidRuntimePlugin.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentFailed, theFile.getPath()));
+                    }
+
+                    if( iStream != null ) {
+                    	try {
+							iStream.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
                     }
                 } else {
                     // Could not read the file
                     TeiidRuntimePlugin.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotReadable, theFile.getPath()));
                 }
+
             } else {
                 // The file was not found
                 TeiidRuntimePlugin.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotFound, theFile.getPath()));
@@ -499,7 +509,12 @@ public class ExecutionAdmin implements IExecutionAdmin {
                     // Jar deployment failed
                     TeiidRuntimePlugin.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentFailed, jarOrRarFile.getPath()));
                     throw ex;
+                } finally {
+                    if( iStream != null ) {
+                    	iStream.close();
+                    }
                 }
+
             } else {
                 // Could not read the file
                 TeiidRuntimePlugin.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotReadable, jarOrRarFile.getPath()));

@@ -158,6 +158,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
     private boolean moveRatherThanCopyAdds;
     private boolean includeIncompleteFKs;
     private boolean debugTimingEnabled = false;
+    private boolean updatable = true;
 
     /**
      * Construct an instance of RelationalModelProcessorImpl.
@@ -1161,6 +1162,8 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 
                 // Set the name ...
                 setNameAndNameInSource(table, nodeName, node, context, problems);
+                
+                table.setSupportsUpdate(isUpdatable());
 
                 // Set the description ...
                 final String desc = tableNode.getRemarks();
@@ -2873,6 +2876,14 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 	public String getType() {
 		return Processors.JDBC;
 	}
-    
-    
+	
+	@Override
+	public boolean isUpdatable() {
+		return updatable;
+	}
+	
+	@Override
+	public void setUpdatable(boolean updatable) {
+		this.updatable = updatable;
+	}
 }

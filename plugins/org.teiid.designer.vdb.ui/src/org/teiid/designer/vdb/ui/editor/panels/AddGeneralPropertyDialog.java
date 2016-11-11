@@ -8,7 +8,9 @@
 package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
+
 import java.util.Properties;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -26,6 +28,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.translators.SimpleProperty;
 
 /**
  *
@@ -38,6 +41,7 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
     private final Properties existingNames;
     private String name;
     private String value;
+    boolean isEdit = false;
 
     /**
      * @param parentShell the parent shell (may be <code>null</code>)
@@ -54,6 +58,29 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
         } else {
         	this.existingNames = existingPropertyNames;
         }
+    }
+    
+    /**
+     * @param parentShell the parent shell (may be <code>null</code>)
+     * @param existingPropertyNames the existing property names (can be <code>null</code>)
+     * @param existingProperty 
+     */
+    public AddGeneralPropertyDialog( Shell parentShell,
+                              Properties existingPropertyNames, SimpleProperty existingProperty ) {
+        super(parentShell, Util.getString(PREFIX + "edit_title"), null, //$NON-NLS-1$
+                Util.getString(PREFIX + "message"), MessageDialog.INFORMATION, //$NON-NLS-1$
+                new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
+
+        if( existingPropertyNames == null ) {
+        	this.existingNames = new Properties();
+        } else {
+        	this.existingNames = existingPropertyNames;
+        	this.existingNames.remove(existingProperty.getName());
+        }
+        
+        this.value = existingProperty.getValue();
+        this.name = existingProperty.getName();
+        this.isEdit = true;
     }
 
     /**
@@ -95,6 +122,9 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
         Text txtName = new Text(pnl, SWT.BORDER);
         txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         txtName.setToolTipText(Util.getString(PREFIX + "txtName.toolTip")); //$NON-NLS-1$
+        if(this.name != null ) {
+        	txtName.setText(this.name);
+        }
         txtName.addModifyListener(new ModifyListener() {
             /**
              * {@inheritDoc}
@@ -114,6 +144,9 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
         Text txtValue = new Text(pnl, SWT.BORDER);
         txtValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         txtValue.setToolTipText(Util.getString(PREFIX + "txtValue.toolTip")); //$NON-NLS-1$
+        if(this.value != null ) {
+        	txtValue.setText(this.value);
+        }
         txtValue.addModifyListener(new ModifyListener() {
             /**
              * {@inheritDoc}

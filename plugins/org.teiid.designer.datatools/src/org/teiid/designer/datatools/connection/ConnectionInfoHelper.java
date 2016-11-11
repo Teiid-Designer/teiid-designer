@@ -302,7 +302,6 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper, ITranslatorO
     
     public void setJNDIName( ModelResource modelResource, String jndiName ) {
         CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
-        CoreArgCheck.isNotEmpty(jndiName, "jndiName"); //$NON-NLS-1$
         
         try {
             getHelper().setProperty(modelResource, CONNECTION_NAMESPACE + IJBossDsProfileConstants.JNDI_PROP_ID, jndiName);

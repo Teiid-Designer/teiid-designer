@@ -36,7 +36,7 @@ public class TeiidDataSourceFactory {
      * @return the password provider
      * @throws Exception
      */
-    public IPasswordProvider getPasswordProvider() throws Exception {
+    public static IPasswordProvider getPasswordProvider() throws Exception {
 
         final List<IPasswordProvider> passwordProviders = new ArrayList<IPasswordProvider>();
         IExtensionRegistryCallback<IPasswordProvider> callback = new IExtensionRegistryCallback<IPasswordProvider>() {

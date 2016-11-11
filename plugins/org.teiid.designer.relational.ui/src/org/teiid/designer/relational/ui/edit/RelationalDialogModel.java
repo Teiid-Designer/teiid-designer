@@ -38,9 +38,11 @@ public class RelationalDialogModel extends EditRelationalObjectDialogModel {
     @Override
     public RelationalEditorPanel getEditorPanel(IDialogStatusListener statusListener,
                                                 Composite parent) {
-        if (relationalObject instanceof RelationalTable) {
+        if (relationalObject instanceof RelationalView) {
+            return new RelationalViewEditorPanel(parent, this, statusListener);
+        } else if (relationalObject instanceof RelationalTable) {
             return new RelationalTableEditorPanel(parent, this, statusListener);
-        } else if (relationalObject instanceof RelationalProcedure) {
+        }  else if (relationalObject instanceof RelationalProcedure) {
             return new RelationalProcedureEditorPanel(parent, this, statusListener);
         } else if (relationalObject instanceof RelationalIndex) {
             return new RelationalIndexEditorPanel(parent, this, statusListener);

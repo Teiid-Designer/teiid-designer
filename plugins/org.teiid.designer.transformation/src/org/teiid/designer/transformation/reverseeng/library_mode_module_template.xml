@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.0" name="{0}">
+    <properties>
+        <property name="jboss.api" value="private"/>
+    </properties>
+    
+    <resources>
+        <resource-root path="{1}" />
+        <!-- Insert resources here -->
+    </resources>
+
+    <dependencies>
+       
+		<module name="org.infinispan.client.hotrod" slot="jdg-6.6" optional="true" services="export"/>
+		<module name="org.infinispan.protostream" slot="jdg-6.6" optional="true" services="export"/>
+      
+    </dependencies>
+</module>
+  

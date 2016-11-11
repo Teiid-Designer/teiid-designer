@@ -46,22 +46,28 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
+import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
+import org.eclipse.wst.server.core.ServerEvent;
 import org.eclipse.wst.server.core.util.ServerLifecycleAdapter;
 import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.command.ServerCommand;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerResourceCommandManager;
 import org.jboss.ide.eclipse.as.core.server.internal.JBossServer;
+import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.loading.ComponentLoadingManager;
 import org.teiid.designer.core.loading.IManagedLoading;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.IServersProvider;
+import org.teiid.designer.runtime.TeiidParentServerListener;
 import org.teiid.designer.runtime.TeiidServerFactory;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
 import org.teiid.designer.runtime.TeiidServerManager;
+import org.teiid.designer.runtime.adapter.JBoss7ServerUtil;
+import org.teiid.designer.runtime.adapter.JBossServerUtil;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
@@ -70,6 +76,8 @@ import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion.VersionID;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
@@ -79,7 +87,7 @@ import org.teiid.designer.ui.util.ErrorHandler;
 /**
  * @since 8.0
  */
-public class TeiidServerEditor extends EditorPart implements IManagedLoading {
+public class TeiidServerEditor extends EditorPart implements IManagedLoading, IServerListener {
 
     /**
      * Identifier of this editor
@@ -97,6 +105,8 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
      * Flag indicating editor's dirty status
      */
     private boolean dirty = false;
+    
+    private boolean active = false;
 
     private IServerWorkingCopy parentServerWorkingCopy;
 
@@ -144,6 +154,14 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
     private Hyperlink jdbcPingHyperlink;
 
     private Label jdbcPingResultLabel;
+    
+    private Section overviewSection;
+    
+    private Section adminSection;
+    
+    private Section jdbcSection;
+    
+    private Label noTeiidLabel;
 
     private ServerResourceCommandManager commandManager;
 
@@ -164,7 +182,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
                         	// Put the refesh on Swt thread
                             Runnable runnable = new Runnable() {
                                 @Override
-                                public void run() {
+                                public void run() {		
                                 	refreshDisplayValues(teiidServer.getTeiidAdminInfo().getPassword(), 
                                 			teiidServer.getTeiidJdbcInfo().getPassword());
                                 }
@@ -238,7 +256,27 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
             if (! parentServer.equals(server))
                 return;
 
-        	refreshDisplayValues(teiidServer.getTeiidAdminInfo().getPassword(), teiidServer.getTeiidJdbcInfo().getPassword());
+            if (form.getBody().isDisposed())  return;
+            
+//            try {
+//				TeiidServerAdapterFactory adapterFactory = new TeiidServerAdapterFactory();
+//				if (parentServer.getServerState() == IServer.STATE_STARTED) {
+//					ITeiidServer teiidServer = adapterFactory.adaptServer(parentServer);
+//					if( teiidServer == null ) {
+//						disposeContents();
+//						
+//		                buildNoTeiidLabel(true);
+//		                
+//						return;
+//					}
+//				} else {
+//					
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+            
+            resetServerEditorPanel();
         }
     };
 
@@ -256,6 +294,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
             commandManager = ((ServerEditorPartInput) input).getServerCommandManager();
             parentServerWorkingCopy = serverInput.getServer();
             parentServer = parentServerWorkingCopy.getOriginal();
+            TeiidParentServerListener.getInstance().addRegisteredParentListener(this);
         }    
     }
     
@@ -290,10 +329,6 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
                 if (form.getBody().isDisposed())
                     return;
 
-                contentsPanel = toolkit.createComposite(form.getBody());
-                GridLayoutFactory.fillDefaults().numColumns(1).spacing(10, 0).applyTo(contentsPanel);
-                GridDataFactory.fillDefaults().grab(true, true).applyTo(contentsPanel);
-
                 IServersProvider serversProvider = DqpPlugin.getInstance().getServersProvider();
                 serversProvider.addServerLifecycleListener(serverLifecycleListener);
 
@@ -308,33 +343,43 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
                         // If server is started we can be more adventurous in what to display since we can ask
                         // the server whether teiid has been installed.
                         teiidServer = adapterFactory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
-                    	adminPWD = teiidServer.getTeiidAdminInfo().getPassword();
-                    	jdbcPWD = teiidServer.getTeiidJdbcInfo().getPassword();
+                        if( teiidServer != null ) {
+                            if( !JBossServerUtil.isTeiidServer(parentServer, null) ) {
+                            	getServerManager().removeServer(teiidServer);
+                            	teiidServer = null;
+                        	} else {
+		                    	adminPWD = teiidServer.getTeiidAdminInfo().getPassword();
+		                    	jdbcPWD = teiidServer.getTeiidJdbcInfo().getPassword();
+                        	}
+                        }
                     } else {
                         // Cannot ask a lot except whether the server is a JBoss Server
                         teiidServer = adapterFactory.adaptServer(parentServer,
                                                              ServerOptions.NO_CHECK_CONNECTION,
                                                              ServerOptions.ADD_TO_REGISTRY);
                         // password may still be a passToken only
-                        adminPWD = teiidServer.getTeiidAdminInfo().getPassword();
-                        jdbcPWD = teiidServer.getTeiidJdbcInfo().getPassword();
+                        if( teiidServer != null ) {
+	                        adminPWD = teiidServer.getTeiidAdminInfo().getPassword();
+	                        jdbcPWD = teiidServer.getTeiidJdbcInfo().getPassword();
+                        }
                     }
                 } catch (Exception ex) {
-                    ErrorHandler.toExceptionDialog(ex);
+                	if(! ex.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+                		ErrorHandler.toExceptionDialog(ex);
+                	}
                 }
 
                 if (teiidServer != null) {
                     // insert sections
-                    createOverviewSection(contentsPanel);
-                    createAdminSection(contentsPanel);
-                    createJDBCSection(contentsPanel);
+                    buildTeiidServerPanel(false);
                 } else {
-                    Label noTeiidLabel = toolkit.createLabel(contentsPanel, UTIL.getString("TeiidServerEditor.noTeiidServer")); //$NON-NLS-1$
-                    blueForeground(noTeiidLabel);
-                    GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true,  true).applyTo(noTeiidLabel);
+                    buildNoTeiidLabel(false);
                 }
 
                 form.reflow(true);
+                
+                active = true;
+                
                 if( teiidServer != null ) {
                 	final String aPWD = adminPWD;
                 	final String jPWD = jdbcPWD;
@@ -352,10 +397,66 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
 
         UiUtil.runInSwtThread(runnable, true);
     }
+    
+    private void buildTeiidServerPanel(boolean doLayout) {
+        // insert sections
+        contentsPanel = toolkit.createComposite(form.getBody());
+        GridLayoutFactory.fillDefaults().numColumns(1).spacing(10, 0).applyTo(contentsPanel);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(contentsPanel);
+        
+        createOverviewSection(contentsPanel);
+        createAdminSection(contentsPanel);
+        createJDBCSection(contentsPanel);
+        
+    	form.setText(UTIL.getString("TeiidServerEditor.title"));//$NON-NLS-1$
+    	form.setImage(null);
+    	
+        if( doLayout ) {
+        	contentsPanel.layout(true);
+        }
+    }
+
+    private void buildNoTeiidLabel(boolean doLayout)  {
+        contentsPanel = toolkit.createComposite(form.getBody());
+        GridLayoutFactory.fillDefaults().numColumns(1).spacing(10, 0).applyTo(contentsPanel);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(contentsPanel);
+        
+    	noTeiidLabel = toolkit.createLabel(contentsPanel, UTIL.getString("TeiidServerEditor.noTeiidServer")); //$NON-NLS-1$
+        blueForeground(noTeiidLabel);
+        GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true,  true).applyTo(noTeiidLabel);
+        
+    	form.setText(UTIL.getString("TeiidServerEditor.noTeiidTitle")); //$NON-NLS-1$
+    	form.setImage(DqpUiPlugin.getDefault().getImage(DqpUiConstants.Images.WARNING_ICON));
+    	
+        if( doLayout ) {
+        	contentsPanel.layout(true);
+        }
+    }
 
     private void disposeContents() {
-        if (contentsPanel != null)
+        if (contentsPanel != null) {
             contentsPanel.dispose();
+            jbServerNameLabel = null;
+            hostNameLabel = null;
+            versionValueCombo = null;
+            adminDescriptionLabel = null;
+            adminUserNameText = null;
+            adminPasswdText = null;
+            adminPort = null;            
+            adminSSLCheckbox = null;
+            adminPingHyperlink = null;
+            adminPingResultLabel = null;
+            jdbcUserNameText = null;
+            jdbcPasswdText = null;
+            jdbcPort = null;
+            jdbcPortOverride = null;
+            jdbcSSLCheckbox = null;
+            jdbcPingHyperlink = null;
+            jdbcPingResultLabel = null;
+            overviewSection = null;
+            adminSection = null;            
+            jdbcSection = null;
+        }
     }
 
     private void blueForeground(Control control) {
@@ -377,6 +478,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR);
         section.setText(UTIL.getString("TeiidServerOverviewSection.title")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
+        overviewSection = section;
         
         Composite composite = toolkit.createComposite(section);
         GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 10).spacing(5, 20).applyTo(composite);
@@ -417,16 +519,13 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         serverVersions.add(teiidServer.getServerVersion().toString());
         try {
             Collection<ITeiidServerVersion> registeredServerVersions = TeiidRuntimeRegistry.getInstance().getSupportedVersions();
-            for (ITeiidServerVersion version : registeredServerVersions) {
-                serverVersions.add(version.toString());
-            }
+            serverVersions = TeiidServerVersion.orderVersions(registeredServerVersions, true);
         } catch (Exception ex) {
             for (VersionID versionId : VersionID.values()) {
                 serverVersions.add(versionId.toString());
             }
         }
 
-        Collections.sort(serverVersions, Collections.reverseOrder());
         versionValueCombo.setItems(serverVersions.toArray(new String[0]));
         versionValueCombo.setText(teiidServer.getServerVersion().toString());
         versionValueCombo.addModifyListener(dirtyModifyListener);
@@ -442,6 +541,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR);
         section.setText(UTIL.getString("TeiidServerAdminSection.title")); //$NON-NLS-1$ 
         GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
+        adminSection = section;
         
         Composite composite = toolkit.createComposite(section);
         GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(5, 10).spacing(5, 20).applyTo(composite);
@@ -520,6 +620,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR);
         section.setText(UTIL.getString("TeiidServerJDBCSection.title")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
+        jdbcSection = section;
         
         Composite composite = toolkit.createComposite(section);
         GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(5, 10).spacing(5, 20).applyTo(composite);
@@ -618,7 +719,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
     }
 
     private void refreshDisplayValues(final String adminPWD, final String jdbcPWD) {
-        if (teiidServer == null || form.isDisposed())
+        if (!active || teiidServer == null || form.isDisposed())
             return;
 
         if( hostNameLabel.isDisposed() ) return;
@@ -653,7 +754,14 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
 	
 	        if (adminSSLCheckbox != null) {
 	            adminSSLCheckbox.setSelection(teiidAdminInfo.isSecure());
-        }
+	        }
+        } else {
+	        String portValue = teiidAdminInfo.getPort() != null ? teiidAdminInfo.getPort() : EMPTY_STRING;
+	        if (adminPort instanceof Text) {
+	            setIfDifferent((Text) adminPort, portValue);
+	        } else if (adminPort instanceof Label) {
+	            ((Label) adminPort).setText(portValue);
+	        }
         }
 
         setIfDifferent(jdbcUserNameText, teiidJdbcInfo.getUsername() != null ? teiidJdbcInfo.getUsername() : EMPTY_STRING);
@@ -695,6 +803,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
     @Override
     public void dispose() {
         getServerManager().removeListener(excutionConfigListener);
+        TeiidParentServerListener.getInstance().removeRegisteredParentListener(this);
 
         IServersProvider serversProvider = DqpPlugin.getInstance().getServersProvider();
         serversProvider.removeServerLifecycleListener(serverLifecycleListener);
@@ -727,6 +836,8 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         //
         
         updatePortOverride();
+        
+        // =========================================================================
         
         // =========================================================================
         
@@ -874,6 +985,84 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
     	}
     	
     	return msg;
+    }
+    
+    public void serverChanged(ServerEvent event) {
+        int state = event.getState();
+        IServer server = event.getServer();
+
+        if (state == IServer.STATE_STOPPING || state == IServer.STATE_STOPPED) {
+	        if (! parentServer.equals(server))
+	            return;
+        }
+
+        resetServerEditorPanel();
+    }
+    
+    private void resetServerEditorPanel() {
+    	// Put the refesh on Swt thread
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+        			TeiidServerAdapterFactory adapterFactory = new TeiidServerAdapterFactory();
+        			if (parentServer.getServerState() == IServer.STATE_STARTED) {
+        				ITeiidServer teiidServer = adapterFactory.adaptServer(parentServer);
+        				
+        				if( teiidServer == null ) {
+        					disposeContents();
+        					
+        					buildNoTeiidLabel(true);
+        	                
+        					return;
+        				} else if( isTeiidServerInstalled(parentServer, teiidServer)){
+                        	if( contentsPanel == null ) {
+                        		buildTeiidServerPanel(true);
+                        	}
+                        	refreshDisplayValues(teiidServer.getTeiidAdminInfo().getPassword(), teiidServer.getTeiidJdbcInfo().getPassword());
+        				 } else {
+                            getServerManager().removeServer(teiidServer);
+                            disposeContents();
+                            
+                            teiidServer = null;
+                            
+                            buildNoTeiidLabel(true);
+        				}
+        			} else {
+        				ITeiidServer teiidServer = adapterFactory.adaptServer(parentServer);
+        				if( teiidServer != null ) {
+	                    	if( contentsPanel == null ) {
+	                    		buildTeiidServerPanel(true);
+	                    	}
+	                    	refreshDisplayValues(teiidServer.getTeiidAdminInfo().getPassword(), teiidServer.getTeiidJdbcInfo().getPassword());
+        				} else  {
+                            disposeContents();
+                            buildNoTeiidLabel(true);
+        				}
+
+        			}
+        		} catch (Exception e) {
+        			if(! e.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+        				e.printStackTrace();
+        			}
+        		}
+            }
+        };
+        UiUtil.runInSwtThread(runnable, true);
+
+    }
+    
+    private boolean isTeiidServerInstalled(IServer parentServer, ITeiidServer teiidServer) throws Exception {
+    	JBoss7Server jb7s = (JBoss7Server) parentServer.loadAdapter(JBoss7Server.class, null);
+    	if( jb7s != null ) {
+    		return JBoss7ServerUtil.isTeiidServer(parentServer, jb7s);
+    	} else {
+    		JBossServer jbs = (JBossServer) teiidServer.getParent().loadAdapter(JBossServer.class, null);
+    		if( jbs != null ) {
+    			return JBossServerUtil.isTeiidServer(parentServer, jbs);
+    		}
+    	}
+    	return false;
     }
 
 }

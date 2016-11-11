@@ -58,6 +58,9 @@ public final class EditTranslatorOverrideDialog extends MessageDialog {
     private String type;
     private TableViewer viewer;
     private TranslatorOverride translatorBeingEdited;
+    
+    boolean nameChanged = false;
+    String originalName;
 
     private EditTranslatorOverrideDialog( Shell parentShell,
                                           String title,
@@ -111,6 +114,7 @@ public final class EditTranslatorOverrideDialog extends MessageDialog {
 
         this.translatorBeingEdited = translator;
         this.name = this.translatorBeingEdited.getName();
+        this.originalName = this.name;
         this.type = this.translatorBeingEdited.getType();
 
         // remove name from list of names so validation won't think current name is a duplicate name
@@ -313,6 +317,7 @@ public final class EditTranslatorOverrideDialog extends MessageDialog {
 
     void handleNameChanged( String newName ) {
         this.name = newName;
+        this.nameChanged = StringUtilities.areDifferent(this.originalName, this.name);
         updateState();
     }
 
@@ -418,4 +423,10 @@ public final class EditTranslatorOverrideDialog extends MessageDialog {
         return null;
     }
 
+    /**
+     * @return true if name was changed
+     */
+    public boolean nameChanged() {
+    	return this.nameChanged;
+    }
 }

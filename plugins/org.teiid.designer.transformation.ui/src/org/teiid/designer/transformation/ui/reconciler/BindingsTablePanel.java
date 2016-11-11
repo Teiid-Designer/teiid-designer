@@ -259,8 +259,6 @@ public class BindingsTablePanel extends Composite {
             }
         });
 
-//        WidgetFactory.createLabel(buttonComposite, BUTTON_GRID_STYLE, ""); //$NON-NLS-1$
-
         deleteButton = WidgetFactory.createButton(buttonComposite, DELETE_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
         deleteButton.setEnabled(!isReadOnly);
         deleteButton.addSelectionListener(new SelectionAdapter() {
@@ -269,8 +267,6 @@ public class BindingsTablePanel extends Composite {
                 deleteButtonPressed();
             }
         });
-
-//        WidgetFactory.createLabel(buttonComposite, BUTTON_GRID_STYLE, ""); //$NON-NLS-1$
 
         resolveTypeButton = WidgetFactory.createButton(buttonComposite, RESOLVE_TYPE_BUTTON_TEXT, BUTTON_GRID_STYLE);
         resolveTypeButton.setEnabled(!isReadOnly);

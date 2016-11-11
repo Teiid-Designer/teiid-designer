@@ -64,6 +64,7 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.viewsupport.TranslatorOverridePropertyEditingSupport;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.Vdb.Event;
 import org.teiid.designer.vdb.connections.SourceHandler;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
@@ -420,6 +421,14 @@ public final class TranslatorOverridesPanel extends Composite {
                     handlePropertySelected(event);
                 }
             });
+            
+            this.propertiesViewer.addDoubleClickListener(new IDoubleClickListener() {
+    			
+    			@Override
+    			public void doubleClick(DoubleClickEvent event) {
+    				handleEditProperty();
+    			}
+    		});
 
             //
             // add toolbar below the table
@@ -575,7 +584,7 @@ public final class TranslatorOverridesPanel extends Composite {
             // update model
             TranslatorOverride translator = getSelectedTranslator();
             TranslatorOverrideProperty property = dialog.getProperty();
-            translator.removeProperty(overrideProp.getDefinition().getId());
+            translator.removeOverrideProperty(overrideProp.getDefinition().getId());
             translator.addProperty(property);
 
             // update UI from model
@@ -640,9 +649,15 @@ public final class TranslatorOverridesPanel extends Composite {
                                                                                translatorOverride,
                                                                                translatorTypes,
                                                                                this.vdb.getTranslators());
-
+        
+        String initialName = translatorOverride.getName();
         if (dialog.open() == Window.OK) {
             this.translatorsViewer.refresh(translatorOverride);
+            
+            if( dialog.nameChanged ) {
+            	String newName = translatorOverride.getName();
+            	this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, initialName, newName);
+            }
         }
     }
 
@@ -652,7 +667,7 @@ public final class TranslatorOverridesPanel extends Composite {
 
         // update model
         TranslatorOverride translator = getSelectedTranslator();
-        translator.removeProperty(selectedProperty.getDefinition().getId());
+        translator.removeOverrideProperty(selectedProperty.getDefinition().getId());
         // TODO need to dirty VDB
 
         // update UI

@@ -23,6 +23,7 @@ public class Messages extends NLS {
 	public static String relationalModelFactory_creatingModelChildren;
 	public static String relationalModelFactory_creatingForeigneKeys;
 	public static String relationalModelFactory_creatingIndexes;
+	public static String relationalModelFactory_settingMaterializedReferences;
 	public static String relationalModelFactory_replacingModelObject;
 	public static String relationalModelFactory_creatingModelChild;
 	public static String relationalModelFactory_error_setting_extension_props_on_0;

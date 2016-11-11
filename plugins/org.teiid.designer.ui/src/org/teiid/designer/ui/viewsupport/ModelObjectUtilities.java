@@ -339,9 +339,7 @@ public abstract class ModelObjectUtilities {
     }
 
     public static boolean isExecutable( EObject eObject ) {
-    	if( ModelUtil.isVdbSourceObject(eObject) ) {
-    		return false;
-    	}
+
         // JUST RETURN FALSE if target object is Mapping Class Input Set or XQuery Procedure
         if ((TransformationHelper.isMappingClass(eObject) && !TransformationHelper.isStagingTable(eObject))
             || TransformationHelper.isSqlInputSet(eObject)) {
@@ -362,7 +360,7 @@ public abstract class ModelObjectUtilities {
         }
 
         return hasValidQuery
-               && ((!TransformationHelper.isXmlDocument(eObject) && !TransformationHelper.tableIsMaterialized(eObject) && TransformationHelper.isSqlTable(eObject)) || TransformationHelper.isSqlProcedure(eObject));
+               && ((!TransformationHelper.isXmlDocument(eObject) /*&& !TransformationHelper.tableIsMaterialized(eObject)*/ && TransformationHelper.isSqlTable(eObject)) || TransformationHelper.isSqlProcedure(eObject));
     }
 
     /**

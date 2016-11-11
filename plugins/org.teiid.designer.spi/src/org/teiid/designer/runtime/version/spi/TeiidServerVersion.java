@@ -9,8 +9,8 @@ package org.teiid.designer.runtime.version.spi;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.DesignerSPIPlugin;
 import org.teiid.designer.Messages;
@@ -220,21 +220,59 @@ public class TeiidServerVersion implements ITeiidServerVersion {
             return serverVersions.iterator().next();
 
         // Find the latest server version by sorting the registered client runtime versions
-        List<String> items = new ArrayList<String>(serverVersions.size());
+        List<ITeiidServerVersion> items = new ArrayList<ITeiidServerVersion>(serverVersions.size());
         for (ITeiidServerVersion serverVersion : serverVersions) {
             /*
              * Do not offer unreleased and untested versions by default.
              * Does not stop the user choosing such versions but avoids
              * displaying them up-front.
              */
-            if (serverVersion.isGreaterThan(lastTestedDefault))
+        	
+            if (serverVersion.isGreaterThan(lastTestedDefault)) {
                 continue;
+            }
 
-            items.add(serverVersion.toString());
+            items.add(serverVersion);
         }
-        Collections.sort(items, Collections.reverseOrder());
+        List<String> versionStrings = orderVersions(items, true);
 
-        return new TeiidServerVersion(items.get(0));
+        return new TeiidServerVersion(versionStrings.get(0));
+    }
+    
+    public static List<String> orderVersions(Collection<ITeiidServerVersion> versions, boolean reverseOrder) {
+    	Collection<ITeiidServerVersion> orderedVersions = new ArrayList<ITeiidServerVersion>(versions.size());
+    	Collection<ITeiidServerVersion> leftOverVersions = new ArrayList<ITeiidServerVersion>(versions.size());
+    	leftOverVersions.addAll(versions);
+    	
+    	while( ! leftOverVersions.isEmpty() ) {
+    		ITeiidServerVersion nextServer = null;
+    		for( ITeiidServerVersion version : leftOverVersions ) {
+    			// Find the lowest version
+    			if( nextServer == null) {
+    				nextServer = version;
+    				continue;
+    			}
+    			
+    			if( reverseOrder ) {
+	    			if( version.isGreaterThan(nextServer) ) {
+	    				nextServer = version;
+	    			}
+    			} else {
+	    			if( version.isLessThan(nextServer) ) {
+	    				nextServer = version;
+	    			}
+    			}
+    		}
+    		
+    		orderedVersions.add(nextServer);
+    		leftOverVersions.remove(nextServer);
+    	}
+    	
+    	List<String> versionStrings = new ArrayList<String>();
+    	for( ITeiidServerVersion version : orderedVersions) {
+    		versionStrings.add(version.toString());
+    	}
+    	return versionStrings;
     }
 
     @Override
