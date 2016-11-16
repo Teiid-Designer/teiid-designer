@@ -8,7 +8,7 @@
 		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jboss.tools</groupId>
-	<version>10.1.0-SNAPSHOT</version>
+	<version>11.0.0-SNAPSHOT</version>
 	<artifactId>org.teiid.designer.webservice.lib</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<properties>
