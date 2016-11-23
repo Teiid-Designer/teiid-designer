@@ -54,6 +54,7 @@
   <xi:include href="editmodelsandprojects.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="managing-vdbs.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="testmodels.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="materialization.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="searching.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="supported_data_sources.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
   <xi:include href="teiid_runtime_metadata.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- ####### SEARCHING ######################################### -->
+
+<chapter id="materialization-chapter">
+    <title>Materialization Support</title>
+
+	<para>Designer provides modeling support for server-side materialization including:
+		<itemizedlist>
+			<listitem> <para>
+				Extension properties for materialized view and referenced materialized tables
+			</para> </listitem>
+			<listitem> <para>
+				General Create POJO feature for selected table or view
+			</para> </listitem>
+			<listitem> <para>
+				Materialize action and wizard to set required properties and generate optional JDG module corresponding
+				to the generated materialized table
+			</para> </listitem>
+			<listitem> <para>
+				JDG connection profile definition and wizard
+			</para> </listitem>
+		</itemizedlist>
+		</para>
+
+	
+	<!-- ####### EXTENSION PROPERTIES ######################################### -->
+	
+	<section id="extension-properties-section">
+		<title>Materialization Extension Properties</title>
+		<para>The Teiid runtime supports materialization which is identified at VDB deployment time
+			through metadata properties.  A couple base properties are provided by Designer's relational
+			table properties. These include a <emphasis role="bold">Materialized</emphasis> boolean property and a 
+			<emphasis role="bold">Materialized Table</emphasis> reference property as shown below.
+			
+			In addition, there are extension properties for a materialized table to help set-up your
+			materialized table behavior. (See Teiid Runtime documentation for details)
+		</para>
+		<figure>
+			<title>Materialized View Properties</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/materialized-view-properties.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</section>
+
+	<!-- ####### CREATE POJO FEATURE ######################################### -->
+	
+	<section id="create-pojo-section">
+		<title>Create POJO</title>
+		<para>As part of the new 11.0 Designer feature for supporting JDG and materialization, we added
+			a separate <emphasis role="bold">Create POJO</emphasis> action and wizard. This feature will generate a simple
+			java class that results in getter and setter methods for each column.  There is also an option to generate
+			an JDG module containing the compiled class.
+		</para>
+		<figure>
+			<title>Create POJO Action</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/create-pojo-action.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<figure>
+			<title>Create POJO Dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/create-pojo-wizard_page_1.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</section>
+	
+	<!-- ####### Materialize View Feature ######################################### -->
+	
+	<section id="materialized-section">
+		<title>Materialize a View</title>
+		<para>You can now materialize a view and generate the necessary related artifacts to support 
+			external materialization through your JDG cache.
+			
+			The generated artifacts include:
+			<itemizedlist>
+				<listitem> <para>
+					New source model containing both the materialized table and companion staging table.
+				</para> </listitem>
+				<listitem> <para>
+					POJO java file and compiled java class
+				</para> </listitem>
+				<listitem> <para>
+					JDG zip module containing packaged jar file and module.xml file for deployment/extraction into your JBoss server 
+				</para> </listitem>
+			</itemizedlist>
+			
+			Follow the steps below to materialize your view....
+		</para>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">Step 1</emphasis>- In the
+					<emphasis role="bold">Model Explorer</emphasis>select the view you wish
+					to materialize and right-click select the
+					<emphasis role="bold">Modeling &gt; Materialize</emphasis> action
+					<figure>
+						<title>Materialize Action</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/materialize-action.png" />
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">Step 2</emphasis>- On the first wizard page, define your generated
+						source model name and location within the same model project. Click <emphasis role="bold">
+						NEXT&gt;</emphasis> to continue.
+					<figure>
+						<title>Materialized Source Model Definition</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/materialize-wizard-page-1.png"/>
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">Step 3</emphasis>- On the second wizard page, select your options for
+						generating a POJO and a JDG module as well as the output folder location in your model project.
+						Click <emphasis role="bold">
+						Finish</emphasis> perform to complete the operations.
+					<figure>
+						<title>Define Java and JDG Module Options</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/materialize-wizard-page-2.png"/>
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<para>The figure below shows the file structure of the generated POJO, class file, jar and jdg module zip file</para>
+		<figure>
+			<title>Generated JDG module files</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/jdg-module-generated-files.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+
+	</section>
+
+	<!-- ####### JDG CONNECTION PROFILE ######################################### -->
+	
+	<section id="jdg-connection-profile-section">
+		<title>JDG Connection Profile</title>
+		<para>JDG connection profile wizard can be used to define JDG-specific connection information required to create a
+			server-side resource adapter.  By setting the JDG connection profile on your generated materialized source model
+			you can use the <emphasis role="bold">Create Data Source</emphasis> feature to create and deploy a resource adapter
+			that supports your materialized view.
+		</para>
+		<para>To create a JDG connection profile, open the <emphasis role="bold">Database Development</emphasis> perspective and select
+			the <emphasis role="bold">New Connection Profile</emphasis> action and <emphasis role="bold">JDG</emphasis> profile option as shown below.
+		</para>
+		<figure>
+			<title>JDG Connection Profile Page 1</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/jdg-cp-wizard-page-1.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>Enter your unique JBoss JNDI name and various JDG-specific resource adapter properties 
+			and click <emphasis role="bold"> Finish</emphasis>
+		</para>
+		<figure>
+			<title>JDG Connection Profile Page 2</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/jdg-cp-wizard-page-2.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+	</section>
+</chapter>
