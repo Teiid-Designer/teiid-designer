@@ -89,17 +89,31 @@ public class ElementsInfoPanel {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// Check Selection from tree
-				String name = detailsPage.createRequestColumn(type);
-				if (name != null) {
+				String[] names = detailsPage.createRequestColumn(type);
+				if (names != null && names.length > 0) {
+					StringBuilder sb = new StringBuilder();
+					int count = 1;
+					int max = names.length;
+					for( String name : names) {
+						sb.append(name);
+						if( count < max ) {
+							sb.append(", ");
+							count++;
+						}
+					}
 					boolean ok = MessageDialog.openQuestion(detailsPage.getShell(),
 						Messages.InvalidSelectedSchemaObject,
-						NLS.bind(Messages.InvalidSelectedSchemaObject_element_msg, name));
+						NLS.bind(Messages.InvalidSelectedSchemaObject_element_msg, names));
 					
 					if( ok ) {
 						if( type == ProcedureInfo.TYPE_BODY ) {
-							detailsPage.getProcedureGenerator().getRequestInfo().addBodyColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null, null);
+							for( String name : names) {
+								detailsPage.getProcedureGenerator().getRequestInfo().addBodyColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null, null);
+							}
 						} else {
-							detailsPage.getProcedureGenerator().getRequestInfo().addHeaderColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null, null);
+							for( String name : names) {
+								detailsPage.getProcedureGenerator().getRequestInfo().addHeaderColumn(name, false, ColumnInfo.DEFAULT_DATATYPE, null, null, null);
+							}
 						}
     					editElementsPanel.refresh();
     					notifyColumnDataChanged();

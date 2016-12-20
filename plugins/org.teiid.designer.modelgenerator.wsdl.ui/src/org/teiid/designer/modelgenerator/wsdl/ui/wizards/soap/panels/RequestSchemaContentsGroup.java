@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -14,6 +17,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -57,7 +61,7 @@ public class RequestSchemaContentsGroup {
 		gd.heightHint = 120;
 		schemaContentsGroup.setLayoutData(gd);
 
-		this.schemaTreeViewer = new TreeViewer(schemaContentsGroup, SWT.SINGLE);
+		this.schemaTreeViewer = new TreeViewer(schemaContentsGroup, SWT.MULTI);
 
 		this.schemaTreeViewer.setContentProvider(this.detailsPage.getSchemaContentProvider());
 		this.schemaTreeViewer.setLabelProvider(this.detailsPage.getSchemaLabelProvider());
@@ -87,6 +91,10 @@ public class RequestSchemaContentsGroup {
 					if (element instanceof XSDParticleImpl || 
 							element instanceof XSDElementDeclarationImpl ||
 							element instanceof XSDAttributeUseImpl ) {
+						columnMenuManager.add(createElementAction);
+					}
+				} else {
+					if( canAddAllSelected()) {
 						columnMenuManager.add(createElementAction);
 					}
 				}
@@ -119,9 +127,35 @@ public class RequestSchemaContentsGroup {
 		this.elementsInfoPanel = panel;
 	}
 	
-	public String createRequestColumn() {
-		return this.detailsPage.getSchemaHandler()
-			.createRequestColumn(this.type, (IStructuredSelection) schemaTreeViewer.getSelection(), getRequestInfo());
+	private boolean canAddAllSelected() {
+		boolean result = true;
+		IStructuredSelection selection = (IStructuredSelection) schemaTreeViewer.getSelection();
+		if (selection.size() > 0 ) {
+			for( Object obj : selection.toArray() ) {
+				if( obj instanceof SchemaNode ) {
+					Object element = ((SchemaNode)selection.getFirstElement()).getElement();
+			    	if( !ImportWsdlSchemaHandler.shouldCreateRequestColumn(element) ) {
+			    		result = false;
+			    	}
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	
+	public String[] createRequestColumn() {
+		List<String> results = new ArrayList<String>();
+		IStructuredSelection selection = (IStructuredSelection) schemaTreeViewer.getSelection();
+		for( Object obj : selection.toArray() ) {
+			IStructuredSelection sel = new StructuredSelection(obj);
+			String value = this.detailsPage.getSchemaHandler().createRequestColumn(this.type, sel, getRequestInfo());
+			if( value != null ) {
+				results.add(value);
+			}
+		}
+		return results.toArray(new String[results.size()]);
 	}
 	
 	public void setInput(Object value) {

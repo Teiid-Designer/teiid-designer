@@ -143,7 +143,7 @@ public class ColumnsInfoPanel {
                         new Runnable() {
                             @Override
                             public void run() {
-                                String name = null;
+                                String[] names = null;
 
                                 try {
                                     /*
@@ -153,14 +153,14 @@ public class ColumnsInfoPanel {
                                      */
                                     initializing = true;
 
-                                    name = detailsPage
+                                    names = detailsPage
                                             .createResponseColumn(type);
                                 }
                                 finally {
                                     initializing = false;
                                 }
 
-                                if (name == null) {
+                                if (names == null || names.length == 0) {
                                     return;
                                 }
 
@@ -169,30 +169,33 @@ public class ColumnsInfoPanel {
                                         Messages.InvalidSelectedSchemaObject,
                                         NLS.bind(
                                                 Messages.InvalidSelectedSchemaObject_column_msg,
-                                                name));
+                                                names));
                                 if (!ok) {
                                     return;
                                 }
 
                                 if (type == ProcedureInfo.TYPE_BODY) {
-                                    detailsPage
-                                            .getProcedureGenerator()
-                                            .getResponseInfo()
-                                            .addBodyColumn(
-                                                    name,
-                                                    false,
-                                                    ColumnInfo.DEFAULT_DATATYPE,
-                                                    null, null, null);
-                                }
-                                else {
-                                    detailsPage
-                                            .getProcedureGenerator()
-                                            .getResponseInfo()
-                                            .addHeaderColumn(
-                                                    name,
-                                                    false,
-                                                    ColumnInfo.DEFAULT_DATATYPE,
-                                                    null, null, null);
+                                	for( String name : names) {
+	                                    detailsPage
+	                                            .getProcedureGenerator()
+	                                            .getResponseInfo()
+	                                            .addBodyColumn(
+	                                                    name,
+	                                                    false,
+	                                                    ColumnInfo.DEFAULT_DATATYPE,
+	                                                    null, null, null);
+                                	}
+                                } else {
+                                	for( String name : names) {
+	                                    detailsPage
+	                                            .getProcedureGenerator()
+	                                            .getResponseInfo()
+	                                            .addHeaderColumn(
+	                                                    name,
+	                                                    false,
+	                                                    ColumnInfo.DEFAULT_DATATYPE,
+	                                                    null, null, null);
+                                	}
                                 }
                                 editColumnsPanel.refresh();
                                 notifyColumnDataChanged();

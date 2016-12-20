@@ -795,14 +795,14 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		return null;
 	}
 
-	public String createRequestColumn(int requestType) {
+	public String[] createRequestColumn(int requestType) {
 		if( requestType == ProcedureInfo.TYPE_BODY ) {
 			return this.requestBodySchemaContentsGroup.createRequestColumn();
 		}
         return this.requestHeaderSchemaContentsGroup.createRequestColumn();
 	}
 
-	public String createResponseColumn(int responseType) {
+	public String[] createResponseColumn(int responseType) {
 		if( responseType == ProcedureInfo.TYPE_BODY ) {
 			return this.responseBodySchemaContentsGroup.createResponseColumn();
         }
