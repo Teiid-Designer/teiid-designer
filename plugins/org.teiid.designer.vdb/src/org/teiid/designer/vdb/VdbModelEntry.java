@@ -700,10 +700,18 @@ public class VdbModelEntry extends VdbIndexedEntry {
                             importedEntry = getVdb().addEntry(name);
                         imports.add(importedEntry);
 
-                        if (importedEntry instanceof VdbModelEntry)
+                        if (importedEntry instanceof VdbModelEntry) {
                             ((VdbModelEntry)importedEntry).importedBy.add(this);
+                        }
                     }
                 }
+            }
+            
+            final EmfResource emfModel = (EmfResource)model;
+            String description = getDescription();
+            String emfDescription = emfModel.getDescription();
+            if( StringUtilities.areDifferent(description,  emfDescription) ) {
+            	setDescription(emfDescription);
             }
 
             // Process for any import VDBs
