@@ -174,7 +174,14 @@ public class ModelExtensionDefinition implements NamespaceProvider, PropertyChan
         if (props.contains(propDefn)) {
             return false;
         }
-
+        
+        // Check if props contains a propDefin with the same namespace and ID, then return false
+        for( ModelExtensionPropertyDefinition defn : props ) {
+        	if( defn.getNamespaceProvider().getNamespacePrefix().equals(propDefn.getNamespaceProvider().getNamespacePrefix()) &&
+        		defn.getId().equals(propDefn.getId()) ) {
+        		return false;
+        	}
+        }
         props.add(propDefn);
         notifyChangeListeners(PropertyName.PROPERTY_DEFINITION, null, propDefn);
 

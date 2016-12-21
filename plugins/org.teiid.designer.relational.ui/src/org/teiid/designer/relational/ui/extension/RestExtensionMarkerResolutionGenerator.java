@@ -14,7 +14,7 @@ public class RestExtensionMarkerResolutionGenerator implements IMarkerResolution
 	    	Collection<IMarkerResolution> resolutions = new ArrayList<IMarkerResolution>();
 	    	
 	    	if( marker.getAttribute(IS_OLD_REST_VERSION_MED, false) ) {
-	    		resolutions.add(new RelationalExtensionVersionResolution("rest"));
+	    		resolutions.add(new RelationalExtensionVersionResolution("REST"));
 	    	} 
 	    	
 	    	return resolutions.toArray(new IMarkerResolution[resolutions.size()]);
