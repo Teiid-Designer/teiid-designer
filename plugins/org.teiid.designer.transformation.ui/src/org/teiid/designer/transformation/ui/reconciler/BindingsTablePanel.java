@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelection;
@@ -50,6 +52,7 @@ import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.reconciler.datatype.DatatypeReconcilerDialog;
 import org.teiid.designer.ui.common.table.TableSizeAdapter;
+import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
@@ -207,15 +210,17 @@ public class BindingsTablePanel extends Composite {
         // Set layout for the Composite
         // ------------------------------
         GridLayout gridLayout = new GridLayout();
-        buttonComposite.setLayout(gridLayout);
         gridLayout.numColumns = 9;
         gridLayout.horizontalSpacing = 0;
+        gridLayout.marginWidth = 0;
+        buttonComposite.setLayout(gridLayout);
 
         GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
         buttonComposite.setLayoutData(gridData);
 
         topButton = WidgetFactory.createButton(buttonComposite, TOP_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
         topButton.setEnabled(!isReadOnly);
+        GridDataFactory.swtDefaults().hint(32, 28).grab(true, true).applyTo(topButton);
         topButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
@@ -223,7 +228,8 @@ public class BindingsTablePanel extends Composite {
             }
         });
 
-        upButton = WidgetFactory.createButton(buttonComposite, UP_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
+        upButton = WidgetFactory.createButton(buttonComposite, BUTTON_GRID_STYLE);; //UP_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
+        upButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.UP_ICON));
         upButton.setEnabled(!isReadOnly);
         upButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -234,6 +240,7 @@ public class BindingsTablePanel extends Composite {
 
         swapButton = WidgetFactory.createButton(buttonComposite, SWAP_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
         swapButton.setEnabled(!isReadOnly);
+        GridDataFactory.swtDefaults().hint(38, 28).grab(true, true).applyTo(swapButton);
         swapButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
@@ -241,7 +248,8 @@ public class BindingsTablePanel extends Composite {
             }
         });
 
-        downButton = WidgetFactory.createButton(buttonComposite, DOWN_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
+        downButton = WidgetFactory.createButton(buttonComposite, BUTTON_GRID_STYLE); //DOWN_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
+        downButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.DOWN_ICON));
         downButton.setEnabled(!isReadOnly);
         downButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -252,6 +260,7 @@ public class BindingsTablePanel extends Composite {
 
         bottomButton = WidgetFactory.createButton(buttonComposite, BOTTOM_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
         bottomButton.setEnabled(!isReadOnly);
+        GridDataFactory.swtDefaults().hint(52, 28).grab(true, true).applyTo(bottomButton);
         bottomButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
@@ -259,7 +268,8 @@ public class BindingsTablePanel extends Composite {
             }
         });
 
-        deleteButton = WidgetFactory.createButton(buttonComposite, DELETE_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
+        deleteButton = WidgetFactory.createButton(buttonComposite,  BUTTON_GRID_STYLE); //DELETE_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
+        deleteButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.DELETE_ICON));
         deleteButton.setEnabled(!isReadOnly);
         deleteButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -270,6 +280,7 @@ public class BindingsTablePanel extends Composite {
 
         resolveTypeButton = WidgetFactory.createButton(buttonComposite, RESOLVE_TYPE_BUTTON_TEXT, BUTTON_GRID_STYLE);
         resolveTypeButton.setEnabled(!isReadOnly);
+        GridDataFactory.swtDefaults().hint(90, 28).grab(true, true).applyTo(resolveTypeButton);
         resolveTypeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {

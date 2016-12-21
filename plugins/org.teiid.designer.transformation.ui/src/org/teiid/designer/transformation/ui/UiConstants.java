@@ -103,6 +103,13 @@ public interface UiConstants {
 		String FOLDER = PC.OBJ16 + "folder.png"; //$NON-NLS-1$
 		String OPEN_FOLDER = PC.OBJ16 + "open-folder.png"; //$NON-NLS-1$
 		String MODEL_PROJECT = PC.OBJ16 + "ModelProject.gif"; //$NON-NLS-1$
+		
+		String UP_ICON = PC.CVIEW16 + "up.gif"; //$NON-NLS-1$
+		String DOWN_ICON = PC.CVIEW16 + "down.gif"; //$NON-NLS-1$
+		String ADD_ICON = PC.CVIEW16 + "add.gif"; //$NON-NLS-1$
+		String REMOVE_ICON = PC.CVIEW16 + "remove.gif"; //$NON-NLS-1$
+		String CLEAR_ICON = PC.CVIEW16 + "clear.png"; //$NON-NLS-1$
+		String DELETE_ICON = PC.CVIEW16 + "delete.gif"; //$NON-NLS-1$
 	}
     
     interface SQLPanels {

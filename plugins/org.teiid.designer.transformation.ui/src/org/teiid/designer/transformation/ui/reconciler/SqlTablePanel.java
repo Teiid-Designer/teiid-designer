@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -45,6 +46,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.transformation.ui.UiConstants;
+import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
 import org.teiid.designer.ui.common.table.TableSizeAdapter;
@@ -141,29 +143,34 @@ public class SqlTablePanel extends Composite {
         // Set layout for the Composite
         // ------------------------------
         GridLayout gridLayout = new GridLayout();
-        buttonComposite.setLayout(gridLayout);
-        gridLayout.numColumns = 4;
+        gridLayout.numColumns = 9;
         gridLayout.horizontalSpacing = 0;
+        gridLayout.marginWidth = 0;
+        buttonComposite.setLayout(gridLayout);
         GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
         buttonComposite.setLayoutData(gridData);
-        addButton = WidgetFactory.createButton(buttonComposite,
-                                               UiConstants.Util.getString("SqlTablePanel.addButton.text"), BUTTON_GRID_STYLE); //$NON-NLS-1$
+        addButton = WidgetFactory.createButton(buttonComposite, BUTTON_GRID_STYLE);
+                                              // UiConstants.Util.getString("SqlTablePanel.addButton.text"), BUTTON_GRID_STYLE); //$NON-NLS-1$
+        addButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.ADD_ICON));
         addButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
                 addButtonPressed();
             }
         });
-        removeButton = WidgetFactory.createButton(buttonComposite,
-                                                  UiConstants.Util.getString("SqlTablePanel.removeSqlButton.text"), BUTTON_GRID_STYLE); //$NON-NLS-1$
+        removeButton = WidgetFactory.createButton(buttonComposite, BUTTON_GRID_STYLE);
+                                                  //UiConstants.Util.getString("SqlTablePanel.removeSqlButton.text"), BUTTON_GRID_STYLE); //$NON-NLS-1$
+        removeButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.REMOVE_ICON));
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
                 removeSqlButtonPressed();
             }
         });
-        clearButton = WidgetFactory.createButton(buttonComposite,
-                                                 UiConstants.Util.getString("SqlTablePanel.clearButton.text"), BUTTON_GRID_STYLE); //$NON-NLS-1$
+        clearButton = WidgetFactory.createButton(buttonComposite, BUTTON_GRID_STYLE);
+                                                // UiConstants.Util.getString("SqlTablePanel.clearButton.text"), BUTTON_GRID_STYLE); //$NON-NLS-1$
+        clearButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.CLEAR_ICON));
+        clearButton.setToolTipText(UiConstants.Util.getString("SqlTablePanel.clearButton.text"));
         clearButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
@@ -173,6 +180,7 @@ public class SqlTablePanel extends Composite {
 
         // jh Defect 21404: Add sort button
         sortButton = WidgetFactory.createButton(buttonComposite, SORT_BUTTON_TEXT, BUTTON_GRID_STYLE);
+        GridDataFactory.swtDefaults().hint(36, 28).grab(true, true).applyTo(sortButton);
         sortButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
@@ -180,10 +188,10 @@ public class SqlTablePanel extends Composite {
             }
         });
 
-        GridData gridData2 = (GridData)sortButton.getLayoutData();
-
-        gridData2.widthHint = 45;
-        sortButton.setLayoutData(gridData2);
+//        GridData gridData2 = (GridData)sortButton.getLayoutData();
+//
+//        gridData2.widthHint = 45;
+//        sortButton.setLayoutData(gridData2);
     }
 
     /**
