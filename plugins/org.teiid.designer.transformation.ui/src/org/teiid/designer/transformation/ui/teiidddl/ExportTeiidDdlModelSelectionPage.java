@@ -125,8 +125,8 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 	}
 	
 	private void createOptionsGroup(Composite parent) {
-		exporter.setNameInSourceUsed(false);
-		exporter.setNativeTypeUsed(false);
+		exporter.setNameInSourceUsed(true);
+		exporter.setNativeTypeUsed(true);
 
 		Group group = WidgetFactory.createGroup(parent, OPTIONS_GROUP,
 				GridData.FILL_HORIZONTAL, 1, 2);

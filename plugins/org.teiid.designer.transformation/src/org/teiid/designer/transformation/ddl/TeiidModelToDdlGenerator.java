@@ -83,6 +83,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     private ModelExtensionAssistantAggregator medAggregator = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator();
 
     private boolean ignoreTeiidProcedures = false;
+    private boolean includeNIS;
+    private boolean includeNativeType;
     
     
     /**
@@ -102,6 +104,19 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		super();
 		
 		this.ignoreTeiidProcedures = ignoreTeiidProcedures;
+	}
+	
+    /**
+     * Constructor that allows including NIS and/or Native Type
+     * 
+     * @param includeNIS
+     * @param includeNativeType
+     */
+	public TeiidModelToDdlGenerator(boolean includeNIS, boolean includeNativeType) {
+		super();
+		
+		this.includeNIS = includeNIS;
+		this.includeNativeType = includeNativeType;
 	}
 
 	/**
@@ -366,6 +381,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			sb.append(SPACE).append(options);
 		}
 		
+		sb.append(SEMI_COLON);
+		
 		sb.append(NEW_LINE);
 
 		return sb.toString();
@@ -438,9 +455,11 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 	//			String formatedSQL = formatter.getFormattedSql();
 	//			sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB).append(formatedSQL);
 				sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB).append(sqlString);
-				sb.append(SEMI_COLON + NEW_LINE);
 			}
 		}
+		
+		sb.append(SEMI_COLON + NEW_LINE);
+		
 		return sb.toString();
     }
     
@@ -464,7 +483,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         
         sb.append(SPACE).append(NEW_LINE + TAB).append(sqlString);
         
-        sb.append(NEW_LINE);
+		sb.append(SEMI_COLON + NEW_LINE);
         
         return sb.toString();
     }
@@ -488,7 +507,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         
         sb.append(SPACE).append(NEW_LINE + TAB).append(sqlString);
         
-        sb.append(NEW_LINE);
+		sb.append(SEMI_COLON + NEW_LINE);
         
         return sb.toString();
     }
@@ -512,7 +531,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         
         sb.append(SPACE).append(NEW_LINE + TAB).append(sqlString);
         
-        sb.append(NEW_LINE);
+		sb.append(SEMI_COLON + NEW_LINE);
         
         return sb.toString();
     }
@@ -623,7 +642,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				sb.append(NEW_LINE);
 			}
 		} else {
-			sb.append(NEW_LINE);
+			sb.append(SEMI_COLON + NEW_LINE);
 		}
 
 		return sb.toString();
@@ -644,6 +663,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         //
         String defaultValue = col.getDefaultValue();
         if (!StringUtilities.isEmpty(defaultValue)) {
+//        	defaultValue = convertDefaultValue(defaultValue);
         	if( !StringUtilities.isSingleQuoted(defaultValue ) ) {
         		defaultValue = StringUtilities.getQuotedValue(defaultValue, QUOTE_MARK);
         	}
@@ -693,11 +713,38 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
         return sb.toString().trim();
     }
+    
+    private static String convertDefaultValue(String originalValue) {
+    	String removedSQuotes = null;
+    	if( !StringUtilities.isSingleQuoted(originalValue )) {
+    		removedSQuotes = originalValue;
+    	} else {
+    		int len = originalValue.length();
+    		removedSQuotes = originalValue.substring(1, len-1);
+    	}
+		if( removedSQuotes.contains("\'")) {
+			StringBuilder sb = new StringBuilder();
+			for( char ch : removedSQuotes.toCharArray() ) {
+				if( ch == '\'') {
+					sb.append('\\');
+				}
+				sb.append(ch);
+			}
+			return sb.toString();
+		}
+    	
+    	return removedSQuotes;
+    	
+    }
 
     private String getColumnOptions(Column col) {
     	OptionsStatement options = new OptionsStatement();
-    	options.add(NAMEINSOURCE, col.getNameInSource(), null);
-    	options.add(NATIVE_TYPE, col.getNativeType(), null);
+    	if( this.includeNIS ) {
+    		options.add(NAMEINSOURCE, col.getNameInSource(), null);
+    	}
+    	if( this.includeNativeType ) {
+    		options.add(NATIVE_TYPE, col.getNativeType(), null);
+    	}
     	options.add(CASE_SENSITIVE, Boolean.toString(col.isCaseSensitive()), Boolean.TRUE.toString());
     	options.add(SELECTABLE, Boolean.toString(col.isSelectable()), Boolean.TRUE.toString());
     	options.add(UPDATABLE, Boolean.toString(col.isUpdateable()), Boolean.TRUE.toString());
@@ -927,7 +974,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     private String getTableOptions(Table table) {
     	OptionsStatement options = new OptionsStatement();
 
-    	options.add(NAMEINSOURCE, table.getNameInSource(), null);
+    	if( this.includeNIS ) {
+    		options.add(NAMEINSOURCE, table.getNameInSource(), null);
+    	}
     	options.add(MATERIALIZED, Boolean.toString(table.isMaterialized()), Boolean.FALSE.toString());
     	options.add(UPDATABLE, Boolean.toString(table.isSupportsUpdate()), Boolean.FALSE.toString());
     	if( table.getCardinality() != 0 ) {
@@ -1124,7 +1173,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     		options.add(ANNOTATION, desc, EMPTY_STRING);
     	}
     	
-    	options.add(NAMEINSOURCE, procedure.getNameInSource(), null);
+    	if( this.includeNIS ) {
+    		options.add(NAMEINSOURCE, procedure.getNameInSource(), null);
+    	}
     	
 		String nativeQuery = getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.NATIVE_QUERY);
 		if(!CoreStringUtil.isEmpty(nativeQuery)) {

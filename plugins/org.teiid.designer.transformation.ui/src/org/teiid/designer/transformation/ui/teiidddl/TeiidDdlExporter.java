@@ -165,7 +165,7 @@ public class TeiidDdlExporter {
 
 			// At this point we have either a relational source or view model
 			// If Source model, we can expect to walk the table, procedure and function objects
-			TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator();
+			TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator(this.nameInSourceUsed, this.nativeTypeUsed);
 			ddl = generator.generate(getModelResource());
 			
 		} catch (ModelWorkspaceException e) {
