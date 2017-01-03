@@ -18,6 +18,12 @@ public interface TeiidDDLConstants {
 		public static final String DETERMINISM = "DETERMINISM";//$NON-NLS-1$
 		public static final String CATEGORY = "CATEGORY";//$NON-NLS-1$
 		public static final String UPDATECOUNT = "UPDATECOUNT";//$NON-NLS-1$
+		public static final String ZERO = "ZERO"; //$NON-NLS-1$
+		public static final String ONE = "ONE"; //$NON-NLS-1$
+		public static final String ZERO_LITERAL = "0"; //$NON-NLS-1$
+		public static final String ONE_LITERAL = "1"; //$NON-NLS-1$
+		public static final String MULTIPLE = "MULTIPLE"; //$NON-NLS-1$
+		public static final String AUTO = "AUTO"; //$NON-NLS-1$
 		public static final String DISTINCT_VALUES = "DISTINCT_VALUES";//$NON-NLS-1$
 		public static final String NULL_VALUE_COUNT = "NULL_VALUE_COUNT";//$NON-NLS-1$
 		public static final String RADIX = "RADIX";//$NON-NLS-1$

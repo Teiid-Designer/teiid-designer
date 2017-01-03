@@ -40,6 +40,9 @@ public interface TeiidDDLConstants {
 		public static final String DETERMINISM = "DETERMINISM";//$NON-NLS-1$
 		public static final String CATEGORY = "CATEGORY";//$NON-NLS-1$
 		public static final String UPDATECOUNT = "UPDATECOUNT";//$NON-NLS-1$
+		public static final String ZERO = "0"; //$NON-NLS-1$
+		public static final String ONE = "1"; //$NON-NLS-1$
+		public static final String TWO = "2"; //$NON-NLS-1$
 		public static final String DISTINCT_VALUES = "DISTINCT_VALUES";//$NON-NLS-1$
 		public static final String NULL_VALUE_COUNT = "NULL_VALUE_COUNT";//$NON-NLS-1$
 		public static final String RADIX = "RADIX";//$NON-NLS-1$

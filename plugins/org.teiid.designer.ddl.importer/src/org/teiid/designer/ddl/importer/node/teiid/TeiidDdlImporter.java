@@ -645,11 +645,12 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 		RelationalParameter prm = super.createProcedureParameter(node, procedure);
 
 		// Handle Teiid-specific properties and options
-		Object prop = node.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_TYPE);
-		if(prop != null) {
-			String direction = prop.toString();
-			prm.setDirection(direction);
+		String direction = node.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_TYPE).toString();
+		String resultFlag = node.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_RESULT_FLAG).toString();
+		if( resultFlag != null  && resultFlag.equalsIgnoreCase(Boolean.TRUE.toString())) {
+			direction = DirectionKind.RETURN_LITERAL.toString();
 		}
+		prm.setDirection(direction);
 
 		// Find all the Option properties
 		List<AstNode> optionNodes = new ArrayList<AstNode>();
@@ -821,12 +822,17 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 
 		} else if (is(node, TeiidDdlLexicon.CreateProcedure.PROCEDURE_STATEMENT)
 				|| is(node, TeiidDdlLexicon.CreateProcedure.FUNCTION_STATEMENT)) {
+			boolean isFunction = is(node, TeiidDdlLexicon.CreateProcedure.FUNCTION_STATEMENT);
 			String modelType = (String)node.getProperty(TeiidDdlLexicon.SchemaElement.TYPE);
 			if( modelType != null ) {
+				RelationalProcedure proc = null;
 				if( modelType.equalsIgnoreCase(ModelType.VIRTUAL_LITERAL.toString())) {
-					createVirtualProcedure(node, model);
+					proc = createVirtualProcedure(node, model);
 				} else {
-					createProcedure(node, model);
+					proc = createProcedure(node, model);
+				}
+				if( isFunction ) {
+					proc.setFunction(true);
 				}
 			}
 
@@ -1040,7 +1046,24 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 				// If any function properties are present, the setFuntion boolean is also set
 				if(!CoreStringUtil.isEmpty(optionValueStr)) {
 					if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATECOUNT)) {
-						procedure.setUpdateCount(optionValueStr);
+						if( optionValueStr.equals(TeiidDDLConstants.ONE_LITERAL) ) {
+							procedure.setUpdateCount(TeiidDDLConstants.ONE);
+						} else if( optionValueStr.equals(TeiidDDLConstants.ZERO_LITERAL) ) {
+							procedure.setUpdateCount(TeiidDDLConstants.ZERO);
+						}  else {
+							// Look for > 1 for MULTIPLE
+							int value = -1;
+							try {
+								value = Integer.parseInt(optionValueStr);
+							} catch (NumberFormatException e) {
+							}
+							
+							if( value > 1 ) {
+								procedure.setUpdateCount(TeiidDDLConstants.MULTIPLE);
+							} else {
+								procedure.setUpdateCount(TeiidDDLConstants.AUTO);
+							}
+						}
 						nodeIter.remove();
 					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.CATEGORY)) {
 						procedure.setFunctionCategory(optionValueStr);

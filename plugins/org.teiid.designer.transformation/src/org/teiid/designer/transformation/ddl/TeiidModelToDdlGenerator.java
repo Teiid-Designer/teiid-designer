@@ -44,6 +44,7 @@ import org.teiid.designer.metamodels.relational.NullableType;
 import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
+import org.teiid.designer.metamodels.relational.ProcedureUpdateCount;
 import org.teiid.designer.metamodels.relational.SearchabilityType;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueConstraint;
@@ -54,6 +55,7 @@ import org.teiid.designer.metamodels.relational.extension.RestModelExtensionCons
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 import org.teiid.designer.relational.RelationalConstants;
+import org.teiid.designer.relational.model.RelationalParameter;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
@@ -83,7 +85,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     private ModelExtensionAssistantAggregator medAggregator = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator();
 
     private boolean ignoreTeiidProcedures = false;
-    private boolean includeNIS;
+	private boolean includeNIS;
     private boolean includeNativeType;
     
     
@@ -801,6 +803,14 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	return options.toString();
     }
     
+    private Map<String, String> getParameterOptions(ProcedureParameter parameter) {
+    	Map<String, String> options = new HashMap<String, String>();
+    	if( this.includeNIS ) {
+    		options.put(NAMEINSOURCE, parameter.getNameInSource());
+    	}
+    	return options;
+    }
+    
     private String getOptions(EObject eobject) {
     	OptionsStatement options = new OptionsStatement();
     	
@@ -1027,6 +1037,10 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     
     private Map<String, String> getOptionsForObject(EObject modelObject) throws Exception {
     	Map<String, String> options = new HashMap<String, String>();
+    	
+    	if( modelObject instanceof ProcedureParameter ) {
+        	options.putAll( getParameterOptions((ProcedureParameter)modelObject));
+    	}
 
     	Collection<String> extensionNamespaces = medAggregator.getSupportedNamespacePrefixes(modelObject);
     	for( String ns : extensionNamespaces ) {
@@ -1190,6 +1204,15 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		// Functions have many additional extension properties
 		boolean isFunction = procedure.isFunction();
 		if(isFunction) {
+			String updateCount =  procedure.getUpdateCount().toString();
+			if( updateCount.equals(ProcedureUpdateCount.ZERO_LITERAL.toString())) {
+				options.add(UPDATECOUNT, ZERO, ZERO);
+			} else if( updateCount.equals(ProcedureUpdateCount.ONE_LITERAL.toString())) {
+				options.add(UPDATECOUNT, ONE, ZERO);
+			} else if( updateCount.equals(ProcedureUpdateCount.MULTIPLE_LITERAL.toString())) {
+				options.add(UPDATECOUNT, TWO, ZERO);
+			}
+
 			String value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.FUNCTION_CATEGORY);
 			options.add(FUNCTION_CATEGORY_PROP, value, null);
 			
@@ -1233,6 +1256,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				}
 			}
 		} else {
+		    options.add(UPDATECOUNT, ONE, ZERO);
 			// REST PROPERTIES??
 			String value =  getRestPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI);
 			if( value != null ) namespaces.add(REST_TEIID_SET_NAMESPACE);
@@ -1391,6 +1415,14 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
 	public void setIncludeFKs(boolean includeFKs) {
 		this.includeFKs = includeFKs;
+	}
+	
+    public void setIncludeNIS(boolean includeNIS) {
+		this.includeNIS = includeNIS;
+	}
+
+	public void setIncludeNativeType(boolean includeNativeType) {
+		this.includeNativeType = includeNativeType;
 	}
 
 	class OptionsStatement {

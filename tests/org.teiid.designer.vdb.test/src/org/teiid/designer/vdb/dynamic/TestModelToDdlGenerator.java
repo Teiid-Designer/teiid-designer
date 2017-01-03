@@ -60,7 +60,7 @@ public class TestModelToDdlGenerator implements StringConstants {
             "</xmi:XMI>";
     
     private interface BQT2_TYPE_DDL {
-    	String 	TYPE_INT = "type_int integer OPTIONS(NAMEINSOURCE '\"type_int\"', NATIVE_TYPE 'int', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_INT = "type_int integer OPTIONS(NAMEINSOURCE '\"type_int\"', NATIVE_TYPE 'int', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE') ";
     	String 	TYPE_INTEGER = "type_integer integer OPTIONS(NAMEINSOURCE '\"type_integer\"', NATIVE_TYPE 'int', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_SMALLINT = "type_smallint short OPTIONS(NAMEINSOURCE '\"type_smallint\"', NATIVE_TYPE 'smallint', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_TINYINT = "type_tinyint byte OPTIONS(NAMEINSOURCE '\"type_tinyint\"', NATIVE_TYPE 'tinyint', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
@@ -141,7 +141,7 @@ public class TestModelToDdlGenerator implements StringConstants {
 
     @Before
     public void setup() throws Exception {
-        generator = new TeiidModelToDdlGenerator();
+        generator = new TeiidModelToDdlGenerator(true, true);
 
         eclipseMock = new EclipseMock();
         modelWorkspaceMock = new ModelWorkspaceMock(eclipseMock);
@@ -245,14 +245,14 @@ public class TestModelToDdlGenerator implements StringConstants {
         String ddl = "CREATE VIEW StockPrices (" + NEW_LINE +
                             "symbol string," + NEW_LINE +
                             "price bigdecimal" + NEW_LINE +
-                            ") AS SELECT * FROM Stock;";
+                            ") OPTIONS(UPDATABLE 'TRUE') AS SELECT * FROM Stock;";
 
         // TODO
         // Should these column option clauses be included if all the values are defaults???
         String expectedDdl = "CREATE VIEW StockPrices (" +
                                              "symbol string" + COMMA + SPACE +
                                              "price bigdecimal" +
-                                             ") AS SELECT * FROM Stock;"; 
+                                             ") OPTIONS(UPDATABLE 'TRUE') AS SELECT * FROM Stock;"; 
 
         String generatedDdl = roundTrip(ddl, true);
         assertEquals(expectedDdl, generatedDdl);
@@ -267,7 +267,7 @@ public class TestModelToDdlGenerator implements StringConstants {
                             "companyID string(10) NOT NULL INDEX," + NEW_LINE +
                             "CONSTRAINT STOCK_PK PRIMARY KEY(symbol)," + NEW_LINE +
                             "CONSTRAINT STOCK_UC UNIQUE(company)" + NEW_LINE +
-                            ") AS SELECT * FROM Stock;";
+                            ") OPTIONS(UPDATABLE 'TRUE') AS SELECT * FROM Stock;";
 
         
 
@@ -278,7 +278,7 @@ public class TestModelToDdlGenerator implements StringConstants {
                                              "companyID string(10) NOT NULL INDEX" + COMMA + SPACE +
                                              "CONSTRAINT STOCK_PK PRIMARY KEY(symbol)" + COMMA + SPACE +
                                              "CONSTRAINT STOCK_UC UNIQUE(company)" +
-                                             ") AS SELECT * FROM Stock;";
+                                             ") OPTIONS(UPDATABLE 'TRUE') AS SELECT * FROM Stock;";
 
         String generatedDdl = roundTrip(ddl, true);
         assertEquals(expectedDdl, generatedDdl);
@@ -371,8 +371,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_BINARY() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_BINARY + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_BINARY + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_BINARY + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_BINARY + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -380,8 +380,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_BINARY_2() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_BINARY_2 + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_BINARY_2 + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_BINARY_2 + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_BINARY_2 + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -389,8 +389,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_BIT() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_BIT + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_BIT + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_BIT + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_BIT + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -398,8 +398,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_CHAR() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_CHAR + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_CHAR + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_CHAR + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_CHAR + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -407,8 +407,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_CHAR_10() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_CHAR_10 + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_CHAR_10 + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_CHAR_10 + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_CHAR_10 + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -416,8 +416,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_CHARACTER() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_CHARACTER + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_CHARACTER + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_CHARACTER + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_CHARACTER + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -425,8 +425,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_CHARACTER_10() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_CHARACTER_10 + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_CHARACTER_10 + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_CHARACTER_10 + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_CHARACTER_10 + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -434,8 +434,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_DATETIME() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_DATETIME + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_DATETIME + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_DATETIME + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_DATETIME + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -443,8 +443,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_DECIMAL() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_DECIMAL + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_DECIMAL + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_DECIMAL + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_DECIMAL + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -452,8 +452,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_DECIMAL_5() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_DECIMAL_5 + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_DECIMAL_5 + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_DECIMAL_5 + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_DECIMAL_5 + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -461,8 +461,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_DECIMAL_5_5() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_DECIMAL_5_5 + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_DECIMAL_5_5 + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_DECIMAL_5_5 + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_DECIMAL_5_5 + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -470,8 +470,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_DECIMAL_PRECISION() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_DECIMAL_PRECISION + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_DECIMAL_PRECISION + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_DECIMAL_PRECISION + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_DECIMAL_PRECISION + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -479,8 +479,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_FLOAT() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_FLOAT + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_FLOAT + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_FLOAT + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_FLOAT + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -488,8 +488,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_FLOAT_10() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_FLOAT_10 + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_FLOAT_10 + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_FLOAT_10 + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_FLOAT_10 + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -497,8 +497,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_IMAGE() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_IMAGE + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_IMAGE + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_IMAGE + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_IMAGE + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -506,8 +506,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_INT() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_INT + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_INT + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_INT + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_INT + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -515,8 +515,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_INTEGER() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_INTEGER + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_INTEGER + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_INTEGER + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_INTEGER + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -524,8 +524,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_LONG_NVARCHAR() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_LONG_NVARCHAR + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_LONG_NVARCHAR + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_LONG_NVARCHAR + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_LONG_NVARCHAR + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -533,8 +533,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_LONG_NVARCHAR_10() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_LONG_NVARCHAR_10 + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_LONG_NVARCHAR_10 + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_LONG_NVARCHAR_10 + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_LONG_NVARCHAR_10 + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -542,8 +542,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_MONEY() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_MONEY + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_MONEY + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_MONEY + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_MONEY + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -551,8 +551,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_NCHAR() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_NCHAR + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_NCHAR + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_NCHAR + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_NCHAR + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -560,8 +560,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_NCHAR_10() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_NCHAR_10 + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_NCHAR_10 + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_NCHAR_10 + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_NCHAR_10 + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -569,8 +569,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_NUMERIC() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_NUMERIC + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_NUMERIC + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_NUMERIC + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_NUMERIC + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -578,8 +578,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_NUMERIC_5() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_NUMERIC_5 + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_NUMERIC_5 + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_NUMERIC_5 + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_NUMERIC_5 + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -587,8 +587,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_NUMERIC_5_5() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_NUMERIC_5_5 + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_NUMERIC_5_5 + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_NUMERIC_5_5 + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_NUMERIC_5_5 + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -596,8 +596,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_REAL() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_REAL + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_REAL + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_REAL + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_REAL + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -605,8 +605,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_SMALLINT() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_SMALLINT + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_SMALLINT + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_SMALLINT + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_SMALLINT + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -614,8 +614,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_SMALLMONEY() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_SMALLMONEY + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_SMALLMONEY + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_SMALLMONEY + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_SMALLMONEY + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -623,8 +623,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_TEXT() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_TEXT + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_TEXT + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_TEXT + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_TEXT + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -632,8 +632,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_TINYINT() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_TINYINT + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_TINYINT + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_TINYINT + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_TINYINT + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -641,8 +641,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_VARBINARY() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_VARBINARY + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_VARBINARY + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_VARBINARY + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_VARBINARY + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -650,8 +650,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_VARCHAR() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_VARCHAR + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_VARCHAR + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_VARCHAR + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_VARCHAR + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -659,8 +659,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     
     @Test
     public void testDdl_TYPE_VARCHAR_10() throws Exception {
-        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_VARCHAR_10 + ");";
-        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_VARCHAR_10 + ")";
+        String ddl = "CREATE FOREIGN TABLE ONE_TYPE (" + BQT2_TYPE_DDL.TYPE_VARCHAR_10 + ") OPTIONS(UPDATABLE 'TRUE');";
+        String expectedDdl =  "CREATE FOREIGN TABLE ONE_TYPE (" + EXPECTED_BQT2_TYPE_DDL.TYPE_VARCHAR_10 + ") OPTIONS(UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -671,11 +671,11 @@ public class TestModelToDdlGenerator implements StringConstants {
         String ddl = 
         		"CREATE FOREIGN TABLE STATUS (" +
     			"STATUS_ID bigdecimal NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE')" +
-    			") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"')";
+    			") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"', UPDATABLE 'TRUE');";
         String expectedDdl = 
         		"CREATE FOREIGN TABLE STATUS (" +
         		"STATUS_ID bigdecimal NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE')" +
-        		") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"')";
+        		") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"', UPDATABLE 'TRUE');";
 
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -687,10 +687,10 @@ public class TestModelToDdlGenerator implements StringConstants {
     			"\n\tSTATUS_ID bigdecimal NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE')," +
     			"\n\tSTATUS_NAME string(30) OPTIONS(NAMEINSOURCE '\"STATUS_NAME\"', NATIVE_TYPE 'VARCHAR2')," +
     			"\n\tCONSTRAINT PK_STATUS PRIMARY KEY(STATUS_ID)" +
-    		") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"')";
+    		") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"', UPDATABLE 'TRUE');";
     	String expectedDdl = "CREATE FOREIGN TABLE STATUS (STATUS_ID bigdecimal NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE'), "
     			+ "STATUS_NAME string(30) OPTIONS(NAMEINSOURCE '\"STATUS_NAME\"', NATIVE_TYPE 'VARCHAR2'), "
-    			+ "CONSTRAINT PK_STATUS PRIMARY KEY(STATUS_ID)) OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"')";
+    			+ "CONSTRAINT PK_STATUS PRIMARY KEY(STATUS_ID)) OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"', UPDATABLE 'TRUE');";
     	
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
@@ -702,7 +702,7 @@ public class TestModelToDdlGenerator implements StringConstants {
     			"\n\tSTATUS_ID bigdecimal NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE')," +
     			"\n\tSTATUS_NAME string(30) OPTIONS(NAMEINSOURCE '\"STATUS_NAME\"', NATIVE_TYPE 'VARCHAR2')," +
     			"\n\tCONSTRAINT PK_STATUS PRIMARY KEY(STATUS_ID)" +
-    		") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"')" + 
+    		") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"', UPDATABLE 'TRUE');" + 
     		"\n" +
     		"\nCREATE FOREIGN TABLE SUPPLIER (" +
     		"\n\tSUPPLIER_ID string(10) NOT NULL OPTIONS(NAMEINSOURCE '\"SUPPLIER_ID\"', NATIVE_TYPE 'VARCHAR2')," +
@@ -712,12 +712,12 @@ public class TestModelToDdlGenerator implements StringConstants {
     		"\n\tSUPPLIER_STATE string(2) OPTIONS(NAMEINSOURCE '\"SUPPLIER_STATE\"', NATIVE_TYPE 'VARCHAR2')," +
     		"\n\tCONSTRAINT PK_SUPPLIER PRIMARY KEY(SUPPLIER_ID)," +
     		"\n\tCONSTRAINT FK_SPLIER_STATS FOREIGN KEY(SUPPLIER_STATUS) REFERENCES STATUS(STATUS_ID)" +
-    		"\n) OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"SUPPLIER\"')";
+    		"\n) OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"SUPPLIER\"', UPDATABLE 'TRUE');";
     	String expectedDdl = "CREATE FOREIGN TABLE STATUS (" 
     				+ "STATUS_ID bigdecimal NOT NULL OPTIONS(NAMEINSOURCE '\"STATUS_ID\"', NATIVE_TYPE 'NUMBER', FIXED_LENGTH 'TRUE'), "
     				+ "STATUS_NAME string(30) OPTIONS(NAMEINSOURCE '\"STATUS_NAME\"', NATIVE_TYPE 'VARCHAR2'), "
     				+ "CONSTRAINT PK_STATUS PRIMARY KEY(STATUS_ID)" 
-    			+ ") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"') "
+    			+ ") OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"STATUS\"', UPDATABLE 'TRUE'); "
     			+ "CREATE FOREIGN TABLE SUPPLIER (" 
     			+ "SUPPLIER_ID string(10) NOT NULL OPTIONS(NAMEINSOURCE '\"SUPPLIER_ID\"', NATIVE_TYPE 'VARCHAR2'), "
     			+ "SUPPLIER_NAME string(30) OPTIONS(NAMEINSOURCE '\"SUPPLIER_NAME\"', NATIVE_TYPE 'VARCHAR2'), "
@@ -725,9 +725,46 @@ public class TestModelToDdlGenerator implements StringConstants {
     			+ "SUPPLIER_CITY string(30) OPTIONS(NAMEINSOURCE '\"SUPPLIER_CITY\"', NATIVE_TYPE 'VARCHAR2'), "
     			+ "SUPPLIER_STATE string(2) OPTIONS(NAMEINSOURCE '\"SUPPLIER_STATE\"', NATIVE_TYPE 'VARCHAR2'), "
     			+ "CONSTRAINT PK_SUPPLIER PRIMARY KEY(SUPPLIER_ID), "
-    			+ "CONSTRAINT FK_SPLIER_STATS FOREIGN KEY(SUPPLIER_STATUS) REFERENCES STATUS(STATUS_ID)) OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"SUPPLIER\"')";
+    			+ "CONSTRAINT FK_SPLIER_STATS FOREIGN KEY(SUPPLIER_STATUS) REFERENCES STATUS(STATUS_ID)) OPTIONS(NAMEINSOURCE '\"PARTSSUPPLIER\".\"SUPPLIER\"', UPDATABLE 'TRUE');";
     	
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
+    }
+    
+    /*
+     * 
+CREATE FOREIGN PROCEDURE "Procedure" (OUT newParameter_1 string(4000) OPTIONS(NAMEINSOURCE 'nis_param1'), OUT newParameter_2 string(4000) RESULT OPTIONS(NAMEINSOURCE 'nis_para2'))
+ OPTIONS(NAMEINSOURCE 'ProcedureSource', UPDATECOUNT '1');
+
+CREATE FOREIGN FUNCTION "Function" (IN newParameter_1 string(4000) OPTIONS(NAMEINSOURCE 'nis_f_param1'))
+ OPTIONS(NAMEINSOURCE 'FunctionSource');
+     */
+    @Test
+    public void testProcedure() throws Exception {
+    	
+    	this.generator.setIncludeNIS(true);
+
+    	String ddl = "CREATE FOREIGN PROCEDURE \"Procedure\" (IN newParameter_1 string(4000) OPTIONS(NAMEINSOURCE 'nis_param1'), OUT newParameter_2 string(4000) RESULT OPTIONS(NAMEINSOURCE 'nis_para2'))" +
+    			"\n OPTIONS(NAMEINSOURCE 'ProcedureSource', UPDATECOUNT '1');";
+    	
+    	String expectedDdl = "CREATE FOREIGN PROCEDURE \"Procedure\" (IN newParameter_1 string(4000) OPTIONS(NAMEINSOURCE 'nis_param1'), OUT newParameter_2 string(4000) RESULT OPTIONS(NAMEINSOURCE 'nis_para2'))" +
+    			" OPTIONS(NAMEINSOURCE 'ProcedureSource', UPDATECOUNT '1');";
+            String generatedDdl = roundTrip(ddl, false);
+    	        assertEquals(expectedDdl, generatedDdl);
+    	    
+    }
+    
+    @Test
+    public void testFunction() throws Exception {
+    	this.generator.setIncludeNIS(true);
+    	
+    	String ddl = "\nCREATE FOREIGN FUNCTION \"Function\" (IN newParameter_1 string(4000) OPTIONS(NAMEINSOURCE 'nis_f_param1'))" +
+    		" OPTIONS(NAMEINSOURCE 'FunctionSource');";
+    	
+    	String expectedDdl = "CREATE FOREIGN FUNCTION \"Function\" (IN newParameter_1 string(4000) OPTIONS(NAMEINSOURCE 'nis_f_param1'))" +
+    		" OPTIONS(NAMEINSOURCE 'FunctionSource');";
+            String generatedDdl = roundTrip(ddl, false);
+    	        assertEquals(expectedDdl, generatedDdl);
+    	    
     }
 }

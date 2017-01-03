@@ -623,6 +623,7 @@ public final class ExportDdlWizard extends AbstractWizard
                                                                          0,
                                                                          2,
                                                                          options.isNameInSourceUsed());
+            this.useNamesInSourceCheckBox.setSelection(true);
             this.useNamesInSourceCheckBox.addSelectionListener(new SelectionAdapter() {
                 @Override
                 public void widgetSelected( final SelectionEvent event ) {
@@ -634,6 +635,7 @@ public final class ExportDdlWizard extends AbstractWizard
                                                                       0,
                                                                       2,
                                                                       options.isNativeTypeUsed());
+            this.useNativeTypeCheckBox.setSelection(true);
             this.useNativeTypeCheckBox.addSelectionListener(new SelectionAdapter() {
                 @Override
                 public void widgetSelected( final SelectionEvent event ) {
