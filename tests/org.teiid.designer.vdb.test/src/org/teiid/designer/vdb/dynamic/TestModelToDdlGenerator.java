@@ -731,18 +731,8 @@ public class TestModelToDdlGenerator implements StringConstants {
         assertEquals(expectedDdl, generatedDdl);
     }
     
-    /*
-     * 
-CREATE FOREIGN PROCEDURE "Procedure" (OUT newParameter_1 string(4000) OPTIONS(NAMEINSOURCE 'nis_param1'), OUT newParameter_2 string(4000) RESULT OPTIONS(NAMEINSOURCE 'nis_para2'))
- OPTIONS(NAMEINSOURCE 'ProcedureSource', UPDATECOUNT '1');
-
-CREATE FOREIGN FUNCTION "Function" (IN newParameter_1 string(4000) OPTIONS(NAMEINSOURCE 'nis_f_param1'))
- OPTIONS(NAMEINSOURCE 'FunctionSource');
-     */
     @Test
     public void testProcedure() throws Exception {
-    	
-    	this.generator.setIncludeNIS(true);
 
     	String ddl = "CREATE FOREIGN PROCEDURE \"Procedure\" (IN newParameter_1 string(4000) OPTIONS(NAMEINSOURCE 'nis_param1'), OUT newParameter_2 string(4000) RESULT OPTIONS(NAMEINSOURCE 'nis_para2'))" +
     			"\n OPTIONS(NAMEINSOURCE 'ProcedureSource', UPDATECOUNT '1');";
@@ -756,7 +746,6 @@ CREATE FOREIGN FUNCTION "Function" (IN newParameter_1 string(4000) OPTIONS(NAMEI
     
     @Test
     public void testFunction() throws Exception {
-    	this.generator.setIncludeNIS(true);
     	
     	String ddl = "\nCREATE FOREIGN FUNCTION \"Function\" (IN newParameter_1 string(4000) OPTIONS(NAMEINSOURCE 'nis_f_param1'))" +
     		" OPTIONS(NAMEINSOURCE 'FunctionSource');";
@@ -766,5 +755,26 @@ CREATE FOREIGN FUNCTION "Function" (IN newParameter_1 string(4000) OPTIONS(NAMEI
             String generatedDdl = roundTrip(ddl, false);
     	        assertEquals(expectedDdl, generatedDdl);
     	    
+    }
+    
+    @Test
+    public void testFKWithNIS() throws Exception {
+    	String ddl = 
+    			"CREATE FOREIGN TABLE \"Table\" (" +
+    			"\n\tColumn1 biginteger(1234) NOT NULL OPTIONS(NAMEINSOURCE 'ColumnSource', NATIVE_TYPE 'NativetypeColumn')," +
+    			"\n\tColumn2 char(1)," +
+    			"\n\tCONSTRAINT PrimaryKey PRIMARY KEY(Column1) OPTIONS(NAMEINSOURCE 'pkNameInSource')," +
+    			"\n\tCONSTRAINT UniqueConstrain UNIQUE(Column2) OPTIONS(NAMEINSOURCE 'ucNameInSource')" +
+    			"\n) OPTIONS(NAMEINSOURCE 'TableSource', UPDATABLE 'TRUE', CARDINALITY '120');";
+    	String expectedDdl = 
+    			"CREATE FOREIGN TABLE \"Table\" (" +
+    			"Column1 biginteger(1234) NOT NULL OPTIONS(NAMEINSOURCE 'ColumnSource', NATIVE_TYPE 'NativetypeColumn')," +
+    			" Column2 char(1)," +
+    			" CONSTRAINT PrimaryKey PRIMARY KEY(Column1) OPTIONS(NAMEINSOURCE 'pkNameInSource')," +
+    			" CONSTRAINT UniqueConstrain UNIQUE(Column2) OPTIONS(NAMEINSOURCE 'ucNameInSource')" +
+    			") OPTIONS(NAMEINSOURCE 'TableSource', UPDATABLE 'TRUE', CARDINALITY '120');";
+    	
+        String generatedDdl = roundTrip(ddl, false);
+        assertEquals(expectedDdl, generatedDdl);
     }
 }

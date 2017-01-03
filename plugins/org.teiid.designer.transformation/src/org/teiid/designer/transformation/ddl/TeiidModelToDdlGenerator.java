@@ -55,8 +55,13 @@ import org.teiid.designer.metamodels.relational.extension.RestModelExtensionCons
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 import org.teiid.designer.relational.RelationalConstants;
+import org.teiid.designer.relational.model.RelationalAccessPattern;
+import org.teiid.designer.relational.model.RelationalForeignKey;
 import org.teiid.designer.relational.model.RelationalParameter;
+import org.teiid.designer.relational.model.RelationalPrimaryKey;
+import org.teiid.designer.relational.model.RelationalUniqueConstraint;
 import org.teiid.designer.transformation.TransformationPlugin;
+import org.teiid.designer.transformation.reverseeng.api.Options;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 //import org.teiid.query.ui.sqleditor.component.QueryDisplayFormatter;
@@ -805,8 +810,40 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     
     private Map<String, String> getParameterOptions(ProcedureParameter parameter) {
     	Map<String, String> options = new HashMap<String, String>();
-    	if( this.includeNIS ) {
+    	if( this.includeNIS && parameter.getNameInSource() != null) {
     		options.put(NAMEINSOURCE, parameter.getNameInSource());
+    	}
+    	return options;
+    }
+    
+    private Map<String, String> getPKOptions(PrimaryKey pk) {
+    	Map<String, String> options = new HashMap<String, String>();
+    	if( this.includeNIS && pk.getNameInSource() != null ) {
+    		options.put(NAMEINSOURCE, pk.getNameInSource());
+    	}
+    	return options;
+    }
+    
+    private Map<String, String> getUCOptions(UniqueConstraint uc) {
+    	Map<String, String> options = new HashMap<String, String>();
+    	if( this.includeNIS && uc.getNameInSource() != null) {
+    		options.put(NAMEINSOURCE, uc.getNameInSource());
+    	}
+    	return options;
+    }
+    
+    private Map<String, String> getFKOptions(ForeignKey fk) {
+    	Map<String, String> options = new HashMap<String, String>();
+    	if( this.includeNIS && fk.getNameInSource() != null) {
+    		options.put(NAMEINSOURCE, fk.getNameInSource());
+    	}
+    	return options;
+    }
+    
+    private Map<String, String> getAPOptions(AccessPattern ap) {
+    	Map<String, String> options = new HashMap<String, String>();
+    	if( this.includeNIS && ap.getNameInSource() != null) {
+    		options.put(NAMEINSOURCE, ap.getNameInSource());
     	}
     	return options;
     }
@@ -861,6 +898,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				if( count < nColumns ) theSB.append(COMMA + SPACE);
 				else theSB.append(CLOSE_BRACKET);
 			}
+			
+	    	String options = getOptions(pk);
+			if( !StringUtilities.isEmpty(options)) {
+				theSB.append(SPACE).append(options);
+			}
+			
 			sb.append(theSB.toString());
 			
 			if( (hasFKs && includeFKs) || hasUCs || hasAPs ) sb.append(COMMA);
@@ -921,7 +964,10 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 					}
 
 				}
-				
+		    	String options = getOptions(fk);
+				if( !StringUtilities.isEmpty(options)) {
+					theSB.append(SPACE).append(options);
+				}
 				sb.append(theSB.toString());
 				if( countFK < nFKs ) sb.append(COMMA);
 			}
@@ -947,6 +993,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 					if( count < nColumns ) theSB.append(COMMA + SPACE);
 					else theSB.append(CLOSE_BRACKET);
 				}
+				
+		    	String options = getOptions(uc);
+				if( !StringUtilities.isEmpty(options)) {
+					theSB.append(SPACE).append(options);
+				}
+				
 				if( ucCount < nUCs ) sb.append(COMMA);
 				sb.append(theSB.toString());
 			}
@@ -1040,7 +1092,15 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	
     	if( modelObject instanceof ProcedureParameter ) {
         	options.putAll( getParameterOptions((ProcedureParameter)modelObject));
-    	}
+    	} else if( modelObject instanceof PrimaryKey ) {
+        	options.putAll( getPKOptions((PrimaryKey)modelObject));
+    	} else if( modelObject instanceof UniqueConstraint ) {
+        	options.putAll( getUCOptions((UniqueConstraint)modelObject));
+    	} else if( modelObject instanceof ForeignKey ) {
+        	options.putAll( getFKOptions((ForeignKey)modelObject));
+    	} else if( modelObject instanceof AccessPattern ) {
+        	options.putAll( getAPOptions((AccessPattern)modelObject));
+    	} 
 
     	Collection<String> extensionNamespaces = medAggregator.getSupportedNamespacePrefixes(modelObject);
     	for( String ns : extensionNamespaces ) {

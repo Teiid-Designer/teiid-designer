@@ -406,6 +406,10 @@ public class EmfModelGenerator {
         baseTable.setSystem(tableRef.isSystem());
         baseTable.setCardinality(tableRef.getCardinality());
         
+        if( !CoreStringUtil.isEmpty(tableRef.getDescription()) ) {
+        	setDescription(baseTable, tableRef.getDescription(), modelResource);
+        }
+        
         // Add Columns
         for( RelationalColumn column : tableRef.getColumns()) {
             createColumn(column, baseTable, modelResource);
@@ -468,6 +472,10 @@ public class EmfModelGenerator {
         
         for( RelationalAccessPattern ap : viewRef.getAccessPatterns()) {
         	apList.add(new DeferredPair(ap, view));
+        }
+        
+        if( !CoreStringUtil.isEmpty(viewRef.getDescription()) ) {
+        	setDescription(view, viewRef.getDescription(), modelResource);
         }
 
         // Add to deferred list, if necessary
@@ -534,6 +542,10 @@ public class EmfModelGenerator {
             }
         }
         column.setLength(columnRef.getLength());
+
+        if( !CoreStringUtil.isEmpty(columnRef.getDescription()) ) {
+        	setDescription(column, columnRef.getDescription(), modelResource);
+        }
         
         // Add to deferred list, if necessary
         updateDeferredList(columnRef,column);
@@ -599,6 +611,10 @@ public class EmfModelGenerator {
             } else {
             	columnRef.setLength(datatypeLength);
             }
+        }
+        
+        if( !CoreStringUtil.isEmpty(columnRef.getDescription()) ) {
+        	setDescription(column, columnRef.getDescription(), modelResource);
         }
         
         // Add to deferred list, if necessary
@@ -739,6 +755,10 @@ public class EmfModelGenerator {
             }
         }
         
+        if( !CoreStringUtil.isEmpty(indexRef.getDescription()) ) {
+        	setDescription(index, indexRef.getDescription(), modelResource);
+        }
+        
         // Add to deferred list, if necessary
         updateDeferredList(indexRef,index);
 
@@ -762,6 +782,10 @@ public class EmfModelGenerator {
         primaryKey.setTable(baseTable);
         primaryKey.setName(pkRef.getName());
         primaryKey.setNameInSource(pkRef.getNameInSource());
+        
+        if( !CoreStringUtil.isEmpty(pkRef.getDescription()) ) {
+        	setDescription(primaryKey, pkRef.getDescription(), modelResource);
+        }
         
         // Add the columns in the correct order
         final List keyColumns = primaryKey.getColumns();
@@ -798,6 +822,10 @@ public class EmfModelGenerator {
         foreignKey.setNameInSource(fkRef.getNameInSource());
         foreignKey.setForeignKeyMultiplicity(getMultiplictyKind(fkRef.getForeignKeyMultiplicity()));
         foreignKey.setPrimaryKeyMultiplicity(getMultiplictyKind(fkRef.getPrimaryKeyMultiplicity()));
+        
+        if( !CoreStringUtil.isEmpty(fkRef.getDescription()) ) {
+        	setDescription(foreignKey, fkRef.getDescription(), modelResource);
+        }
         
         // Add the columns in the correct order
         final List keyColumns = foreignKey.getColumns();
@@ -848,6 +876,10 @@ public class EmfModelGenerator {
         accessPattern.setTable(baseTable);
         accessPattern.setName(apRef.getName());
         accessPattern.setNameInSource(apRef.getNameInSource());
+
+        if( !CoreStringUtil.isEmpty(apRef.getDescription()) ) {
+        	setDescription(accessPattern, apRef.getDescription(), modelResource);
+        }
         
         // Add the columns in the correct order
         final List keyColumns = accessPattern.getColumns();
@@ -882,6 +914,10 @@ public class EmfModelGenerator {
         uniqueConstraint.setTable(baseTable);
         uniqueConstraint.setName(ucRef.getName());
         uniqueConstraint.setNameInSource(ucRef.getNameInSource());
+        
+        if( !CoreStringUtil.isEmpty(ucRef.getDescription()) ) {
+        	setDescription(uniqueConstraint, ucRef.getDescription(), modelResource);
+        }
         
         // Add the columns in the correct order
         final List keyColumns = uniqueConstraint.getColumns();
@@ -954,6 +990,9 @@ public class EmfModelGenerator {
         procedure.setFunction(procedureRef.isFunction());
         procedure.setUpdateCount(getUpdateCount(procedureRef.getUpdateCount()));
         
+        if( !CoreStringUtil.isEmpty(procedureRef.getDescription()) ) {
+        	setDescription(procedure, procedureRef.getDescription(), modelResource);
+        }
 
         // Add Columns
         for( RelationalParameter paramRef : procedureRef.getParameters()) {
@@ -1011,6 +1050,10 @@ public class EmfModelGenerator {
             	parameter.setLength(datatypeLength);
             }
         }
+
+        if( !CoreStringUtil.isEmpty(parameterRef.getDescription()) ) {
+        	setDescription(parameter, parameterRef.getDescription(), modelResource);
+        }
        
         // Add to deferred list, if necessary
         updateDeferredList(parameterRef,parameter);
@@ -1040,6 +1083,10 @@ public class EmfModelGenerator {
             createColumn(colRef, result, modelResource);
         }
         
+        if( !CoreStringUtil.isEmpty(resultSetRef.getDescription()) ) {
+        	setDescription(result, resultSetRef.getDescription(), modelResource);
+        }
+        
         // Add to deferred list, if necessary
         updateDeferredList(resultSetRef,result);
 
@@ -1065,6 +1112,8 @@ public class EmfModelGenerator {
      * @param modelResource the model resource
      */
     public void setDescription( EObject eObject, String description, ModelResource modelResource ) {
+    	
+    	System.out.println(" EmfModelGen.setDescription()  desc = " + description + " Obj =" + eObject);
         if (description != null && description.trim().length() > 0) {
             try {
                 AnnotationContainer annotations = null;
