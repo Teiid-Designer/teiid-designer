@@ -98,7 +98,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
      * 
      */
 	public TeiidModelToDdlGenerator() {
-		super();
+		this(true, true);
 	}
 	
     /**

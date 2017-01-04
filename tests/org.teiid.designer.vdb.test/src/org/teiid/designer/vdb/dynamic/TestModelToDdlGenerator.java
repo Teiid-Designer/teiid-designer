@@ -141,7 +141,7 @@ public class TestModelToDdlGenerator implements StringConstants {
 
     @Before
     public void setup() throws Exception {
-        generator = new TeiidModelToDdlGenerator(true, true);
+        generator = new TeiidModelToDdlGenerator();
 
         eclipseMock = new EclipseMock();
         modelWorkspaceMock = new ModelWorkspaceMock(eclipseMock);
@@ -774,6 +774,22 @@ public class TestModelToDdlGenerator implements StringConstants {
     			" CONSTRAINT UniqueConstrain UNIQUE(Column2) OPTIONS(NAMEINSOURCE 'ucNameInSource')" +
     			") OPTIONS(NAMEINSOURCE 'TableSource', UPDATABLE 'TRUE', CARDINALITY '120');";
     	
+        String generatedDdl = roundTrip(ddl, false);
+        assertEquals(expectedDdl, generatedDdl);
+    }
+    
+    @Test
+    public void testINDEX() throws Exception {
+    	String ddl = 
+    			"CREATE FOREIGN TABLE myTable (" + 
+    			"\n\tnewColumn_1 string(4000) INDEX" +
+    			") OPTIONS(NAMEINSOURCE 'myTableSource', UPDATABLE 'TRUE');";
+		
+		String expectedDdl = 
+				"CREATE FOREIGN TABLE myTable (" + 
+		    			"newColumn_1 string(4000) INDEX" +
+		    			") OPTIONS(NAMEINSOURCE 'myTableSource', UPDATABLE 'TRUE');";
+		
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
     }

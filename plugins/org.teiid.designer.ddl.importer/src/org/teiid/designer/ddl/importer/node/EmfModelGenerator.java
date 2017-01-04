@@ -207,7 +207,8 @@ public class EmfModelGenerator {
 
 		if(!indexList.isEmpty()) {
 			for( RelationalIndex index : indexList ) {
-				createIndex(index, targetModelResource);  
+				EObject newIndex = createIndex(index, targetModelResource);
+				targetModelResource.getEmfResource().getContents().add(newIndex);
 			}
 		}
 		
@@ -321,8 +322,8 @@ public class EmfModelGenerator {
         } break;
 
         case TYPES.INDEX: {
-        	newEObject = createIndex(relationalRef, modelResource);
-        	modelResource.getEmfResource().getContents().add(newEObject);
+//        	newEObject = createIndex(relationalRef, modelResource);
+//        	modelResource.getEmfResource().getContents().add(newEObject);
         } break;
 
         case TYPES.UNDEFINED:
