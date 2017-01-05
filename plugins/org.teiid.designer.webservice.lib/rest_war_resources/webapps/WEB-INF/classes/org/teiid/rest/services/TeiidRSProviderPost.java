@@ -156,7 +156,7 @@ public class TeiidRSProviderPost {
         
 		if (result instanceof SQLXML) {
 			if (charSet != null) {
-				XMLSerialize serialize = (XMLSerialize)TeiidNodeFactory.getInstance().create(parser, ASTNodes.XML_SERIALIZE);
+				XMLSerialize serialize = (XMLSerialize)TeiidNodeFactory.getInstance().create(version, ASTNodes.XML_SERIALIZE);
 		    	serialize.setTypeString("blob"); //$NON-NLS-1$
 		    	serialize.setDeclaration(true);
 		    	serialize.setEncoding(charSet);
