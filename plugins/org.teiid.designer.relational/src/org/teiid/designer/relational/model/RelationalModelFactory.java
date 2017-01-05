@@ -286,6 +286,8 @@ public class RelationalModelFactory implements RelationalConstants {
                 for( RelationalIndex index : ((RelationalTable)relationalRef).getIndexes() ) {
                 	EObject newIndex = createIndex(index, modelResource);
                 }
+                
+                applyTableExtensionProperties((RelationalTable)relationalRef,(BaseTable) newEObject, false);
 
             } break;
             case TYPES.VIEW: {
@@ -294,6 +296,8 @@ public class RelationalModelFactory implements RelationalConstants {
             } break;
             case TYPES.PROCEDURE: {
             	newEObject = createProcedure(relationalRef, modelResource);
+            	
+            	applyProcedureExtensionProperties((RelationalProcedure)relationalRef,(Procedure) newEObject);
 
             } break;
             case TYPES.INDEX: {

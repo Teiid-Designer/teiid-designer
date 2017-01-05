@@ -85,7 +85,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     private TabItem resultSetTab;
 	
 	// table property widgets
-    private Button nonPreparedCB, deterministicCB, returnsNullCB, variableArgsCB, aggregateCB,
+    private Button deterministicCB, returnsNullCB, variableArgsCB, aggregateCB,
 		allowsDistinctCB, allowsOrderByCB, analyticCB, decomposableCB, useDistinctRowsCB, includeResultSetCB;
     private Text resultSetNameText;
 	
@@ -527,20 +527,20 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 	        
 	        this.updateCountCombo.setText(UPDATE_COUNT.AUTO);
 	        
-	        this.nonPreparedCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
-	        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.nonPreparedCB);
-	        this.nonPreparedCB.setText(Messages.nonPreparedLabel);
-	        this.nonPreparedCB.addSelectionListener(new SelectionAdapter() {
-	            /**            		
-	             * {@inheritDoc}
-	             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-	             */
-	            @Override
-	            public void widgetSelected( SelectionEvent e ) {
-	            	getRelationalReference().setNonPrepared(nonPreparedCB.getSelection());
-	                handleInfoChanged();
-	            }
-	        });
+	        this.updateCountCombo.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					getRelationalReference().setUpdateCount(updateCountCombo.getText());
+					
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
 	        
 			REST_PROPERTIES : {
 				Group restGroup = WidgetFactory.createGroup(thePanel, Messages.restOptions, SWT.FILL, 1, 2);
