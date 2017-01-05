@@ -12,7 +12,12 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.relational.Table;
+import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
+import org.teiid.designer.transformation.reverseeng.ReverseEngConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
@@ -74,6 +79,13 @@ public class ClearMaterializationAction extends SortableSelectionAction {
 				Table table = (Table)(SelectionUtilities.getSelectedEObject(getSelection()));
 				table.setMaterialized(false);
 				table.setMaterializedTable(null);
+				
+				// Clear extension properties
+	            final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+	            ModelObjectExtensionAssistant assistant =  (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(ReverseEngConstants.RELATIONAL_EXT_ASSISTANT_NS);
+	            assistant.removeProperty(table, RelationalModelExtensionConstants.PropertyIds.MATVIEW_AFTER_LOAD_SCRIPT);
+	            assistant.removeProperty(table, RelationalModelExtensionConstants.PropertyIds.MATVIEW_BEFORE_LOAD_SCRIPT);
+	            assistant.removeProperty(table, RelationalModelExtensionConstants.PropertyIds.MATERIALIZED_STAGE_TABLE);
 				succeeded = true;
 			}
 		} catch (Exception ex) {
