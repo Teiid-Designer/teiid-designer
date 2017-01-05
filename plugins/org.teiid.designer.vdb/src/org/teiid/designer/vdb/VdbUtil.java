@@ -645,7 +645,7 @@ public class VdbUtil implements VdbConstants {
 				// so need to look for older runtime, then do an integer check and log a warning if it's a non-integer
 				if(validationVersion != null && validationVersion.isLessThan(Version.TEIID_9_0)) {
 					String vdbVersion = manifest.getVersion();
-					Integer intValue = Integer.getInteger(vdbVersion);
+					Integer intValue = Integer.valueOf(vdbVersion);
 					if( intValue == null ) {
 						statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, 
 								VdbPlugin.UTIL.getString("vdbValidationWarning_onlyIntegerVdbVersionsSupportedPriorToTeiid9")) ); //$NON-NLS-1$

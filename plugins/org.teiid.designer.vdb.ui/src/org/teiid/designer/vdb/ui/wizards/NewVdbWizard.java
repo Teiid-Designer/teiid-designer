@@ -230,7 +230,13 @@ public final class NewVdbWizard extends AbstractWizard
                     String fullVdbName = newVdb.getName();
     				int firstIndex = fullVdbName.indexOf('.');
                     String versionStr = fullVdbName.substring(firstIndex + 1);
-					newVdb.setVersion(versionStr);
+                    int version = 1;
+					try {
+						version = Integer.parseInt(versionStr);
+					} catch (NumberFormatException e) {
+						// Do nothing.. shouldn't get here and swallow anyway cause version == 1 is back-up
+					}
+					newVdb.setVersion(Integer.toString(version));
             		
                     newVdb.save();
                     NewVdbWizard.this.folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
