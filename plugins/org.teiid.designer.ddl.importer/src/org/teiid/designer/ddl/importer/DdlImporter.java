@@ -159,7 +159,7 @@ public class DdlImporter {
      * @throws Exception
      */
     public void importDdl(String ddl, IProgressMonitor monitor, int totalWork, Properties options) throws Exception {
-    	if( specifiedParser != null && specifiedParser.toUpperCase().equals("TEIID") ) {
+    	if( specifiedParser != null && specifiedParser.toUpperCase().equals(TeiidDDLConstants.TEIID) ) {
     		importTeiidDdl(ddl, monitor, totalWork, options);
     		return;
     	}
@@ -500,6 +500,12 @@ public class DdlImporter {
                 }
             }
         }
+
+    	if( specifiedParser != null && specifiedParser.toUpperCase().equals(TeiidDDLConstants.TEIID) ) {
+    		Set<ModelResource> models = new HashSet<ModelResource>();
+    		models.add(model);
+    		setMaterializedTableReferences(models);
+    	}
 
 
         // Save model

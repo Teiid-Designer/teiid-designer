@@ -75,6 +75,7 @@ public interface TeiidDDLConstants {
 	    public String DDL_IMPORT_FILTER_CONSTRAINTS = "ddlImport_filterConstraints"; //$NON-NLS-1$
 	    public String DDL_IMPORT_TABLE_UPDATABLE_OVERRIDE = "ddlImport_table_updatable_override"; //$NON-NLS-1$
 		public static final String RETURNS = "RETURNS"; //$NON-NLS-1$
+		public static final String TEIID = "TEIID"; //$NON-NLS-1$
 	    
 
 }
