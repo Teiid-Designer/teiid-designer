@@ -576,19 +576,21 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		int count = 0;
 		
 		for( ProcedureParameter param : params ) {
+			if( count == 0 ) sb.append(NEW_LINE);
+			
 			String paramStr = getParameterDdl(param);
 			count++;
-			sb.append(paramStr);
+			sb.append(TAB).append(paramStr);
 			
 			String options = getOptions(param);
 			if( !StringUtilities.isEmpty(options)) {
 				sb.append(SPACE).append(options);
 			}
 			
-			if( count < nParams ) sb.append(COMMA + SPACE);
+			if( count < nParams ) sb.append(COMMA + NEW_LINE);
 		}
 		
-		sb.append(CLOSE_BRACKET);
+		sb.append(NEW_LINE + CLOSE_BRACKET);
 		
 		// Depending on the procedure type, need to append either one of the following:
 		//   > returns datatype
@@ -612,26 +614,27 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				sb.append(SPACE).append(options);
 			}
 			
-			sb.append(SPACE + TABLE + SPACE);
+			sb.append(NEW_LINE + TAB + TABLE + SPACE);
 			
 			sb.append(OPEN_BRACKET);
 			
 			count = 0;
 			int nCols = procedure.getResult().getColumns().size();
 			for( Object col : procedure.getResult().getColumns() ) {
+				if( count == 0 ) sb.append(NEW_LINE);
+				
 				Column nextCol = (Column)col;
 				count++;
 				String columnStr = getColumnDdl(nextCol);
-				sb.append(columnStr);
-				if( count < nCols ) sb.append(COMMA + SPACE);
+				sb.append(TAB + TAB).append(columnStr);
+				if( count < nCols ) sb.append(COMMA + NEW_LINE);
 
 			}
-			sb.append(CLOSE_BRACKET);
+			sb.append(NEW_LINE + CLOSE_BRACKET);
 		}
 		
 		String options = getProcedureOptions(procedure);
 		if( !StringUtilities.isEmpty(options)) {
-			sb.append(NEW_LINE);
 			sb.append(SPACE).append(options);
 		}
 
@@ -812,6 +815,10 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	Map<String, String> options = new HashMap<String, String>();
     	if( this.includeNIS && parameter.getNameInSource() != null) {
     		options.put(NAMEINSOURCE, parameter.getNameInSource());
+    	}
+    	
+    	if( this.includeNativeType ) {
+    		options.put(NATIVE_TYPE, parameter.getNativeType());
     	}
     	return options;
     }

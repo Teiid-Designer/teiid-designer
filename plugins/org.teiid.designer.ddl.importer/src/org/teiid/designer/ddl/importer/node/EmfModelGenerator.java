@@ -1114,7 +1114,6 @@ public class EmfModelGenerator {
      */
     public void setDescription( EObject eObject, String description, ModelResource modelResource ) {
     	
-    	System.out.println(" EmfModelGen.setDescription()  desc = " + description + " Obj =" + eObject);
         if (description != null && description.trim().length() > 0) {
             try {
                 AnnotationContainer annotations = null;

@@ -551,11 +551,18 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 				procedure.setResultSet(result);
 				initialize(result, procedureNode);
 
+				List<AstNode> resultOptionNodes = new ArrayList<AstNode>();
+				
 				for(AstNode resultCol: child) {
 					if(resultCol.hasMixin(TeiidDdlLexicon.CreateProcedure.RESULT_COLUMN)) {
 						createColumn(resultCol,result);
+					} else if( is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION) ) {
+						resultOptionNodes.add(resultCol);
 					}
 				}
+				// Need to process options so Description get's set
+				processOptions(resultOptionNodes, result);
+				
 			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_DATA_TYPE)) {
 				// Need to create a procedure parameter with return direction
 				RelationalParameter param = createProcedureParameter(child, procedure);
@@ -608,11 +615,19 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 				procedure.setResultSet(result);
 				initialize(result, procedureNode);
 
+				List<AstNode> resultOptionNodes = new ArrayList<AstNode>();
+				
 				for(AstNode resultCol: child) {
 					if(resultCol.hasMixin(TeiidDdlLexicon.CreateProcedure.RESULT_COLUMN)) {
 						createColumn(resultCol,result);
+					} else if( is(resultCol, StandardDdlLexicon.TYPE_STATEMENT_OPTION) ) {
+						resultOptionNodes.add(resultCol);
 					}
 				}
+				
+				// Need to process options so Description get's set
+				processOptions(resultOptionNodes, result);
+				
 			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_DATA_TYPE)) {
 				// Add a parameter with RETURN direction
 				RelationalParameter param = createProcedureParameter(child, procedure);
@@ -643,7 +658,11 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 	@Override
 	protected RelationalParameter createProcedureParameter(AstNode node, RelationalProcedure procedure) throws Exception {
 		RelationalParameter prm = super.createProcedureParameter(node, procedure);
-
+		
+		// StandardImporter sets the native type to datatype. Need to unset this because Teiid defines it in the OPTIONS() clause
+		// or it's null
+		prm.setNativeType(RelationalColumn.DEFAULT_NATIVE_TYPE);
+		
 		// Handle Teiid-specific properties and options
 		String direction = node.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_TYPE).toString();
 		String resultFlag = node.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_RESULT_FLAG).toString();
@@ -930,6 +949,8 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 			processTeiidColumnOptions(optionNodes,(RelationalColumn)relationalReference);
 		} else if(relationalReference instanceof RelationalProcedure) {
 			processTeiidProcedureOptions(optionNodes,(RelationalProcedure)relationalReference);
+		} else if(relationalReference instanceof RelationalParameter) {
+			processTeiidParameterOptions(optionNodes, (RelationalParameter)relationalReference);
 		}
 	}
 
@@ -1200,6 +1221,26 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 			}
 		}
 	}
+	
+	private void processTeiidParameterOptions(List<AstNode> optionNodes, RelationalParameter param) {
+
+		Iterator<AstNode> nodeIter = optionNodes.iterator();
+		while(nodeIter.hasNext()) {
+			AstNode optionNode = nodeIter.next();
+			String optionName = optionNode.getName();
+			Object optionValue = optionNode.getProperty(StandardDdlLexicon.VALUE);
+			if(!CoreStringUtil.isEmpty(optionName)) {
+				String optionValueStr = (String)optionValue;
+				if(!CoreStringUtil.isEmpty(optionValueStr)) {
+					if(optionName.equalsIgnoreCase(TeiidDDLConstants.NATIVE_TYPE)) {
+						param.setNativeType(optionValueStr);
+						nodeIter.remove();
+						resolveParameterDatatype(param, optionValueStr);
+                    }
+				}
+			}
+		}
+	}
 
 	private void resolveColumnDatatype(RelationalColumn column, String nativeType) {
 		if( (column.getDatatype().equalsIgnoreCase(TYPES_UPPER.INTEGER) || column.getDatatype().equalsIgnoreCase(TYPES_UPPER.BIGINTEGER))
@@ -1234,6 +1275,37 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 		// Not enough info in DDL to determine if fixed length data type so calling it here
 		// on importing DDL, the FIXED_LENGTH OPTIONS() value would be the determining factor.
 		//		column.setLengthFixed(isFixedLength(column.getNativeType()));
+	}
+	
+	private void resolveParameterDatatype(RelationalParameter param, String nativeType) {
+		if( (param.getDatatype().equalsIgnoreCase(TYPES_UPPER.INTEGER) || param.getDatatype().equalsIgnoreCase(TYPES_UPPER.BIGINTEGER))
+				&& nativeType.equalsIgnoreCase(TYPES_UPPER.INT) ) {
+			param.setDatatype(nativeType);
+		} else if( param.getDatatype().equalsIgnoreCase(TYPES_UPPER.STRING) && nativeType.equalsIgnoreCase(TYPES_UPPER.CHAR) ) {
+			// Some DB's have columns of type "char(10)" and need to be converted to String type
+			if( param.getLength() > 1 ) {
+				param.setDatatype(TYPES_UPPER.STRING);
+			} else {
+				param.setDatatype(nativeType);
+			}
+		} else if( param.getDatatype().equalsIgnoreCase(TYPES_UPPER.VARBINARY) && nativeType.equalsIgnoreCase(TYPES_UPPER.BINARY ) ) {
+			param.setDatatype(TYPES_UPPER.OBJECT.toLowerCase());
+		} else if( param.getDatatype().equalsIgnoreCase(TYPES_UPPER.TIMESTAMP) && nativeType.equalsIgnoreCase(TYPES_UPPER.DATETIME ) ) {
+		} else if( param.getDatatype().equalsIgnoreCase(TYPES_UPPER.DOUBLE) && nativeType.equalsIgnoreCase(TYPES_UPPER.FLOAT ) ) {
+			param.setDatatype(nativeType);
+			if( param.getPrecision() == 0 ) {
+				param.setPrecision(53);
+			}
+		} else if( param.getDatatype().equalsIgnoreCase(TYPES_UPPER.BIGDECIMAL) && nativeType.equalsIgnoreCase(TYPES_UPPER.DECIMAL ) ) {
+			param.setDatatype(nativeType);
+		} else if( param.getDatatype().equalsIgnoreCase(TYPES_UPPER.SHORT) && nativeType.equalsIgnoreCase(TYPES_UPPER.TINYINT ) ) {
+			param.setDatatype(TYPES_UPPER.BYTE.toLowerCase());
+		} else if( param.getDatatype().equalsIgnoreCase(TYPES_UPPER.FLOAT) && nativeType.equalsIgnoreCase(TYPES_UPPER.REAL ) ) {
+			if( param.getPrecision() == 0 ) {
+				param.setPrecision(24);
+			}
+		}
+
 	}
 
     /**
