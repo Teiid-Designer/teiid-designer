@@ -55,13 +55,7 @@ import org.teiid.designer.metamodels.relational.extension.RestModelExtensionCons
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 import org.teiid.designer.relational.RelationalConstants;
-import org.teiid.designer.relational.model.RelationalAccessPattern;
-import org.teiid.designer.relational.model.RelationalForeignKey;
-import org.teiid.designer.relational.model.RelationalParameter;
-import org.teiid.designer.relational.model.RelationalPrimaryKey;
-import org.teiid.designer.relational.model.RelationalUniqueConstraint;
 import org.teiid.designer.transformation.TransformationPlugin;
-import org.teiid.designer.transformation.reverseeng.api.Options;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 //import org.teiid.query.ui.sqleditor.component.QueryDisplayFormatter;
@@ -377,6 +371,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		if( table instanceof BaseTable) {
 			String constraints = getContraints((BaseTable)table);
 			if( constraints != null ) {
+				sb.append(COMMA);
 				sb.append(constraints);
 			}
 		}
@@ -443,6 +438,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		if( table instanceof BaseTable) {
 			String constraints = getContraints((BaseTable)table);
 			if( constraints != null ) {
+				sb.append(COMMA);
 				sb.append(constraints);
 			}
 		}
@@ -894,7 +890,6 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			PrimaryKey pk = table.getPrimaryKey();
 			// CONSTRAINT PK_ACCOUNTHOLDINGS PRIMARY KEY(TRANID),
 			String pkName = getName(pk);
-			sb.append(COMMA);
 			StringBuilder theSB = new StringBuilder(NEW_LINE + TAB + CONSTRAINT + SPACE + pkName + SPACE + PRIMARY_KEY);
 			nColumns = pk.getColumns().size();
 			count = 0;

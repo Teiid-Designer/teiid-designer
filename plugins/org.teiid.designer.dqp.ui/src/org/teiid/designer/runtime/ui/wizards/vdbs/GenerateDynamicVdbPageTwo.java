@@ -34,8 +34,6 @@ import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.runtime.ui.wizards.vdbs.style.XmlRegion;
 import org.teiid.designer.runtime.ui.wizards.vdbs.style.XmlRegionAnalyzer;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.ui.common.util.WizardUtil;
-import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 /**

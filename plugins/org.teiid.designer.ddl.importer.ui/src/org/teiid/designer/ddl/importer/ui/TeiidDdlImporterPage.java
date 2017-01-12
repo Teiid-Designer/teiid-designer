@@ -37,10 +37,14 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -84,6 +88,7 @@ public class TeiidDdlImporterPage  extends WizardPage implements IPersistentWiza
     private static final List<ModelType> MODEL_TYPES = Arrays.asList(ModelType.PHYSICAL_LITERAL, ModelType.VIRTUAL_LITERAL);
     private static final String OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_SETTING = "optToCreateModelEntitiesForUnsupportedDdl"; //$NON-NLS-1$
     private static final String OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_SETTING = "optToSetModelEntityDescription"; //$NON-NLS-1$
+    private Font monospaceFont;
 
     private final DdlImporter importer;
     final IProject[] projects;
@@ -98,7 +103,7 @@ public class TeiidDdlImporterPage  extends WizardPage implements IPersistentWiza
     private Button optToSetModelEntityDescriptionCheckBox;
     private Button optToCreateModelEntitiesForUnsupportedDdlCheckBox;
     Button filterRedundantUCsCB;
-    private Text ddlFileContentsBox;
+    private StyledText ddlFileContentsBox;
     
     private TabItem modelDefinitionTab;
     private TabItem optionsTab;
@@ -262,6 +267,8 @@ public class TeiidDdlImporterPage  extends WizardPage implements IPersistentWiza
      */
     @Override
     public void createControl( final Composite parent ) {
+        monospaceFont(parent);
+        
         final IDialogSettings settings = getDialogSettings();
         initDlgFolderName = settings.get(INITIAL_DIALOG_FOLDER_SETTING);
 
@@ -590,8 +597,12 @@ public class TeiidDdlImporterPage  extends WizardPage implements IPersistentWiza
         final Composite mainPanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
         GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(mainPanel);
         
-        ddlFileContentsBox = WidgetFactory.createTextBox(mainPanel);
+
+        ddlFileContentsBox = new StyledText(mainPanel, SWT.READ_ONLY | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        GridDataFactory.fillDefaults().grab(true, true).minSize(400, 300).applyTo(ddlFileContentsBox);
+
         ddlFileContentsBox.setEditable(false);
+        ddlFileContentsBox.setFont(monospaceFont);
         
         return mainPanel;
     }
@@ -710,6 +721,24 @@ public class TeiidDdlImporterPage  extends WizardPage implements IPersistentWiza
     void tabFromDdlFileCombo() {
         if (importer.ddlFileName() != null) if (importer.modelFolder() == null) modelFolderFld.setFocus();
         else modelNameFld.setFocus();
+    }
+    
+    private Font monospaceFont(Composite composite) {
+        if (monospaceFont == null) {
+            monospaceFont = new Font(composite.getDisplay(), "Monospace", 12, SWT.NORMAL); //$NON-NLS-1$
+            composite.addDisposeListener(new DisposeListener() {
+
+                @Override
+                public void widgetDisposed(DisposeEvent e) {
+                    if (monospaceFont == null)
+                        return;
+
+                    monospaceFont.dispose();
+                }
+            });
+        }
+
+        return monospaceFont;
     }
 
     void validate() {

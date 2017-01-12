@@ -2,7 +2,6 @@ package org.teiid.designer.transformation.ui.teiidddl;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -14,30 +13,23 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.IWizard;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Text;
-import org.teiid.core.designer.util.FileUtils;
-import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -50,8 +42,9 @@ public class ExportTeiidShowDdlPage extends AbstractWizardPage implements UiCons
 
 	private final String EMPTY = StringConstants.EMPTY_STRING;
 	private final int GROUP_HEIGHT_190 = 190;
+    private Font monospaceFont;
 
-    private Text ddlContentsBox;
+    private StyledText ddlContentsBox;
     private Button exportDDLToFileSystemButton;
     private Button exportDDLToWorkspaceButton;
 		
@@ -70,6 +63,7 @@ public class ExportTeiidShowDdlPage extends AbstractWizardPage implements UiCons
 
 	@Override
 	public void createControl(Composite parent) {
+        monospaceFont(parent);
 		// Create page
 		final Composite mainPanel = new Composite(parent, SWT.NONE);
 
@@ -98,8 +92,11 @@ public class ExportTeiidShowDdlPage extends AbstractWizardPage implements UiCons
         groupGD.widthHint = 400;
         theGroup.setLayoutData(groupGD);
 
-        ddlContentsBox = WidgetFactory.createTextBox(theGroup);
+        ddlContentsBox = new StyledText(theGroup, SWT.READ_ONLY | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        GridDataFactory.fillDefaults().grab(true, true).minSize(400, 300).applyTo(ddlContentsBox);
+
         ddlContentsBox.setEditable(false);
+        ddlContentsBox.setFont(monospaceFont);
     }
 
     /**
@@ -197,7 +194,6 @@ public class ExportTeiidShowDdlPage extends AbstractWizardPage implements UiCons
     		 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
     		 */
     		@Override
-    		@SuppressWarnings("unchecked")
     		public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
     			try {
     	            final IFile ddlFileToCreate = targetContainer.getFile(new Path(ddlFileName));
@@ -299,5 +295,23 @@ public class ExportTeiidShowDdlPage extends AbstractWizardPage implements UiCons
 	private void setThisPageComplete(String message, int severity) {
 		WizardUtil.setPageComplete(this, message, severity);
 	}
+	
+    private Font monospaceFont(Composite composite) {
+        if (monospaceFont == null) {
+            monospaceFont = new Font(composite.getDisplay(), "Monospace", 12, SWT.NORMAL); //$NON-NLS-1$
+            composite.addDisposeListener(new DisposeListener() {
+
+                @Override
+                public void widgetDisposed(DisposeEvent e) {
+                    if (monospaceFont == null)
+                        return;
+
+                    monospaceFont.dispose();
+                }
+            });
+        }
+
+        return monospaceFont;
+    }
 
 }

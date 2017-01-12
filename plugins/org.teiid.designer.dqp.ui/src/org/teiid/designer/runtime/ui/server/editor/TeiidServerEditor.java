@@ -722,7 +722,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
         if (!active || teiidServer == null || form.isDisposed())
             return;
 
-        if( hostNameLabel.isDisposed() ) return;
+        if( hostNameLabel == null || hostNameLabel.isDisposed() ) return;
         
         hostNameLabel.setText(teiidServer.getHost());
         String versionValue = teiidServer.getServerVersion().toString();
