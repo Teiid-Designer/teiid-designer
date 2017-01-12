@@ -1101,7 +1101,7 @@ public class EmfModelGenerator {
      * @param eObj the EObject
      */
     private void updateDeferredList(RelationalReference relRef, EObject eObj) {
-        if(!relRef.getExtensionProperties().isEmpty() || !CoreStringUtil.isEmpty(relRef.getDescription()) || relRef instanceof RelationalProcedure) {
+        if(!relRef.getExtensionProperties().isEmpty() || !CoreStringUtil.isEmpty(relRef.getDescription())) {
         	deferredProcessingList.add(new DeferredPair(relRef, eObj));      
         }
     }

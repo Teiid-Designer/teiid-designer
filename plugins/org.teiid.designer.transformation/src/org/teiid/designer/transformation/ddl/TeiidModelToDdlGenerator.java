@@ -637,7 +637,11 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
 		if( isVirtual && !isFunction ) {
 			TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(procedure);
-			String sqlString = TransformationHelper.getSelectSqlString(tRoot).replace(CREATE_VIRTUAL_PROCEDURE, StringConstants.EMPTY_STRING);
+			String existingSQL = TransformationHelper.getSelectSqlString(tRoot);
+			if( StringUtilities.isEmpty(existingSQL) ) {
+				existingSQL = "<SQL UNDEFINED>";
+			}
+			String sqlString = existingSQL.replace(CREATE_VIRTUAL_PROCEDURE, StringConstants.EMPTY_STRING);
 			
 			if( sqlString != null ) {
 				if( sqlString.indexOf('\n') == 0 ) {
@@ -1292,12 +1296,25 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			setBooleanProperty(NULL_ON_NULL_PROP, value, false, options);
 
 			
+			/*
+			    NONDETERMINISTIC
+			    COMMAND_DETERMINISTIC
+			    SESSION_DETERMINISTIC
+			    USER_DETERMINISTIC
+			    VDB_DETERMINISTIC
+			    DETERMINISTIC
+			 */
 			value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.DETERMINISTIC);
-			setBooleanProperty(DETERMINISM_PROP, value, false, options);
+			boolean isDeterministic = Boolean.parseBoolean(value);
+			if( isDeterministic ) {
+				options.add(DETERMINISM_PROP, DETERMINISM_OPT_DETERMINISTIC, DETERMINISM_OPT_NONDETERMINISTIC);
+			} else {
+				options.add(DETERMINISM_PROP, DETERMINISM_OPT_NONDETERMINISTIC, DETERMINISM_OPT_NONDETERMINISTIC);
+			}
 
 			value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.AGGREGATE);
 			if( value != null ) {
-				boolean booleanValue = Boolean.getBoolean(value);
+				boolean booleanValue = Boolean.parseBoolean(value);
 				if( booleanValue ) {
 					setBooleanProperty(AGGREGATE_PROP, value, false, options);
 					

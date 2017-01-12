@@ -194,10 +194,19 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
             }
             
             // 'UDF' properties are supported in physical or virtual models now, when function=true
-            if (  PropertyName.same(PropertyName.JAVA_CLASS, propId) || PropertyName.same(PropertyName.JAVA_METHOD, propId) 
-               || PropertyName.same(PropertyName.FUNCTION_CATEGORY, propId) || PropertyName.same(PropertyName.UDF_JAR_PATH, propId)
-               || PropertyName.same(PropertyName.VARARGS, propId) || PropertyName.same(PropertyName.NULL_ON_NULL, propId)
-               || PropertyName.same(PropertyName.DETERMINISTIC, propId) || PropertyName.same(PropertyName.AGGREGATE, propId)) {
+            if (  PropertyName.same(PropertyName.JAVA_CLASS, propId) 
+               || PropertyName.same(PropertyName.JAVA_METHOD, propId) 
+               || PropertyName.same(PropertyName.FUNCTION_CATEGORY, propId)
+               || PropertyName.same(PropertyName.UDF_JAR_PATH, propId)
+               || PropertyName.same(PropertyName.VARARGS, propId)
+               || PropertyName.same(PropertyName.NULL_ON_NULL, propId)
+               || PropertyName.same(PropertyName.DETERMINISTIC, propId)
+               || PropertyName.same(PropertyName.AGGREGATE, propId)
+               || PropertyName.same(PropertyName.ANALYTIC, propId)
+               || PropertyName.same(PropertyName.ALLOWS_ORDER_BY, propId)
+               || PropertyName.same(PropertyName.USES_DISTINCT_ROWS, propId)
+               || PropertyName.same(PropertyName.DECOMPOSABLE, propId)
+               || PropertyName.same(PropertyName.ALLOWS_DISTINCT, propId)) {
                 if ((modelObject instanceof Procedure) && isFunction) {
                     return propDefn;
                 }

@@ -167,7 +167,7 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
         	String keyStr = (String)key;
         	if( keyStr.equalsIgnoreCase("global-temp-table")) {
         		String value = props.getProperty(keyStr);
-        		return Boolean.getBoolean(value);
+        		return Boolean.parseBoolean(value);
         	}
         }
         return false;
