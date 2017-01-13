@@ -596,13 +596,17 @@ public class DynamicVdb extends BasicVdb {
                 //
                 VdbSource[] sources = dynModel.getSources();
                 if (sources != null) {
+                	boolean propsAreSet = false;
                     for (VdbSource source : sources) {
+                    	if( propsAreSet) break;
+                    	
                         String translatorProperty = IConnectionInfoHelper.TRANSLATOR_NAMESPACE
                                                     + IConnectionInfoHelper.TRANSLATOR_NAME_KEY;
                         ModelUtil.setModelAnnotationPropertyValue(modelResource, translatorProperty, source.getTranslatorName());
 
                         String jndiProperty = IConnectionInfoHelper.CONNECTION_NAMESPACE + IJBossDsProfileConstants.JNDI_PROP_ID;
                         ModelUtil.setModelAnnotationPropertyValue(modelResource, jndiProperty, source.getJndiName());
+                        propsAreSet = true;
                     }
                 }
 
