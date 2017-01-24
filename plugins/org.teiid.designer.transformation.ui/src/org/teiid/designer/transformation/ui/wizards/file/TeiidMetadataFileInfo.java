@@ -27,6 +27,7 @@ import org.teiid.designer.query.IProcedureService;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.query.proc.ITeiidColumnInfo;
 import org.teiid.designer.query.proc.ITeiidMetadataFileInfo;
+import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 
 /**
@@ -121,6 +122,18 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
      * 
      */
 	private String escape = DEFAULT_ESCAPE;
+	
+	/**
+     * indicator that the data file contains columns that are delimited by special character.
+     */
+	private int rowDelimiterOption = ISQLConstants.ROW_DELIMETER_OPTIONS.DEFAULT;
+	
+	/**
+     * The unique delimiter used in the Teiid metadata file separating the column names and the column data values.
+     * (never <code>null</code> or empty)
+     * 
+     */
+	private String customRowDelimiter = "\n";
 	
 	/**
      * indicator that the data file contains columns with fixed widths.
@@ -1043,6 +1056,32 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		}
 		
 		setIncludeSkip(value);
+	}
+
+	public int getRowDelimeterOption() {
+		return rowDelimiterOption;
+	}
+
+	public void setRowDelimeterOption(int rowDelimeterOption) {
+		this.rowDelimiterOption = rowDelimeterOption;
+	}
+
+	public String getRowDelimiter() {
+		return customRowDelimiter;
+	}
+
+	public void setRowDelimiter(String rowDelimiter) {
+		this.customRowDelimiter = rowDelimiter;
+	}
+
+	public void setRowDelimiterOption(int value) {
+		this.rowDelimiterOption = value;
+	}
+
+	@Override
+	public int getRowDelimiterOption() {
+
+		return this.rowDelimiterOption;
 	}
     
 }

@@ -36,6 +36,18 @@ public interface ITeiidMetadataFileInfo extends ITeiidFileInfo, ISQLConstants {
      * @return the data file's delimiter character 
      */
     String getDelimiter();
+    
+    /**
+     * 
+     * @return the data file's delimiter character 
+     */
+    int getRowDelimiterOption();
+    
+    /**
+     * 
+     * @return the data file's delimiter character 
+     */
+    String getRowDelimiter();
 
     /**
      * 

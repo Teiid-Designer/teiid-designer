@@ -50,7 +50,7 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
     public String getSQLStatement(ITeiidMetadataFileInfo metadataFileInfo, String relationalModelName) {
         /*
          * 
-         * TEXTTABLE(expression COLUMNS <COLUMN>, ... [DELIMITER char] [(QUOTE|ESCAPE) char] [HEADER [integer]] [SKIP integer]) AS name
+         * TEXTTABLE(expression COLUMNS <COLUMN>, ... [NO_ROW_DELIMITER | [ROW_DELIMIETER char] [DELIMITER char] [(QUOTE|ESCAPE) char] [HEADER [integer]] [SKIP integer]) AS name
          * 
          * DELIMITER sets the field delimiter character to use. Defaults to ','.
          * 
@@ -130,9 +130,28 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         
         sb = new StringBuffer();
         
+        // ROW DELIMITER
+        int rowDelimiterOption = metadataFileInfo.getRowDelimiterOption();
+        switch (rowDelimiterOption) {
+	        case ISQLConstants.ROW_DELIMETER_OPTIONS.NONE: {
+	        	sb.append(NO_ROW_DELIMIETER_STR);
+	        } break;
+	        	
+	        case ISQLConstants.ROW_DELIMETER_OPTIONS.CUSTOM: {
+	        	sb.append(ROW_DELIMIETER_STR).append(SPACE).append(S_QUOTE).append(metadataFileInfo.getRowDelimiter()).append(S_QUOTE);
+	        } break;
+	        	
+	        default: {
+	        	// value = ISQLConstants.ROW_DELIMETER_OPTIONS.DEFAULT
+	        }
+        	
+        }
+
+        
+        
         String delimiter = metadataFileInfo.getDelimiter();
         if( metadataFileInfo.doUseDelimitedColumns() && ! DEFAULT_DELIMITER.equals(delimiter) ) {
-            sb.append(DELIMITER_STR); //$NON-NLS-1$
+            sb.append(SPACE).append(DELIMITER_STR); //$NON-NLS-1$
             sb.append(SPACE).append(S_QUOTE).append(delimiter).append(S_QUOTE);
         }
         

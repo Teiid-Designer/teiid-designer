@@ -110,12 +110,21 @@ public interface ISQLConstants {
     String QUOTE_STR = "QUOTE"; //$NON-NLS-1$
     String DELIMITER_STR = "DELIMITER"; //$NON-NLS-1$
     
+    String NO_ROW_DELIMIETER_STR = "NO ROW DELIMITER"; //$NON-NLS-1$
+    String ROW_DELIMIETER_STR= "ROW DELIMITER"; //$NON-NLS-1$
+    
     interface INSERT_OPTIONS {
     	int REPLACE_ALL = 0;
     	int INSERT_AT_BEGINNING = 1;
     	int INSERT_AT_CURSOR =  2;
     	int INSERT_AT_END = 3;
     	
+    }
+    
+    interface ROW_DELIMETER_OPTIONS {
+    	int DEFAULT = 0;
+    	int CUSTOM = 1;
+    	int NONE =  2;
     }
 
 }
