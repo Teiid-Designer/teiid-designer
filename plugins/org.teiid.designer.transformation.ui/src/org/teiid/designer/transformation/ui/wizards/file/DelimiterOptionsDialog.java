@@ -112,16 +112,18 @@ public class DelimiterOptionsDialog  extends TitleAreaDialog {
         gridData.widthHint = 500;
         composite.setLayoutData(gridData);
         
-        createRowDelimitedOptionsGroup(composite);
-        
-        createDelimitedColumnsOptionsGroup(composite);
+    	if( fileInfo.doUseDelimitedColumns() ) {
+            createDelimitedColumnsOptionsGroup(composite);
+    	} else {
+    		createRowDelimitedOptionsGroup(composite);
+    	}
+
         
         return composite;
     }
     
     private void createRowDelimitedOptionsGroup(Composite parent) {
 
-    	
     	Group theGroup = WidgetFactory.createGroup(parent, getString("rowDelimeter"), SWT.NONE, 1, 3); //$NON-NLS-1$
     	theGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
     	
@@ -279,39 +281,39 @@ public class DelimiterOptionsDialog  extends TitleAreaDialog {
 		    		return;
 		    	}
         	}
-    	}
-
-    	// Row Delimiter
-    	this.customRowDelimiterText.setEnabled(this.customRowDelimiterRB.getSelection());
-
-    	if( this.defaultRowDelimiterCB.getSelection() ) {
-    		fileInfo.setRowDelimiterOption(ISQLConstants.ROW_DELIMETER_OPTIONS.DEFAULT);
-    		// If default is selected.. then disable radio buttons and text field
-    		this.customRowDelimiterRB.setEnabled(false);
-    		this.customRowDelimiterText.setEnabled(false);
-    		this.noRowDelimiterRB.setEnabled(false);
-    	} else if( this.customRowDelimiterRB.getSelection() ) {
-    		fileInfo.setRowDelimiterOption(ISQLConstants.ROW_DELIMETER_OPTIONS.CUSTOM);
-    		String value = this.customRowDelimiterText.getText().trim();
-    		if( value.length() == 0 ) {
-	    		setErrorMessage(getString("customCharacterUndefined")); //$NON-NLS-1$
-	    		enableOk(false);
-	        	synching = false;
-	    		return;
-    		} else if( value.length() > 1 ) {
-	    		setErrorMessage(getString("customCharacterLengthError")); //$NON-NLS-1$
-	    		enableOk(false);
-	        	synching = false;
-	    		return;
-    		}
-    		fileInfo.setRowDelimiter(value);
     	} else {
-    		fileInfo.setRowDelimiterOption(ISQLConstants.ROW_DELIMETER_OPTIONS.NONE);
-    	}    	
-    	
-    	this.customRowDelimiterRB.setEnabled(!defaultRowDelimiterCB.getSelection());
-    	this.customRowDelimiterText.setEnabled(!defaultRowDelimiterCB.getSelection() && !this.noRowDelimiterRB.getSelection());
-    	this.noRowDelimiterRB.setEnabled(!defaultRowDelimiterCB.getSelection());
+	    	// Row Delimiter
+	    	this.customRowDelimiterText.setEnabled(this.customRowDelimiterRB.getSelection());
+	
+	    	if( this.defaultRowDelimiterCB.getSelection() ) {
+	    		fileInfo.setRowDelimiterOption(ISQLConstants.ROW_DELIMETER_OPTIONS.DEFAULT);
+	    		// If default is selected.. then disable radio buttons and text field
+	    		this.customRowDelimiterRB.setEnabled(false);
+	    		this.customRowDelimiterText.setEnabled(false);
+	    		this.noRowDelimiterRB.setEnabled(false);
+	    	} else if( this.customRowDelimiterRB.getSelection() ) {
+	    		fileInfo.setRowDelimiterOption(ISQLConstants.ROW_DELIMETER_OPTIONS.CUSTOM);
+	    		String value = this.customRowDelimiterText.getText().trim();
+	    		if( value.length() == 0 ) {
+		    		setErrorMessage(getString("customCharacterUndefined")); //$NON-NLS-1$
+		    		enableOk(false);
+		        	synching = false;
+		    		return;
+	    		} else if( value.length() > 1 ) {
+		    		setErrorMessage(getString("customCharacterLengthError")); //$NON-NLS-1$
+		    		enableOk(false);
+		        	synching = false;
+		    		return;
+	    		}
+	    		fileInfo.setRowDelimiter(value);
+	    	} else {
+	    		fileInfo.setRowDelimiterOption(ISQLConstants.ROW_DELIMETER_OPTIONS.NONE);
+	    	}    	
+	    	
+	    	this.customRowDelimiterRB.setEnabled(!defaultRowDelimiterCB.getSelection());
+	    	this.customRowDelimiterText.setEnabled(!defaultRowDelimiterCB.getSelection() && !this.noRowDelimiterRB.getSelection());
+	    	this.noRowDelimiterRB.setEnabled(!defaultRowDelimiterCB.getSelection());
+    	}
     	
     	enableOk(true);
     	synching = false;
@@ -327,57 +329,61 @@ public class DelimiterOptionsDialog  extends TitleAreaDialog {
     
     private void synchronizeUI() {
     	synching = true;
-		this.defaultDelimiterRB.setSelection(false);
-		this.spaceRB.setSelection(false);
-		this.tabRB.setSelection(false);
-		this.semicolonRB.setSelection(false);
-		this.barRB.setSelection(false);
-    	this.otherDelimiterRB.setSelection(false);
-    	this.otherDelimiterText.setEnabled(false);
     	
-    	String delimiter = fileInfo.getDelimiter();
-    	if( ITeiidMetadataFileInfo.COMMA.equals(delimiter)) {
-    		this.defaultDelimiterRB.setSelection(true);
-    	} else if( ITeiidMetadataFileInfo.SEMI_COLON.equals(delimiter)) {
-    		this.semicolonRB.setSelection(true);
-    	} else if( ITeiidMetadataFileInfo.BAR.equals(delimiter)) {
-    		this.barRB.setSelection(true);
-    	} else if( ITeiidMetadataFileInfo.SPACE.equals(delimiter)) {
-    		this.spaceRB.setSelection(true);
-    	} else if( ITeiidMetadataFileInfo.TAB.equals(delimiter)) {
-    		this.tabRB.setSelection(true);
+    	if( this.fileInfo.doUseDelimitedColumns()) {
+			this.defaultDelimiterRB.setSelection(false);
+			this.spaceRB.setSelection(false);
+			this.tabRB.setSelection(false);
+			this.semicolonRB.setSelection(false);
+			this.barRB.setSelection(false);
+	    	this.otherDelimiterRB.setSelection(false);
+	    	this.otherDelimiterText.setEnabled(false);
+	    	
+	    	String delimiter = fileInfo.getDelimiter();
+	    	if( ITeiidMetadataFileInfo.COMMA.equals(delimiter)) {
+	    		this.defaultDelimiterRB.setSelection(true);
+	    	} else if( ITeiidMetadataFileInfo.SEMI_COLON.equals(delimiter)) {
+	    		this.semicolonRB.setSelection(true);
+	    	} else if( ITeiidMetadataFileInfo.BAR.equals(delimiter)) {
+	    		this.barRB.setSelection(true);
+	    	} else if( ITeiidMetadataFileInfo.SPACE.equals(delimiter)) {
+	    		this.spaceRB.setSelection(true);
+	    	} else if( ITeiidMetadataFileInfo.TAB.equals(delimiter)) {
+	    		this.tabRB.setSelection(true);
+	    	} else {
+	    		// Assume OTHER
+	    		this.otherDelimiterRB.setSelection(true);
+	    		String charStr = StringConstants.EMPTY_STRING + delimiter;
+	    		this.otherDelimiterText.setText(charStr);
+	    		this.otherDelimiterText.setEnabled(true);
+	    	}
     	} else {
-    		// Assume OTHER
-    		this.otherDelimiterRB.setSelection(true);
-    		String charStr = StringConstants.EMPTY_STRING + delimiter;
-    		this.otherDelimiterText.setText(charStr);
-    		this.otherDelimiterText.setEnabled(true);
-    	}
     	
     	// Row Delimiter
     	int option = fileInfo.getRowDelimeterOption();
-    	if( option == ISQLConstants.ROW_DELIMETER_OPTIONS.DEFAULT ) {
-    		this.defaultRowDelimiterCB.setSelection(true);
-    		this.noRowDelimiterRB.setSelection(true);
-    		this.noRowDelimiterRB.setEnabled(false);
-    		this.customRowDelimiterRB.setEnabled(false);
-    		this.customRowDelimiterText.setEnabled(false);
-    	} else if( option == ISQLConstants.ROW_DELIMETER_OPTIONS.NONE ) {
-    		this.defaultRowDelimiterCB.setSelection(false);
-    		this.noRowDelimiterRB.setEnabled(true);
-    		this.noRowDelimiterRB.setSelection(true);
-    		this.customRowDelimiterRB.setEnabled(true);
-    		this.customRowDelimiterText.setEnabled(false);
-    	} else {
-    		this.customRowDelimiterText.setEnabled(true);
-    		String rowChar = this.fileInfo.getRowDelimiter();
-    		if( !StringUtilities.isEmpty(rowChar)) {
-    			this.customRowDelimiterText.setText(rowChar);
-    		}
-    		this.defaultRowDelimiterCB.setSelection(false);
-    		this.noRowDelimiterRB.setSelection(false);
-    		this.customRowDelimiterRB.setEnabled(true);
-    		this.customRowDelimiterRB.setSelection(true);
+	    	if( option == ISQLConstants.ROW_DELIMETER_OPTIONS.DEFAULT ) {
+	    		this.defaultRowDelimiterCB.setSelection(true);
+	    		this.noRowDelimiterRB.setSelection(true);
+	    		this.noRowDelimiterRB.setEnabled(false);
+	    		this.customRowDelimiterRB.setEnabled(false);
+	    		this.customRowDelimiterText.setEnabled(false);
+	    	} else if( option == ISQLConstants.ROW_DELIMETER_OPTIONS.NONE ) {
+	    		this.defaultRowDelimiterCB.setSelection(false);
+	    		this.noRowDelimiterRB.setEnabled(true);
+	    		this.noRowDelimiterRB.setSelection(true);
+	    		this.customRowDelimiterRB.setEnabled(true);
+	    		this.customRowDelimiterText.setEnabled(false);
+	    	} else {
+	    		this.customRowDelimiterText.setEnabled(true);
+	    		String rowChar = this.fileInfo.getRowDelimiter();
+	    		if( !StringUtilities.isEmpty(rowChar)) {
+	    			this.customRowDelimiterText.setText(rowChar);
+	    		}
+	    		this.defaultRowDelimiterCB.setSelection(false);
+	    		this.noRowDelimiterRB.setSelection(false);
+	    		this.customRowDelimiterRB.setEnabled(true);
+	    		this.customRowDelimiterRB.setSelection(true);
+	    	}
     	}
     	synching = false;
     }

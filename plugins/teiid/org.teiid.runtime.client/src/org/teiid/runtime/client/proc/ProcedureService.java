@@ -113,7 +113,12 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
             i++;
         }
         
-        String proc = S_QUOTE + metadataFileInfo.getDataFile().getName() + S_QUOTE;
+        String fileName = metadataFileInfo.getDataFile().getName();
+        if( metadataFileInfo.getDataFileFilter() != null ) {
+        	fileName = metadataFileInfo.getDataFileFilter();
+        }
+        String proc = S_QUOTE + fileName + S_QUOTE;
+
         if( metadataFileInfo.isUrl() ) {
             proc = S_QUOTE + GET + S_QUOTE
                     + COMMA + SPACE + NULL.toLowerCase()

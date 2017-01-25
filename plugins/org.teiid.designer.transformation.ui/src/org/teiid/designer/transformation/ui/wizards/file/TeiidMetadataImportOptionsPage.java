@@ -56,6 +56,7 @@ import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
+import org.teiid.designer.ui.common.widget.Dialog;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
@@ -816,6 +817,25 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	    this.selectedTextLengthText.setLayoutData(gd);
 	    this.selectedTextLengthText.setEditable(false);
 	    this.selectedTextLengthText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+	    
+        Button editDelimiterButton = WidgetFactory.createButton(theGroup, SWT.PUSH);
+        editDelimiterButton.setText(getString("editDelimiterButtonLabel")); //$NON-NLS-1$
+    	gd = new GridData(GridData.FILL_HORIZONTAL);
+    	gd.minimumWidth = 120;
+    	gd.horizontalSpan = 2;
+        
+        editDelimiterButton.setLayoutData(gd);
+        editDelimiterButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+            	DelimiterOptionsDialog dialog = new DelimiterOptionsDialog(getShell(), dataFileInfo);
+            	
+            	dialog.open();
+            	handleInfoChanged(false);
+            }
+        });
+        editDelimiterButton.setEnabled(true);
     }
     
     private void createFixedFileContentsGroup(Composite parent) {
@@ -1262,9 +1282,22 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     		length = textLength > 0 ? textLength : length;
     	}
     	TeiidColumnInfo newColumn = new TeiidColumnInfo(newName, ITeiidColumnInfo.DEFAULT_DATATYPE, length);
-		dataFileInfo.addColumn(newColumn);
-		
-		handleInfoChanged(false);
+    	
+    	if(dataFileInfo.doUseDelimitedColumns() ) {
+    		EditDelimitedColumnDialog dialog = new EditDelimitedColumnDialog(getShell(), newColumn);
+			
+			if( dialog.open() == Dialog.OK) {
+				dataFileInfo.addColumn(newColumn);
+				handleInfoChanged(false);
+			}
+    	} else {
+			EditFixedColumnDialog dialog = new EditFixedColumnDialog(getShell(), newColumn);
+			
+			if( dialog.open() == Dialog.OK) {
+				dataFileInfo.addColumn(newColumn);
+				handleInfoChanged(false);
+			}
+    	}
     }
     
     void updateSqlText() {

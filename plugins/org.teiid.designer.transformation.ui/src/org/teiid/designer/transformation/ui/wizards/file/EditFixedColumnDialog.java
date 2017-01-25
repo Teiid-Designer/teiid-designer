@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -100,12 +101,10 @@ public class EditFixedColumnDialog extends TitleAreaDialog {
 		Composite dialogComposite = (Composite) super.createDialogArea(parent);
 
 		Composite composite = WidgetFactory.createPanel(dialogComposite);
+		GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(composite);
 		// ------------------------------
 		// Set layout for the Composite
 		// ------------------------------
-		GridLayout gridLayout = new GridLayout();
-		composite.setLayout(gridLayout);
-		gridLayout.numColumns = 2;
 		GridData gridData = new GridData(GridData.FILL_BOTH);
 		gridData.grabExcessHorizontalSpace = true;
 		gridData.widthHint = 500;
@@ -187,7 +186,7 @@ public class EditFixedColumnDialog extends TitleAreaDialog {
 		label1.setLayoutData(new GridData());
 
 		final Text widthValueText = new Text(composite, SWT.BORDER | SWT.NONE);
-		widthValueText.setText(String.valueOf(column.getDatatype()));
+		widthValueText.setText(String.valueOf(column.getWidth()));
 		widthValueText.setForeground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_BLUE));
 		widthValueText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
