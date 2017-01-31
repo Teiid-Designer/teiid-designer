@@ -64,6 +64,7 @@ public interface TeiidDDLConstants {
 		public static final String UNIQUE = "UNIQUE";//$NON-NLS-1$
 		public static final String REFERENCES = "REFERENCES";//$NON-NLS-1$
 		public static final String ACCESSPATTERN = "ACCESSPATTERN";//$NON-NLS-1$
+		public static final String INDEX = "INDEX";//$NON-NLS-1$
 		public static final String NAMEINSOURCE = "NAMEINSOURCE";//$NON-NLS-1$
 		public static final String ANNOTATION = "ANNOTATION";//$NON-NLS-1$
 		public static final String UUID = "UUID";//$NON-NLS-1$

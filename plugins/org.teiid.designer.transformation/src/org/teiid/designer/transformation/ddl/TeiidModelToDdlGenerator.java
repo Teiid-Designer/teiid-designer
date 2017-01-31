@@ -27,6 +27,7 @@ import org.teiid.core.designer.util.ModelType;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.index.IndexConstants.INDEX_NAME;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -40,6 +41,7 @@ import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ForeignKey;
+import org.teiid.designer.metamodels.relational.Index;
 import org.teiid.designer.metamodels.relational.NullableType;
 import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.Procedure;
@@ -130,11 +132,13 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
 		final ModelContents contents = ModelContents.getModelContents(modelResource);
 		isVirtual = modelResource.getModelType().getValue() == ModelType.VIRTUAL;
+		
+		Collection<Index> indexes = getIndexes(modelResource);
 
 		append(StringConstants.NEW_LINE);
 		
 		for( Object obj : contents.getAllRootEObjects() ) {
-			String statement = getStatement((EObject)obj);
+			String statement = getStatement((EObject)obj, indexes);
 			if( ! StringUtilities.isEmpty(statement) ) {
 				append(statement);
 				append(StringConstants.NEW_LINE);
@@ -149,13 +153,16 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		return ddlBuffer.toString();
 	}
 	
-	public String getStatement(EObject eObj) {
+	public String getStatement(EObject eObj, Collection<Index> allIndexes) {
 		if( eObj instanceof Table ) {
+			
+			Collection<Index> indexes = getIndexesForTable((Table)eObj, allIndexes);
+			
 			if( isVirtual ) {
 				// generate DDL for a View including SQL statement
 				if( ((Table)eObj).isSupportsUpdate() ) {
 					// Need to process SELECT, INSERT, UPDATE, DELETE statements
-					String select =  view((Table)eObj);
+					String select =  view((Table)eObj, indexes);
 					String insert = insert((Table)eObj);
 					String update = update((Table)eObj);
 					String delete = delete((Table)eObj);
@@ -172,11 +179,11 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 					return sb.toString();
 					
 				} else {
-					return view((Table)eObj);
+					return view((Table)eObj, indexes);
 				}
 			} else {
 				// Generate simple CREATE FOREIGN TABLE
-				return table((Table)eObj);
+				return table((Table)eObj, indexes);
 			}
 		} else if( eObj instanceof Procedure) {
 			// Generate CREATE FOREIGN PROCEDURE 
@@ -343,7 +350,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         ddlBuffer.append(o);
     }
 	
-    private String table(Table table) {
+    private String table(Table table, Collection<Index> tableIndexes) {
         if (! includeTables)
             return null;
         
@@ -369,8 +376,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 	
 		// Add PK/FK/UC's
 		if( table instanceof BaseTable) {
-			String constraints = getContraints((BaseTable)table);
-			if( constraints != null ) {
+			String constraints = getContraints((BaseTable)table, tableIndexes);
+			if( ! StringUtilities.isEmpty(constraints) ) {
 				sb.append(COMMA);
 				sb.append(constraints);
 			}
@@ -390,7 +397,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		return sb.toString();
     }
     
-    private String view(Table table) {
+    private String view(Table table, Collection<Index> indexes) {
         if (! includeTables)
             return null;
         
@@ -436,8 +443,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		
 		// Add PK/FK/UC's
 		if( table instanceof BaseTable) {
-			String constraints = getContraints((BaseTable)table);
-			if( constraints != null ) {
+			String constraints = getContraints((BaseTable)table, indexes);
+			if( !StringUtilities.isEmpty(constraints) ) {
 				sb.append(COMMA);
 				sb.append(constraints);
 			}
@@ -717,8 +724,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
             //
             // INDEX
             //
-            if (! col.getIndexes().isEmpty())
-                sb.append(TeiidSQLConstants.NonReserved.INDEX).append(SPACE);
+//            if (! col.getIndexes().isEmpty())
+//                sb.append(TeiidSQLConstants.NonReserved.INDEX).append(SPACE);
         }
 
         return sb.toString().trim();
@@ -859,6 +866,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	OptionsStatement options = new OptionsStatement();
     	
     	String desc = getDescription(eobject);
+    	System.out.println("   >>  GeiidModelToDdlGenerator.getOptions()  description  = " + desc + "  for:  " + eobject);
     	if( !StringUtilities.isEmpty(desc) ) {
     		options.add(ANNOTATION, desc, EMPTY_STRING);
     	}
@@ -877,12 +885,13 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	return options.toString();
     }
     
-    private String getContraints(BaseTable table) {
+    private String getContraints(BaseTable table, Collection<Index> indexes) {
     	StringBuffer sb = new StringBuffer();
     	
 		boolean hasPK = table.getPrimaryKey() != null;
-		boolean hasFKs = table.getForeignKeys().size() > 0;
-		boolean hasAPs = table.getAccessPatterns().size() > 0;
+		boolean hasFKs = !table.getForeignKeys().isEmpty();
+		boolean hasAPs = !table.getAccessPatterns().isEmpty();
+		boolean hasIndexes = !indexes.isEmpty();
 		
 		int nColumns = 0;
 		int count = 0;
@@ -912,7 +921,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			
 			sb.append(theSB.toString());
 			
-			if( (hasFKs && includeFKs) || hasUCs || hasAPs ) sb.append(COMMA);
+			if( (hasFKs && includeFKs) || hasUCs || hasAPs || hasIndexes) sb.append(COMMA);
 		}
 		
 		// FK
@@ -974,10 +983,11 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				if( !StringUtilities.isEmpty(options)) {
 					theSB.append(SPACE).append(options);
 				}
+				if( countFK < nFKs ) theSB.append(COMMA);
 				sb.append(theSB.toString());
-				if( countFK < nFKs ) sb.append(COMMA);
+
 			}
-			if( hasUCs || hasAPs ) sb.append(COMMA);
+			if( hasUCs || hasAPs || hasIndexes) sb.append(COMMA);
 		}
 		// UC's
 		// CONSTRAINT PK_ACCOUNTHOLDINGS UNIQUE(TRANID)
@@ -1005,14 +1015,13 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 					theSB.append(SPACE).append(options);
 				}
 				
-				if( ucCount < nUCs ) sb.append(COMMA);
+				if( ucCount < nUCs ) theSB.append(COMMA);
 				sb.append(theSB.toString());
 			}
+			
+			if( hasAPs || hasIndexes) sb.append(COMMA);
 		}
 		
-		if( !hasPK && !(hasFKs) && !hasUCs && hasAPs) {
-			sb.append(COMMA);
-		}
 		if( hasAPs ) {
 			int nAPs = table.getAccessPatterns().size();
 			int apCount = 0;
@@ -1031,7 +1040,43 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 					if( count < nColumns ) theSB.append(COMMA + SPACE);
 					else theSB.append(CLOSE_BRACKET);
 				}
-				if( apCount < nAPs ) sb.append(COMMA);
+				
+		    	String options = getOptions(ap);
+				if( !StringUtilities.isEmpty(options)) {
+					theSB.append(SPACE).append(options);
+				}
+				
+				if( apCount < nAPs ) theSB.append(COMMA);
+				sb.append(theSB.toString());
+			}
+			
+			if( hasIndexes) sb.append(COMMA);
+		}
+		
+		if( hasIndexes ) {
+			int nIndexes = indexes.size();
+			int indexCount = 0;
+			for( Index index: indexes ) {
+				indexCount++;
+				String name = getName(index);
+
+				StringBuilder theSB = new StringBuilder(NEW_LINE + TAB + CONSTRAINT + SPACE + name + SPACE + INDEX);
+				nColumns = index.getColumns().size();
+				count = 0;
+				for( Object col : index.getColumns() ) {
+					count++;
+					if( count == 1 ) theSB.append(OPEN_BRACKET);
+					theSB.append(getName((EObject)col));
+					if( count < nColumns ) theSB.append(COMMA + SPACE);
+					else theSB.append(CLOSE_BRACKET);
+				}
+				
+		    	String options = getOptions(index);
+				if( !StringUtilities.isEmpty(options)) {
+					theSB.append(SPACE).append(options);
+				}
+				
+				if( indexCount < nIndexes ) theSB.append(COMMA);
 				sb.append(theSB.toString());
 			}
 		}
@@ -1502,6 +1547,51 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
 	public void setIncludeNativeType(boolean includeNativeType) {
 		this.includeNativeType = includeNativeType;
+	}
+	
+	private Collection<Index> getIndexesForTable(Table table, Collection<Index> allIndexes) {
+	    Collection<Index> indexes = new ArrayList<Index>();
+	    
+		@SuppressWarnings("unchecked")
+		List<Column> tableColumns = table.getColumns();
+		
+	    for( Index index : allIndexes ) {
+	    	boolean addIndex = false;
+	    	
+	    	@SuppressWarnings("unchecked")
+			List<Column> colRefs = index.getColumns();
+	    	for( Column colRef : colRefs ) {
+		    	for( Column col : tableColumns ) {
+		    		if( col == colRef ) {
+		    			addIndex = true;
+		    		}
+		    	}
+	    	}
+	    	
+	    	if( addIndex ) {
+	    		indexes.add(index);
+	    	}
+	    }
+	    
+	    return indexes;
+	}
+	
+	private Collection<Index> getIndexes(ModelResource mr) throws ModelWorkspaceException {
+	    CoreArgCheck.isNotNull(mr);
+	    
+	    Collection<Index> indexes = new ArrayList<Index>();
+	    
+		final ModelContents contents = ModelContents.getModelContents(mr);
+
+		append(StringConstants.NEW_LINE);
+		
+		for( Object obj : contents.getAllRootEObjects() ) {
+			if(obj instanceof Index ) {
+				indexes.add((Index)obj);
+			}
+		}
+		
+		return indexes;
 	}
 
 	class OptionsStatement {

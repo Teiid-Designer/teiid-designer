@@ -29,6 +29,9 @@ import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.extension.AbstractMetaclassNameProvider;
+import org.teiid.designer.core.resource.EmfResource;
+import org.teiid.designer.core.util.ModelContents;
+import org.teiid.designer.core.util.ModelResourceContainerFactory;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.extension.ExtensionPlugin;
@@ -1113,35 +1116,20 @@ public class EmfModelGenerator {
      * @param modelResource the model resource
      */
     public void setDescription( EObject eObject, String description, ModelResource modelResource ) {
-    	
         if (description != null && description.trim().length() > 0) {
             try {
-                AnnotationContainer annotations = null;
-                final Iterator contents = modelResource.getEmfResource().getContents().iterator();
-                while (contents.hasNext()) {
-                    final Object next = contents.next();
-                    if (next instanceof AnnotationContainer) {
-                        annotations = (AnnotationContainer)next;
-                        break;
-                    }
-                } // while
-
-                if (annotations == null) {
-                    annotations = CoreFactory.eINSTANCE.createAnnotationContainer();
-                    modelResource.getEmfResource().getContents().add(annotations);
-                }
-
-                Annotation annotation = annotations.findAnnotation(eObject);
-                if (annotation == null) {
-                    annotation = CoreFactory.eINSTANCE.createAnnotation();
-                    annotations.getAnnotations().add(annotation);
-                    annotation.setAnnotatedObject(eObject);
-                }
-
-                annotation.setDescription(description);
+            	String currentDesc = this.getModelEditor().getDescription(eObject);
+            	if( currentDesc == null ) {
+                    final Annotation annotation = ModelResourceContainerFactory.createNewAnnotation(eObject,
+                        		((EmfResource)modelResource.getEmfResource()).getModelContents().getAnnotationContainer(true));
+                    annotation.setDescription(description);
+            	}
             } catch (ModelWorkspaceException e) {
                 RelationalPlugin.Util.log(IStatus.ERROR, 
                 	NLS.bind(Messages.emfModelGenerator_error_adding_desciption_to_0, eObject));
+            } catch (ModelerCoreException e) {
+            	RelationalPlugin.Util.log(IStatus.ERROR, 
+                    	NLS.bind(Messages.emfModelGenerator_error_adding_desciption_to_0, eObject));
             }
 
         }

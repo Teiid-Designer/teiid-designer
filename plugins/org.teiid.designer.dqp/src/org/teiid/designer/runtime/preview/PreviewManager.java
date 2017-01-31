@@ -36,6 +36,7 @@ import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.Index;
 import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionAssistant;
 import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionConstants;
 import org.teiid.designer.runtime.DqpPlugin;
@@ -770,7 +771,7 @@ public final class PreviewManager {
             generator.setIsVirtual(isVirtual);
             
             for( EObject eObj : eObjects ) {
-            	String statement = generator.getStatement(eObj);
+            	String statement = generator.getStatement(eObj, new ArrayList<Index>());
             	if( !StringUtilities.isEmpty(statement) ) {
             		statements.add(statement);
             		

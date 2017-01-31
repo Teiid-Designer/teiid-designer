@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
@@ -52,8 +53,9 @@ public class ExportDDLToWorkspaceDialog extends TitleAreaDialog implements Liste
      * ExportDDLToWorkspaceDialog constructor
      * @param shell the shell
      */
-    public ExportDDLToWorkspaceDialog(Shell shell) {
+    public ExportDDLToWorkspaceDialog(Shell shell, String fileName) {
         super(shell);
+        this.fileName = fileName;
     }
         
     /**
@@ -143,7 +145,11 @@ public class ExportDDLToWorkspaceDialog extends TitleAreaDialog implements Liste
         fileNameText = new Text(dialogComposite, SWT.BORDER | SWT.SINGLE);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         fileNameText.setLayoutData(gd);
-        fileNameText.setText(Util.getString("ExportDDLToWorkspaceDialog_defaultFileName"));
+        if( StringUtilities.isEmpty(fileName) ) {
+        	fileNameText.setText(Util.getString("ExportDDLToWorkspaceDialog_defaultFileName"));
+        } else {
+        	fileNameText.setText(fileName);
+        }
         fileNameText.addModifyListener(new ModifyListener() {
             @Override
 			public void modifyText( ModifyEvent e ) {

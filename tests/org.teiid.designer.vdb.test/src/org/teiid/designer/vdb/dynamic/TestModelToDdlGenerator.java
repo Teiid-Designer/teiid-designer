@@ -264,7 +264,7 @@ public class TestModelToDdlGenerator implements StringConstants {
                             "symbol string(10) NOT NULL AUTO_INCREMENT, " + NEW_LINE +
                             "price bigdecimal(1) DEFAULT 10, " + NEW_LINE +
                             "company string(10) NOT NULL, " + NEW_LINE +
-                            "companyID string(10) NOT NULL INDEX," + NEW_LINE +
+                            "companyID string(10) NOT NULL," + NEW_LINE +
                             "CONSTRAINT STOCK_PK PRIMARY KEY(symbol)," + NEW_LINE +
                             "CONSTRAINT STOCK_UC UNIQUE(company)" + NEW_LINE +
                             ") OPTIONS(UPDATABLE 'TRUE') AS SELECT * FROM Stock;";
@@ -275,7 +275,7 @@ public class TestModelToDdlGenerator implements StringConstants {
                                              "symbol string(10) NOT NULL AUTO_INCREMENT" + COMMA + SPACE +
                                              "price bigdecimal(1) DEFAULT '10'" + COMMA + SPACE +
                                              "company string(10) NOT NULL" + COMMA + SPACE +
-                                             "companyID string(10) NOT NULL INDEX" + COMMA + SPACE +
+                                             "companyID string(10) NOT NULL" + COMMA + SPACE +
                                              "CONSTRAINT STOCK_PK PRIMARY KEY(symbol)" + COMMA + SPACE +
                                              "CONSTRAINT STOCK_UC UNIQUE(company)" +
                                              ") OPTIONS(UPDATABLE 'TRUE') AS SELECT * FROM Stock;";
@@ -779,18 +779,92 @@ public class TestModelToDdlGenerator implements StringConstants {
     }
     
     @Test
-    public void testINDEX() throws Exception {
+    public void testAccessPattern() throws Exception {
     	String ddl = 
-    			"CREATE FOREIGN TABLE myTable (" + 
-    			"\n\tnewColumn_1 string(4000) INDEX" +
-    			") OPTIONS(NAMEINSOURCE 'myTableSource', UPDATABLE 'TRUE');";
-		
-		String expectedDdl = 
-				"CREATE FOREIGN TABLE myTable (" + 
-		    			"newColumn_1 string(4000) INDEX" +
-		    			") OPTIONS(NAMEINSOURCE 'myTableSource', UPDATABLE 'TRUE');";
-		
+    			"CREATE FOREIGN TABLE ProductDataXX (" +
+    			"\n\tProductID string(10)," +
+    			"\n\tCONSTRAINT AP_1 ACCESSPATTERN(ProductID) OPTIONS( NAMEINSOURCE 'AP_1_NIS')" +
+    			"\n);";
+    	
+    	String expectedDdl = 
+    			"CREATE FOREIGN TABLE ProductDataXX (" +
+    			"ProductID string(10)," +
+    			" CONSTRAINT AP_1 ACCESSPATTERN(ProductID) OPTIONS(NAMEINSOURCE 'AP_1_NIS')" +
+    			") OPTIONS(UPDATABLE 'TRUE');";
+    	
         String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
+    }
+
+    @Test
+    public void testFKPKUCAPandIndexes() throws Exception {
+    	String ddl = 
+    			"CREATE FOREIGN TABLE ProductDataXX (" +
+    			"\n\tProductID string(10) NOT NULL OPTIONS(NAMEINSOURCE '\"ProductID\"', NATIVE_TYPE 'varchar')," +
+    			"\n\tProductName string(60) OPTIONS(NAMEINSOURCE '\"ProductName\"', NATIVE_TYPE 'varchar')," +
+    			"\n\tCONSTRAINT PK1 PRIMARY KEY(ProductID)," +
+    			"\n\tCONSTRAINT FK_1 FOREIGN KEY(ProductID) REFERENCES ProductDataYY(ProductID)" +
+    			"\n) OPTIONS(NAMEINSOURCE '\"products\".\"dbo\".\"ProductData\"', UPDATABLE 'TRUE');" +
+        		"\n" +
+    			"CREATE FOREIGN TABLE ProductDataZZ (" +
+    			"\n\tProductID string(10) NOT NULL OPTIONS(NAMEINSOURCE '\"ProductID\"', NATIVE_TYPE 'varchar')," +
+    			"\n\tProductName string(60) OPTIONS(NAMEINSOURCE '\"ProductName\"', NATIVE_TYPE 'varchar')," +
+    			"\n\tCONSTRAINT PK1 PRIMARY KEY(ProductID)," +
+    			"\n\tCONSTRAINT FK_2 FOREIGN KEY(ProductID) REFERENCES ProductDataYY(ProductID)" +
+    			"\n) OPTIONS(NAMEINSOURCE '\"products\".\"dbo\".\"ProductData\"', UPDATABLE 'TRUE');" +
+        		"\n" +
+    			"CREATE FOREIGN TABLE ProductDataYY (" +
+    			"\n\tProductID string(10) NOT NULL OPTIONS(NAMEINSOURCE '\"ProductID\"', NATIVE_TYPE 'varchar')," +
+    			"\n\tProductName string(60) OPTIONS(NAMEINSOURCE '\"ProductName\"', NATIVE_TYPE 'varchar')," +
+    			"\n\tCONSTRAINT PK2 PRIMARY KEY(ProductID)" +
+    			"\n) OPTIONS(NAMEINSOURCE '\"products\".\"dbo\".\"ProductData\"', UPDATABLE 'TRUE');" +
+				"\n" +
+    			"CREATE FOREIGN TABLE ProductDataDD (" +
+    			"\n\tProductID string(10) NOT NULL OPTIONS(NAMEINSOURCE '\"ProductID\"', NATIVE_TYPE 'varchar')," +
+    			"\n\tProductName string(60) OPTIONS(NAMEINSOURCE '\"ProductName\"', NATIVE_TYPE 'varchar')" +
+    			"\n) OPTIONS(NAMEINSOURCE '\"products\".\"dbo\".\"ProductData\"', UPDATABLE 'TRUE');" +
+				"\n" +
+				"CREATE FOREIGN TABLE myTable (" +
+				"\n\tnewColumn_1 string(4000)," +
+				"\n\tnewColumn_2 string(4000)," +
+				"\n\tCONSTRAINT myIndex1 INDEX(newColumn_1) OPTIONS(ANNOTATION 'index1 description')," +
+				"\n\tCONSTRAINT myIndex2 INDEX(newColumn_2) OPTIONS(ANNOTATION 'index2 description')" +
+				"\n) OPTIONS(NAMEINSOURCE 'myTableSource', UPDATABLE 'TRUE');";
+    			
+    	String expectedDdl = 
+    			"CREATE FOREIGN TABLE ProductDataXX (" +
+    			"ProductID string(10) NOT NULL OPTIONS(NAMEINSOURCE '\"ProductID\"', NATIVE_TYPE 'varchar')," +
+    			" ProductName string(60) OPTIONS(NAMEINSOURCE '\"ProductName\"', NATIVE_TYPE 'varchar')," +
+    			" CONSTRAINT PK1 PRIMARY KEY(ProductID)," +
+    			" CONSTRAINT FK_1 FOREIGN KEY(ProductID) REFERENCES ProductDataYY(ProductID)" +
+    			") OPTIONS(NAMEINSOURCE '\"products\".\"dbo\".\"ProductData\"', UPDATABLE 'TRUE');" +
+        		" " +
+    			"CREATE FOREIGN TABLE ProductDataZZ (" +
+    			"ProductID string(10) NOT NULL OPTIONS(NAMEINSOURCE '\"ProductID\"', NATIVE_TYPE 'varchar')," +
+    			" ProductName string(60) OPTIONS(NAMEINSOURCE '\"ProductName\"', NATIVE_TYPE 'varchar')," +
+    			" CONSTRAINT PK1 PRIMARY KEY(ProductID)," +
+    			" CONSTRAINT FK_2 FOREIGN KEY(ProductID) REFERENCES ProductDataYY(ProductID)" +
+    			") OPTIONS(NAMEINSOURCE '\"products\".\"dbo\".\"ProductData\"', UPDATABLE 'TRUE');" +
+        		" " +
+    			"CREATE FOREIGN TABLE ProductDataYY (" +
+    			"ProductID string(10) NOT NULL OPTIONS(NAMEINSOURCE '\"ProductID\"', NATIVE_TYPE 'varchar')," +
+    			" ProductName string(60) OPTIONS(NAMEINSOURCE '\"ProductName\"', NATIVE_TYPE 'varchar')," +
+    			" CONSTRAINT PK2 PRIMARY KEY(ProductID)" +
+    			") OPTIONS(NAMEINSOURCE '\"products\".\"dbo\".\"ProductData\"', UPDATABLE 'TRUE');" +
+				" " +
+    			"CREATE FOREIGN TABLE ProductDataDD (" +
+    			"ProductID string(10) NOT NULL OPTIONS(NAMEINSOURCE '\"ProductID\"', NATIVE_TYPE 'varchar')," +
+    			" ProductName string(60) OPTIONS(NAMEINSOURCE '\"ProductName\"', NATIVE_TYPE 'varchar')" +
+    			") OPTIONS(NAMEINSOURCE '\"products\".\"dbo\".\"ProductData\"', UPDATABLE 'TRUE');" +
+				" " +
+				"CREATE FOREIGN TABLE myTable (" +
+				"newColumn_1 string(4000)," +
+				" newColumn_2 string(4000)," +
+				" CONSTRAINT myIndex1 INDEX(newColumn_1) OPTIONS(ANNOTATION 'index1 description')," +
+				" CONSTRAINT myIndex2 INDEX(newColumn_2) OPTIONS(ANNOTATION 'index2 description')" +
+				") OPTIONS(NAMEINSOURCE 'myTableSource', UPDATABLE 'TRUE');";
+    			
+	        String generatedDdl = roundTrip(ddl, false);
+	        assertEquals(expectedDdl, generatedDdl);
     }
 }

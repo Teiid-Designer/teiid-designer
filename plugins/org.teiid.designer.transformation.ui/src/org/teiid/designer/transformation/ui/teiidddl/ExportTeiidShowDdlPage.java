@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -158,9 +159,10 @@ public class ExportTeiidShowDdlPage extends AbstractWizardPage implements UiCons
      */
     public void handleExportDDLToFileSystem() {
         FileDialog dlg = new FileDialog(getShell(), SWT.SAVE);
-        dlg.setFilterExtensions(new String[] {"*.*"}); //$NON-NLS-1$ 
-        dlg.setText(Util.getString("ExportTeiidShowDdlPage_exportDDLDialogTitle"));
-        dlg.setFileName(Util.getString("ExportTeiidShowDdlPage_exportDDLDialogDefaultFileName"));
+        dlg.setFilterExtensions(new String[] {"*.*"}); //$NON-NLS-1$
+        String ddlFileName = ModelUtil.getName(exporter.getModelResource()) + ".ddl";
+        dlg.setText(ddlFileName);
+        dlg.setFileName(ddlFileName);
         String fileStr = dlg.open();
         
         // Export to the file
@@ -172,7 +174,8 @@ public class ExportTeiidShowDdlPage extends AbstractWizardPage implements UiCons
      */
     private void handleExportDDLToWorkspace() {
         // Show dialog for copying the DataSource
-        ExportDDLToWorkspaceDialog dialog = new ExportDDLToWorkspaceDialog(getShell());
+    	String ddlFileName = ModelUtil.getName(exporter.getModelResource()) + ".ddl";
+        ExportDDLToWorkspaceDialog dialog = new ExportDDLToWorkspaceDialog(getShell(), ddlFileName);
 
         dialog.open();
         
