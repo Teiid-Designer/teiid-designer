@@ -3275,7 +3275,7 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
             append(NonReserved.SELECTOR);
             append(SPACE);
-            append(escapeSinglePart(obj.getSelector()));
+            outputLiteral(String.class, false, obj.getSelector());
         }
         append(SPACE);
         append(NonReserved.COLUMNS);
