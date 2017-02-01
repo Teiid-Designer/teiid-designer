@@ -540,7 +540,19 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     public void addModels( final List<IFile> modelFiles ) {
         try {
             for (final IFile modelFile : modelFiles) {
-                vdb.addEntry(modelFile.getFullPath());
+            	// Check if vdb contains the model file already or not (due to virtual models adding dependencies already
+            	IPath modelPath = modelFile.getFullPath();
+            	
+            	boolean exists = false;
+            	for(VdbModelEntry entry : vdb.getModelEntries() ) {
+            		if(entry.getPath().equals(modelPath)) {
+            			exists = true;
+            			break;
+            		}
+            	}
+            	if( !exists ) {
+            		vdb.addEntry(modelFile.getFullPath());
+            	}
             }
         } catch (Exception ex) {
             ErrorHandler.toExceptionDialog(ex);
