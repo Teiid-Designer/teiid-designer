@@ -767,6 +767,7 @@ public final class PreviewManager {
             
             TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator(true);
             generator.setIncludeFKs(false);
+            generator.setIncludeNIS(true);
             
             generator.setIsVirtual(isVirtual);
             
