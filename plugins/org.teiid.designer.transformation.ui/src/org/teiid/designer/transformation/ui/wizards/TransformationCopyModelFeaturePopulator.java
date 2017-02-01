@@ -23,7 +23,16 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.metamodels.core.AnnotationContainer;
+import org.teiid.designer.metamodels.relational.AccessPattern;
 import org.teiid.designer.metamodels.relational.BaseTable;
+import org.teiid.designer.metamodels.relational.Column;
+import org.teiid.designer.metamodels.relational.ForeignKey;
+import org.teiid.designer.metamodels.relational.PrimaryKey;
+import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.ProcedureParameter;
+import org.teiid.designer.metamodels.relational.ProcedureResult;
+import org.teiid.designer.metamodels.relational.Table;
+import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.common.widget.InheritanceCheckboxTreeViewer;
@@ -267,9 +276,10 @@ public class TransformationCopyModelFeaturePopulator
                                 originalIsProcedure);
                         Boolean skipDescendants = new Boolean(doTransformation);
                         descendantsToSkip.add(skipDescendants);
-                        
                         if (doTransformation) {
                             try {
+                            	nullNameInSource(curCopy);
+                            	
                                 NewModelObjectHelperManager.helpCreate(curCopy, extraProperties);
                             } catch (ModelerCoreException err) {
                                 Util.log(IStatus.ERROR, Util.getString("TransformationCopyModelFeaturePopulator.doTransformationsHelpCreateError")); //$NON-NLS-1$
@@ -352,5 +362,46 @@ public class TransformationCopyModelFeaturePopulator
     		}
     	}
 
+    }
+    
+    private void nullNameInSource(EObject obj) {
+        if( obj instanceof Table ) {
+        	Table table = (Table)obj;
+        	table.setNameInSource(null);
+        	for( Object col : table.getColumns() ) {
+        		((Column)col).setNameInSource(null);
+        	}
+        	if( table instanceof BaseTable) {
+        		BaseTable bTable = (BaseTable)table;
+        		PrimaryKey pk = bTable.getPrimaryKey();
+        		if( pk != null ) {
+        			pk.setNameInSource(null);
+        		}
+        		for( Object fk : bTable.getForeignKeys() ) {
+        			((ForeignKey)fk).setNameInSource(null);
+        		}
+        		for( Object uc : bTable.getUniqueConstraints() ) {
+        			((UniqueConstraint)uc).setNameInSource(null);
+        		}
+        		for( Object ap : bTable.getAccessPatterns() ) {
+        			((AccessPattern)ap).setNameInSource(null);
+        		}
+        	}
+        	
+        } else if( obj instanceof Procedure) {
+        	Procedure proc = (Procedure)obj;
+        	proc.setNameInSource(null);
+        	
+        	for( Object par : proc.getParameters() ) {
+        		((ProcedureParameter)par).setNameInSource(null);
+        	}
+        	ProcedureResult res = proc.getResult();
+        	if( res != null ) {
+            	for( Object col : res.getColumns() ) {
+            		((Column)col).setNameInSource(null);
+            	}
+        	}
+        	
+        }
     }
 }
