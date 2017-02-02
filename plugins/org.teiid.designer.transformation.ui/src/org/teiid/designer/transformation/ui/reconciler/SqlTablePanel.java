@@ -150,7 +150,6 @@ public class SqlTablePanel extends Composite {
         GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
         buttonComposite.setLayoutData(gridData);
         addButton = WidgetFactory.createButton(buttonComposite, BUTTON_GRID_STYLE);
-                                              // UiConstants.Util.getString("SqlTablePanel.addButton.text"), BUTTON_GRID_STYLE); //$NON-NLS-1$
         addButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.ADD_ICON));
         addButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -159,7 +158,6 @@ public class SqlTablePanel extends Composite {
             }
         });
         removeButton = WidgetFactory.createButton(buttonComposite, BUTTON_GRID_STYLE);
-                                                  //UiConstants.Util.getString("SqlTablePanel.removeSqlButton.text"), BUTTON_GRID_STYLE); //$NON-NLS-1$
         removeButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.REMOVE_ICON));
         removeButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -168,7 +166,6 @@ public class SqlTablePanel extends Composite {
             }
         });
         clearButton = WidgetFactory.createButton(buttonComposite, BUTTON_GRID_STYLE);
-                                                // UiConstants.Util.getString("SqlTablePanel.clearButton.text"), BUTTON_GRID_STYLE); //$NON-NLS-1$
         clearButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.CLEAR_ICON));
         clearButton.setToolTipText(UiConstants.Util.getString("SqlTablePanel.clearButton.text"));
         clearButton.addSelectionListener(new SelectionAdapter() {
@@ -180,7 +177,7 @@ public class SqlTablePanel extends Composite {
 
         // jh Defect 21404: Add sort button
         sortButton = WidgetFactory.createButton(buttonComposite, SORT_BUTTON_TEXT, BUTTON_GRID_STYLE);
-        GridDataFactory.swtDefaults().hint(36, 28).grab(true, true).applyTo(sortButton);
+        GridDataFactory.swtDefaults().hint(60, 28).grab(true, true).applyTo(sortButton);
         sortButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {

@@ -67,18 +67,15 @@ public class BindingsTablePanel extends Composite {
     private static final int LABEL_GRID_STYLE = GridData.HORIZONTAL_ALIGN_BEGINNING;
 
     private static final String LOCKED_CHECKBOX_TEXT = UiConstants.Util.getString("BindingsTablePanel.lockedCheckbox.text"); //$NON-NLS-1$
-    private static final String UP_ATTR_BUTTON_TEXT = UiConstants.Util.getString("BindingsTablePanel.upAttrButton.text"); //$NON-NLS-1$
-    private static final String DOWN_ATTR_BUTTON_TEXT = UiConstants.Util.getString("BindingsTablePanel.downAttrButton.text"); //$NON-NLS-1$
-    private static final String SWAP_ATTR_BUTTON_TEXT = UiConstants.Util.getString("BindingsTablePanel.swapAttrButton.text"); //$NON-NLS-1$
-    private static final String TOP_ATTR_BUTTON_TEXT = UiConstants.Util.getString("BindingsTablePanel.topAttrButton.text"); //$NON-NLS-1$
-    private static final String BOTTOM_ATTR_BUTTON_TEXT = UiConstants.Util.getString("BindingsTablePanel.bottomAttrButton.text"); //$NON-NLS-1$
-    private static final String DELETE_ATTR_BUTTON_TEXT = UiConstants.Util.getString("BindingsTablePanel.deleteAttrButton.text"); //$NON-NLS-1$
     private static final String RESOLVE_TYPE_BUTTON_TEXT = UiConstants.Util.getString("BindingsTablePanel.resolveTypeButton.text"); //$NON-NLS-1$
     private static final String BINDINGS_TABLE_TITLE_TEXT = UiConstants.Util.getString("BindingsTablePanel.table.title"); //$NON-NLS-1$
     private static final String BINDINGS_TABLE_DATAYPE_NOTE_TEXT = UiConstants.Util.getString("BindingsTablePanel.datatype.note"); //$NON-NLS-1$
     private static final String BINDINGS_TABLE_ATTR_COL_TEXT = UiConstants.Util.getString("BindingsTablePanel.attrCol.title"); //$NON-NLS-1$
     private static final String BINDINGS_TABLE_SQL_COL_TEXT = UiConstants.Util.getString("BindingsTablePanel.sqlColumn.title"); //$NON-NLS-1$
     private static final String DATATYPE_RECONCILER_DIALOG_TITLE = UiConstants.Util.getString("DatatypeReconciler.title.text"); //$NON-NLS-1$
+    private static final String TOP_BUTTON_TOOLTIP = UiConstants.Util.getString("BindingsTablePanel.topButton.tooltip"); //$NON-NLS-1$
+    private static final String SWAP_BUTTON_TOOLTIP = UiConstants.Util.getString("BindingsTablePanel.swapButton.tooltip"); //$NON-NLS-1$
+    private static final String BOTTOM_BUTTON_TOOLTIP = UiConstants.Util.getString("BindingsTablePanel.bottomButton.tooltip"); //$NON-NLS-1$
 
     // Set the table column property names
     private final String ATTRIBUTE_COLUMN = "attribute"; //$NON-NLS-1$
@@ -218,9 +215,10 @@ public class BindingsTablePanel extends Composite {
         GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
         buttonComposite.setLayoutData(gridData);
 
-        topButton = WidgetFactory.createButton(buttonComposite, TOP_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
+        topButton = WidgetFactory.createButton(buttonComposite, /*TOP_ATTR_BUTTON_TEXT,*/ BUTTON_GRID_STYLE);
+        topButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.TOP_ICON));
+        topButton.setToolTipText(TOP_BUTTON_TOOLTIP);
         topButton.setEnabled(!isReadOnly);
-        GridDataFactory.swtDefaults().hint(32, 28).grab(true, true).applyTo(topButton);
         topButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
@@ -238,9 +236,10 @@ public class BindingsTablePanel extends Composite {
             }
         });
 
-        swapButton = WidgetFactory.createButton(buttonComposite, SWAP_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
+        swapButton = WidgetFactory.createButton(buttonComposite, /*SWAP_ATTR_BUTTON_TEXT,*/ BUTTON_GRID_STYLE);
+        swapButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.SWAP_ICON));
+        swapButton.setToolTipText(SWAP_BUTTON_TOOLTIP);
         swapButton.setEnabled(!isReadOnly);
-        GridDataFactory.swtDefaults().hint(38, 28).grab(true, true).applyTo(swapButton);
         swapButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
@@ -258,9 +257,10 @@ public class BindingsTablePanel extends Composite {
             }
         });
 
-        bottomButton = WidgetFactory.createButton(buttonComposite, BOTTOM_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
+        bottomButton = WidgetFactory.createButton(buttonComposite, /*BOTTOM_ATTR_BUTTON_TEXT,*/ BUTTON_GRID_STYLE);
+        bottomButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.BOTTOM_ICON));
+        bottomButton.setToolTipText(BOTTOM_BUTTON_TOOLTIP);
         bottomButton.setEnabled(!isReadOnly);
-        GridDataFactory.swtDefaults().hint(52, 28).grab(true, true).applyTo(bottomButton);
         bottomButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
@@ -280,7 +280,7 @@ public class BindingsTablePanel extends Composite {
 
         resolveTypeButton = WidgetFactory.createButton(buttonComposite, RESOLVE_TYPE_BUTTON_TEXT, BUTTON_GRID_STYLE);
         resolveTypeButton.setEnabled(!isReadOnly);
-        GridDataFactory.swtDefaults().hint(90, 28).grab(true, true).applyTo(resolveTypeButton);
+        GridDataFactory.swtDefaults().hint(110, 28).grab(true, true).applyTo(resolveTypeButton);
         resolveTypeButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
