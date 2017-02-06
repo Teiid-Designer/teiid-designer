@@ -110,6 +110,9 @@ public interface UiConstants {
 		String REMOVE_ICON = PC.CVIEW16 + "remove.gif"; //$NON-NLS-1$
 		String CLEAR_ICON = PC.CVIEW16 + "clear.png"; //$NON-NLS-1$
 		String DELETE_ICON = PC.CVIEW16 + "delete.gif"; //$NON-NLS-1$
+		String TOP_ICON = PC.CVIEW16 + "top.gif"; //$NON-NLS-1$
+		String BOTTOM_ICON = PC.CVIEW16 + "bottom.gif"; //$NON-NLS-1$
+		String SWAP_ICON = PC.CVIEW16 + "swap.png"; //$NON-NLS-1$
 	}
     
     interface SQLPanels {
