@@ -632,7 +632,6 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 				// Add a parameter with RETURN direction
 				RelationalParameter param = createProcedureParameter(child, procedure);
 				param.setDirection(DirectionKind.RETURN_LITERAL.toString());
-				param.setName(TeiidDDLConstants.RETURNS);
 			} else if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
 				procOptionNodes.add(child);
 			}
@@ -664,12 +663,26 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 		prm.setNativeType(RelationalColumn.DEFAULT_NATIVE_TYPE);
 		
 		// Handle Teiid-specific properties and options
-		String direction = node.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_TYPE).toString();
-		String resultFlag = node.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_RESULT_FLAG).toString();
-		if( resultFlag != null  && resultFlag.equalsIgnoreCase(Boolean.TRUE.toString())) {
-			direction = DirectionKind.RETURN_LITERAL.toString();
+		String direction = DirectionKind.IN_LITERAL.toString();
+		
+		Object dirProp = node.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_TYPE);
+		if( dirProp != null ) {
+			direction = dirProp.toString();
+		}
+		Object resultObj = node.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_RESULT_FLAG);
+		if( resultObj != null ) {
+			String resultFlag = resultObj.toString();
+			if( resultFlag != null  && resultFlag.equalsIgnoreCase(Boolean.TRUE.toString())) {
+				direction = DirectionKind.RETURN_LITERAL.toString();
+			}
+		} else {
+			Object resultTypeObj = node.getProperty(TeiidDdlLexicon.CreateProcedure.RESULT_DATA_TYPE);
+			if( resultTypeObj != null ) {
+				direction = DirectionKind.RETURN_LITERAL.toString();
+			}
 		}
 		prm.setDirection(direction);
+
 
 		// Find all the Option properties
 		List<AstNode> optionNodes = new ArrayList<AstNode>();

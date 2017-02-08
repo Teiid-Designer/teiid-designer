@@ -866,7 +866,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	OptionsStatement options = new OptionsStatement();
     	
     	String desc = getDescription(eobject);
-    	System.out.println("   >>  GeiidModelToDdlGenerator.getOptions()  description  = " + desc + "  for:  " + eobject);
+
     	if( !StringUtilities.isEmpty(desc) ) {
     		options.add(ANNOTATION, desc, EMPTY_STRING);
     	}

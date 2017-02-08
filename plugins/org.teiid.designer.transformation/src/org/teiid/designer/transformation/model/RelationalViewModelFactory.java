@@ -139,6 +139,7 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
                 // Set the transformation SQL
                 RelationalViewTable viewTable = (RelationalViewTable)obj;
                 TransformationHelper.createTransformation(baseTable, viewTable.getTransformationSQL());
+                newEObject = baseTable;
             }
                 break;
             case TYPES.VIEW: {
@@ -153,10 +154,12 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
                 TransformationHelper.createTransformation(procedure, viewProc.getTransformationSQL());
                 
                 applyProcedureExtensionProperties((RelationalProcedure)obj,(Procedure) procedure);
+                
+                newEObject = procedure;
             }
                 break;
             case TYPES.INDEX: {
-                super.buildObject(obj, modelResource, progressMonitor);
+            	newEObject = super.buildObject(obj, modelResource, progressMonitor);
             }
                 break;
 
