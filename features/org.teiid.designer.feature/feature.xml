@@ -165,6 +165,8 @@
       <import plugin="org.eclipse.swt" version="3.104.1" match="compatible"/>
       <import plugin="org.eclipse.jdt.core" version="3.11.1" match="compatible"/>
       <import plugin="org.eclipse.wst.server.core" version="1.7.0" match="compatible"/>
+      <import plugin="org.teiid.designer.dataservices.ui"/>
+      <import plugin="org.teiid.designer.datasources.ui"/>
    </requires>
 
    <plugin
