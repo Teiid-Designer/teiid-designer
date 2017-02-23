@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
@@ -948,7 +949,13 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
                 event.item = item;
                 event.type = SWT.Selection;
                 if( !tabFolderSelectionInProgress ) {
-                	getTabFolder().notifyListeners(SWT.Selection, event);
+                	try {
+						getTabFolder().notifyListeners(SWT.Selection, event);
+					} catch (SWTException e) {
+						if( ! e.getMessage().contains("Widget is disposed") ) {
+							UiConstants.Util.log(e);
+						}
+					}
                 }
                 break;
             }

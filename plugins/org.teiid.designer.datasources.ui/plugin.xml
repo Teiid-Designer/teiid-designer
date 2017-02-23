@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+    
+<!-- Eclipse Import Wizards -->
+  <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.datasources.ui.sources.DataSourcesView"
+            icon="icons/connection_source.gif"
+            id="org.teiid.designer.datasources.ui.sources.DataSourcesViewID"
+            name="Data Sources">
+      </view>
+   </extension>
+    <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->
+   <extension
+         id="datasourcesPerspectiveContributor"
+         name="%datasourcesPerspectiveContributor.name"
+         point="org.teiid.designer.ui.modelerPerspectiveContributor">
+      <class
+        name="org.teiid.designer.datasources.ui.sources.DataSourcesPerspectiveContributor">
+      </class>
+   </extension>
+  
+</plugin>

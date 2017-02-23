@@ -26,6 +26,7 @@ import org.teiid.designer.runtime.ui.vdb.ExecuteVdbDialog;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbWorker;
 import org.teiid.designer.runtime.ui.vdb.VdbConstants;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.util.ErrorHandler;
@@ -54,6 +55,7 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
         super();
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.EXECUTE_VDB));
         worker = new ExecuteVdbWorker();
+        setId(ModelActionConstants.Resource.EXECUTE_VDB);
     }
 
     @Override

@@ -9,6 +9,7 @@ package org.teiid.designer.ui.actions;
 
 
 
+import org.eclipse.swt.graphics.Image;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.actions.workers.CloneWorker;
 import org.teiid.designer.ui.editors.ModelEditorManager;
@@ -37,6 +38,15 @@ public class CloneAction extends ModelObjectAction {
         worker = new CloneWorker(true);
         setActionWorker(worker);
     }
+    
+    public CloneAction(Image image, Image disabledImage) {
+        this();
+        
+        setImage(image);
+        setDisabledImage(disabledImage);
+
+    }
+    
     
     //============================================================================================================================
     // Methods

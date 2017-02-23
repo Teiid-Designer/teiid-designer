@@ -65,6 +65,7 @@ public class CreateDataSourceAction extends SortableSelectionAction implements I
         super(label, SWT.DEFAULT);
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.SOURCE_BINDING_ICON));
         providerFactory = new ConnectionInfoProviderFactory();
+        setId("CreateDataSourceAction");
     }
 
     public void setTeiidServer( ITeiidServer teiidServer ) {

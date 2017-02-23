@@ -132,7 +132,7 @@
       </resourceAction>
    </extension>
    <extension
-        id="CreateDataSourceAction"
+        id="CreateVdbDataSourceAction"
         name="%createVdbDataSourceAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction

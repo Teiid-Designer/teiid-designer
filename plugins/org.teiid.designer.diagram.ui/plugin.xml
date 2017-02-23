@@ -38,7 +38,7 @@
          point="org.teiid.designer.ui.modelEditorPage">
       <class
             tabName="%diagramEditorName"
-            order="0"
+            order="1"
             name="org.teiid.designer.diagram.ui.editor.DiagramEditor">
       </class>
    </extension>

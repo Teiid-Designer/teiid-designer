@@ -150,7 +150,7 @@ public class CreateViewIndexAction  extends Action implements INewChildAction, I
 	}
 
 	@Override
-   public void run() {
+    public void run() {
         // If properties were passed in, use it's model as the selection - if available
         if (this.designerProperties != null) {
             IFile propsViewModel = DesignerPropertiesUtil.getViewModel(this.designerProperties);
@@ -158,24 +158,27 @@ public class CreateViewIndexAction  extends Action implements INewChildAction, I
         }
 		if( selectedModel != null ) {
 	        ModelResource mr = ModelUtilities.getModelResource(selectedModel);
-	        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-	        
-            relationalViewIndex = new RelationalViewIndex();
-	        
-	        // Hand the table off to the generic edit dialog
-            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewIndex, selectedModel);
-            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
-
-	        dialog.open();
-	        
-	        if (dialog.getReturnCode() == Window.OK) {
-	        	this.newViewIndex = createViewIndexInTxn(mr, relationalViewIndex);
-	        } else {
-	        	this.newViewIndex = null;
-	        	this.relationalViewIndex = null;
-	        }
+	        run(mr);
 		}
-		
+	}
+	
+	public void run(ModelResource mr) {
+        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+        
+        relationalViewIndex = new RelationalViewIndex();
+        
+        // Hand the table off to the generic edit dialog
+        TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewIndex, selectedModel);
+        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
+
+        dialog.open();
+        
+        if (dialog.getReturnCode() == Window.OK) {
+        	this.newViewIndex = createViewIndexInTxn(mr, relationalViewIndex);
+        } else {
+        	this.newViewIndex = null;
+        	this.relationalViewIndex = null;
+        }
 	}
 
     private EObject createViewIndexInTxn( ModelResource modelResource, RelationalViewIndex viewIndex ) {

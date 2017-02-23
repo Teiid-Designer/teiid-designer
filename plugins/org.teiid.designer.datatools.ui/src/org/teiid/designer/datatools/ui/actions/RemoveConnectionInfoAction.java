@@ -21,6 +21,7 @@ import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
@@ -51,6 +52,7 @@ public class RemoveConnectionInfoAction extends SortableSelectionAction  impleme
         super(label, SWT.DEFAULT);
         setImageDescriptor(DatatoolsUiPlugin.getDefault().getImageDescriptor(DatatoolsUiConstants.Images.REMOVE_CONNECTION_ICON));
         helper = new ConnectionInfoHelper();
+        setId(ModelActionConstants.Resource.REMOVE_CONNECTION_INFO);
     }
 
     /**

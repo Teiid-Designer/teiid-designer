@@ -121,6 +121,8 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
 
     ConnectionProfileWorker profileWorker;
 
+    IConnectionProfile selectedProfile;
+
     private boolean connRequiresPassword = false;
 
     /**
@@ -140,6 +142,25 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
         this.selectedModelResource = initialSelection;
         this.providerFactory = new ConnectionInfoProviderFactory();
         this.teiidDataSourceProperties = new Properties();
+    }
+    
+    /**
+     * @since 4.0
+     */
+    public CreateDataSourceWizard( Shell shell,
+    							   ITeiidServer teiidServer,
+                                   Collection<ModelResource> relationalModels,
+                                   IConnectionProfile initialProfile ) {
+        super(shell, 2);
+        this.relationalModelsMap = new HashMap<String, ModelResource>();
+        for (ModelResource mr : relationalModels) {
+            this.relationalModelsMap.put(ModelUtil.getName(mr), mr);
+        }
+        this.hasModelResources = !relationalModelsMap.isEmpty();
+        this.teiidServer = teiidServer;
+        this.providerFactory = new ConnectionInfoProviderFactory();
+        this.teiidDataSourceProperties = new Properties();
+        this.selectedProfile = initialProfile;
     }
     
     /* (non-Javadoc)

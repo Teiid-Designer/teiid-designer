@@ -36,6 +36,7 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Dialog;
@@ -62,6 +63,7 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
         super(ACTION_TITLE, SWT.DEFAULT);
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SET_CONNECTION_ICON));
         this.connectionInfoHelper = new ConnectionInfoHelper();
+        setId(ModelActionConstants.Resource.SET_TRANSLATOR_NAME);
     }
 
     /**

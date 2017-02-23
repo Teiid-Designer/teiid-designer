@@ -35,6 +35,7 @@ import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
@@ -64,7 +65,7 @@ public class EditTOPropertiesAction  extends SortableSelectionAction  implements
     public EditTOPropertiesAction() {
         super(label, SWT.DEFAULT);
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.SOURCE_BINDING_ICON));
-        
+        setId(ModelActionConstants.Resource.EDIT_TRANSLATOR_OVERRIDES);
     }
 
     public void setTeiidServer( ITeiidServer teiidServer ) {

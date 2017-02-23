@@ -22,6 +22,7 @@ import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.runtime.ui.wizards.vdbs.GenerateDynamicVdbWizard;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
@@ -35,6 +36,7 @@ public class GenerateDynamicVdbAction extends SortableSelectionAction implements
     public GenerateDynamicVdbAction() {
         super(label, SWT.DEFAULT);
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.DYNAMIC_VDB));
+        setId(ModelActionConstants.Resource.GENERATE_DYNAMIC_VDB);
     }
 
     /**

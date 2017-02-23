@@ -20,6 +20,7 @@ import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileSummaryDialog;
 import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
@@ -49,6 +50,7 @@ public class ViewConnectionProfileAction extends SortableSelectionAction  implem
     public ViewConnectionProfileAction() {
         super(TITLE, SWT.DEFAULT);
         setImageDescriptor(DatatoolsUiPlugin.getDefault().getImageDescriptor(DatatoolsUiConstants.Images.VIEW_CONNECTION_ICON));
+        setId(ModelActionConstants.Resource.VIEW_CONNECTION_PROFILE);
         providerFactory = new ConnectionInfoProviderFactory();
     }
 
@@ -90,7 +92,7 @@ public class ViewConnectionProfileAction extends SortableSelectionAction  implem
         }
     }
 
-    private Properties getModelConnectionProperties(ModelResource mr) {
+    public Properties getModelConnectionProperties(ModelResource mr) {
 
         try {
             if (ModelIdentifier.isRelationalSourceModel(mr)) {

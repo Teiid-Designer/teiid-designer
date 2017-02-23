@@ -43,6 +43,7 @@ import org.teiid.designer.runtime.ui.vdb.VdbAgeChecker;
 import org.teiid.designer.runtime.ui.vdb.VdbDeployer;
 import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
 import org.teiid.designer.ui.actions.ISelectionAction;
+import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.vdb.Vdb;
@@ -54,7 +55,7 @@ import org.teiid.designer.vdb.XmiVdb;
 /**
  * @since 8.0
  */
-public class DeployVdbAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
+public class DeployVdbAction extends SortableSelectionAction implements ISelectionListener, Comparable, ISelectionAction {
 
     static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(DeployVdbAction.class);
 
