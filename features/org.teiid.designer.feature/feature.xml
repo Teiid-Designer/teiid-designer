@@ -165,8 +165,10 @@
       <import plugin="org.eclipse.swt" version="3.104.1" match="compatible"/>
       <import plugin="org.eclipse.jdt.core" version="3.11.1" match="compatible"/>
       <import plugin="org.eclipse.wst.server.core" version="1.7.0" match="compatible"/>
-      <import plugin="org.teiid.designer.dataservices.ui" version="11.0.1" match="compatible"/>
-      <import plugin="org.teiid.designer.datasources.ui" version="11.0.1" match="compatible"/>
+      <!--
+      <import plugin="org.teiid.designer.dataservices.ui" version="11.0.0" match="compatible"/>
+      -->
+      <import plugin="org.teiid.designer.datasources.ui" version="11.0.0" match="compatible"/>
    </requires>
 
    <plugin
@@ -634,5 +636,12 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.teiid.designer.datasources.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
