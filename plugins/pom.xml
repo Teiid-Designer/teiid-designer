@@ -24,6 +24,7 @@
 		<module>org.teiid.designer.compare</module>
 		<module>org.teiid.designer.compare.ui</module>
 		<module>org.teiid.designer.core</module>
+		<module>org.teiid.designer.datasources.ui</module>
 		<module>org.teiid.designer.core.xslt</module>
 		<module>org.teiid.designer.datatools</module>
 		<module>org.teiid.designer.datatools.ui</module>
