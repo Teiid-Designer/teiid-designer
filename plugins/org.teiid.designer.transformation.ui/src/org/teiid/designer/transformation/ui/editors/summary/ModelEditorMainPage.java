@@ -54,6 +54,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
@@ -291,6 +292,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
         		ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
         String desc = "Model name :   " + modelResource.getItemName() + "                               Location :   " +   modelResource.getPath().removeLastSegments(1).toString();
         section.setText(desc); //"Summary");
+        section.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 
 //        section.setDescription(desc);
         blueForeground(section.getDescriptionControl());
@@ -431,7 +433,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
         modelTree = new Tree(composite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 
         modelTreeViewer = new TreeViewer(modelTree);
-        GridDataFactory.fillDefaults().span(1,  1).hint(300, 250).minSize(SWT.DEFAULT, 60).grab(false, true).applyTo(modelTree);
+        GridDataFactory.fillDefaults().span(1,  1).hint(250, 250).minSize(SWT.DEFAULT, 60).grab(false, true).applyTo(modelTree);
         
         ITreeContentProvider contentProvider = new ModelOutlineContentProvider(getEditorInput());
         modelTreeViewer.setContentProvider(contentProvider);
@@ -674,6 +676,8 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     }
 
     private void resetDescription() {
+    	if( this.textViewerPanel == null || this.textViewerPanel.isDisposed() ) return;
+    	
         String description = UNDEFINED;
 
     	if( getSelectedObject() instanceof EObject ) {

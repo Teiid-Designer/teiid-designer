@@ -109,17 +109,17 @@ public class GlobalConnectionTreeProvider extends ConnectionProfileTreeProvider 
 		if( element instanceof RootConnectionNode ) {
 			RootConnectionNode node = (RootConnectionNode)element;
 			if( node.isDataSource() )  {
-				image = UiPlugin.getDefault().getImage(UiConstants.ImageIds.TEIID_SERVER);
+				image = UiPlugin.getDefault().getImage(UiConstants.IMAGES.TEIID_SERVER);
 			} else {
-				image = UiPlugin.getDefault().getImage(UiConstants.ImageIds.PROFILES);
+				image = UiPlugin.getDefault().getImage(UiConstants.IMAGES.PROFILES);
 			}
 		} else if (element instanceof ICategory) {
 			image = PlatformUI.getWorkbench().getSharedImages().getImage(
 					ISharedImages.IMG_OBJ_FOLDER);
 		} else if (element instanceof IConnectionProfile) {
-			image = UiPlugin.getDefault().getImage(UiConstants.ImageIds.CONNECTION);
+			image = UiPlugin.getDefault().getImage(UiConstants.IMAGES.CONNECTION);
 		} else if( element instanceof DataSourceItem ) {
-			image = UiPlugin.getDefault().getImage(UiConstants.ImageIds.TEIID_JDBC_SOURCE);
+			image = UiPlugin.getDefault().getImage(UiConstants.IMAGES.TEIID_JDBC_SOURCE);
 		} else {
 			image = null;
 		}

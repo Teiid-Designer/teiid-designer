@@ -9,6 +9,7 @@ package org.teiid.designer.datasources.ui;
 
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.LoggingUtil;
+import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 
 
 /**
@@ -50,19 +51,45 @@ public interface UiConstants {
     
     public static final String FLAT_FILE_DATA_SOURCE = "Flat File Data Source"; //$NON-NLS-1$
     
+	/**
+	 * Private constants used by other constants within this class.
+	 * 
+	 * @since 4.3
+	 */
+	class PC {
+	    public static final String I18N_NAME = PLUGIN_ID + ".i18n"; //$NON-NLS-1$
+	
+	    public static final String ICON_PATH = "icons/full/"; //$NON-NLS-1$
+	
+	    public static final String CVIEW16 = ICON_PATH + "cview16/"; //$NON-NLS-1$
+	
+	    public static final String CTOOL16 = ICON_PATH + "ctool16/"; //$NON-NLS-1$
+	
+	    public static final String OBJ16 = ICON_PATH + "obj16/"; //$NON-NLS-1$
+	
+	    public static final String WIZBAN = ICON_PATH + "wizban/"; //$NON-NLS-1$
+	}
+	
     @SuppressWarnings( "javadoc" )
-    interface ImageIds {
-        String FOLDER = "icons/"; //$NON-NLS-1$
+    interface IMAGES {
         
-        String RESET_PROPERTY = FOLDER + "restore-default-value.png";  //$NON-NLS-1$
-        String ADD_PROPERTY = FOLDER + "add_property.png";  //$NON-NLS-1$
-        String REMOVE_PROPERTY = FOLDER + "remove_property.png";  //$NON-NLS-1$
+        String RESET_PROPERTY = PC.CVIEW16 + "restore-default-value.png";  //$NON-NLS-1$
+        String ADD_PROPERTY = PC.CVIEW16 + "add_property.png";  //$NON-NLS-1$
+        String REMOVE_PROPERTY = PC.CVIEW16 + "remove_property.png";  //$NON-NLS-1$
         
-        String JDBC_SOURCE = FOLDER + "jdbc_16.gif"; //$NON-NLS-1$
-        String TEIID_JDBC_SOURCE = FOLDER + "jdbc-source.gif"; //$NON-NLS-1$
-        String TEIID_SERVER = FOLDER + "teiid-server.png"; //$NON-NLS-1$
-        String CONNECTION = FOLDER + "connection.gif"; //$NON-NLS-1$
-        String PROFILES = FOLDER + "profiles.gif"; //$NON-NLS-1$
+        String JDBC_SOURCE = PC.CVIEW16 + "jdbc_16.gif"; //$NON-NLS-1$
+        String TEIID_JDBC_SOURCE = PC.CVIEW16 + "jdbc-source.gif"; //$NON-NLS-1$
+        String TEIID_SERVER = PC.CVIEW16 + "teiid-server.png"; //$NON-NLS-1$
+        String CONNECTION = PC.CVIEW16 + "connection.gif"; //$NON-NLS-1$
+        String PROFILES = PC.CVIEW16 + "profiles.gif"; //$NON-NLS-1$
+        
+        String ADD_CONNECTION = PC.CVIEW16 + "add-connection.png";  //$NON-NLS-1$
+        String EDIT_CONNECTION = PC.CVIEW16 + "edit-connection.png";  //$NON-NLS-1$
+        String REMOVE_CONNECTION = PC.CVIEW16 + "remove-connection.png";  //$NON-NLS-1$
+        String REFRESH = PC.CVIEW16 + "refresh.png";  //$NON-NLS-1$
+        String GENERATE_SOURCE_MODEL = PC.CVIEW16 + "generate-source-model.png";  //$NON-NLS-1$
+        String CREATE_DATA_SOURCE = PC.CVIEW16 + "create-data-source.png";  //$NON-NLS-1$
+        
     }
     
     interface JdbcTranslatorKeys {

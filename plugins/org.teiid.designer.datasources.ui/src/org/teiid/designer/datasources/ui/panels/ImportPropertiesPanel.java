@@ -169,7 +169,7 @@ public class ImportPropertiesPanel {
         Composite toolbarPanel = WidgetFactory.createPanel(panel, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 2);
         
         this.addPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
-        this.addPropertyButton.setImage(UiPlugin.getDefault().getImage(UiConstants.ImageIds.ADD_PROPERTY)); 
+        this.addPropertyButton.setImage(UiPlugin.getDefault().getImage(UiConstants.IMAGES.ADD_PROPERTY)); 
         this.addPropertyButton.setToolTipText(Messages.ImportPropertiesPanel_addNewPropertyButton_tooltip);
         this.addPropertyButton.addSelectionListener(new SelectionListener() {
 			
@@ -184,7 +184,7 @@ public class ImportPropertiesPanel {
 		});
         
         this.removePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
-        this.removePropertyButton.setImage(UiPlugin.getDefault().getImage(UiConstants.ImageIds.REMOVE_PROPERTY));
+        this.removePropertyButton.setImage(UiPlugin.getDefault().getImage(UiConstants.IMAGES.REMOVE_PROPERTY));
         this.removePropertyButton.setToolTipText(Messages.ImportPropertiesPanel_removePropertyButton_tooltip); 
         this.removePropertyButton.addSelectionListener(new SelectionListener() {
 			

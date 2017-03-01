@@ -78,6 +78,16 @@
       </specialAction>
    </extension>
    <extension
+        id="GenerateDataServiceAction"
+        name="%generateDataServiceAction"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="org.teiid.designer.runtime.ui.actions.GenerateDataServiceAction"
+         label="%generateDataServiceAction.label">
+      </specialAction>
+   </extension>
+   
+   <extension
         id="DeployVdbAction"
         name="%deployVdbAction.name"
         point="org.teiid.designer.ui.modelResourceAction">

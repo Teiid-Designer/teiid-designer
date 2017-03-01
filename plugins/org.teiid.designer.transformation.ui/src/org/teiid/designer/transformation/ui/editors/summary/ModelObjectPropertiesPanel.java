@@ -74,7 +74,7 @@ public class ModelObjectPropertiesPanel implements UiConstants { //, DataSourceP
      */
     private void createTablePanel(Composite parent, boolean isReadOnly) {
         Composite panel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH);
-        GridDataFactory.fillDefaults().hint(-1, 300).grab(true, false).applyTo(panel);
+        GridDataFactory.fillDefaults().hint(-1, 250).grab(true, false).applyTo(panel);
 
         // Create Table Viewer
         int tableStyle = SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION;

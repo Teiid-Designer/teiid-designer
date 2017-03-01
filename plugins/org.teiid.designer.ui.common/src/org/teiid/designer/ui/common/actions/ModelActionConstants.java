@@ -56,6 +56,7 @@ public interface ModelActionConstants {
         String GENERATE_REST_VIRTUAL_PROCEDURES = "GenerateRestVirtualProceduresAction"; //$NON-NLS-1$
         String CREATE_WEB_SERVICE_FROM_XML = "GenerateWebServiceModelAction2"; //$NON-NLS-1$
         String CREATE_XML_VIEW_FROM_XSD = "CreateXmlViewFromXsdAction"; //$NON-NLS-1$
+        String GENERATE_DATA_SERVICE = "GenerateDataServiceAction"; //$NON-NLS-1$
     }
     
     interface WizardsIDs {

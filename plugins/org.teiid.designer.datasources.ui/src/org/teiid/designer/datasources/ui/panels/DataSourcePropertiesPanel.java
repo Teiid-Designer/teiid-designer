@@ -686,7 +686,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
             PropertyItem property = (PropertyItem)element;
             
             Image image = null;
-            Image changedImage = UiPlugin.getDefault().getImage(UiConstants.ImageIds.RESET_PROPERTY);
+            Image changedImage = UiPlugin.getDefault().getImage(UiConstants.IMAGES.RESET_PROPERTY);
             Image errorImage = UiPlugin.getDefault().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
 
             if (!this.nameColumn) {

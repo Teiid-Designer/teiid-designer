@@ -34,9 +34,9 @@ import org.eclipse.swt.widgets.Display;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.datasources.ui.Messages;
 import org.teiid.designer.datasources.ui.UiConstants;
+import org.teiid.designer.datasources.ui.UiPlugin;
 import org.teiid.designer.datasources.ui.panels.DataSourceItem;
 import org.teiid.designer.datasources.ui.wizard.CreateDataSourceDialog;
-import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
@@ -53,12 +53,12 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     private Button refreshButton;
     
     private IAction dummyAction;
-    private IAction refreshAction;
     private IAction createAction;
     private IAction deleteAction;
     private IAction editAction;
     private IAction generateSourceModelAction;
     private IAction createDataSourceAction;
+    private IAction createDataSourceFromProfileAction;
     // Add a Context Menu
     private MenuManager treeMenuManager;
 	
@@ -109,16 +109,6 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
             }
         };
         
-
-        this.treeViewer.getControl().setMenu(treeMenuManager.createContextMenu(parent));
-        
-        this.refreshAction = new Action("Refresh") { //$NON-NLS-1$
-            @Override
-            public void run() {
-            	treeViewer.refresh();
-            }
-		};
-        
         this.createAction = new Action("Create") { //$NON-NLS-1$
             @Override
             public void run() {
@@ -131,6 +121,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
             	}
             }
 		};
+		this.createAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(IMAGES.ADD_CONNECTION));
 		
         this.editAction = new Action("Edit") { //$NON-NLS-1$
             @Override
@@ -142,6 +133,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
             	}
             }
 		};
+		this.editAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(IMAGES.EDIT_CONNECTION));
 		
         this.deleteAction = new Action("Delete") { //$NON-NLS-1$
             @Override
@@ -153,6 +145,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
             	}
             }
 		};
+		this.deleteAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(IMAGES.REMOVE_CONNECTION));
 		
         this.generateSourceModelAction = new Action("Generate Source Model") { //$NON-NLS-1$
             @Override
@@ -165,15 +158,27 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
             	}
             }
 		};
+		this.generateSourceModelAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(IMAGES.GENERATE_SOURCE_MODEL));
+		
+		this.createDataSourceFromProfileAction =  new Action("Create Data Source") { //$NON-NLS-1$
+            @Override
+            public void run() {
+            	if( isProfileSelected() ) {
+            		handleCreateDataSourceFromProfile();
+            	}
+            }
+		};
+		this.createDataSourceFromProfileAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(IMAGES.CREATE_DATA_SOURCE));
 		
 		this.createDataSourceAction =  new Action("Create Data Source") { //$NON-NLS-1$
             @Override
             public void run() {
-            	if( isProfileSelected() ) {
-            		handleCreateDataSource();
+            	if( isDataSourceSelected() ) {
+            		handleCreateSource();
             	}
             }
 		};
+		this.createDataSourceAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(IMAGES.CREATE_DATA_SOURCE));
     }
     
     /**
@@ -189,7 +194,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
         panel.setLayoutData(groupGD);
         
         newCPButton = new Button(panel, SWT.PUSH);
-        newCPButton.setText(Messages.dataSourcePanel_newButtonText);
+        newCPButton.setImage(UiPlugin.getDefault().getImage(IMAGES.ADD_CONNECTION));
         newCPButton.setToolTipText(Messages.dataSourcePanel_newButtonTooltip);
         newCPButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         newCPButton.setEnabled(true);
@@ -197,20 +202,20 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-            	if( isProfileSelected() ) {
-            		handleCreateProfile();
-            	} else if( isDataSourceSelected() || isDataSourceTreeSelected() ) {
+            	if( isDataSourceSelected() || isDataSourceTreeSelected() ) {
             		if( manager.serverAvailable() ) {
             			handleCreateSource();
             		}
+            	} else {
+            		handleCreateProfile();
             	}
             }
             
         });
         
         deleteCPButton = new Button(panel, SWT.PUSH);
-        deleteCPButton.setText(Messages.dataSourcePanel_deleteButtonText);
-        deleteCPButton.setToolTipText(Messages.dataSourcePanel_deleteButtonTooltip);
+        deleteCPButton.setImage(UiPlugin.getDefault().getImage(IMAGES.REMOVE_CONNECTION));
+        deleteCPButton.setToolTipText("Delete");//Messages.dataSourcePanel_deleteButtonTooltip);
         deleteCPButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         deleteCPButton.setEnabled(false);
         deleteCPButton.addSelectionListener(new SelectionAdapter() {
@@ -228,8 +233,8 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
         deleteCPButton.setEnabled(false);
         
         editCPButton = new Button(panel, SWT.PUSH);
-        editCPButton.setText(Messages.dataSourcePanel_editButtonText);
-        editCPButton.setToolTipText(Messages.dataSourcePanel_editButtonTooltip);
+        editCPButton.setImage(UiPlugin.getDefault().getImage(IMAGES.EDIT_CONNECTION));
+        editCPButton.setToolTipText("Edit"); //Messages.dataSourcePanel_editButtonTooltip);
         editCPButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         editCPButton.setEnabled(false);
         editCPButton.addSelectionListener(new SelectionAdapter() {
@@ -250,7 +255,8 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
         WidgetFactory.createLabel(panel, "");
         
         refreshButton = new Button(panel, SWT.PUSH);
-        refreshButton.setText(Messages.dataSourcePanel_refreshButtonText);
+//        refreshButton.setText(Messages.dataSourcePanel_refreshButtonText);
+        refreshButton.setImage(UiPlugin.getDefault().getImage(IMAGES.REFRESH));
         refreshButton.setToolTipText(Messages.dataSourcePanel_refreshButtonTooltip);
         refreshButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         refreshButton.setEnabled(false);
@@ -270,24 +276,48 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     void setButtonsState() {
     	boolean selection = false;
 
-    	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
-    	if( !obj.isEmpty() && 
-    			( obj.getFirstElement() instanceof IConnectionProfile ) || obj.getFirstElement() instanceof DataSourceItem )  {
+    	if( isDataSourceSelected() || isDataSourceTreeSelected() ) {
+    		if( manager.serverAvailable() ) {
+    			newCPButton.setToolTipText("Create Data Source");
+    			newCPButton.setToolTipText("Create Data Source");
+    		}
+    		if( isDataSourceSelected() ) {
+    			selection = true;
+    		}
+    	} else if( isProfileSelected() ) {
+    		newCPButton.setToolTipText("Create Connection Profile");
+    		newCPButton.setToolTipText("Create Connection Profile");
     		selection = true;
+    	} else {
+    		newCPButton.setToolTipText("Create Connection Profile");
+    		newCPButton.setToolTipText("Create Connection Profile");
     	}
+//    	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
+//    	if( !obj.isEmpty() && 
+//    			( obj.getFirstElement() instanceof IConnectionProfile ) || obj.getFirstElement() instanceof DataSourceItem )  {
+//    		selection = true;
+//    	}
+    	newCPButton.setEnabled(true);
     	deleteCPButton.setEnabled(selection);
     	dummyAction.setEnabled(selection);
     	editCPButton.setEnabled(selection);
     	
 		treeMenuManager.removeAll();
 		
-		if( isProfileSelected() || !isDataSourceTreeSelected() ) {
+		if( isProfileSelected() ) {
 			// can create a profile any time
 			treeMenuManager.add(createAction);
 			treeMenuManager.add(generateSourceModelAction);
 			if( manager.getImportManager().isValidImportServer() ) {
-				treeMenuManager.add(createDataSourceAction);
+				treeMenuManager.add(createDataSourceFromProfileAction);
 			}
+		} else if( isDataSourceSelected() ) {
+			// can create a profile any time
+			treeMenuManager.add(createDataSourceAction);
+			treeMenuManager.add(generateSourceModelAction);
+//			if( manager.getImportManager().isValidImportServer() ) {
+//				treeMenuManager.add(createDataSourceAction);
+//			}
 		} else if( manager.serverAvailable() ){
 			// can't create a DS without a running server
 			treeMenuManager.add(createAction);
@@ -460,6 +490,17 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     		} else if( profile.getCategory().getName().equals(UiConstants.FLAT_FILE_DATA_SOURCE) ) {
     			ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.FLAT_FILE_IMPORT, new StructuredSelection(), new Properties(), true);
     		}
+    	}
+    }
+    
+    private void handleCreateDataSourceFromProfile() {
+    	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
+    	if( !obj.isEmpty() && obj.getFirstElement() instanceof IConnectionProfile ) {
+    		CreateDataSourceAction action = new CreateDataSourceAction((IConnectionProfile)obj.getFirstElement());
+    		action.setTeiidServer(ModelerCore.getTeiidServerManager().getDefaultServer());
+    		action.run();
+    		manager.refreshDataSourceList( );
+    		this.treeViewer.refresh();
     	}
     }
     

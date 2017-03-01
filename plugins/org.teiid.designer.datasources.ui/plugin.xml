@@ -16,7 +16,7 @@
       <view
             category="org.teiid.designer.ui"
             class="org.teiid.designer.datasources.ui.sources.DataSourcesView"
-            icon="icons/connection_source.gif"
+            icon="icons/full/cview16/connection_source.gif"
             id="org.teiid.designer.datasources.ui.sources.DataSourcesViewID"
             name="Data Sources">
       </view>
