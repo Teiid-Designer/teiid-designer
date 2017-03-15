@@ -31,13 +31,20 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.dialogs.GenerateDataServiceDialog;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.vdb.VdbPlugin;
+import org.teiid.designer.vdb.VdbVersionUtil;
 
 public class GenerateDataServiceWorker extends PreviewDataWorker implements DqpUiConstants {
 	public static final String THIS_CLASS = I18nUtil.getPropertyPrefix(GenerateDataServiceWorker.class);
@@ -77,6 +84,15 @@ public class GenerateDataServiceWorker extends PreviewDataWorker implements DqpU
 		versionString = "1"; //$NON-NLS-1$
 
 		manager = new PreviewManager(targetObject);
+		
+		ModelResource mr = ModelUtilities.getModelResource(targetObject);
+		if( mr != null ) {
+			try {
+				workspaceLocation = mr.getUnderlyingResource().getParent();
+			} catch (ModelWorkspaceException err) {
+	    		ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
+			}
+		}
 
 		try {
 			internalRun(targetObject);
@@ -105,10 +121,12 @@ public class GenerateDataServiceWorker extends PreviewDataWorker implements DqpU
     	GenerateDataServiceDialog dialog = new GenerateDataServiceDialog(shell, this);
         
         if( dialog.open() == Window.OK ) {
+        	String xml = dialog.getXmlFileContent();
+        	
         	if( saveToWorkspace ) {
-        		saveToWorkspace();
+        		saveToWorkspace(xml);
         	} else {
-        		saveToFileSystem();
+        		saveToFileSystem(xml);
         	}
         }
 
@@ -188,7 +206,7 @@ public class GenerateDataServiceWorker extends PreviewDataWorker implements DqpU
 		return fileSystemFolder;
 	}
 
-	private void saveToWorkspace() {
+	private void saveToWorkspace(final String xml) {
     	// Create the DDL File
     	final IRunnableWithProgress op = new IRunnableWithProgress() {
 
@@ -202,7 +220,6 @@ public class GenerateDataServiceWorker extends PreviewDataWorker implements DqpU
     			try {
     	            final IFile fileToCreate = workspaceLocation.getFile(new Path(dataServiceFileName));
     	            
-    	            String xml = getDataServiceStatus(false).getMessage();
     	        	InputStream istream = new ByteArrayInputStream(xml.getBytes());
     	            
     	        	fileToCreate.create(istream, false, monitor);
@@ -230,7 +247,7 @@ public class GenerateDataServiceWorker extends PreviewDataWorker implements DqpU
      * Export the current DDL to the supplied file
      * @param fileStr
      */
-    private void saveToFileSystem() {
+    private void saveToFileSystem(final String xml) {
     	String fileSystemFullPathAndFile = fileSystemFolder + File.separator + dataServiceFileName;
         if (fileSystemFullPathAndFile != null) {
             FileWriter fw = null;
@@ -240,7 +257,6 @@ public class GenerateDataServiceWorker extends PreviewDataWorker implements DqpU
                 fw = new FileWriter(fileSystemFullPathAndFile);
                 out = new BufferedWriter(fw);
                 pw = new PrintWriter(out);
-                String xml = getDataServiceStatus(false).getMessage();
                 pw.write(xml);
 
             } catch (Exception e) {
@@ -270,6 +286,21 @@ public class GenerateDataServiceWorker extends PreviewDataWorker implements DqpU
     		return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, getString("errorMessage_workspaceLocationUndefined")); //$NON-NLS-1$
     	} else if( !saveToWorkspace && StringUtilities.isEmpty(fileSystemFolder) ) {
     		return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, getString("errorMessage_fileLocationUndefined")); //$NON-NLS-1$
+    	} else if( StringUtilities.isEmpty(versionString) ) {
+    		return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, getString("errorMessage_vdbVersionUndefined")); //$NON-NLS-1$
+    	}
+    	
+    	// Check VDB Version
+    	ITeiidServerVersion teiidVersion = ModelerCore.getTeiidServerVersion();
+    	if( teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_9_0) ) {
+    		IStatus status = VdbVersionUtil.isVdbNameWithVersionValid(teiidVersion, versionString);
+    		if( !status.isOK() ) return status;
+    	} else {
+			try {
+				Integer.valueOf(versionString);
+			} catch (NumberFormatException e) {
+				return new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID, getString("errorMessage_vdbVersionMustBeAnInteger")); //$NON-NLS-1$
+			}
     	}
     	
     	return Status.OK_STATUS;

@@ -35,6 +35,7 @@ public interface ModelActionConstants {
         String CREATE_VIRTUAL_MODEL_FROM_SCHEMA = "createVirtualModelFromSchemaAction"; //$NON-NLS-1$
         String DEPLOY_VDB = "DeployVdbAction"; //$NON-NLS-1$
         String EXECUTE_VDB = "ExecuteVdbAction"; //$NON-NLS-1$
+        String GENERATE_VDB_XML = "GenerateDynamicVdbAction2"; //$NON-NLS-1$
     }
     
     interface Special {

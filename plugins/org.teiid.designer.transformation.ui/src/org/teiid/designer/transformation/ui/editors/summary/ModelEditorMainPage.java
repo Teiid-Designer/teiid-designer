@@ -430,7 +430,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
         	}
         }
         
-        modelTree = new Tree(composite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
+        modelTree = new Tree(composite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI);
 
         modelTreeViewer = new TreeViewer(modelTree);
         GridDataFactory.fillDefaults().span(1,  1).hint(250, 250).minSize(SWT.DEFAULT, 60).grab(false, true).applyTo(modelTree);
@@ -940,10 +940,19 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
             
             case Notification.SET: {
                 EObject eObj = NotificationUtilities.getEObject(notification);
-                if( eObj instanceof ModelAnnotation || eObj instanceof Annotation) {
-                    resetDescription();
-                } else {
-                	propertiesPanel.selectionChanged(new SelectionChangedEvent(this, new StructuredSelection(getSelectedObject())) );
+                if( eObj != null ) {
+	                Runnable work = new Runnable() {
+	                    @Override
+	        			public void run() {
+	    	                if( eObj instanceof ModelAnnotation || eObj instanceof Annotation) {
+	    	                    resetDescription();
+	    	                } else {
+	    	                	propertiesPanel.selectionChanged(new SelectionChangedEvent(ModelEditorMainPage.this, new StructuredSelection(getSelectedObject())) );
+	    	                }
+	                    }
+	                };
+
+	                UiUtil.runInSwtThread(work, true);
                 }
             } break;
         }

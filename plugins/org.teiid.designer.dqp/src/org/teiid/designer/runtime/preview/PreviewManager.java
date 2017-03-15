@@ -354,9 +354,6 @@ public final class PreviewManager {
         	sb.append("\n\t<description>" + description + "</description>"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         sb.append("\n\t<property name=\"UseConnectorMetadata\" value=\"true\" />"); //$NON-NLS-1$
-        if( StringUtilities.isNotEmpty(deploymentName) ) {
-        	sb.append("\n\t<property name=\"deployment-name\" value=\""+ deploymentName +"\" />"); //$NON-NLS-1$ //$NON-NLS-2$
-        }
         
         Collection<VdbSourceModelInfo> vdbImports = getVdbSourceModelInfos();
         

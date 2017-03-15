@@ -1784,7 +1784,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                  */
                 @Override
                 public void widgetSelected( final SelectionEvent event ) {
-                	SortableSelectionAction action = ModelResourceActionManager.getAction(ModelActionConstants.Resource.GENERATE_DYNAMIC_VDB);
+                	SortableSelectionAction action = ModelResourceActionManager.getAction(ModelActionConstants.Resource.GENERATE_VDB_XML);
                 	IResource vdbResource = ((IFileEditorInput)getEditorInput()).getFile();
                 	action.selectionChanged(VdbEditor.this, new StructuredSelection(vdbResource));
                 	action.run();

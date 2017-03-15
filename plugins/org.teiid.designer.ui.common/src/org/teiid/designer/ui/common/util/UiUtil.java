@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -53,6 +54,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.ui.common.UiConstants;
 import org.teiid.designer.ui.common.UiPlugin;
+import org.teiid.designer.ui.common.util.style.XmlRegion;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 
 
@@ -684,6 +686,63 @@ public final class UiUtil implements UiConstants {
         } else if (value != val) {
             store.setValue(preference, value);
         }
+    }
+    
+    /**
+     * Taken from
+     * https://vzurczak.wordpress.com/2012/09/07/xml-syntax-highlighting-with-a-styled-text
+     * BSD Licensed
+     *
+     * Computes style ranges from XML regions.
+     * @param regions an ordered list of XML regions
+     * @return an ordered list of style ranges for SWT styled text
+     */
+    public static List<StyleRange> computeStyleRanges(List<XmlRegion> regions) {
+
+        List<StyleRange> styleRanges = new ArrayList<StyleRange>();
+        if (regions == null)
+            return styleRanges;
+
+        for (XmlRegion xr : regions) {
+
+            // The style itself depends on the region type
+            // In this example, we use colors from the system
+            StyleRange sr = new StyleRange();
+            switch (xr.getXmlRegionType()) {
+                case MARKUP:
+                    sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN);
+                    sr.fontStyle = SWT.BOLD;
+                    break;
+                case ATTRIBUTE:
+                    sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_RED);
+                    break;
+                case ATTRIBUTE_VALUE:
+                    sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE);
+                    break;
+                case MARKUP_VALUE:
+                case COMMENT:
+                    sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_BLUE);
+                    break;
+                case INSTRUCTION:
+                    sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
+                    break;
+                case CDATA:
+                    sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+                    sr.fontStyle = SWT.BOLD;
+                    break;
+                case WHITESPACE:
+                    break;
+                default:
+                    break;
+            }
+
+            // Define the position and limit
+            sr.start = xr.getStart();
+            sr.length = xr.getEnd() - xr.getStart();
+            styleRanges.add(sr);
+        }
+
+        return styleRanges;
     }
 
     /**
