@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.internal.Category;
 import org.eclipse.datatools.connectivity.ui.actions.DeleteAction;
 import org.eclipse.datatools.connectivity.ui.actions.ViewPropertyAction;
 import org.eclipse.datatools.connectivity.ui.wizards.NewFilteredCPWizard;
@@ -31,6 +32,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.datasources.ui.Messages;
 import org.teiid.designer.datasources.ui.UiConstants;
@@ -92,7 +94,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
         this.treeViewer.setLabelProvider(provider);
 
         this.treeViewer.setInput(this.manager);
-        
+        this.treeViewer.getControl().setMenu(treeMenuManager.createContextMenu(parent));
         this.treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			@Override
@@ -318,6 +320,8 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
 //			if( manager.getImportManager().isValidImportServer() ) {
 //				treeMenuManager.add(createDataSourceAction);
 //			}
+		} else if( profileTreeSelected() ) {
+			treeMenuManager.add(createAction);
 		} else if( manager.serverAvailable() ){
 			// can't create a DS without a running server
 			treeMenuManager.add(createAction);
@@ -538,6 +542,16 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     	}
     	
     	return null;
+    }
+    
+    private boolean profileTreeSelected() {
+    	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
+    	if( !obj.isEmpty() && (obj.getFirstElement() instanceof RootConnectionNode || 
+    			obj.getFirstElement() instanceof Category) ) {
+    		return true;
+    	}
+    	
+    	return false;
     }
     
     private boolean isProfileSelected() {
