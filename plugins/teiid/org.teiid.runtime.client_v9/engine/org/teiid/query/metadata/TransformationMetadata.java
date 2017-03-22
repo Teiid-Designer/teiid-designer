@@ -44,7 +44,10 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.teiid.adminapi.impl.DataPolicyMetadata;
+import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
 import org.teiid.adminapi.impl.VDBMetaData;
 import org.teiid.core.types.BlobImpl;
 import org.teiid.core.types.ClobImpl;
@@ -64,7 +67,10 @@ import org.teiid.metadata.Column.SearchType;
 import org.teiid.metadata.ColumnSet;
 import org.teiid.metadata.ForeignKey;
 import org.teiid.metadata.FunctionParameter;
+import org.teiid.metadata.Grant;
+import org.teiid.metadata.Grant.Permission;
 import org.teiid.metadata.KeyRecord;
+import org.teiid.metadata.MetadataStore;
 import org.teiid.metadata.Procedure;
 import org.teiid.metadata.ProcedureParameter;
 import org.teiid.metadata.ProcedureParameter.Type;
@@ -81,6 +87,7 @@ import org.teiid.query.sql.lang.ObjectTable;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
+import org.teiid.runtime.client.TeiidRuntimePlugin;
 
 
 /**
@@ -196,7 +203,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
     			policy = policy.clone();
     			policies.put(policy.getName(), policy);
     		}
-    		store.processGrants(policies);
+    		processGrants(store, policies);
     	} else {
     		this.importedModels = Collections.emptySet();
     	}
@@ -210,6 +217,25 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
             this.functionLibrary = new FunctionLibrary(teiidVersion, systemFunctions);
         } else {
             this.functionLibrary = new FunctionLibrary(teiidVersion, systemFunctions, functionTrees.toArray(new FunctionTree[functionTrees.size()]));
+        }
+    }
+    
+    private void processGrants(MetadataStore store, Map<String, DataPolicyMetadata> policies) {
+        if (store.getGrants() == null || store.getGrants().isEmpty() || policies == null) {
+            return;
+        }
+        for (Grant grant : store.getGrants()) {
+            DataPolicyMetadata dpm = policies.get(grant.getRole());
+            if (dpm != null) {
+                for (Permission p:grant.getPermissions()) {
+                    PermissionMetaData pmd = DatabaseUtil.convert(p);
+                    if (pmd != null) {
+                        dpm.addPermission(pmd);
+                    }
+                }
+            } else {
+                TeiidRuntimePlugin.LOGGER.log(new Status(IStatus.WARNING, "Permission added to non-existant role", grant.getRole())); //$NON-NLS-1$
+            }
         }
     }
 

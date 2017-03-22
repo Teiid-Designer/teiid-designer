@@ -25,6 +25,7 @@ package org.teiid.metadata;
 import java.util.Collections;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
@@ -39,6 +40,13 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
 	public static final String SPATIAL_SRID = MetadataFactory.SPATIAL_URI + "srid"; //$NON-NLS-1$
 	public static final String SPATIAL_TYPE = MetadataFactory.SPATIAL_URI + "type"; //$NON-NLS-1$
 	public static final String SPATIAL_COORD_DIMENSION = MetadataFactory.SPATIAL_URI + "coord_dimension"; //$NON-NLS-1$
+
+	//the defaults are safe for odbc/jdbc metadata
+	@Since(Version.TEIID_9_2)
+	public static final int DEFAULT_PRECISION = Short.MAX_VALUE;
+	//similar to postgresql behavior, we default to a non-zero
+	@Since(Version.TEIID_9_2)
+	public static final int DEFAULT_SCALE = Short.MAX_VALUE/2;
 
 	public enum NullType {
 		No_Nulls {
@@ -98,11 +106,31 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
     }
 
     public int getPrecision() {
+    	if( teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_9_2)) {
+	    	if (precision == 0 && this.getDatatype() != null && getDatatype().getName().equals(DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL)) {
+	    		return DEFAULT_PRECISION;
+	    	}
+    	}
         return precision;
     }
 
     public int getScale() {
+    	if( teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_9_2)) {
+	    	if (this.getDatatype() != null && getDatatype().getName().equals(DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL)) {
+			    if (precision == 0 && scale == 0) {
+			        return DEFAULT_SCALE;
+			    }
+			    if (Math.abs(scale) > precision) {
+			        return Integer.signum(scale)*precision;
+			    }
+			}
+    	}
         return scale;
+    }
+    
+    @Since(Version.TEIID_9_2)
+    public boolean isDefaultPrecisionScale() {
+        return precision == 0 && scale == 0;
     }
 
     public int getRadix() {
@@ -163,7 +191,12 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
     public Datatype getDatatype() {
 		return datatype;
 	}
-    
+
+    /**
+    * Set the datatype without copying any of the datatype attributes and assumes a non-array type
+    * @see #setDatatype(Datatype, boolean, int) for more control over the type info
+    * @param datatype
+    */
     public void setDatatype(Datatype datatype) {
     	setDatatype(datatype, false, 0);
     }
@@ -184,8 +217,15 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
 			if (copyAttributes) {
 				this.radix = this.datatype.getRadix();
 				this.length = this.datatype.getLength();
-				this.precision = this.datatype.getPrecision();
-				this.scale = this.datatype.getScale();
+				if( teiidVersion.isGreaterThan(Version.TEIID_9_2) ) {
+					if (!datatype.getName().equals(DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL)) {
+						this.precision = this.datatype.getPrecision();
+						this.scale = this.datatype.getScale();
+					}
+				} else {
+					this.precision = this.datatype.getPrecision();
+					this.scale = this.datatype.getScale();
+				}
 				this.nullType = this.datatype.getNullType();
 			}
 		}

@@ -216,7 +216,13 @@ public class BlobType extends Streamable<Blob> implements Blob, Comparable<BlobT
 	
 	@Override
 	public int hashCode() {
-		return 1;
+		try {
+			    return (int) reference.length();
+			} catch (SQLException e) {
+			    return 0;
+			} catch (Exception e) {
+			    return 0;
+			} 
 	}
 	
 }

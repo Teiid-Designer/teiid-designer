@@ -39,11 +39,13 @@ import org.teiid.adminapi.Model;
 import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
+import org.teiid.metadata.BaseColumn.NullType;
+import org.teiid.metadata.Database.ResourceType;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod.PushDown;
-import org.teiid.metadata.MetadataStore.Grant;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
@@ -57,7 +59,7 @@ import org.teiid.runtime.client.Messages;
  */
 public class MetadataFactory implements Serializable {
 
-	private static final String TEIID_RESERVED = "teiid_"; //$NON-NLS-1$
+	static final String TEIID_RESERVED = "teiid_"; //$NON-NLS-1$
 	private static final String TEIID_SF = "teiid_sf"; //$NON-NLS-1$
 	private static final String TEIID_RELATIONAL = "teiid_rel"; //$NON-NLS-1$
 	private static final String TEIID_WS = "teiid_ws"; //$NON-NLS-1$
@@ -70,7 +72,7 @@ public class MetadataFactory implements Serializable {
     private static final String TEIID_SPATIAL = "teiid_spatial"; //$NON-NLS-1$
     private static final String TEIID_LDAP = "teiid_ldap"; //$NON-NLS-1$
     private static final String TEIID_REST = "teiid_rest"; //$NON-NLS-1$
-
+    private static final String TEIID_PI = "teiid_pi"; //$NON-NLS-1$
 	private static final long serialVersionUID = 8590341087771685630L;
 
 	private final ITeiidServerVersion teiidVersion;
@@ -90,7 +92,7 @@ public class MetadataFactory implements Serializable {
     private transient QueryParser parser;
     private transient Model model;
     private transient Map<String, ? extends VDBResource> vdbResources;
-    private List<Grant> grants;
+    private Map<String, Grant> grants;
 
 	public static final String SF_URI = "{http://www.teiid.org/translator/salesforce/2012}"; //$NON-NLS-1$
 	public static final String WS_URI = "{http://www.teiid.org/translator/ws/2012}"; //$NON-NLS-1$
@@ -103,6 +105,7 @@ public class MetadataFactory implements Serializable {
     public static final String SPATIAL_URI = "{http://www.teiid.org/translator/spatial/2015}"; //$NON-NLS-1$
     public static final String LDAP_URI = "{http://www.teiid.org/translator/ldap/2015}"; //$NON-NLS-1$
     public static final String REST_URI = "{http://teiid.org/rest}"; //$NON-NLS-1$
+    public static final String PI_URI = "{http://www.teiid.org/translator/pi/2016}"; //$NON-NLS-1$
 
     /*
      * Converted from static field to function to allow version to be checked
@@ -121,6 +124,7 @@ public class MetadataFactory implements Serializable {
         map.put(TEIID_SPATIAL, SPATIAL_URI.substring(1, SPATIAL_URI.length()-1));
         map.put(TEIID_LDAP, LDAP_URI.substring(1, LDAP_URI.length()-1));
         map.put(TEIID_REST, REST_URI.substring(1, REST_URI.length()-1));
+        map.put(TEIID_PI, PI_URI.substring(1, PI_URI.length()-1));
         
         return Collections.unmodifiableMap(map);
     }
@@ -270,6 +274,24 @@ public class MetadataFactory implements Serializable {
         setUUID(column);
         return column;
     }
+    
+    
+    @Since(Version.TEIID_9_2)
+    public Column renameColumn(String oldName, String name, ColumnSet<?> table) {
+        if (this.autoCorrectColumnNames) {
+            name.replace(AbstractMetadataRecord.NAME_DELIM_CHAR, '_');
+        } else if (name.indexOf(AbstractMetadataRecord.NAME_DELIM_CHAR) != -1) {
+            throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60008, table.getFullName(), name));
+        }
+        if (table.getColumnByName(name) != null) {
+            throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60016, table.getFullName() + AbstractMetadataRecord.NAME_DELIM_CHAR + name));
+        }
+        Column column = table.getColumnByName(oldName);
+        table.removeColumn(column);        
+        column.setName(name);
+        table.addColumn(column);
+        return column;
+    }	
 
     public static Datatype setDataType(String type, BaseColumn column, Map<String, Datatype> dataTypes, boolean allowNull) {
         int arrayDimensions = 0;
@@ -532,10 +554,21 @@ public class MetadataFactory implements Serializable {
 	 */
 	public FunctionMethod addFunction(String name, String returnType, String... paramTypes) {
 		FunctionMethod function = FunctionMethod.createFunctionMethod(teiidVersion, name, null, null, returnType, paramTypes);
+		setFunctionMethodTypes(function);
 		function.setPushdown(PushDown.MUST_PUSHDOWN);
 		setUUID(function);
 		schema.addFunction(function);
 		return function;
+	}
+	
+	private void setFunctionMethodTypes(FunctionMethod function) {
+		FunctionParameter outputParameter = function.getOutputParameter();
+		if (outputParameter != null) {
+			setDataType(outputParameter.getRuntimeType(), outputParameter, builtinDataTypes, outputParameter.getNullType() == NullType.Nullable);
+		}
+		for (FunctionParameter param : function.getInputParameters()) {
+			setDataType(param.getRuntimeType(), param, builtinDataTypes, param.getNullType() == NullType.Nullable);
+		}
 	}
 
     /**
@@ -547,6 +580,7 @@ public class MetadataFactory implements Serializable {
      */
     public FunctionMethod addFunction(String name, Method method) {
         FunctionMethod func = createFunctionFromMethod(teiidVersion, name, method);
+        setFunctionMethodTypes(func);
         setUUID(func);
         getSchema().addFunction(func);
         return func;
@@ -664,7 +698,10 @@ public class MetadataFactory implements Serializable {
         if (this.enterpriseTypes != null) {
             store.addDataTypes(this.enterpriseTypes.values());
         }
-        store.addGrants(this.grants);
+        
+        if (this.grants != null) {
+            store.addGrants(this.grants.values());
+        }
     }
 
     public MetadataStore asMetadataStore() {
@@ -853,17 +890,21 @@ public class MetadataFactory implements Serializable {
      */
     public void addPermission(String role, AbstractMetadataRecord resource, Boolean allowAlter, Boolean allowCreate, Boolean allowRead, Boolean allowUpdate,
             Boolean allowDelete, Boolean allowExecute, String condition, Boolean constraint) {
-        PermissionMetaData pmd = new PermissionMetaData();
-        pmd.setResourceName(resource.getFullName());
-        pmd.setAllowAlter(allowAlter);
-        pmd.setAllowCreate(allowCreate);
-        pmd.setAllowDelete(allowDelete);
-        pmd.setAllowExecute(allowExecute);
-        pmd.setAllowRead(allowRead);
-        pmd.setAllowUpdate(allowUpdate);
-        pmd.setCondition(condition);
-        pmd.setConstraint(constraint);
-        addPermission(pmd, role);
+		Grant.Permission pmd = new Grant.Permission();
+		pmd.setResourceName(resource.getFullName());
+		if (resource instanceof Table) {
+		    pmd.setResourceType(ResourceType.TABLE);
+		} else {
+		    pmd.setResourceType(ResourceType.PROCEDURE);
+		}
+		pmd.setAllowAlter(allowAlter);
+		pmd.setAllowInsert(allowCreate);
+		pmd.setAllowDelete(allowDelete);
+		pmd.setAllowExecute(allowExecute);
+		pmd.setAllowSelect(allowRead);
+		pmd.setAllowUpdate(allowUpdate);
+		pmd.setCondition(condition, constraint);
+		addPermission(pmd, role);
     }
 
     /**
@@ -878,15 +919,17 @@ public class MetadataFactory implements Serializable {
      */
     public void addSchemaPermission(String role, Boolean allowAlter, Boolean allowCreate, Boolean allowRead, Boolean allowUpdate,
             Boolean allowDelete, Boolean allowExecute) {
-        PermissionMetaData pmd = new PermissionMetaData();
+        Grant.Permission pmd = new Grant.Permission();
         pmd.setResourceName(this.schema.getFullName());
-        pmd.setAllowAlter(allowAlter);
-        pmd.setAllowCreate(allowCreate);
-        pmd.setAllowDelete(allowDelete);
-        pmd.setAllowExecute(allowExecute);
-        pmd.setAllowRead(allowRead);
-        pmd.setAllowUpdate(allowUpdate);
-        addPermission(pmd, role);
+        pmd.setResourceType(ResourceType.SCHEMA);
+		
+		pmd.setAllowAlter(allowAlter);
+		pmd.setAllowInsert(allowCreate);
+		pmd.setAllowDelete(allowDelete);
+		pmd.setAllowExecute(allowExecute);
+		pmd.setAllowSelect(allowRead);
+		pmd.setAllowUpdate(allowUpdate);
+		addPermission(pmd, role);
     }
 
     /**
@@ -902,28 +945,31 @@ public class MetadataFactory implements Serializable {
      */
     public void addColumnPermission(String role, Column resource, Boolean allowCreate, Boolean allowRead, Boolean allowUpdate,
             String condition, String mask, Integer order) {
-        PermissionMetaData pmd = new PermissionMetaData();
+    	Grant.Permission pmd = new Grant.Permission();
         String resourceName = null;
         if (resource.getParent() != null && resource.getParent().getParent() instanceof Procedure) {
             resourceName = resource.getParent().getParent().getFullName() + '.' + resource.getName();
         } else {
             resourceName = resource.getFullName();
         }
-        pmd.setResourceName(resourceName);
-        pmd.setAllowCreate(allowCreate);
-        pmd.setAllowRead(allowRead);
-        pmd.setAllowUpdate(allowUpdate);
-        pmd.setCondition(condition);
-        pmd.setMask(mask);
-        pmd.setOrder(order);
+		pmd.setResourceName(resourceName);
+		pmd.setAllowInsert(allowCreate);
+		pmd.setAllowSelect(allowRead);
+		pmd.setAllowUpdate(allowUpdate);
+		pmd.setCondition(condition, null);
+		pmd.setMask(mask);
+		pmd.setMaskOrder(order);
+		addPermission(pmd, role);
         addPermission(pmd, role);
     }
 
-    private void addPermission(PermissionMetaData pmd, String role) {
+    private void addPermission(Grant.Permission pmd, String role) {
         if (this.grants == null) {
-            this.grants = new ArrayList<Grant>();
+            this.grants = (Map<String, Grant>) new ArrayList<Grant>();
         }
-        this.grants.add(new Grant(role, pmd));
+        Grant grant = new Grant();
+        grant.addPermission(pmd);
+        this.grants.put(role, grant);
     }
 
 	public void addFunction(FunctionMethod functionMethod) {

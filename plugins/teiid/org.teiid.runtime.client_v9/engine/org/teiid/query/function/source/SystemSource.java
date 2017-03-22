@@ -145,7 +145,8 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 		addStringFunction("upper", Messages.getString(Messages.SystemSource.upper_result), "upperCase", DataTypeManagerService.DefaultDataTypes.STRING); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         addStringFunction(SourceSystemFunctions.LTRIM, Messages.getString(Messages.SystemSource.left_result), "leftTrim", DataTypeManagerService.DefaultDataTypes.STRING); //$NON-NLS-1$ //$NON-NLS-2$ 
         addStringFunction(SourceSystemFunctions.RTRIM, Messages.getString(Messages.SystemSource.right_result), "rightTrim", DataTypeManagerService.DefaultDataTypes.STRING); //$NON-NLS-1$ //$NON-NLS-2$ 
-        addConcatFunction();    
+        addConcatFunction(DataTypeManagerService.DefaultDataTypes.STRING.getClass().toString());    
+        addConcatFunction(DataTypeManagerService.DefaultDataTypes.CLOB.getClass().toString());  
         addSubstringFunction(); 
         addLeftRightFunctions();
         addLocateFunction();
@@ -223,12 +224,28 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         addFunctions(JSONFunctionMethods.class);
         addFunctions(SystemFunctionMethods.class);
         addFunctions(FunctionMethods.class);
+        addOSDQLibrary();
 
         // Since 8.10
         addFunctions(GeometryFunctionMethods.class);
 
 
         addFunctions(XMLSystemFunctions.class);
+    }
+    
+    private void addOSDQLibrary() {
+    	try {
+    	    Class<?> osdqFunctions = Class.forName(
+    	            "org.teiid.dataquality.OSDQFunctions", false, //$NON-NLS-1$
+    	            this.getClass().getClassLoader());
+    	    addFunctions(osdqFunctions, "osdq."); //$NON-NLS-1$
+    	} catch (ClassNotFoundException e) {
+    	    // ignore the add
+    	}
+    }
+    
+    private void addFunctions(Class<?> clazz) {
+        addFunctions(clazz, null);
     }
 
     /**
@@ -254,7 +271,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         return clazz;
     }
 
-    private void addFunctions(Class<?> clazz) {
+    private void addFunctions(Class<?> clazz, String prefix) {
         if(! AnnotationUtils.isApplicable(clazz, teiidVersion))
             return;
         
@@ -274,6 +291,9 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 			String name = f.name();
 			if (name.isEmpty()) {
 				name = method.getName();
+			}
+			if (prefix != null) {
+				name = prefix + name;
 			}
 			addFunction(method, f, name);
             if (!f.alias().isEmpty()) {
@@ -676,33 +696,34 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addClobFunction(String name, String description, String methodName, String returnType) {
         functions.add(
-            new FunctionMethod(name, description, STRING, PushDown.MUST_PUSHDOWN, FUNCTION_CLASS, methodName,
-                Arrays.asList(
-                    new FunctionParameter(teiidVersion, "clob", DataTypeManagerService.DefaultDataTypes.CLOB, Messages.getString(Messages.SystemSource.clobfunc_arg1)) ), //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter(teiidVersion, "result", returnType, description), true, Determinism.DETERMINISTIC ) );                 //$NON-NLS-1$
+        		new FunctionMethod(name, description, STRING, FUNCTION_CLASS, methodName,
+        				new FunctionParameter[] {
+        				new FunctionParameter(teiidVersion, "clob", DataTypeManagerService.DefaultDataTypes.CLOB, Messages.getString(Messages.SystemSource.clobfunc_arg1)) }, //$NON-NLS-1$ 
+        				new FunctionParameter(teiidVersion, "result", returnType, description)) );                 //$NON-NLS-1$
     }
 
-    private void addConcatFunction() {
+    private void addConcatFunction(String type) {
         functions.add(
             new FunctionMethod(SourceSystemFunctions.CONCAT, Messages.getString(Messages.SystemSource.concat_description), STRING, FUNCTION_CLASS, "concat", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
-                    new FunctionParameter(teiidVersion, "string1", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.concat_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
-                    new FunctionParameter(teiidVersion, "string2", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.concat_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.concat_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                    new FunctionParameter(teiidVersion, "string1",type, Messages.getString(Messages.SystemSource.concat_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
+                    new FunctionParameter(teiidVersion, "string2", type, Messages.getString(Messages.SystemSource.concat_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
+                new FunctionParameter(teiidVersion, "result", type, Messages.getString(Messages.SystemSource.concat_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
         functions.add(
             new FunctionMethod("||", Messages.getString(Messages.SystemSource.concatop_description), STRING, FUNCTION_CLASS, "concat", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 new FunctionParameter[] {
-                    new FunctionParameter(teiidVersion, "string1", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.concatop_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
-                    new FunctionParameter(teiidVersion, "string2", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.concatop_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.concatop_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                    new FunctionParameter(teiidVersion, "string1", type, Messages.getString(Messages.SystemSource.concatop_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
+                    new FunctionParameter(teiidVersion, "string2", type, Messages.getString(Messages.SystemSource.concatop_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
+                new FunctionParameter(teiidVersion, "result", type, Messages.getString(Messages.SystemSource.concatop_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
         
         FunctionMethod concat2 = new FunctionMethod(SourceSystemFunctions.CONCAT2, Messages.getString(Messages.SystemSource.concat_description), STRING, FUNCTION_CLASS, "concat2", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
-            		new FunctionParameter(teiidVersion, "string1", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.concat_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
-            		new FunctionParameter(teiidVersion, "string2", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.concat_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-            	new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.concat_result_description)) );                 //$NON-NLS-1$ //$NON-NLS-2$
+            		new FunctionParameter(teiidVersion, "string1", type, Messages.getString(Messages.SystemSource.concat_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
+            		new FunctionParameter(teiidVersion, "string2", type, Messages.getString(Messages.SystemSource.concat_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
+            	new FunctionParameter(teiidVersion, "result", type, Messages.getString(Messages.SystemSource.concat_result_description)) );                 //$NON-NLS-1$ //$NON-NLS-2$
         concat2.setNullOnNull(false);
-        functions.add(concat2);                         
+        functions.add(concat2);
+
     }
 
     private void addSubstringFunction() {
@@ -978,6 +999,13 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         functions.add(
             new FunctionMethod("user", Messages.getString(Messages.SystemSource.user_description), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "user", null, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.user_result)), true, Determinism.USER_DETERMINISTIC) );                     //$NON-NLS-1$ //$NON-NLS-2$
+        functions.add(
+        		new FunctionMethod("user", Messages.getString(Messages.SystemSource.user_description), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "user", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        		Arrays.asList(
+        		new FunctionParameter(teiidVersion, "includeSecurityDomain", DataTypeManagerService.DefaultDataTypes.BOOLEAN, Messages.getString(Messages.SystemSource.user_param1)) //$NON-NLS-1$ //$NON-NLS-2$
+        		),
+        		new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.user_result)), true, Determinism.USER_DETERMINISTIC) );                     //$NON-NLS-1$ //$NON-NLS-2$
+
     }
     
     private void addCurrentDatabaseFunction() {

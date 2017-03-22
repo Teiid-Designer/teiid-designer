@@ -23,6 +23,9 @@
 package org.teiid.core.types.basic;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.Transform;
@@ -59,19 +62,33 @@ public class StringToTimestampTransform extends Transform {
 	 * the transformation fails
 	 */
 	public Object transformDirect(Object value) throws Exception {
-		value = ((String) value).trim();
+		String val = ((String) value).trim();
 		Timestamp result = null;
 		try {
-			result = Timestamp.valueOf( (String) value );
+			result = Timestamp.valueOf( val );
 		} catch(Exception e) {
-		    if (!validate && pattern.matcher((String)value).matches()) {
+		    if (!validate && pattern.matcher(val).matches()) {
 				throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID10060, value, getTargetType().getSimpleName()));
 			}
 			  throw new TeiidClientException(e, Messages.gs(Messages.TEIID.TEIID10059, value));
 		}
 		//validate everything except for fractional seconds
-		if (!((String)value).startsWith(result.toString().substring(0, 19))) {
-			  throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID10060, value, getTargetType().getSimpleName()));
+		String substring = result.toString().substring(0, 19);
+		if (!val.startsWith(substring)) {
+			TimeZone tz = TimeZone.getDefault();
+			if (tz.useDaylightTime()) {
+				//check for a transition with a more costly SimpleDateFormat using a non-DST timezone
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //$NON-NLS-1$
+				sdf.setLenient(false);
+				sdf.setTimeZone(TimeZone.getTimeZone("GMT")); //$NON-NLS-1$
+				try {
+					sdf.parse(val.substring(0, 19));
+					return result;
+				} catch (ParseException e) {
+					//let the exception happen
+				}
+			}
+			throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID10060, value, getTargetType().getSimpleName()));
 		}
 		return result;
 	}

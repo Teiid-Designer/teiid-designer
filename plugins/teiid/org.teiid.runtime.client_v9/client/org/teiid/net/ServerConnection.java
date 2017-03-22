@@ -23,6 +23,8 @@
 package org.teiid.net;
 
 import org.teiid.client.security.LogonResult;
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 public interface ServerConnection {
 	
@@ -46,4 +48,6 @@ public interface ServerConnection {
 	
 	boolean isLocal();
 	
+	@Since(Version.TEIID_9_2)
+	String getServerVersion();
 }

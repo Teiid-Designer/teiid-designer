@@ -724,8 +724,8 @@ public class SQLStringVisitor extends LanguageVisitor
         // Turn off adding comments until the query is completely formed
         disableComments(obj);
 
-        if (obj.isMerge()) {
-            append(MERGE);
+        if (obj.isUpsert()) {
+            append(UPSERT);
         } else {
             append(INSERT);
         }
@@ -1735,7 +1735,14 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
         }
         append(AS);
-    	if (obj.isNoInline()) {
+        if (obj.isMaterialize()) {
+        	    append(SPACE);
+        	append(BEGIN_HINT);
+        	append(SPACE);
+        	append(WithQueryCommand.MATERIALIZE);
+        	append(SPACE);
+        	append(END_HINT);    	    
+         } else if (obj.isNoInline()) {
     		append(SPACE);
         	append(BEGIN_HINT);
             append(SPACE);
@@ -3176,9 +3183,15 @@ public class SQLStringVisitor extends LanguageVisitor
         }
         if (obj.getQuote() != null) {
             append(SPACE);
-            append(NonReserved.QUOTE);
-            append(SPACE);
-            visitNode(newConstant(obj.getQuote()));
+            if (obj.getQuote().charValue() == TextLine.NO_QUOTE_CHAR) {
+        		append(NO);
+        		append(SPACE);
+        		append(NonReserved.QUOTE);
+        	} else {
+        		append(NonReserved.QUOTE);
+        		append(SPACE);
+        		visitNode(new Constant(getTeiidVersion(), obj.getQuote()));
+        	}
         }
         if (obj.isIncludeHeader()) {
             append(SPACE);
@@ -3314,7 +3327,7 @@ public class SQLStringVisitor extends LanguageVisitor
                     append(SPACE);
                     append(NonReserved.SELECTOR);
                     append(SPACE);
-                    append(escapeSinglePart(col.getSelector()));
+                    outputLiteral(String.class, false, obj.getSelector());
                     append(SPACE);
                     append(col.getPosition());
                 }
@@ -3808,14 +3821,23 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         append(TRIGGER);
         append(SPACE);
+    	if (obj.getName() != null) {
+    	    append(escapeSinglePart(obj.getName()));
+    	    append(SPACE);
+    	}
         append(ON);
         append(SPACE);
         append(obj.getTarget());
         beginClause(0);
-        append(NonReserved.INSTEAD);
-        append(SPACE);
-        append(OF);
-        append(SPACE);
+    	if (obj.isAfter()) {
+    	    append(NonReserved.AFTER);
+    	    append(SPACE);
+    	} else {
+        	append(NonReserved.INSTEAD);
+        	append(SPACE);
+        	append(OF);
+        	append(SPACE);
+    	}
         append(obj.getEvent());
         if (obj.getDefinition() != null) {
             beginClause(0);

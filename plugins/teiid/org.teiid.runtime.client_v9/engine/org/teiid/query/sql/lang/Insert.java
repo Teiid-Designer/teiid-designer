@@ -30,7 +30,7 @@ public class Insert extends ProcedureContainer
 
     private Criteria constraint;
     
-    private boolean merge;
+    private boolean upsert;
 
     /**
      * @param p
@@ -186,15 +186,15 @@ public class Insert extends ProcedureContainer
     /**
      * @return merge flag
      */
-    public boolean isMerge() {
-        return merge;
+    public boolean isUpsert() {
+        return upsert;
     }
     
     /**
      * @param merge
      */
-    public void setMerge(boolean merge) {
-        this.merge = merge;
+    public void setUpsert(boolean upsert) {
+        this.upsert = upsert;
     }
 
     /**
@@ -214,7 +214,7 @@ public class Insert extends ProcedureContainer
         int result = super.hashCode();
         result = prime * result + ((this.constraint == null) ? 0 : this.constraint.hashCode());
         result = prime * result + ((this.group == null) ? 0 : this.group.hashCode());
-        result = prime * result + (this.merge ? 1231 : 1237);
+        result = prime * result + (this.upsert ? 1231 : 1237);
         result = prime * result + ((this.queryExpression == null) ? 0 : this.queryExpression.hashCode());
         result = prime * result + ((this.values == null) ? 0 : this.values.hashCode());
         result = prime * result + ((this.variables == null) ? 0 : this.variables.hashCode());
@@ -233,7 +233,7 @@ public class Insert extends ProcedureContainer
         if (this.group == null) {
             if (other.group != null) return false;
         } else if (!this.group.equals(other.group)) return false;
-        if (this.merge != other.merge) return false;
+        if (this.upsert != other.upsert) return false;
         if (this.queryExpression == null) {
             if (other.queryExpression != null) return false;
         } else if (!this.queryExpression.equals(other.queryExpression)) return false;
@@ -266,7 +266,7 @@ public class Insert extends ProcedureContainer
             clone.setQueryExpression(getQueryExpression().clone());
         if(getConstraint() != null)
             clone.setConstraint(getConstraint().clone());
-        clone.setMerge(isMerge());
+        clone.setUpsert(isUpsert());
         if(getSourceHint() != null)
             clone.setSourceHint(getSourceHint());
         if(getOption() != null)

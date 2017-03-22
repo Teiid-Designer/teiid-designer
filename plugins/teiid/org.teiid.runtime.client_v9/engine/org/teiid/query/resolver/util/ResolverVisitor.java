@@ -79,6 +79,7 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.QueryString;
 import org.teiid.query.sql.symbol.Reference;
 import org.teiid.query.sql.symbol.SearchedCaseExpression;
+import org.teiid.query.sql.symbol.Symbol;
 import org.teiid.query.sql.symbol.XMLExists;
 import org.teiid.query.sql.symbol.XMLQuery;
 import org.teiid.query.sql.symbol.XMLSerialize;
@@ -335,6 +336,8 @@ public class ResolverVisitor extends LanguageVisitor
 	    		resolveQuantifiedCompareArray(obj);
     		} catch (QueryResolverException e) {
     			handleException(e);
+    		} catch (Exception e) {
+    			handleException(e);
     		}
     	}
     }
@@ -389,7 +392,7 @@ public class ResolverVisitor extends LanguageVisitor
 		boolean rightChar = isCharacter(rightType, true);
 		
 		// Special cases when left expression is a constant
-		if(leftExpression instanceof Constant && !rightChar) {
+		if(leftExpression instanceof Constant && (!rightChar || leftChar)) {
 		    // Auto-convert constant string on left to expected type on right
 		    try {
 		        obj.setLeftExpression(ResolverUtil.convertExpression( leftExpression, leftTypeName, rightTypeName, metadata));
@@ -470,29 +473,33 @@ public class ResolverVisitor extends LanguageVisitor
 	    			}
 	    		}
 	    	} else {
-                Class<?> type = null;
-                for (int i = 0; i < array.getExpressions().size(); i++) {
-                    Expression expr = array.getExpressions().get(i);
-                    Class<?> baseType = expr.getType();
-                    while (baseType != null && baseType.isArray()) {
-                        baseType = baseType.getComponentType();
-                    }
-                    if (baseType != DefaultDataTypes.NULL.getTypeClass()) {
-                        if (type == null) {
-                            type = expr.getType();
-                        } else if (type != expr.getType()) {
-                            type = DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass();
-                        }
-                    }
-                }
-                if (type == null) {
-                    type = DefaultDataTypes.NULL.getTypeClass();
-                }
-                array.setComponentType(type);
+	    		resolveComponentType(array);
             }
     	} catch (Exception e) {
     		handleException(e);
     	}
+    }
+    
+    public static void resolveComponentType(Array array) {
+        Class<?> type = null;
+        for (int i = 0; i < array.getExpressions().size(); i++) {
+        	Expression expr = array.getExpressions().get(i);
+        	Class<?> baseType = expr.getType();
+        	while (baseType != null && baseType.isArray()) {
+        		baseType = baseType.getComponentType();
+        	}
+        	if (baseType != DataTypeManagerService.DefaultDataTypes.NULL.getClass()) {
+        		if (type == null) {
+        			type = expr.getType();
+        		} else if (type != expr.getType()) {
+        			type = DataTypeManagerService.DefaultDataTypes.OBJECT.getClass();
+        		}
+        	}
+        }
+        if (type == null) {
+        	type = DataTypeManagerService.DefaultDataTypes.NULL.getClass();
+        }
+        array.setComponentType(type);
     }
 
     @Override
@@ -669,7 +676,7 @@ public class ResolverVisitor extends LanguageVisitor
     	}
     }
 
-	private boolean isCharacter(Expression arg, boolean includeChar) {
+	static boolean isCharacter(Expression arg, boolean includeChar) {
 	    Class<?> type = arg.getType();
         return isCharacter(type, includeChar);
 	}
@@ -827,6 +834,14 @@ public class ResolverVisitor extends LanguageVisitor
 	    function.setType(fd.getReturnType());
 	    if (CoreConstants.SYSTEM_MODEL.equals(fd.getSchema()) && StringUtil.startsWithIgnoreCase(function.getName(), SYS_PREFIX)) {
 	    	function.setName(function.getName().substring(SYS_PREFIX.length()));
+	    }
+	    if (CoreConstants.SYSTEM_MODEL.equals(fd.getSchema())) {
+	        if (StringUtil.startsWithIgnoreCase(function.getName(), SYS_PREFIX)) {
+	            function.setName(function.getName().substring(SYS_PREFIX.length()));
+	        }
+	    } else if (library.getSystemFunctions().hasFunctionWithName(function.getName()) 
+	            && !StringUtil.startsWithIgnoreCase(function.getName(), function.getFunctionDescriptor().getSchema() + Symbol.SEPARATOR)) {
+            function.setName(function.getFunctionDescriptor().getSchema() + Symbol.SEPARATOR + function.getName());
 	    }
 	}
 
@@ -1052,7 +1067,7 @@ public class ResolverVisitor extends LanguageVisitor
         boolean rightChar = isCharacter(rightExpression, true);
 
 	    // Special cases when right expression is a constant
-	    if(rightExpression instanceof Constant && !leftChar) {
+        if(rightExpression instanceof Constant && (!leftChar || rightChar)) {
 	        // Auto-convert constant string on right to expected type on left
 	        try {
 	            ccrit.setRightExpression(ResolverUtil.convertExpression(rightExpression, rightTypeName, leftTypeName, metadata));
@@ -1065,7 +1080,7 @@ public class ResolverVisitor extends LanguageVisitor
 	    }
 	    
 	    // Special cases when left expression is a constant
-	    if(leftExpression instanceof Constant && !rightChar) {
+	    if(rightExpression instanceof Constant && (!leftChar || rightChar)) {
 	        // Auto-convert constant string on left to expected type on right
 	        try {
 	            ccrit.setLeftExpression(ResolverUtil.convertExpression(leftExpression, leftTypeName, rightTypeName, metadata));

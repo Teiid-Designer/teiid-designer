@@ -2,9 +2,12 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.symbol;
 
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.runtime.client.Messages;
 
@@ -210,6 +213,16 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
      */
     public boolean isResolved() {
         return (metadataID != null);
+    }
+    
+    /**
+     * Returns if this is a pushed Common Table 
+     * Set after resolving and initial common table planning
+     * @return
+     */
+    @Since(Version.TEIID_9_2)
+    public boolean isPushedCommonTable() {
+        return isTempTable && TempMetadataAdapter.getActualMetadataId(metadataID) == metadataID;
     }
 
     /**

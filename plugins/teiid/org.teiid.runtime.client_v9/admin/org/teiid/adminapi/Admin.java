@@ -25,10 +25,12 @@ package org.teiid.adminapi;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import org.teiid.adminapi.VDB.ConnectionType;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 public interface Admin {
@@ -150,6 +152,23 @@ public interface Admin {
      * @throws AdminException
      */
     void deploy(String deployName, InputStream content) throws AdminException;
+
+    /**
+     * Deploy a artifact (VDB, JAR, RAR files)
+     * @param deployName  Name of the VDB file to save under
+     * @param content
+     * @param persistent the deployed artifact is persisted or not
+     * @throws AdminException
+     */
+    @Since(Version.TEIID_9_2)
+    public void deploy(String deployName, InputStream content, boolean persistent) throws AdminException;
+    
+    /**
+     * Get existing deployments on in the sysem
+     * @throws AdminException
+     */
+    @Since(Version.TEIID_9_2)
+    public List<String> getDeployments() throws AdminException;
 
     /**
      * Deploy a {@link VDB} file.
@@ -535,7 +554,7 @@ public interface Admin {
      * @param executionId
      * @return
      */
-    String getQueryPlan(String sessionId, int executionId) throws AdminException;
+    String getQueryPlan(String sessionId, long executionId) throws AdminException;
 
     /**
      * Restart the Server
@@ -543,5 +562,12 @@ public interface Admin {
      */
     void restart();
 
+    /**
+     * Set the profile name.  A null value will set the default profile name.
+     * @param name
+     */
+    @Since(Version.TEIID_9_2)
+    void setProfileName(String name);
+    
     void refresh();
 }

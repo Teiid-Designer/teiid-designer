@@ -78,6 +78,7 @@ import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.SubqueryContainer;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.symbol.AliasSymbol;
+import org.teiid.query.sql.symbol.Array;
 import org.teiid.query.sql.symbol.CaseExpression;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.DerivedColumn;
@@ -301,6 +302,12 @@ public class ResolverUtil {
 	        if (!DataTypeManagerService.getInstance(constant.getTeiidVersion()).isTransformable(targetTypeName, sourceTypeName)) {
 	        	return null;
 	        }
+	        
+            //allow implicit conversion of literal values to floating
+            if (Number.class.isAssignableFrom(constant.getType()) &&
+                    (result.getType() == DataTypeManagerService.DefaultDataTypes.DOUBLE.getClass() || result.getType() == DataTypeManagerService.DefaultDataTypes.FLOAT.getClass())) {
+                return result;
+            }
         
 	        if (!(constant.getValue() instanceof Comparable)) {
 	        	return null; //this is the case for xml constants
@@ -900,20 +907,52 @@ public class ResolverUtil {
 		}
 		String exprTypeName = DataTypeManagerService.getInstance(expression.getTeiidVersion()).getDataTypeName(exprType);
 	
-		Collection<Expression> projectedSymbols = crit.getCommand().getProjectedSymbols();
-		if (projectedSymbols.size() != 1){
-	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30093, crit.getCommand()));
+		List<Expression> projectedSymbols = crit.getCommand().getProjectedSymbols();
+		int size = projectedSymbols.size();
+        if (size != 1){
+		    //special handling for array comparison, we don't require the subquery to be wrapped explicitly
+		    if (expression instanceof Array) {
+		        Array array = (Array)expression;
+		        if (array.getExpressions().size() != size) {
+		            throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31210, size, array.getExpressions().size(), crit));
+		        }
+		        for (int i = 0; i < size; i++) {
+		            array.getExpressions().set(i, resolveComparision(array.getExpressions().get(i), crit, metadata, projectedSymbols.get(i).getType()));
+		        }
+		        return array;
+		    }
+	        throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30093, crit.getCommand()));
 		}
 		Class<?> subqueryType = projectedSymbols.iterator().next().getType();
+	    
+        return resolveComparision(expression, crit, metadata,
+                subqueryType);
+	}
+	
+
+    private static Expression resolveComparision(Expression expression,
+            SubqueryContainer crit, IQueryMetadataInterface metadata,
+            Class<?> subqueryType) throws Exception {
+        // Check that type of the expression is same as the type of the
+        // single projected symbol of the subquery
+        Class<?> exprType = expression.getType();
+        if(exprType == null) {
+             throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30075, expression));
+        }
+        String exprTypeName = DataTypeManagerService.getInstance(expression.getTeiidVersion()).getDataTypeName(exprType);
+
 		String subqueryTypeName = DataTypeManagerService.getInstance(expression.getTeiidVersion()).getDataTypeName(subqueryType);
 		Expression result = null;
 	    try {
+	    	if (!metadata.widenComparisonToString() && ResolverVisitor.isCharacter(subqueryType, true) && !ResolverVisitor.isCharacter(expression, true)) {
+	    		throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31172, crit));
+	    	}
 	        result = convertExpression(expression, exprTypeName, subqueryTypeName, metadata);
 	    } catch (QueryResolverException qre) {
-	         throw new QueryResolverException(qre, Messages.gs(Messages.TEIID.TEIID30094, crit));
+	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30094, crit));
 	    }
-	    return result;
-	}
+        return result;
+    }
 
 	public static ResolvedLookup resolveLookup(Function lookup, IQueryMetadataInterface metadata) throws Exception {
 		Expression[] args = lookup.getArgs();

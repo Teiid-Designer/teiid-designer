@@ -71,6 +71,8 @@ public interface ICommand<E extends IExpression, LV extends ILanguageVisitor>
     public static final int TYPE_ALTER_PROC = 15;
     
     public static final int TYPE_ALTER_TRIGGER = 16;
+    
+    public static final int TYPE_SOURCE_EVENT = -1;
 
     /**
      * type of command

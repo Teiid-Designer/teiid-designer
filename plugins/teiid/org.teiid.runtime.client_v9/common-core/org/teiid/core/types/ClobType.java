@@ -52,6 +52,8 @@ public final class ClobType extends Streamable<Clob> implements NClob, Sequencab
     
 	private Type type = Type.TEXT;
 	
+	private int hash;
+	
     public ClobType() {
     }
     
@@ -161,11 +163,14 @@ public final class ClobType extends Streamable<Clob> implements NClob, Sequencab
     }
     
     private final static int CHAR_SEQUENCE_BUFFER_SIZE = 1 << 12;
-    
+
     public CharSequence getCharSequence() {
         return new CharSequence() {
 
-        	private String buffer;
+            
+            private char[] buffer = new char[CHAR_SEQUENCE_BUFFER_SIZE];
+            private int bufLength;
+            private Reader reader;
         	private int beginPosition;
         	        	
             public int length() {
@@ -183,11 +188,26 @@ public final class ClobType extends Streamable<Clob> implements NClob, Sequencab
 
             public char charAt(int index) {
                 try {
-                	if (buffer == null || index < beginPosition || index >= beginPosition + buffer.length()) {
-                		buffer = ClobType.this.getSubString(index + 1, CHAR_SEQUENCE_BUFFER_SIZE);
-                		beginPosition = index;
+                    if ((reader == null || index < beginPosition) && reader != null) {
+                        reader.close();
+                        reader = null;
+                    }
+                	if (buffer == null || index < beginPosition || index >= beginPosition + bufLength) {
+                	    if (reference instanceof ClobImpl) {
+                    	    if (reader == null) {
+                                reader = getCharacterStream();
+                    	    }
+                    	    bufLength = reader.read(buffer, 0, buffer.length);
+                	    } else {
+                	        String stringBuffer = ClobType.this.getSubString(index + 1, CHAR_SEQUENCE_BUFFER_SIZE);
+                	        bufLength = stringBuffer.length();
+                	        buffer = stringBuffer.toCharArray();
+                	    }
+                        beginPosition = index;
                 	}
-                	return buffer.charAt(index - beginPosition);
+                	return buffer[index - beginPosition];
+                } catch (IOException err) {
+                    throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID10053, err));
                 } catch (SQLException err) {
                       throw new RuntimeException(err);
                 } 
@@ -297,8 +317,13 @@ public final class ClobType extends Streamable<Clob> implements NClob, Sequencab
             return true;
 		}
         try {
-            return this.compareTo(other) == 0;
-        } catch (Exception e) {
+        	if (length() != other.length()) {
+        		return false;
+        	}
+        	return this.compareTo(other) == 0;
+        } catch (SQLException e) {
+        	return false;
+ 		} catch (Exception e) {
             return false;
         }
     }

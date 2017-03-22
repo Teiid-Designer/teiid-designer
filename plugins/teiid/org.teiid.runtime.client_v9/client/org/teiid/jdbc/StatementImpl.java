@@ -24,6 +24,7 @@ package org.teiid.jdbc;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -756,10 +757,9 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
 
         setAnalysisInfo(resultsMsg);
 
-        if (resultsMsg.getException() != null) {
+        if (resultsMsg.getException() != null && (!resultsMsg.isUpdateResult() || resultsMsg.getResultsList() == null)) { 
             throw new SQLException(resultsMsg.getException());
         }
-
         // save warnings if have any
         if (resultsWarning != null) {
             accumulateWarnings(resultsWarning);
@@ -781,12 +781,20 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
             if (logger.isLoggable(Level.FINER)) {
             	logger.finer("Recieved update counts: " + Arrays.toString(updateCounts)); //$NON-NLS-1$
             }
-            // In update scenarios close the statement implicitly
+            // In update scenarios close the statement implicitly - the server should have already done this
             try {
 				getDQP().closeRequest(getCurrentRequestID());
 			} catch (Exception e) {
 				throw new SQLException(e);
-			}            
+			}
+            
+            //handle a batch update exception
+            if (resultsMsg.getException() != null) {
+	            SQLException exe = new SQLException(resultsMsg.getException());
+	            BatchUpdateException batchUpdateException = new BatchUpdateException(exe.getMessage(), exe.getSQLState(), exe.getErrorCode(), updateCounts, exe);
+	            this.updateCounts=null;
+	            throw batchUpdateException;
+            }
         } else {
             createResultSet(resultsMsg);
         }
@@ -874,6 +882,9 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
         checkStatement();
         if (this.updateCounts == null) {
         	return -1;
+        }
+        if (this.updateCounts.length == 0) {
+        	return 0;
         }
         return this.updateCounts[0];
     }

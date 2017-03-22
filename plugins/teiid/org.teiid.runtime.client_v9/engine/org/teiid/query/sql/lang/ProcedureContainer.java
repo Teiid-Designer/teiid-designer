@@ -22,6 +22,9 @@
 
 package org.teiid.query.sql.lang;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.validator.UpdateValidator.UpdateInfo;
@@ -39,6 +42,7 @@ public abstract class ProcedureContainer extends Command {
 
     private int updateCount = -1;
     private UpdateInfo updateInfo;
+    private Set<String> tags;
 
     /**
      * @return group
@@ -49,6 +53,10 @@ public abstract class ProcedureContainer extends Command {
         super.copyMetadataState(copy);
         copy.setUpdateInfo(this.getUpdateInfo());
         copy.updateCount = updateCount;
+        
+        if (tags != null) {
+        	copy.tags = new HashSet<String>(tags);
+        }
     }
     
     /** 
@@ -80,4 +88,15 @@ public abstract class ProcedureContainer extends Command {
 		this.updateInfo = updateInfo;
 	}
     
+    public boolean hasTag(String name) {
+    return tags != null && tags.contains(name);
+    }
+    	
+	public void addTag(String name) {
+	    if (tags == null) {
+	        tags = new HashSet<String>();
+	    }
+	    tags.add(name);
+	}
+
 }

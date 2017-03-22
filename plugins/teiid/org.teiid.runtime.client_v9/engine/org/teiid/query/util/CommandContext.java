@@ -54,6 +54,7 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
 	    private LRUCache<String, DecimalFormat> decimalFormatCache;
 		private LRUCache<String, SimpleDateFormat> dateFormatCache;
 		private LRUCache<Entry<String,Integer>, Pattern> patternCache;
+		private Throwable batchUpdateException;
 	}
 	
 	private GlobalState globalState = new GlobalState();
@@ -295,5 +296,13 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
 
     public void disableAutoCleanLobs() {
         // Do Nothing
+    }
+    
+    public Throwable getBatchUpdateException() {
+    	return this.globalState.batchUpdateException;
+    }
+    
+    public void setBatchUpdateException(Throwable t) {
+    	this.globalState.batchUpdateException = t;
     }
 }

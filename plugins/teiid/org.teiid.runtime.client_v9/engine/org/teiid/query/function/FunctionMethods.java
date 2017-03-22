@@ -22,10 +22,12 @@
 
 package org.teiid.query.function;
 
+import java.io.FilterReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.Serializable;
+import java.io.Writer;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -53,6 +55,9 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
+import org.teiid.common.buffer.FileStore;
+import org.teiid.common.buffer.FileStoreInputStreamFactory;
 import org.teiid.core.types.BlobImpl;
 import org.teiid.core.types.BlobType;
 import org.teiid.core.types.ClobImpl;
@@ -60,6 +65,9 @@ import org.teiid.core.types.ClobType;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.InputStreamFactory.BlobInputStreamFactory;
 import org.teiid.core.types.InputStreamFactory.ClobInputStreamFactory;
+import org.teiid.core.types.InputStreamFactory.StorageMode;
+import org.teiid.core.types.Streamable;
+import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.core.util.ReaderInputStream;
 import org.teiid.core.util.StringUtil;
@@ -80,9 +88,81 @@ import org.teiid.translator.SourceSystemFunctions;
  * Static method hooks for most of the function library.
  */
 public final class FunctionMethods {
+	private static final class UpperLowerReader extends FilterReader {
+        int c1 = -1;
+        private boolean upper;
+
+        private UpperLowerReader(Reader in, boolean upper) {
+            super(in);
+            this.upper = upper;
+        }
+        
+        @Override
+        public int read(char[] cbuf, int off, int len) throws IOException {
+            if (len <= 0) {
+                if (len < 0) {
+                    throw new IndexOutOfBoundsException();
+                } else if ((off < 0) || (off > cbuf.length)) {
+                    throw new IndexOutOfBoundsException();
+                }
+                return 0;
+            }
+            int chars = 0;
+            while (chars <= len) {
+                int c = read();
+                if (c == -1) {
+                    if (chars == 0) {
+                        return -1;
+                    }
+                    break;
+                }
+                cbuf[off++] = (char)c;
+                chars++;
+            }
+            return chars;
+        }
+
+        @Override
+        public int read() throws IOException {
+            if (c1 != -1) {
+                int c = c1;
+                c1 = -1;
+                return c;
+            }
+            int c = super.read();
+            if ((char)c >= Character.MIN_HIGH_SURROGATE
+                    && (char)c <= Character.MAX_HIGH_SURROGATE) {
+                c1 = super.read();
+                if (Character.isLowSurrogate((char)c1)) {
+                    int codePoint = Character.toCodePoint((char)c, (char)c1);
+                    codePoint = modifyChar(codePoint);
+                    int count = Character.charCount(codePoint);
+                    if (count == 1) {
+                        c1 = -1;
+                        return codePoint;
+                    }
+                    char[] chars = Character.toChars(codePoint);
+                    c1 = chars[1];
+                    return chars[0];
+                }
+                c1 = modifyChar(c1);
+                
+            }
+            return modifyChar(c);
+        }
+
+        private int modifyChar(int c) {
+            if (upper) {
+                return Character.toUpperCase(c);
+            }
+            return Character.toLowerCase(c);
+        }
+    }
+
 	
 	private static final boolean CALENDAR_TIMESTAMPDIFF = PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.calendarTimestampDiff", true); //$NON-NLS-1$
 
+	public static final String AT = "@"; //$NON-NLS-1$
 	// ================== Function = plus =====================
 
 	public static int plus(int x, int y) throws Exception {
@@ -541,6 +621,10 @@ public final class FunctionMethods {
 		}
 		return Integer.valueOf(month/3 + 1);
 	}
+	
+	public static Object from_unixtime(Integer count) {
+	    return timestampAdd(NonReserved.SQL_TSI_SECOND, count, new Timestamp(0));
+	}
 
 	//	================== Function = timestampadd =====================
 
@@ -768,7 +852,46 @@ public final class FunctionMethods {
 		}
 		return str1 + str2;
 	}
-
+	
+//	public static ClobType concat(CommandContext context, ClobType str1, ClobType str2) throws IOException, SQLException {
+//		BufferManager bm = context.getBufferManager();
+//		FileStore fs = bm.createFileStore("clob"); //$NON-NLS-1$
+//		FileStoreInputStreamFactory fsisf = new FileStoreInputStreamFactory(fs, Streamable.ENCODING);
+//		boolean remove = true;
+//		
+//		try (Reader characterStream = str1.getCharacterStream(); Reader characterStream2 = str2.getCharacterStream();){
+//		    Writer writer = fsisf.getWriter();
+//		    int chars = ObjectConverterUtil.write(writer, characterStream, -1, false);
+//		    chars += ObjectConverterUtil.write(writer, characterStream2, -1, false);
+//		    writer.close();
+//		    if (fsisf.getStorageMode() == StorageMode.MEMORY) {
+//		        //detach if just in memory
+//		    	byte[] bytes = fsisf.getMemoryBytes();
+//		    	return new ClobType(new ClobImpl(new String(bytes, Streamable.ENCODING)));
+//			}
+//		    remove = false;
+//			context.addCreatedLob(fsisf);
+//		    return new ClobType(new ClobImpl(fsisf, chars));
+//		} finally {
+//			if (remove) {
+//				fs.remove();
+//			}
+//		}
+//	}
+	
+	public static ClobType concat2(CommandContext context, ClobType str1, ClobType str2) throws IOException, SQLException {
+//		if (str1 == null) {
+//			if (str2 == null) {
+//				return null;
+//			}
+//			return str2;
+//		}
+//		if (str2 == null) {
+//			return str1;
+//		}
+//		return concat(context, str1, str2);
+		throw new UnsupportedOperationException();
+	}
 	// ================== Function = substring =====================
 
 	public static Object substring(String string, Integer startVal, Integer lengthVal) {
@@ -829,12 +952,30 @@ public final class FunctionMethods {
 	public static Object lowerCase(String str) {
 		return str.toLowerCase();
 	}
+	
+	public static ClobType lowerCase(ClobType str) {
+	    return new ClobType(new ClobImpl(new ClobInputStreamFactory(str) {
+            @Override
+            public Reader getReader(Reader reader) {
+                return new UpperLowerReader(reader, false);
+            }
+        }, str.getLength()));
+    }
 
 	// ================== Function = uppercase =====================
 
 	public static Object upperCase(String str) {
 		return str.toUpperCase();
 	}
+	
+    public static ClobType upperCase(ClobType str) {
+        return new ClobType(new ClobImpl(new ClobInputStreamFactory(str) {
+            @Override
+            public Reader getReader(Reader reader) {
+                return new UpperLowerReader(reader, true);
+            }
+        }, str.getLength()));
+    }
 
 	// ================== Function = locate =====================
 
@@ -1355,7 +1496,19 @@ public final class FunctionMethods {
 
     // ================= Function - USER ========================
     public static Object user(CommandContext context) {
-        return context.getUserName();
+    	return user(context, true);
+    }
+
+    public static Object user(CommandContext context, boolean includeSecurityDomain) {
+    	throw new UnsupportedOperationException();      
+    }
+
+    static String escapeName(String name) {
+        if (name == null) {
+            return name;
+        }
+        
+        return name.replaceAll(AT, "\\\\"+AT); //$NON-NLS-1$
     }
     
     public static Object current_database(CommandContext context) {

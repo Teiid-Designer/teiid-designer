@@ -412,7 +412,12 @@ public class FunctionTree {
 
             if (validateClassResult && method.getAggregateAttributes() != null
                 && (method.getPushdown() == PushDown.CAN_PUSHDOWN || method.getPushdown() == PushDown.CANNOT_PUSHDOWN)) {
-                result.newInstance();
+            	try {
+            		    result.newInstance();
+            		} catch (Exception e) {
+            		    //should only happen if the method is null / not found
+            		    throw new Exception(Messages.gs(Messages.TEIID.TEIID30387, method.getName(), method.getInvocationClass()));
+            		}
             }
 
             result.setHasWrappedArgs(hasWrappedArg);
@@ -421,6 +426,10 @@ public class FunctionTree {
             throw new RuntimeException(ex);
         }
 	}
+    
+    public boolean hasFunctionWithName(String name) {
+    	return functionsByName.containsKey(name);
+   	}
     
     /**
      * Look up a function descriptor by signature in the tree.  If none is

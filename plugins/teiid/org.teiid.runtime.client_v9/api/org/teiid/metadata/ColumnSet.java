@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+
 public class ColumnSet<T extends AbstractMetadataRecord> extends AbstractMetadataRecord {
 	
 	private static final long serialVersionUID = -1185104601468519829L;
@@ -70,6 +73,18 @@ public class ColumnSet<T extends AbstractMetadataRecord> extends AbstractMetadat
     	}
     }
 
+    @Since(Version.TEIID_9_2)
+    public void removeColumn(Column column) {
+    	if (columns == null) {
+    		return;
+    	}
+    	columns.remove(column);
+    	Map<String, Column> map = columnMap;
+    	if (map != null) {
+    		map.remove(column.getName());
+    	}
+    }   
+    
     public void setColumns(List<Column> columns) {
 		this.columns = columns;
 		columnMap = null;

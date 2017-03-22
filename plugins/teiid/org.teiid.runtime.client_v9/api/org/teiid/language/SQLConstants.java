@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.teiid.designer.annotation.AnnotationUtils;
+import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
@@ -129,6 +131,52 @@ public abstract class SQLConstants {
         String AUTO_INCREMENT = "AUTO_INCREMENT"; //$NON-NLS-1$
         String PRESERVE = "PRESERVE"; //$NON-NLS-1$
         String GEOMETRY = "GEOMETRY"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String UPSERT = "UPSERT"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String AFTER = "AFTER"; //$NON-NLS-1$
+        //ddl
+        @Since(Version.TEIID_9_2)
+        String AUTHENTICATED = "AUTHENTICATED"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String TYPE = "TYPE"; //$NON-NLS-1$$
+        @Since(Version.TEIID_9_2)
+        String TRANSLATOR = "TRANSLATOR"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String JAAS = "JAAS"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String CONDITION= "CONDITION"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String MASK = "MASK"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String ACCESS = "ACCESS"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String CONTROL = "CONTROL"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String DATABASE = "DATABASE"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String DATA = "DATA"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String PRIVILEGES = "PRIVILEGES"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String ROLE = "ROLE"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String SCHEMA = "SCHEMA"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String USE = "USE"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String SERVER = "SERVER"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String WRAPPER = "WRAPPER"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String NONE = "NONE"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String REPOSITORY= "REPOSITORY"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String RENAME = "RENAME"; //$NON-NLS-1$
+        @Since(Version.TEIID_9_2)
+        String USAGE = "USAGE"; //$NON-NLS-1$
+
     }
     
     public interface Reserved {
@@ -288,6 +336,7 @@ public abstract class SQLConstants {
         String NCLOB = "NCLOB"; //$NON-NLS-1$
         String NEW = "NEW"; //$NON-NLS-1$
         String NO = "NO"; //$NON-NLS-1$
+        @Removed(Version.TEIID_9_2)
         String NONE = "NONE"; //$NON-NLS-1$
         String NOT = "NOT"; //$NON-NLS-1$
         String NULL = "NULL"; //$NON-NLS-1$

@@ -138,7 +138,9 @@ public class ValueIteratorProviderCollectorVisitor extends LanguageVisitor
     public void visit(SubqueryFromClause obj) {
     	if (collectLateral && obj.isLateral()) {
     		this.valueIteratorProviders.add(obj);
-    	}
+    	} else {
+    	    getValueIteratorProviders(obj.getCommand(), this.valueIteratorProviders);
+     	}
     }
     
 
@@ -186,6 +188,6 @@ public class ValueIteratorProviderCollectorVisitor extends LanguageVisitor
     }           
     
 	public void setCollectLateral(boolean b) {
-		this.collectLateral = true;
+		this.collectLateral = b;
 	}     
 }

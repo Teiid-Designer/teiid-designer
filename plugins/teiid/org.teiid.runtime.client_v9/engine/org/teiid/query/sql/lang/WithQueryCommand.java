@@ -17,6 +17,7 @@ public class WithQueryCommand extends SimpleNode
 	
 	public static final String NO_INLINE = "no_inline"; //$NON-NLS-1$
 	
+	public static final String MATERIALIZE = "materialize"; //$NON-NLS-1$
 
     private GroupSymbol groupSymbol;
 
@@ -27,6 +28,8 @@ public class WithQueryCommand extends SimpleNode
     private boolean recursive;
     
 	private boolean noInline;
+	
+	private boolean materialize;
 
     /**
      * @param p
@@ -123,7 +126,8 @@ public class WithQueryCommand extends SimpleNode
         } else if (!this.queryExpression.equals(other.queryExpression)) return false;
         
 		if( noInline == other.noInline &&
-		recursive == other.recursive ) {
+				materialize == other.materialize &&
+				recursive == other.recursive ) {
 			return true;
 		}
         return false;
@@ -149,6 +153,7 @@ public class WithQueryCommand extends SimpleNode
         clone.setRecursive(clone.isRecursive());
         
 		clone.noInline = noInline;
+		clone.materialize = materialize;
 		
         return clone;
     }
@@ -159,6 +164,14 @@ public class WithQueryCommand extends SimpleNode
 	
 	public void setNoInline(boolean noUnnest) {
 		this.noInline = noUnnest;
+	}
+	
+	public boolean isMaterialize() {
+		return materialize;
+	}
+		
+	public void setMaterialize(boolean materialize) {
+		this.materialize = materialize;
 	}
 
 }

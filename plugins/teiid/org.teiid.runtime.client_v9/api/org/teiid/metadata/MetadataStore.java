@@ -25,41 +25,28 @@ package org.teiid.metadata;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
+import org.teiid.metadata.Grant.Permission;
 
 /**
  * Simple holder for metadata.
  */
 public class MetadataStore implements Serializable {
-	
-	protected static class Grant implements Serializable {
-		private static final long serialVersionUID = -3768577122034702953L;
-		protected String role;
-		protected PermissionMetaData perm;
-		
-		public Grant(String role, PermissionMetaData perm) {
-			this.role = role;
-			this.perm = perm;
-		}
-		
-		public String getRole() {
-			return role;
-		}
-		
-		public PermissionMetaData getPermission() {
-			return perm;
-		}
-	}
 
 	private static final long serialVersionUID = -3130247626435324312L;
 	protected NavigableMap<String, Schema> schemas = new TreeMap<String, Schema>(String.CASE_INSENSITIVE_ORDER);
 	protected List<Schema> schemaList = new ArrayList<Schema>(); //used for a stable ordering
 	protected NavigableMap<String, Datatype> datatypes = new TreeMap<String, Datatype>(String.CASE_INSENSITIVE_ORDER);
-	protected List<Grant> grants;
+	protected Map<String, Grant> grants = new TreeMap<String, Grant>(String.CASE_INSENSITIVE_ORDER);
+	protected LinkedHashMap<String, Role> roles = new LinkedHashMap<String, Role>();
 
 	public NavigableMap<String, Schema> getSchemas() {
 		return schemas;
@@ -78,6 +65,15 @@ public class MetadataStore implements Serializable {
 	
 	public List<Schema> getSchemaList() {
 		return schemaList;
+	}
+	
+	@Since(Version.TEIID_9_2)
+	public Schema removeSchema(String schemaName) {
+	    Schema s = this.schemas.remove(schemaName);
+        if ( s != null) {
+            this.schemaList.remove(s);
+        }       
+        return s;
 	}
 	
 	public void addDataTypes(Collection<Datatype> types) {
@@ -104,17 +100,135 @@ public class MetadataStore implements Serializable {
 				addSchema(s);
 			}
 			addDataTypes(store.getDatatypes().values());
-			addGrants(store.grants);
+			addGrants(store.grants.values());
+			roles.putAll(store.roles);
 		}
 	}
 
-	void addGrants(List<Grant> g) {
-		if (g == null) {
+	void addGrants(Collection<Grant> grants) {
+		if (grants == null) {
 			return;
 		}
-		if (this.grants == null) {
-			this.grants = new ArrayList<Grant>();
+		for (Grant g:grants) {
+		    addGrant(g);
 		}
-		this.grants.addAll(g);
 	}
+	
+	void addGrant(Grant grant) {
+	    if (grant == null) {
+	        return;
+	    }
+	    Grant previous = this.grants.get(grant.getRole());
+	    if (previous == null) {
+	        this.grants.put(grant.getRole(), grant);
+	    } else {
+	        for (Permission addPermission : grant.getPermissions()) {
+	            boolean found = false;
+	            for (Permission currentPermission : new ArrayList<Permission>(previous.getPermissions())) {
+                    if (currentPermission.resourceMatches(addPermission)) {
+                        found = true;
+                        if (addPermission.getMask() != null) {
+                            if (currentPermission.getMask() != null) {
+                                throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60035, addPermission.getMask(), currentPermission.getMask()));
+                            }
+                            currentPermission.setMask(addPermission.getMask());
+                            currentPermission.setMaskOrder(addPermission.getMaskOrder());
+                        }
+                        if (addPermission.getCondition() != null) {
+                            if (currentPermission.getCondition() != null) {
+                                throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60036, addPermission.getMask(), currentPermission.getMask()));
+                            }
+                            currentPermission.setCondition(addPermission.getCondition(), addPermission.isConditionAConstraint());
+                        }
+                        currentPermission.appendPrivileges(addPermission.getPrivileges());
+                    }
+                    if (currentPermission.getPrivileges().isEmpty() 
+                            && currentPermission.getRevokePrivileges().isEmpty()
+                            && currentPermission.getCondition() == null
+                            && currentPermission.getMask() == null) {
+                        previous.removePermission(currentPermission);
+                    }
+                    if (found) {
+                        break;
+                    }
+                }
+	            if (!found) {
+	                previous.addPermission(addPermission);
+	            }
+            }
+            if (previous.getPermissions().isEmpty()) {
+                this.grants.remove(grant.getRole());
+            }
+	    }
+	}
+	
+	public void removeGrant(Grant toRemoveGrant) {
+	    if (toRemoveGrant == null) {
+	        return;
+	    }
+	    Grant previous = this.grants.get(toRemoveGrant.getRole());
+	    if (previous == null) {
+	        this.grants.put(toRemoveGrant.getRole(), toRemoveGrant);
+	    } else {
+	        for (Permission revokePermission : toRemoveGrant.getPermissions()) {
+                boolean found = false;
+                for (Permission currentPermission : new ArrayList<Permission>(previous.getPermissions())) {
+                    if (currentPermission.resourceMatches(revokePermission)) {
+                        found = true;
+                        if (revokePermission.getMask() != null) {
+                            if (currentPermission.getMask() != null) {
+                                currentPermission.setMask(null);
+                                currentPermission.setMaskOrder(null);
+                            } else {
+                                //TODO: could be exception
+                            }
+                        }
+                        if (revokePermission.getCondition() != null) {
+                            if (currentPermission.getCondition() != null) {
+                                currentPermission.setCondition(null, null);
+                            } else {
+                                //TODO: could be exception
+                            }
+                        }
+                        currentPermission.removePrivileges(revokePermission.getRevokePrivileges());
+                    }
+                    if (currentPermission.getPrivileges().isEmpty() 
+                            && currentPermission.getRevokePrivileges().isEmpty()
+                            && currentPermission.getCondition() == null
+                            && currentPermission.getMask() == null) {
+                        previous.removePermission(currentPermission);
+                    }
+                    if (found) {
+                        break;
+                    }
+                }
+                if (!found) {
+                    previous.addPermission(revokePermission);
+                }
+            }
+            if (previous.getPermissions().isEmpty()) {
+                this.grants.remove(toRemoveGrant.getRole());
+            }	        
+	    }
+	}	
+	
+	public Collection<Grant> getGrants() {
+	    return this.grants.values();
+	}
+    
+    void addRole(Role role) {
+        this.roles.put(role.getName(), role);
+    }
+    
+    Role getRole(String roleName) {
+        return this.roles.get(roleName);
+    }
+
+    Collection<Role> getRoles() {
+        return this.roles.values();
+    }
+    
+    Role removeRole(String roleName) {
+        return this.roles.remove(roleName);
+    }    
 }

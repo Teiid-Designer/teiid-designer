@@ -27,11 +27,14 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.OptionalDataException;
 import java.util.List;
 import org.teiid.core.util.ApplicationInfo;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
 /**
@@ -45,6 +48,8 @@ public class Handshake implements Externalizable {
     private byte[] publicKey;
     private byte[] publicKeyLarge;
     private AuthenticationType authType = null;
+    
+    private boolean cbc = true;
     
     public Handshake() {
     	
@@ -118,6 +123,16 @@ public class Handshake implements Externalizable {
     public void setPublicKeyLarge(byte[] publicKeyLarge) {
     	this.publicKeyLarge = publicKeyLarge;
     }
+    
+    @Since(Version.TEIID_9_2)
+    public boolean isCbc() {
+    	return cbc;
+    }
+
+    @Since(Version.TEIID_9_2)
+    public void setCbc(boolean cbc) {
+    	this.cbc = cbc;
+    }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException,
@@ -134,6 +149,13 @@ public class Handshake implements Externalizable {
     	} catch (EOFException e) {
     		
     	}
+    	try {
+    	    cbc = in.readBoolean();
+    	} catch (OptionalDataException e) {
+    	    cbc = false;
+    	} catch (EOFException e) {
+    	    cbc = false;
+    	}
     }
     
     @Override
@@ -147,6 +169,7 @@ public class Handshake implements Externalizable {
     		out.writeInt(publicKeyLarge.length);
     		out.write(publicKeyLarge);
     	}
+    	out.writeBoolean(cbc);
     }
     
 }

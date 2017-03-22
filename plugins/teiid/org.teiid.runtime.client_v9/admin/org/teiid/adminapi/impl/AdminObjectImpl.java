@@ -33,6 +33,7 @@ import java.util.Properties;
 import org.teiid.adminapi.AdminObject;
 import org.teiid.core.util.CopyOnWriteLinkedHashMap;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 public abstract class AdminObjectImpl implements AdminObject, Serializable {
@@ -161,7 +162,12 @@ public abstract class AdminObjectImpl implements AdminObject, Serializable {
 	public void addProperty(String key, String value) {
 		this.properties.put(key, value);
 	}
-	
+
+    @Since(Version.TEIID_9_2)
+	public String removeProperty(String key) {
+		return this.properties.remove(key);
+	}
+
    /**
     * Add attachment
     *

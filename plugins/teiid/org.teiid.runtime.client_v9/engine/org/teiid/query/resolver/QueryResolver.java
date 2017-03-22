@@ -112,6 +112,7 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
     private final CommandResolver dynamicCommandResolver;
     private final CommandResolver tempTableResolver;
     private final CommandResolver alterResolver;
+    private final CommandResolver dummyResolver;
 
     /*
      * The parser that preceded the resolution
@@ -135,6 +136,13 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
         dynamicCommandResolver = new DynamicCommandResolver(this);
         tempTableResolver = new TempTableResolver(this);
         alterResolver = new AlterResolver(this);
+        dummyResolver = new CommandResolver(this) {
+
+        	@Override
+        	public void resolveCommand(Command command, TempMetadataAdapter metadata,
+        	boolean resolveNullLiterals) throws Exception{
+        	}
+        };
     }
 
     /**
@@ -431,6 +439,7 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
             case ICommand.TYPE_ALTER_PROC:           
             case ICommand.TYPE_ALTER_TRIGGER:        
             case ICommand.TYPE_ALTER_VIEW:           return alterResolver;
+            case ICommand.TYPE_SOURCE_EVENT:         return dummyResolver; 
             default:
                 throw new AssertionError("Unknown command type"); //$NON-NLS-1$
         }

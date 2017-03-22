@@ -232,9 +232,7 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
 
         // If descriptor is missing invokable method, find this VM's descriptor
         // give name and types from fd
-        if(invocationMethod == null) {
-        	 throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30382, getFullName()));
-        }
+        checkMethod();
         
         // Invoke the method and return the result
         try {
@@ -312,7 +310,14 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
         	 throw new TeiidClientException(e);
 		}
 	}
-
+	
+	private void checkMethod() throws Exception {
+		// If descriptor is missing invokable method, find this VM's descriptor
+		// give name and types from fd
+		if(invocationMethod == null) {
+			 throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30382, getFullName()));
+		}
+	}
 	public static Object importValue(ITeiidServerVersion teiidVersion, Object result, Class<?> expectedType)
 			throws Exception {
 		if (!ALLOW_NAN_INFINITY) {
@@ -334,7 +339,7 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
 			return result;
 		}
 		result = dataTypeManager.transformValue(result, expectedType);
-		if (result instanceof String) {
+		if (result != null && expectedType == DataTypeManagerService.DefaultDataTypes.STRING.getClass()) {
 			String s = (String)result;
 			if (s.length() > DataTypeManagerService.MAX_STRING_LENGTH) {
 				return s.substring(0, DataTypeManagerService.MAX_STRING_LENGTH);

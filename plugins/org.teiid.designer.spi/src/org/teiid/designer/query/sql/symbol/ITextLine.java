@@ -14,5 +14,5 @@ import org.teiid.designer.query.sql.lang.IExpression;
  *
  */
 public interface ITextLine<LV extends ILanguageVisitor> extends IExpression<LV> {
-
+	char NO_QUOTE_CHAR = 0;
 }

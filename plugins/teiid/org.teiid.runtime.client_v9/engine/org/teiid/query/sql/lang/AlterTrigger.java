@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang;
 
+import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.designer.query.sql.lang.IAlterTrigger;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.metadata.Table.TriggerEvent;
@@ -19,6 +20,10 @@ public class AlterTrigger extends Alter<TriggerAction> implements IAlterTrigger<
     private boolean create;
 
     private Boolean enabled;
+    
+    private boolean after;
+
+    private String name;
 
     /**
      * @param p
@@ -75,6 +80,22 @@ public class AlterTrigger extends Alter<TriggerAction> implements IAlterTrigger<
         this.enabled = enabled;
     }
 
+	public boolean isAfter() {
+        return after;
+    }
+	
+	public void setAfter(boolean after) {
+        this.after = after;
+    }
+	
+	public String getName() {
+	    return name;
+	}
+	
+	public void setName(String name) {
+	    this.name = name;
+	}
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -91,12 +112,11 @@ public class AlterTrigger extends Alter<TriggerAction> implements IAlterTrigger<
         if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         AlterTrigger other = (AlterTrigger)obj;
-        if (this.create != other.create) return false;
-        if (this.enabled == null) {
-            if (other.enabled != null) return false;
-        } else if (!this.enabled.equals(other.enabled)) return false;
-        if (this.event != other.event) return false;
-        return true;
+		return EquivalenceUtil.areEqual(this.enabled, other.enabled) 
+		        && EquivalenceUtil.areEqual(this.name, other.name)
+				&& this.create == other.create
+				&& other.event == this.event
+				&& other.after == this.after;
     }
 
     /** Accept the visitor. **/
@@ -115,6 +135,10 @@ public class AlterTrigger extends Alter<TriggerAction> implements IAlterTrigger<
             clone.setEvent(getEvent());
         clone.setCreate(isCreate());
         clone.setEnabled(getEnabled());
+        clone.setCreate(isCreate());
+        clone.setEnabled(getEnabled());
+        clone.setAfter(isAfter());
+        clone.setName(getName());
         if(getTarget() != null)
             clone.setTarget(getTarget().clone());
         if(getSourceHint() != null)

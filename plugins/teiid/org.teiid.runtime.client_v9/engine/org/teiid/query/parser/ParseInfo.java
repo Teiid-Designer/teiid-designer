@@ -36,7 +36,7 @@ public class ParseInfo implements Serializable {
     private static final long serialVersionUID = -7323683731955992888L;
     private static final boolean ANSI_QUOTED_DEFAULT = PropertiesUtils.getBooleanProperty(System.getProperties(),
                                                                                           "org.teiid.ansiQuotedIdentifiers", true); //$NON-NLS-1$
-
+    boolean backslashDefaultMatchEscape=false;
     private int referenceCount = 0;
 
     /**
@@ -117,8 +117,17 @@ public class ParseInfo implements Serializable {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         ParseInfo other = (ParseInfo)obj;
-        if (this.ansiQuotedIdentifiers != other.ansiQuotedIdentifiers) return false;
+        if (this.ansiQuotedIdentifiers != other.ansiQuotedIdentifiers || this.backslashDefaultMatchEscape != other.backslashDefaultMatchEscape) return false;
         if (this.designerCommand != other.designerCommand) return false;
         return true;
+    }
+    
+    public boolean isBackslashDefaultMatchEscape() {
+    	return backslashDefaultMatchEscape;
+    }
+    
+    public void setBackslashDefaultMatchEscape(
+    	boolean backslashDefaultMatchEscape) {
+    	this.backslashDefaultMatchEscape = backslashDefaultMatchEscape;
     }
 }

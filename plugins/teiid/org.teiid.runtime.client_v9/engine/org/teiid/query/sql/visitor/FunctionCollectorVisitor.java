@@ -30,6 +30,7 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.metadata.FunctionMethod.Determinism;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.LanguageObject;
+import org.teiid.query.sql.lang.SubqueryContainer;
 import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
 import org.teiid.query.sql.navigator.PreOrderNavigator;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -195,6 +196,12 @@ public class FunctionCollectorVisitor extends LanguageVisitor
 				return true;
 			}
 		}
+		
+//		for (SubqueryContainer<?> container : ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(ex)) {
+//			if (container.getCommand().getCorrelatedReferences() != null && isNonDeterministic(container.getCommand())) {
+//				return true;
+//			}
+//		}
 		return false;
 	}
 

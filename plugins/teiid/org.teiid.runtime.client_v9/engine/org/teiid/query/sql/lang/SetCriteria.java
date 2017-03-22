@@ -96,7 +96,7 @@ public class SetCriteria extends AbstractSetCriteria implements ISetCriteria<Exp
 
     @Override
     public SetCriteria clone() {
-        SetCriteria clone = new SetCriteria(getTeiidVersion(), this.id);
+        SetCriteria criteriaCopy = new SetCriteria(getTeiidVersion(), this.id);
 
         Collection copyValues = null;
 	    if (isAllConstants()) {
@@ -104,14 +104,14 @@ public class SetCriteria extends AbstractSetCriteria implements ISetCriteria<Exp
 	    } else {
 	    	copyValues = LanguageObject.Util.deepClone(new ArrayList(values), Expression.class);
 	    }
-        clone.setValues( new LinkedHashSet(cloneCollection(copyValues)));
+	    criteriaCopy.setValues( new LinkedHashSet(cloneCollection(copyValues)));
         if(getExpression() != null)
-            clone.setExpression(getExpression().clone());
-        clone.setNegated(isNegated());
+        	criteriaCopy.setExpression(getExpression().clone());
+        criteriaCopy.setNegated(isNegated());
 
-        clone.allConstants = allConstants;
+        criteriaCopy.allConstants = allConstants;
 
-        return clone;
+        return criteriaCopy;
     }
 
 }

@@ -240,15 +240,16 @@ public class CompositeMetadataStore extends MetadataStore {
 	}
 	
 	public void processGrants(Map<String, DataPolicyMetadata> policies) {
-		if (this.grants == null || policies == null) {
-			return;
-		}
-		for (Grant grant : this.grants) {
-			DataPolicyMetadata dpm = policies.get(grant.getRole());
-			if (dpm != null) {
-				dpm.addPermission(grant.getPermission());
-			}
-		}
+		throw new UnsupportedOperationException();
+//		if (this.grants == null || policies == null) {
+//			return;
+//		}
+//		for (Grant grant : this.grants) {
+//			DataPolicyMetadata dpm = policies.get(grant.getRole());
+//			if (dpm != null) {
+//				dpm.addPermission(grant.getPermission());
+//			}
+//		}
 	}
 	
 }

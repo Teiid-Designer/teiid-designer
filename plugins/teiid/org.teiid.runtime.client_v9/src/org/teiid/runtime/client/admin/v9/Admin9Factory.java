@@ -2308,7 +2308,7 @@ public class Admin9Factory {
 		}
 
 		@Override
-		public String getQueryPlan(String sessionId, int executionId)  throws AdminException {
+		public String getQueryPlan(String sessionId, long executionId)  throws AdminException {
 			final ModelNode request = buildRequest("teiid", "get-plan", "session", sessionId, "execution-id", String.valueOf(executionId));//$NON-NLS-1$
 			if (request == null) {
 				return null;

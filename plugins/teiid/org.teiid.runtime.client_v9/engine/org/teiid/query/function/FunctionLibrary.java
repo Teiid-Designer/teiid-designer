@@ -107,6 +107,10 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
     public FunctionTree[] getUserFunctions() {
         return userFunctions;
     }
+    
+	public FunctionTree getSystemFunctions() {
+		return systemFunctions;
+	}
 
     /**
      * Get all function categories, sorted in alphabetical order

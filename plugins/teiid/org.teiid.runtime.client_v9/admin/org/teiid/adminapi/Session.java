@@ -22,6 +22,8 @@
 
 package org.teiid.adminapi;
 
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  * A Session represents a single connection between a client and the server.
@@ -55,9 +57,10 @@ public interface Session extends AdminObject, DomainAware {
 
     /**
      * Get User Name for this Session
-     * 
+     * <br>It will not include the Security Domain, see {@link #getSecurityDomain()}
      * @return String of UserName
      */
+    @Since(Version.TEIID_9_2)
     public String getUserName();
 
     /**

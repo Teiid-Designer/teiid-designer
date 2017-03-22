@@ -30,15 +30,17 @@ import org.teiid.core.types.ClobType;
 import org.teiid.core.types.GeometryType;
 import org.teiid.designer.annotation.Updated;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.language.SQLConstants;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
 import org.teiid.query.util.CommandContext;
+import org.teiid.runtime.client.Messages;
 import org.teiid.translator.SourceSystemFunctions;
 
 
 public class GeometryFunctionMethods {
 
-    		@TeiidFunction(name=SourceSystemFunctions.ST_ASTEXT, 
+    @TeiidFunction(name=SourceSystemFunctions.ST_ASTEXT, 
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             pushdown=PushDown.CAN_PUSHDOWN)
@@ -47,7 +49,7 @@ public static ClobType asText(GeometryType geometry)
 return GeometryUtils.geometryToClob(geometry, false);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_ASEWKT,
+@TeiidFunction(name=SourceSystemFunctions.ST_ASEWKT,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             pushdown=PushDown.CAN_PUSHDOWN)
@@ -56,7 +58,7 @@ public static ClobType asEwkt(GeometryType geometry)
  return GeometryUtils.geometryToClob(geometry, true);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_ASBINARY,
+@TeiidFunction(name=SourceSystemFunctions.ST_ASBINARY,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             pushdown=PushDown.CAN_PUSHDOWN)
@@ -65,7 +67,15 @@ public static BlobType asBlob(GeometryType geometry) {
  return new BlobType(b);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_ASEWKB,
+public static BlobType asBlob(GeometryType geometry, String encoding) throws Exception {
+ if ("NDR".equals(encoding)) { //$NON-NLS-1$
+     return new BlobType(GeometryUtils.getBytes(GeometryUtils.getGeometry(geometry), false)); 
+ } 
+ Blob b = geometry.getReference();
+ return new BlobType(b);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_ASEWKB,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -73,7 +83,7 @@ public static BlobType asEwkb(final GeometryType geometry) {
 	return GeometryUtils.geometryToEwkb(geometry);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_ASGEOJSON,
+@TeiidFunction(name=SourceSystemFunctions.ST_ASGEOJSON,
             category=FunctionCategoryConstants.GEOMETRY,
  		   pushdown=PushDown.CAN_PUSHDOWN,
             nullOnNull=true)
@@ -82,7 +92,7 @@ public static ClobType asGeoJson(GeometryType geometry)
  return GeometryUtils.geometryToGeoJson(geometry);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_ASGML,
+@TeiidFunction(name=SourceSystemFunctions.ST_ASGML,
             category=FunctionCategoryConstants.GEOMETRY,
  		   pushdown=PushDown.CAN_PUSHDOWN,
             nullOnNull=true)
@@ -91,7 +101,7 @@ public static ClobType asGml(CommandContext context, GeometryType geometry)
  return GeometryUtils.geometryToGml(context, geometry, true);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_ASKML,
+@TeiidFunction(name=SourceSystemFunctions.ST_ASKML,
             category=FunctionCategoryConstants.GEOMETRY,
             pushdown=PushDown.CAN_PUSHDOWN,
             nullOnNull=true)
@@ -100,7 +110,7 @@ public static ClobType asKml(CommandContext context, GeometryType geometry)
  return GeometryUtils.geometryToGml(context, geometry, false);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMTEXT,
+@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMTEXT,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true)
 public static GeometryType geomFromText(ClobType wkt) 
@@ -108,7 +118,7 @@ public static GeometryType geomFromText(ClobType wkt)
 	return GeometryUtils.geometryFromClob(wkt);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMTEXT,
+@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMTEXT,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             pushdown=PushDown.CAN_PUSHDOWN)
@@ -117,7 +127,7 @@ public static GeometryType geomFromText(ClobType wkt, int srid)
 	return GeometryUtils.geometryFromClob(wkt, srid, false);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMWKB,
+@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMWKB,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             alias="ST_GEOMFROMBINARY")
@@ -126,7 +136,7 @@ public static GeometryType geoFromBlob(BlobType wkb)
 	return GeometryUtils.geometryFromBlob(wkb);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMWKB,
+@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMWKB,
             category=FunctionCategoryConstants.GEOMETRY,
             pushdown=PushDown.CAN_PUSHDOWN,
  		   nullOnNull=true,
@@ -136,7 +146,7 @@ public static GeometryType geoFromBlob(BlobType wkb, int srid)
 	return GeometryUtils.geometryFromBlob(wkb, srid);
 }
  
-			@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMGEOJSON,
+@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMGEOJSON,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true)
 public static GeometryType geomFromGeoJson(ClobType clob) 
@@ -144,7 +154,7 @@ public static GeometryType geomFromGeoJson(ClobType clob)
  return GeometryUtils.geometryFromGeoJson(clob);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMGEOJSON,
+@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMGEOJSON,
             category=FunctionCategoryConstants.GEOMETRY,
  		   pushdown=PushDown.CAN_PUSHDOWN,
             nullOnNull=true)
@@ -153,7 +163,7 @@ public static GeometryType geomFromGeoJson(ClobType clob, int srid)
  return GeometryUtils.geometryFromGeoJson(clob, srid);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMGML,
+@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMGML,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true)
 public static GeometryType geomFromGml(ClobType gml) 
@@ -161,7 +171,7 @@ public static GeometryType geomFromGml(ClobType gml)
  return GeometryUtils.geometryFromGml(gml, null);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMGML,
+@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMGML,
             category=FunctionCategoryConstants.GEOMETRY,
  		   pushdown=PushDown.CAN_PUSHDOWN,
             nullOnNull=true)
@@ -170,7 +180,7 @@ public static GeometryType geomFromGml(ClobType gml, int srid)
  return GeometryUtils.geometryFromGml(gml, srid);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_INTERSECTS,
+@TeiidFunction(name=SourceSystemFunctions.ST_INTERSECTS,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             pushdown=PushDown.CAN_PUSHDOWN)
@@ -178,7 +188,7 @@ public static Boolean intersects(GeometryType geom1, GeometryType geom2) throws 
 	return GeometryUtils.intersects(geom1, geom2);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_CONTAINS,
+@TeiidFunction(name=SourceSystemFunctions.ST_CONTAINS,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             pushdown=PushDown.CAN_PUSHDOWN)
@@ -186,7 +196,7 @@ public static Boolean contains(GeometryType geom1, GeometryType geom2) throws Ex
 	return GeometryUtils.contains(geom1, geom2);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_CROSSES,
+@TeiidFunction(name=SourceSystemFunctions.ST_CROSSES,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             pushdown=PushDown.CAN_PUSHDOWN)
@@ -194,7 +204,7 @@ public static Boolean crosses(GeometryType geom1, GeometryType geom2) throws Exc
 	return GeometryUtils.crosses(geom1, geom2);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_DISJOINT,
+@TeiidFunction(name=SourceSystemFunctions.ST_DISJOINT,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             pushdown=PushDown.CAN_PUSHDOWN)
@@ -202,7 +212,7 @@ public static Boolean disjoint(GeometryType geom1, GeometryType geom2) throws Ex
 	return GeometryUtils.disjoint(geom1, geom2);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_DISTANCE,
+@TeiidFunction(name=SourceSystemFunctions.ST_DISTANCE,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             pushdown=PushDown.CAN_PUSHDOWN)
@@ -210,7 +220,7 @@ public static Double distance(GeometryType geom1, GeometryType geom2) throws Exc
 	return GeometryUtils.distance(geom1, geom2);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_OVERLAPS,
+@TeiidFunction(name=SourceSystemFunctions.ST_OVERLAPS,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             pushdown=PushDown.CAN_PUSHDOWN)
@@ -218,7 +228,7 @@ public static Boolean overlaps(GeometryType geom1, GeometryType geom2) throws Ex
 	return GeometryUtils.overlaps(geom1, geom2);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_TOUCHES,
+@TeiidFunction(name=SourceSystemFunctions.ST_TOUCHES,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             pushdown=PushDown.CAN_PUSHDOWN)
@@ -226,7 +236,7 @@ public static Boolean touches(GeometryType geom1, GeometryType geom2) throws Exc
 	return GeometryUtils.touches(geom1, geom2);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_SRID,
+@TeiidFunction(name=SourceSystemFunctions.ST_SRID,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -234,7 +244,7 @@ public static int getSrid(GeometryType geom1) {
  return geom1.getSrid();
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_SETSRID,
+@TeiidFunction(name=SourceSystemFunctions.ST_SETSRID,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -245,7 +255,7 @@ public static GeometryType setSrid(GeometryType geom1, int srid) {
  return gt;
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_EQUALS,
+@TeiidFunction(name=SourceSystemFunctions.ST_EQUALS,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -253,7 +263,7 @@ public static Boolean equals(GeometryType geom1, GeometryType geom2) throws Exce
  return GeometryUtils.equals(geom1, geom2);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_TRANSFORM,
+@TeiidFunction(name=SourceSystemFunctions.ST_TRANSFORM,
             category=FunctionCategoryConstants.GEOMETRY,
             nullOnNull=true,
             pushdown=PushDown.CAN_PUSHDOWN)
@@ -264,7 +274,7 @@ public static GeometryType transform(CommandContext context,
  return GeometryTransformUtils.transform(context, geom, srid);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_ENVELOPE,
+@TeiidFunction(name=SourceSystemFunctions.ST_ENVELOPE,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -272,7 +282,7 @@ public static GeometryType envelope(GeometryType geom) throws Exception {
 	return GeometryUtils.envelope(geom);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_WITHIN,
+@TeiidFunction(name=SourceSystemFunctions.ST_WITHIN,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -280,7 +290,7 @@ public static Boolean within(GeometryType geom1, GeometryType geom2) throws Exce
 	return GeometryUtils.within(geom1, geom2);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_DWITHIN,
+@TeiidFunction(name=SourceSystemFunctions.ST_DWITHIN,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -292,7 +302,7 @@ public static Boolean dwithin(GeometryType geom1, GeometryType geom2, double dis
 * PostGIS compatibility
 */
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_SIMPLIFY,
+@TeiidFunction(name=SourceSystemFunctions.ST_SIMPLIFY,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -302,7 +312,17 @@ public static GeometryType simplify(GeometryType geom,
 	return GeometryUtils.simplify(geom, tolerance);
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_FORCE_2D,
+@TeiidFunction(name=SourceSystemFunctions.ST_SIMPLIFYPRESERVETOPOLOGY,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType simplifyPreserveTopology(GeometryType geom, 
+                               double tolerance)
+                                       throws Exception {        
+ return GeometryUtils.simplifyPreserveTopology(geom, tolerance);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_FORCE_2D,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -310,7 +330,7 @@ public static GeometryType force2D(GeometryType geom) {
 	return geom; //higher dimensions not supported
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_HASARC,
+@TeiidFunction(name=SourceSystemFunctions.ST_HASARC,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -318,7 +338,7 @@ public static boolean hasArc(@SuppressWarnings("unused") GeometryType geom) {
 	return false; //curved not supported
 }
 
-			@TeiidFunction(name=SourceSystemFunctions.ST_ASEWKB,
+@TeiidFunction(name=SQLConstants.Tokens.DOUBLE_AMP,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -326,7 +346,7 @@ public static boolean boundingBoxIntersects(GeometryType geom1, GeometryType geo
 	return GeometryUtils.boundingBoxIntersects(geom1, geom2);
 }
 
-				@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMEWKT,
+@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMEWKT,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -335,7 +355,7 @@ public static GeometryType geomFromEwkt(ClobType ewkt)
 	return GeometryUtils.geometryFromClob(ewkt, null, true);
 }
 
-				@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMEWKB,
+@TeiidFunction(name=SourceSystemFunctions.ST_GEOMFROMEWKB,
      category=FunctionCategoryConstants.GEOMETRY,
      nullOnNull=true,
      pushdown=PushDown.CAN_PUSHDOWN)
@@ -343,4 +363,365 @@ public static GeometryType geomFromEwkb(BlobType ewkb)
   throws Exception, SQLException {
 	return GeometryUtils.geometryFromEwkb(ewkb.getBinaryStream(), null);
 }
+
+@TeiidFunction(name=SourceSystemFunctions.ST_AREA,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Double area(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.area(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_BOUNDARY,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType boundary(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.boundary(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_BUFFER,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType buffer(GeometryType geom, double distance) 
+  throws Exception {
+ return GeometryUtils.buffer(geom, distance);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_CENTROID,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType centroid(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.centroid(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_CONVEXHULL,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType convexHull(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.convexHull(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_COORDDIM,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Integer coordDim(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.coordDim(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_CURVETOLINE,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType curveToLine(@SuppressWarnings("unused") GeometryType geom) 
+  throws Exception {
+ throw new Exception(Messages.gs(Messages.TEIID.TEIID31206));
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_DIFFERENCE,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType difference(GeometryType geom1, GeometryType geom2) 
+  throws Exception {
+ return GeometryUtils.difference(geom1, geom2);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_DIMENSION,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Integer dimension(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.dimension(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_ENDPOINT,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType endPoint(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.startEndPoint(geom, false);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_EXTERIORRING,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType exteriorRing(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.exteriorRing(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_GEOMETRYN,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType geometryN(GeometryType geom, int index) 
+  throws Exception {
+ return GeometryUtils.geometryN(geom, index - 1);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_GEOMETRYTYPE,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static String geometryType(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.geometryType(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_INTERIORRINGN,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType interiorRingN(GeometryType geom, int index) 
+  throws Exception {
+ return GeometryUtils.interiorRingN(geom, index - 1);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_INTERSECTION,
+            category=FunctionCategoryConstants.GEOMETRY,
+            nullOnNull=true,
+            pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType intersection(GeometryType geom1, GeometryType geom2) throws Exception {
+	return GeometryUtils.intersection(geom1, geom2);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_ISCLOSED,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Boolean isClosed(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.isClosed(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_ISEMPTY,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Boolean isEmpty(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.isEmpty(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_ISRING,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Boolean isRing(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.isRing(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_ISSIMPLE,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Boolean isSimple(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.isSimple(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_ISVALID,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Boolean isValid(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.isValid(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_LENGTH,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Double length(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.length(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_NUMGEOMETRIES,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Integer numGeometries(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.numGeometries(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_NUMINTERIORRINGS,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Integer numInteriorRings(GeometryType geom) throws Exception {
+ return GeometryUtils.numInteriorRings(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_NUMPOINTS,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Integer numPoints(GeometryType geom) throws Exception {
+ return GeometryUtils.numPoints(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_ORDERINGEQUALS,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Boolean orderingEquals(GeometryType geom1, GeometryType geom2) throws Exception {
+ return GeometryUtils.orderingEquals(geom1, geom2);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_POINT,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType point(double x, double y) {
+ return GeometryUtils.point(x, y);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_POINTN,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType pointN(GeometryType geom, int index) throws Exception {
+ return GeometryUtils.pointN(geom, index - 1);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_PERIMETER,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Double perimeter(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.perimeter(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_POINTONSURFACE,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType pointOnSurface(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.pointOnSurface(geom);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_POLYGON,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType polygon(GeometryType geom, int srid) 
+  throws Exception {
+ return GeometryUtils.polygon(geom, srid);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_RELATE,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static String relate(GeometryType geom1, GeometryType geom2) 
+  throws Exception {
+ return GeometryUtils.relate(geom1, geom2);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_RELATE,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Boolean relate(GeometryType geom1, GeometryType geom2, String intersectionPattern) 
+  throws Exception {
+ return GeometryUtils.relate(geom1, geom2, intersectionPattern);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_STARTPOINT,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType startPoint(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.startEndPoint(geom, true);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_SYMDIFFERENCE,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType symDifference(GeometryType geom1, GeometryType geom2) 
+  throws Exception {
+ return GeometryUtils.symDifference(geom1, geom2);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_UNION,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType union(GeometryType geom1, GeometryType geom2) 
+  throws Exception {
+ return GeometryUtils.union(geom1, geom2);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_X,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Double ordinateX(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.ordinate(geom, GeometryUtils.Ordinate.X);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_Y,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Double ordinateY(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.ordinate(geom, GeometryUtils.Ordinate.Y);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_Z,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static Double ordinateZ(GeometryType geom) 
+  throws Exception {
+ return GeometryUtils.ordinate(geom, GeometryUtils.Ordinate.Z);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_MAKEENVELOPE,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType makeEnvelope(double xmin, double ymin, double xmax, double ymax) {
+ return GeometryUtils.makeEnvelope(xmin, ymin, xmax, ymax, null);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_MAKEENVELOPE,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType makeEnvelope(double xmin, double ymin, double xmax, double ymax, int srid) {
+ return GeometryUtils.makeEnvelope(xmin, ymin, xmax, ymax, srid);
+}
+
+@TeiidFunction(name=SourceSystemFunctions.ST_SNAPTOGRID,
+     category=FunctionCategoryConstants.GEOMETRY,
+     nullOnNull=true,
+     pushdown=PushDown.CAN_PUSHDOWN)
+public static GeometryType snapToGrid(GeometryType geom, float size) throws Exception {
+ return GeometryUtils.snapToGrid(geom, size);
+}
+
 }

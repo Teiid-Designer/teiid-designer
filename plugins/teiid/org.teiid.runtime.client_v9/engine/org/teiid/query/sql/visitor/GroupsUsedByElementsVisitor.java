@@ -24,6 +24,7 @@ package org.teiid.query.sql.visitor;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import org.teiid.designer.query.sql.IGroupsUsedByElementsVisitor;
 import org.teiid.query.sql.lang.LanguageObject;
@@ -59,7 +60,7 @@ public class GroupsUsedByElementsVisitor
      * @return Collection of {@link org.teiid.query.sql.symbol.GroupSymbol}
      */
     public static final Set<GroupSymbol> getGroups(LanguageObject obj) {
-        Set<GroupSymbol> groups = new HashSet<GroupSymbol>();
+        Set<GroupSymbol> groups = new LinkedHashSet<GroupSymbol>();
         getGroups(obj, groups);
         return groups;
     }
@@ -69,7 +70,7 @@ public class GroupsUsedByElementsVisitor
      * @return set of group symbols
      */
     public static Set<GroupSymbol> getGroups(Collection<? extends LanguageObject> objects) {
-        Set<GroupSymbol> groups = new HashSet<GroupSymbol>();
+        Set<GroupSymbol> groups = new LinkedHashSet<GroupSymbol>();
         getGroups(objects, groups);
         return groups;
     }
@@ -122,14 +123,14 @@ public class GroupsUsedByElementsVisitor
     
     @Override
     public Set<GroupSymbol> findGroups(LanguageObject obj) {
-        Set<GroupSymbol> groups = new HashSet<GroupSymbol>();
+        Set<GroupSymbol> groups = new LinkedHashSet<GroupSymbol>();
         findGroups(obj, groups);
         return groups;
     }
 
     @Override
     public <T extends LanguageObject> Set<GroupSymbol> findGroups(Collection<T> objects) {
-        Set<GroupSymbol> groups = new HashSet<GroupSymbol>();
+        Set<GroupSymbol> groups = new LinkedHashSet<GroupSymbol>();
         findGroups(objects, groups);
         return groups;
     }

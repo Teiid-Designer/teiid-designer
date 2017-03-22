@@ -22,6 +22,8 @@
 
 package org.teiid.core.crypto;
 
+import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  * Interface defining a utility that can perform both encryption and decryption.
@@ -40,6 +42,7 @@ public interface Cryptor {
      * @param cleartext The text to be encrypted
      * @param The encrypted ciphertext
      */
+    @Removed(Version.TEIID_9_2)
     String encrypt( String cleartext ) throws CryptoException;
     
     Object sealObject(Object object) throws CryptoException;
@@ -58,6 +61,7 @@ public interface Cryptor {
      * @param ciphertext The text to be encrypted
      * @param The decrypted cleartext
      */
+    @Removed(Version.TEIID_9_2)
     String decrypt( String ciphertext ) throws CryptoException;
     
     Object unsealObject(Object object) throws CryptoException;

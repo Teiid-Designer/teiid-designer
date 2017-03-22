@@ -29,12 +29,19 @@ import java.io.Serializable;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
+
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
+import javax.crypto.spec.IvParameterSpec;
+
 import org.teiid.core.util.AccessibleByteArrayOutputStream;
 import org.teiid.core.util.Base64;
 import org.teiid.core.util.ObjectInputStreamWithClassloader;
+import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
 
 
@@ -55,14 +62,21 @@ public class BasicCryptor implements Cryptor {
     public static final String OLD_ENCRYPT_PREFIX = "{mm-encrypt}"; //$NON-NLS-1$
 	public static final String ENCRYPT_PREFIX = "{teiid-encrypt}"; //$NON-NLS-1$
 	
+	private static final SecureRandom random = new SecureRandom();
+	
 	private ClassLoader classLoader = BasicCryptor.class.getClassLoader();
 	private boolean useSealedObject = true;
+	private IvParameterSpec iv;
+	private byte[] randBuffer;
 	
-    public BasicCryptor( Key encryptKey, Key decryptKey, String algorithm) throws CryptoException {
+    public BasicCryptor( Key encryptKey, Key decryptKey, String algorithm, IvParameterSpec iv) throws CryptoException {
     	this.encryptKey = encryptKey;
         this.cipherAlgorithm = algorithm;
         this.decryptKey = decryptKey;
-
+        this.iv = iv;
+        if (iv != null) {
+        	randBuffer = new byte[iv.getIV().length];
+        }
         initEncryptCipher();
         initDecryptCipher();
     }
@@ -82,7 +96,12 @@ public class BasicCryptor implements Cryptor {
      */
     public synchronized byte[] decrypt( byte[] ciphertext ) throws CryptoException {
         try {
-            return decryptCipher.doFinal(ciphertext);
+        	byte[] result = decryptCipher.doFinal(ciphertext);
+        	if (iv != null) {
+        		//throw away the first block
+        		return Arrays.copyOfRange(result, iv.getIV().length, result.length);
+        	}
+        	return result;
         } catch ( Exception e ) {
             try {
                 initDecryptCipher();
@@ -93,6 +112,7 @@ public class BasicCryptor implements Cryptor {
         }
     }
 
+    @Removed(Version.TEIID_9_2)
     public String decrypt( String ciphertext ) throws CryptoException {
         if ( ciphertext == null ) {
               throw new CryptoException(Messages.gs(Messages.TEIID.TEIID10007));
@@ -203,6 +223,7 @@ public class BasicCryptor implements Cryptor {
         }
     }
 
+    @Removed(Version.TEIID_9_2)
     public String encrypt( String cleartext ) throws CryptoException {
         if ( cleartext == null ) {
               throw new CryptoException(Messages.gs(Messages.TEIID.TEIID10014));

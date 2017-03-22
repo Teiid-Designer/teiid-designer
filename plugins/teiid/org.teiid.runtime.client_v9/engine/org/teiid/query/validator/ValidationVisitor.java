@@ -282,7 +282,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         validateInsert(obj);
         
         try {
-			if (obj.isMerge()) {
+			if (obj.isUpsert()) {
 				Collection keys = getMetadata().getUniqueKeysInGroup(obj.getGroup().getMetadataID());
 				if (keys.isEmpty()) {
 					handleValidationError(Messages.gs(Messages.TEIID.TEIID31132, obj.getGroup()), obj);
@@ -344,13 +344,6 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         } else {
         	this.inQuery = true;
             validateAggregates(obj);
-
-            //if it is select with no from, should not have ScalarSubQuery
-            if(obj.getSelect() != null && obj.getFrom() == null){
-                if(!ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(obj.getSelect()).isEmpty()){
-                    handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0067),obj);
-                }
-            }
             
             if (obj.getInto() != null) {
                 validateSelectInto(obj);
@@ -373,14 +366,6 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 			handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0027, obj, getDataTypeManager().getDataTypeName(obj.getExpression().getType())), obj);
     	}
         this.validateRowLimitFunctionNotInInvalidCriteria(obj);
-        
-		Collection<Expression> projSymbols = obj.getCommand().getProjectedSymbols();
-
-		//Subcommand should have one projected symbol (query with one expression
-		//in SELECT or stored procedure execution that returns a single value).
-		if(projSymbols.size() != 1) {
-			handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0011),obj);
-		}
 	}
 	
 	@Override
@@ -875,7 +860,8 @@ public class ValidationVisitor extends AbstractValidationVisitor {
             boolean multiSource = getMetadata().isMultiSource(getMetadata().getModelID(insertGroup.getMetadataID()));
             // Validate that all elements in variable list are updatable
         	for (ElementSymbol insertElem : vars) {
-                if(! getMetadata().elementSupports(insertElem.getMetadataID(), SupportConstants.Element.UPDATE)) {
+                if(! getMetadata().elementSupports(insertElem.getMetadataID(), SupportConstants.Element.UPDATE)
+                		&& !isUpsertKeyColumn(obj, insertElem)) {
                     handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0052, insertElem), insertElem);
                 }
                 if (multiSource && getMetadata().isMultiSourceElement(insertElem.getMetadataID())) {
@@ -913,7 +899,17 @@ public class ValidationVisitor extends AbstractValidationVisitor {
                         // If nextValue is an expression, evaluate it before checking for null
                         Object evaluatedValue = Evaluator.assess(nextValue);
                         if(evaluatedValue == null && ! getMetadata().elementSupports(nextVar.getMetadataID(), SupportConstants.Element.NULL)) {
-                            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0055, nextVar), nextVar);
+                        	//as an upsert key it can mean an insert
+                        	if (!isUpsertKeyColumn(obj, nextVar) 
+                        	        || !(getMetadata().elementSupports(nextVar.getMetadataID(), SupportConstants.Element.AUTO_INCREMENT)
+                        	                || getMetadata().elementSupports(nextVar.getMetadataID(), SupportConstants.Element.DEFAULT_VALUE))) { 
+                        	    handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0055, nextVar)); //$NON-NLS-1$
+                        	}//as an upsert key it can mean an insert
+                        	if (!isUpsertKeyColumn(obj, nextVar) 
+                        	        || !(getMetadata().elementSupports(nextVar.getMetadataID(), SupportConstants.Element.AUTO_INCREMENT)
+                        	                || getMetadata().elementSupports(nextVar.getMetadataID(), SupportConstants.Element.DEFAULT_VALUE))) { 
+                        	    handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0055, nextVar)); //$NON-NLS-1$
+                        	}                        
                         }
                     } catch(Exception e) {
                         //ignore for now, we don't have the context which could be the problem
@@ -922,7 +918,17 @@ public class ValidationVisitor extends AbstractValidationVisitor {
             }// end of while
         } catch(Exception e) {
             handleException(e, obj);
-        } 
+        }
+    }
+        
+    private boolean isUpsertKeyColumn(Insert obj, ElementSymbol insertElem)
+            throws Exception {
+        if (!obj.isUpsert()) {
+            return false;
+        }
+        Collection keys = getMetadata().getUniqueKeysInGroup(obj.getGroup().getMetadataID());
+        //not an actual update, but a modification of existing row
+        return !keys.isEmpty() && getMetadata().getElementIDsInKey(keys.iterator().next()).contains(insertElem.getMetadataID());
     }
     
     protected void validateSetClauseList(SetClauseList list) {
@@ -1866,6 +1872,11 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     public void visit(AlterTrigger obj) {
     	validateAlterTarget(obj);
     	validateGroupSupportsUpdate(obj.getTarget());
+    	if (obj.isAfter()) {
+		    handleValidationError(Messages.getString(Messages.ValidationVisitor.after_not_alterable), obj); //$NON-NLS-1$
+		} else {
+		    validateGroupSupportsUpdate(obj.getTarget());
+		}
 		try {
 			if (obj.getDefinition() != null) {
 				Validator.validate(obj.getDefinition(), getMetadata(), this);

@@ -47,6 +47,7 @@ import org.teiid.client.security.LogonResult;
 import org.teiid.client.util.ExceptionUtil;
 import org.teiid.client.util.ResultsFuture;
 import org.teiid.core.util.PropertiesUtils;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.gss.MakeGSS;
 import org.teiid.net.CommunicationException;
@@ -80,6 +81,7 @@ public class SocketServerConnection implements ServerConnection {
 	private boolean failOver;
 	private long lastPing = System.currentTimeMillis();
 	private int pingFailOverInterval = FAILOVER_PING_INTERVAL;
+	private String serverVersion;
     
 	public SocketServerConnection(
 			SocketServerInstanceFactory connectionFactory, boolean secure,
@@ -91,7 +93,7 @@ public class SocketServerConnection implements ServerConnection {
 		//ILogon that is allowed to failover
 		this.logon = this.getService(ILogon.class);
 		this.failOver = Boolean.valueOf(connProps.getProperty(TeiidURL.CONNECTION.AUTO_FAILOVER)).booleanValue();
-		selectServerInstance(false);
+		this.serverVersion = selectServerInstance(false).getServerVersion();
 	}
 	
 	/**
@@ -119,7 +121,11 @@ public class SocketServerConnection implements ServerConnection {
 			Exception ex = null;
 			try {
 				if (!hostInfo.isResolved()) {
-					hostInfo = new HostInfo(hostInfo.getHostName(), new InetSocketAddress(hostInfo.getInetAddress(), hostInfo.getPortNumber()));
+					InetAddress inetAddress = hostInfo.getInetAddress();
+					if (!hostInfo.isResolved()) {
+						//create a resolved version
+						hostInfo = new HostInfo(hostInfo.getHostName(), new InetSocketAddress(inetAddress, hostInfo.getPortNumber()));
+					}
 				}
 				ILogon newLogon = connect(hostInfo);
 				if (this.logonResult == null) {
@@ -420,5 +426,11 @@ public class SocketServerConnection implements ServerConnection {
 	@Override
 	public boolean isLocal() {
 		return false;
+	}
+	
+	@Override
+	@Since(Version.TEIID_9_2)
+	public String getServerVersion() {
+		return this.serverVersion;
 	}
 }
