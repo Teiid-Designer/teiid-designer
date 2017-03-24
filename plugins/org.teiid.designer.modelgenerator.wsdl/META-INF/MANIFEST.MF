@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.modelgenerator.wsdl;singleton:=true
-Bundle-Version: 11.0.1.qualifier
+Bundle-Version: 11.0.2.qualifier
 Bundle-Activator: org.teiid.designer.modelgenerator.wsdl.ModelGeneratorWsdlPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
