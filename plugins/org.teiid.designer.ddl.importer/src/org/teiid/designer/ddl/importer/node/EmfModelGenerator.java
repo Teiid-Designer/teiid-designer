@@ -321,12 +321,14 @@ public class EmfModelGenerator {
         		// if the procedure does not contain a result set.. then need to delete it if EMF & transformation framework might have added it
         		if( ((RelationalViewProcedure)relationalRef).getResultSet() == null ) {
         			ProcedureResult result = ((Procedure)newEObject).getResult();
-        			try {
-						ModelerCore.getModelEditor().delete(result);
-					} catch (ModelerCoreException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+        			if( result != null ) {
+	        			try {
+							ModelerCore.getModelEditor().delete(result);
+						} catch (ModelerCoreException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+        			}
         		}
         	} else {
         		newEObject = createProcedure(relationalRef, modelResource);
