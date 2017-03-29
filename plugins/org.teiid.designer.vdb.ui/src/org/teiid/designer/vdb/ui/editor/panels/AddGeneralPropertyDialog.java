@@ -274,7 +274,7 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
     }
     
     private static boolean isValidChar(char c) {
-    	if((Character.isLetter(c) || Character.isDigit(c)) || c == '-') return true;
+    	if((Character.isLetter(c) || Character.isDigit(c)) || c == '-' || c == '.' || c == '_') return true;
     	
     	return false;
     }
