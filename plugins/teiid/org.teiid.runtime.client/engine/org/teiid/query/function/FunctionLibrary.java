@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -146,6 +147,11 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
     @Override
     public List<FunctionForm> getFunctionForms(String category) {
         Set<FunctionMethod> fMethods = systemFunctions.getFunctionsInCategory(category);
+        
+        if( fMethods.isEmpty() ) { 
+        	fMethods = new HashSet<FunctionMethod>();
+        } 
+        
         for (FunctionTree tree: this.userFunctions) {
             fMethods.addAll(tree.getFunctionsInCategory(category));
         }
