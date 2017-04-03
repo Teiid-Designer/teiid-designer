@@ -17,7 +17,7 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 public class RelationalStringNameValidator extends StringNameValidator {
 	
 	public static String DESIGNER_CORE_PACKAGE = ModelerCore.class.getPackage().getName();
-	public static char[] INVALID_CHARS = {' ', '.'};
+	public static char[] INVALID_CHARS = {' ', '.', '-'};
 	public static char[] INVALID_QUOTED_CHARS = {' '};
 	
 	boolean isTable = false;
