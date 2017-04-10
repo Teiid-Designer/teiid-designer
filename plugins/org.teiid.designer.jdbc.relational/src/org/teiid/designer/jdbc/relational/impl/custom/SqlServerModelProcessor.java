@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.jdbc.relational.impl.custom;
 
+import java.sql.Types;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -29,6 +30,7 @@ import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
 public class SqlServerModelProcessor extends RelationalModelProcessorImpl {
     private static final String TEXT_TYPE_NAME = "TEXT"; //$NON-NLS-1$
     private static final String IMAGE_TYPE_NAME = "IMAGE"; //$NON-NLS-1$
+    private static final String NUMERIC_TYPE_NAME = "NUMERIC"; //$NON-NLS-1$
     
     // NOTE from MS SQLServer 2000 Doc:
     //
@@ -170,6 +172,12 @@ public class SqlServerModelProcessor extends RelationalModelProcessorImpl {
         	String realType = trimmedTypeName.substring(0, identIndex).trim();
         	column.setAutoIncremented(true);
         	column.setNativeType(realType);
+        }
+        
+        if( NUMERIC_TYPE_NAME.equalsIgnoreCase(typeName) ) {
+        	if( columnSize > 0 ) {
+        		column.setPrecision(columnSize);
+        	}
         }
     }
     
