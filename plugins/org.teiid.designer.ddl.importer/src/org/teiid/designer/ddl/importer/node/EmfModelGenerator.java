@@ -754,7 +754,7 @@ public class EmfModelGenerator {
         
         Index index = FACTORY.createIndex();
         index.setName(indexRef.getName());
-        index.setNameInSource(index.getNameInSource());
+        index.setNameInSource(indexRef.getNameInSource());
         index.setFilterCondition(indexRef.getFilterCondition());
         index.setAutoUpdate(indexRef.isAutoUpdate());
         index.setNullable(indexRef.isNullable());
