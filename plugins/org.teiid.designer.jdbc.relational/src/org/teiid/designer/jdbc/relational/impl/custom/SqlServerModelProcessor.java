@@ -173,12 +173,6 @@ public class SqlServerModelProcessor extends RelationalModelProcessorImpl {
         	column.setAutoIncremented(true);
         	column.setNativeType(realType);
         }
-        
-        if( NUMERIC_TYPE_NAME.equalsIgnoreCase(typeName) ) {
-        	if( columnSize > 0 ) {
-        		column.setPrecision(columnSize);
-        	}
-        }
     }
     
 	@Override

@@ -80,5 +80,30 @@ public interface ModelerJdbcRelationalConstants {
 		String TEIID = "teiid"; //$NON-NLS-1$
 		String EXCEL = "excel"; //$NON-NLS-1$
 	}
+	
+	/**
+	 * SQL defines distinct data types named by the following <key word>s:
+		CHARACTER, CHARACTER VARYING, BIT, BIT VARYING, NUMERIC, DECIMAL,
+		INTEGER, SMALLINT, FLOAT, REAL, DOUBLE PRECISION, DATE, TIME,
+		TIMESTAMP, and INTERVAL.
+	 *
+	 */
+	interface SQL_92_DATATYPES {
+		String CHARACTER = "CHARACTER"; //$NON-NLS-1$
+		String CHARACTER_VARYING = "CHARACTER VARYING"; //$NON-NLS-1$
+		String BIT = "BIT"; //$NON-NLS-1$
+		String BIT_VARYING = "BIT VARYING"; //$NON-NLS-1$
+		String NUMERIC = "NUMERIC"; //$NON-NLS-1$
+		String DECIMAL = "DECIMAL"; //$NON-NLS-1$
+		String INTEGER = "INTEGER"; //$NON-NLS-1$
+		String SMALLINT = "SMALLINT"; //$NON-NLS-1$
+		String FLOAT = "FLOAT"; //$NON-NLS-1$
+		String REAL = "REAL"; //$NON-NLS-1$
+		String DOUBLE_PRECISION = "DOUBLE PRECISION"; //$NON-NLS-1$
+		String DATE = "DATE"; //$NON-NLS-1$
+		String TIME = "TIME"; //$NON-NLS-1$
+		String TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
+		String INTERVAL = "INTERVAL"; //$NON-NLS-1$
+	}
     
 }

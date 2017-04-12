@@ -112,6 +112,7 @@ import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.RelationalStringNameRule;
 import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
+import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
  * RelationalModelProcessorImpl
@@ -1331,8 +1332,10 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 	    }
 	    
         final EObject datatype = findType(type, delegateNativeTypeName, columnSize, columnSize, numDecDigits, problems);
+        String teiidTypeName = null;
         if (datatype != null) {
             column.setType(datatype);
+            teiidTypeName = ModelerCore.getModelEditor().getName(datatype);
         }
 
         // Set the searchability ...
@@ -1347,6 +1350,14 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         	column.setLength(columnSize);
         }
         column.setScale(numDecDigits);
+        
+        if( teiidTypeName != null && columnSize > 0 ) {
+        	if(IDataTypeManagerService.DataTypeName.BIGDECIMAL.toString().equalsIgnoreCase(typeName) ||
+        		IDataTypeManagerService.DataTypeName.FLOAT.toString().equalsIgnoreCase(typeName) ||
+        		IDataTypeManagerService.DataTypeName.DECIMAL.toString().equalsIgnoreCase(typeName)) {
+        		column.setPrecision(columnSize);
+        	}
+        }
 
         // Set the nullability
         switch (nullable) {
