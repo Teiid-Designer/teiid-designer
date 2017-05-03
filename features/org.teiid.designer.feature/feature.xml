@@ -33,13 +33,6 @@
          version="0.0.0"/>
 
    <includes
-         id="org.jboss.tools.foundation.security.linux.feature"
-         version="0.0.0"
-         optional="true"
-         os="linux"
-         ws="gtk"/>
-
-   <includes
          id="org.teiid.designer.library.feature"
          version="0.0.0"
          optional="true"/>
