@@ -44,6 +44,7 @@ import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.TempDirectory;
 import org.teiid.designer.DesignerSPIPlugin;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.runtime.ui.wizards.webservices.WarDeploymentInfoPanel;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
@@ -75,7 +76,6 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
     private static final String TASK_CREATING_WAR_ARCHIVE = getString("taskCreatingWarArchive"); //$NON-NLS-1$
     private static final String TASK_COPYING_WAR_FILE = getString("taskCopyingWarFile"); //$NON-NLS-1$
     private static final String TASK_CLEANUP = getString("taskCleanup"); //$NON-NLS-1$
-    private static final String JNDI_PREFIX = "java:"; //$NON-NLS-1$
 
     /**
      * This constructor is package protected, so that only the factory can call it.
@@ -445,8 +445,8 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
         File teiidRestProperties = new File(webInfClassesDirectory + File.separator +TEIID_REST_PROPS);
         String jndiValue = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME);
 
-        if (jndiValue != null && !jndiValue.startsWith(JNDI_PREFIX)) {
-            jndiValue = JNDI_PREFIX + FORWARD_SLASH + jndiValue;
+        if (jndiValue != null) {
+            jndiValue = JndiUtil.addJavaPrefix(jndiValue);
         }
         
         ITeiidServerVersion teiidVersion = ModelerCore.getTeiidServerVersion();

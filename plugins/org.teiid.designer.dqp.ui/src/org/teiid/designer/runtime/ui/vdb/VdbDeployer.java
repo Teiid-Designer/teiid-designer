@@ -20,6 +20,7 @@ import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
@@ -44,7 +45,7 @@ public class VdbDeployer {
     static final String PREFIX = I18nUtil.getPropertyPrefix(VdbDeployer.class);
 
     private static final String JNDI_PROPERTY_KEY = "jndi-name"; //$NON-NLS-1$
-    private static final String JNDI_CONTEXT = "java:/"; //$NON-NLS-1$
+
 
     /**
      * A VDB deployment status.
@@ -214,9 +215,7 @@ public class VdbDeployer {
                         // auto-create if jndiName not different than sourceName
                         String jndiNameWithoutContext = jndiName;
                     	// incoming jndiName may not have context, so try that also since server can match it
-                    	if(jndiName.startsWith(JNDI_CONTEXT)) {
-                    		jndiNameWithoutContext = jndiName.substring(JNDI_CONTEXT.length());
-                    	}
+                    	jndiNameWithoutContext = JndiUtil.removeJavaPrefix(jndiName);
                         
                         if (sourceName.equals(jndiNameWithoutContext) && this.autoCreateDsOnServer) {
                             autoCreate = true; // create without asking user
@@ -377,8 +376,8 @@ public class VdbDeployer {
                 		break;
                 	}
                 	// incoming jndiName may not have context, so try that also since server can match it
-                	if(!jndiName.startsWith(JNDI_CONTEXT)) {
-                		String jndiNameWithContext = JNDI_CONTEXT+jndiName;
+                	if(!JndiUtil.hasJavaPrefix(jndiName)) {
+                		String jndiNameWithContext = JndiUtil.addJavaPrefix(jndiName);
                 		if(serverJndiName.equalsIgnoreCase(jndiNameWithContext)) {
                 			hasSourceWithJndi = true;
                 			break;

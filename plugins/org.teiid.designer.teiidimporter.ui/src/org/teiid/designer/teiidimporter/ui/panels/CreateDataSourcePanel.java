@@ -266,8 +266,9 @@ public final class CreateDataSourcePanel extends Composite implements UiConstant
      * @return the name status
      */
     private IStatus validateName() {
+    	if( !isCreateNew ) return Status.OK_STATUS;
+    	
         String dsName = this.dataSourceNameText.getText();
-        
         // Check if null or empty
         if(dsName==null || dsName.isEmpty()) {
             return new Status(IStatus.ERROR, PLUGIN_ID, Messages.createDataSourcePanelErrorNameEmpty);

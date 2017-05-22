@@ -29,13 +29,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.dialogs.ScrolledConnectionProfileDetailsPage;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 public class JDGProfileDetailsWizardPage extends ScrolledConnectionProfileDetailsPage implements IJDGProfileConstants.PropertyKeys, Listener, DatatoolsUiConstants {
-    private static final String JNDI_PREFIX = "java:/";  //$NON-NLS-1$
     private Composite scrolled;
 
     private CLabel profileText;
@@ -436,7 +436,8 @@ public class JDGProfileDetailsWizardPage extends ScrolledConnectionProfileDetail
 
         if (event.widget == jndiText) {
             Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-            properties.setProperty(IJBossDsProfileConstants.JNDI_PROP_ID, JNDI_PREFIX + jndiText.getText());
+            String jndiName = JndiUtil.addJavaPrefix(jndiText.getText());
+            properties.setProperty(IJBossDsProfileConstants.JNDI_PROP_ID, jndiName);
         }
 
         updateState();

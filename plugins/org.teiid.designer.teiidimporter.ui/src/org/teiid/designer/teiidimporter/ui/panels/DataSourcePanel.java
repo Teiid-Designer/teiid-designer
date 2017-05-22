@@ -10,8 +10,8 @@ package org.teiid.designer.teiidimporter.ui.panels;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
@@ -467,30 +468,24 @@ public final class DataSourcePanel extends Composite implements UiConstants {
             dataSources = new ArrayList<ITeiidDataSource>();
             UTIL.log(ex);
         }
-        
-        // get className - driverMap for RA sources
-        Map<String,String> classNameDriverNameMap = dataSourceManager.getClassNameDriverNameMap(dataSources);
-        
+ 
         for(ITeiidDataSource dataSource: dataSources) {
-            DataSourceItem dsObj = new DataSourceItem();
+
             // ------------------------
             // Set PropertyItem fields
             // ------------------------
             // Name
-            String name = dataSource.getName();
-            dsObj.setName(name);
-
+            String dsName = dataSource.getName();
+                        
             String sourceJndiName = dataSource.getPropertyValue("jndi-name");  //$NON-NLS-1$
-            if(sourceJndiName!=null) {
-            	dsObj.setJndiName(sourceJndiName);
-            // The jndi property may not be present if the source was just created.  Use the default name.
-            } else {
-            	dsObj.setJndiName("java:/"+name); //$NON-NLS-1$
+            if( sourceJndiName == null ) {
+            	sourceJndiName = JndiUtil.addJavaPrefix(dsName); //$NON-NLS-1$
             }
 
             // Driver name
-            String dsDriver = dataSourceManager.getDataSourceDriver(name, classNameDriverNameMap);
-            dsObj.setDriver(dsDriver);
+            String dsDriver = dataSourceManager.getDriver(dataSource);
+            
+            DataSourceItem dsObj = new DataSourceItem(dsName, sourceJndiName, dsDriver);
             // ------------------------
             // Add PropertyItem to List
             // ------------------------
@@ -504,7 +499,7 @@ public final class DataSourcePanel extends Composite implements UiConstants {
      */
     public String getSelectedDataSourceName() {
         DataSourceItem selectedDS = getSelectedDataSource();
-        return (selectedDS==null) ? null : selectedDS.getName();
+        return (selectedDS==null) ? null : selectedDS.getJndiName();
     }
     
     /**

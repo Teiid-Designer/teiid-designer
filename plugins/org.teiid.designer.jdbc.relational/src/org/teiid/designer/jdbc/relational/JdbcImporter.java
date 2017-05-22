@@ -129,7 +129,7 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
         }
         if( this.jbossJndiName == null && this.updatedModel != null) {
         	String modelName = this.updatedModel.getItemName();
-        	this.jbossJndiName = modelName + "_DS";
+        	this.jbossJndiName = "java:/" + modelName + "_DS";
         }
     }
 

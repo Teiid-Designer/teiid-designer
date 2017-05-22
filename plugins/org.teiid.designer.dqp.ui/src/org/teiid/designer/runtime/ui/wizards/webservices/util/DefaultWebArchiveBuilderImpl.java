@@ -52,6 +52,7 @@ import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.TempDirectory;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeConstants;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.ui.wizards.webservices.WarDeploymentInfoPanel;
 import org.teiid.designer.ui.util.ErrorHandler;
@@ -72,7 +73,6 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServi
     private List<String> ports = new ArrayList<String>();
     private Map<String, String> operationToProcedureMap = new HashMap<String, String>();
     private String wsdlFilename = CoreStringUtil.Constants.EMPTY_STRING;
-    private static final String JNDI_PREFIX = "java:"; //$NON-NLS-1$
 
     // =============================================================
     // Constants
@@ -501,8 +501,8 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServi
         File teiisSoapProperties = new File(webInfClassesDirectory + File.separator + TEIID_SOAP_PROPS);
         String jndiValue = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME);
 
-        if (jndiValue != null && !jndiValue.startsWith(JNDI_PREFIX)) {
-            jndiValue = JNDI_PREFIX + FORWARD_SLASH + jndiValue;
+        if (jndiValue != null) {
+            jndiValue = JndiUtil.addJavaPrefix(jndiValue);
         }
 
         FileWriter fstream = null;

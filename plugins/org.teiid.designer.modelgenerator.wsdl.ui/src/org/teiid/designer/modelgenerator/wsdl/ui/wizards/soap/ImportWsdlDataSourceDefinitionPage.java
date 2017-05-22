@@ -92,7 +92,7 @@ public class ImportWsdlDataSourceDefinitionPage extends AbstractWizardPage imple
         			int nameLength = modelName.length();
         			modelName = modelName.substring(0, nameLength-4);
         		}
-        		this.theImportManager.setJBossJndiNameName(modelName);
+        		this.theImportManager.setJBossJndiNameName("java:/" + modelName + "_DS");
                 this.jndiName = theImportManager.getJBossJndiName();
                 this.jndiNameField.setText(this.jndiName);
         	}
