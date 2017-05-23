@@ -42,6 +42,8 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
      * Could not execute "read-children-names" for undefined. Failure was "JBAS013493: System boot is in process; execution of remote management operations is not currently available".
      */
     public static String JBAS013493_CODE = "JBAS013493";  //$NON-NLS-1$
+    
+    public static String MISSING_NLS_MESSAGE = "NLS missing message: OperationOnAddressFailed in"; //$NON-NLS-1$
 
     /**
      * Get the singleton instance of of this class
