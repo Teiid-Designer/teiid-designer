@@ -55,6 +55,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -96,6 +97,9 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ResourceChangeUtilities;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.actions.ModelResourceActionManager;
+import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.table.CheckBoxColumnProvider;
 import org.teiid.designer.ui.common.table.DefaultTableProvider;
@@ -204,6 +208,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     TableAndToolBar<VdbEntry> udfJarsGroup;
     private Button synchronizeAllButton;
     Button showImportVdbsButton;
+    Button executeButton;
+    Button exportDynamicVdbButton;
     private Label validationDateTimeLabel;
     private Label validationVersionLabel;
     private PropertyChangeListener vdbListener;
@@ -1746,6 +1752,43 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 }
             });
             showImportVdbsButton.setEnabled(!getVdb().getImports().isEmpty());
+        }
+        
+        { // execute VDB button
+        	executeButton = WidgetFactory.createButton(extraButtonPanel, "Execute",//i18n("showImportVdbsButton"), //$NON-NLS-1$
+                    GridData.HORIZONTAL_ALIGN_BEGINNING);
+        	executeButton.addSelectionListener(new SelectionAdapter() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( final SelectionEvent event ) {
+                	SortableSelectionAction action = ModelResourceActionManager.getAction(ModelActionConstants.Resource.EXECUTE_VDB);
+                	IResource vdbResource = ((IFileEditorInput)getEditorInput()).getFile();
+                	action.selectionChanged(VdbEditor.this, new StructuredSelection(vdbResource));
+                	action.run();
+                }
+            });
+        }
+        { // execute VDB button
+        	exportDynamicVdbButton = WidgetFactory.createButton(extraButtonPanel, "Export as XML",//i18n("showImportVdbsButton"), //$NON-NLS-1$
+                    GridData.HORIZONTAL_ALIGN_BEGINNING);
+        	exportDynamicVdbButton.addSelectionListener(new SelectionAdapter() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( final SelectionEvent event ) {
+                	SortableSelectionAction action = ModelResourceActionManager.getAction(ModelActionConstants.Resource.GENERATE_VDB_XML);
+                	IResource vdbResource = ((IFileEditorInput)getEditorInput()).getFile();
+                	action.selectionChanged(VdbEditor.this, new StructuredSelection(vdbResource));
+                	action.run();
+                }
+            });
         }
     }
 

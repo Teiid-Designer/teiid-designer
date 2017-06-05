@@ -1042,7 +1042,8 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
 
         			}
         		} catch (Exception e) {
-        			if(! e.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+        			if(! e.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE) &&
+        			   ! e.getMessage().contains(TeiidParentServerListener.JBAS012174_CODE) ) {
         				e.printStackTrace();
         			}
         		}

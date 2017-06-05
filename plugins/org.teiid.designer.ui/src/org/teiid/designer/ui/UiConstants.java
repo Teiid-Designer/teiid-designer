@@ -13,6 +13,7 @@ import org.eclipse.ui.IPageLayout;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.ui.actions.IModelerActionConstants;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 
 
 /**
@@ -90,6 +91,8 @@ public interface UiConstants {
         String SYSTEM_CATALOG_VIEW = "views.systemModelView"; //$NON-NLS-1$
         String SQL_RESERVED_WORDS_VIEW = "views.sqlReservedWordsView"; //$NON-NLS-1$
         String ECLIPSE_CHEAT_SHEET_VIEW = "org.eclipse.ui.cheatsheets.views.CheatSheetView";//$NON-NLS-1$
+        String DATA_SOURCES_VIEW = "org.teiid.designer.datasources.ui.sources.DataSourcesViewID"; //$NON-NLS-1$
+        String SERVERS_VIEW = "org.eclipse.wst.server.ui.ServersView"; //$NON-NLS-1$
 
         String MODEL_EDITOR = "modelEditor"; //$NON-NLS-1$
         
@@ -116,7 +119,7 @@ public interface UiConstants {
         }
 
         // DQP UI
-        String PREVIEW_DATA_ACTION_ID = "org.teiid.designer.runtime.ui.preview.PreviewTableDataContextAction"; //$NON-NLS-1$
+        String PREVIEW_DATA_ACTION_ID = ModelActionConstants.Special.PREVIEW_DATA; //$NON-NLS-1$
     }
 
     // ============================================================================================================================

@@ -83,7 +83,7 @@ public class NewOperationPanel extends Composite implements StringConstants {
 		super(parent, style);
 		
 		GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(false).applyTo(this);
-		GridDataFactory.fillDefaults().grab(true, true).hint(500, -1).applyTo(this);
+		GridDataFactory.fillDefaults().grab(true, true).hint(500, 400).applyTo(this);
 		
 		this.intFace = intFace;
 		this.operation = operation;

@@ -48,6 +48,7 @@ import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.VdbModelBuilder;
+import org.teiid.designer.core.container.DuplicateResourceException;
 import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -959,6 +960,9 @@ public final class XmiVdb extends BasicVdb {
                                               VdbPlugin.UTIL.getString("XmiVdb.udfPropertyAdded",  entry.getName())) ); //$NON-NLS-1$
             }
 
+            Collection<ModelResource> modelResources = new ArrayList<ModelResource>();
+            ModelUtil.collectModelResources(getSourceFile().getProject(),  modelResources);
+            
             //
             // Convert model entries to DynamicModels
             //
@@ -1001,6 +1005,7 @@ public final class XmiVdb extends BasicVdb {
                 }
 
                 boolean isNonRelationalModel = false;
+                boolean notInWorkspace = false;
                 
 				if( entry.getType().equals(ModelType.Type.VIRTUAL.getName()) || !excludeSourceMetadata ) {
 	
@@ -1011,10 +1016,27 @@ public final class XmiVdb extends BasicVdb {
 	                    entryFile = entry.findFileInWorkspace();
 	                } else {
 	                    entryFile = createEntryFile(entry);
+	                    notInWorkspace = true;
 	                }
 	                
 	                ModelWorkspaceManager workspaceManager = ModelWorkspaceManager.getModelWorkspaceManager();
-	                ModelResource modelResource = (ModelResource) workspaceManager.findModelWorkspaceItem(entryFile, true);
+   
+	                ModelResource modelResource = null;
+	                if( ! notInWorkspace ) {
+		                for( ModelResource mr : modelResources ) {
+		                	// Compare paths
+		                	if( entryFile.getProject().getName().equals(mr.getCorrespondingResource().getProject().getName() ) ) {
+			                	IPath entryFilePath = entryFile.getProjectRelativePath();
+			                	IPath mrPath = mr.getCorrespondingResource().getProjectRelativePath();
+			                	if(entryFilePath.toString().equals(mrPath.toString()) ) {
+			                		modelResource = mr;
+			                		break;
+			                	}
+		                	}
+		                }
+	                } else {
+						modelResource = (ModelResource) workspaceManager.findModelWorkspaceItem(entryFile, true);
+	                }
 	                
 	                if (modelResource == null)
 	                    throw new Exception("Failed to get model resource for " + entryFile.getLocation().toOSString()); //$NON-NLS-1$

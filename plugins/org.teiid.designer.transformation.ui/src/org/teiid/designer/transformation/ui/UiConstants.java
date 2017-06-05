@@ -113,6 +113,17 @@ public interface UiConstants {
 		String TOP_ICON = PC.CVIEW16 + "top.gif"; //$NON-NLS-1$
 		String BOTTOM_ICON = PC.CVIEW16 + "bottom.gif"; //$NON-NLS-1$
 		String SWAP_ICON = PC.CVIEW16 + "swap.png"; //$NON-NLS-1$
+		
+		String NEW_TABLE_ICON = PC.CVIEW16 + "new-relational-table.png"; //$NON-NLS-1$
+		String NEW_VIRTUAL_TABLE_ICON = PC.CVIEW16 + "new-view-table.png"; //$NON-NLS-1$
+		String NEW_PROCECDURE_ICON = PC.CVIEW16 + "new-relational-procedure.png"; //$NON-NLS-1$
+		String NEW_VIRTUAL_PROCEDURE_ICON = PC.CVIEW16 + "new-view-procedure.png"; //$NON-NLS-1$
+		String NEW_INDEX_ICON = PC.CVIEW16 + "new-relational-index.png"; //$NON-NLS-1$
+		
+		String CLONE_ICON = PC.CVIEW16 + "clone.png"; //$NON-NLS-1$
+		String CLONE_DISABLED_ICON = PC.CVIEW16 + "clone-disabled.png"; //$NON-NLS-1$
+		
+		String PREVIEW_DATA_ICON = PC.CVIEW16 + "previewData.gif"; //$NON-NLS-1$
 	}
     
     interface SQLPanels {

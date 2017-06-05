@@ -66,6 +66,7 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
                          IPageLayout thePage) {
         theFolder.addView(theViewId);
         thePage.addShowViewShortcut(theViewId);
+        System.out.println("    >>>  ModelerPerspectiveFactory.addView()  ID = " + theViewId);
     }
 
     /* (non-Javadoc)
@@ -85,9 +86,8 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
                                                          (float)0.25,
                                                          editorArea);
         addView(Explorer.VIEW, topLeftFolder, theLayout);
-        addView(OUTLINE_VIEW, topLeftFolder, theLayout);
-        addView(ProjectExplorer.VIEW_ID, topLeftFolder, theLayout);
-        
+      
+        topLeftFolder.addPlaceholder(OUTLINE_VIEW);
         topLeftFolder.addPlaceholder(DATATYPE_HIERARCHY_VIEW);
         topLeftFolder.addPlaceholder(METAMODELS_VIEW);
 
@@ -102,6 +102,7 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
                     addView(po.getViewId(), topLeftFolder, theLayout);
             }
         }
+        otherViews = null;
 
         // --------------------------------------
         // Create output folder (bottom right) - Tasks
@@ -125,6 +126,7 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
                     addView(po.getViewId(), bottomRightFolder, theLayout);
             }
         }
+        otherViews = null;
 
         theLayout.addShowViewShortcut(SEARCH_RESULT_VIEW);
 
@@ -153,25 +155,7 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
                     addView(po.getViewId(), bottomLeftFolder, theLayout);
             }
         }
-        
-        // --------------------------------------
-        // Create Center Left Folder (additional views)
-        //
-        IFolderLayout centerLeftFolder;
-        otherViews = getViews(PerspectiveObject.LEFT_CENTER, false);
-        if( otherViews != null && !otherViews.isEmpty() ) {
-            centerLeftFolder = theLayout.createFolder(CENTER_LEFT_FOLDER,
-                                                       IPageLayout.TOP,
-                                                       (float)0.4,
-                                                       PROPERTY_FOLDER);
-            for( Iterator<PerspectiveObject> iter = otherViews.iterator(); iter.hasNext(); ) {
-                po = iter.next();
-                if( po.isPlaceholder())
-                    centerLeftFolder.addPlaceholder(po.getViewId());
-                else
-                    addView(po.getViewId(), centerLeftFolder, theLayout);
-            }
-        }
+        otherViews = null;
         
         IFolderLayout topRightFolder;
         otherViews = getViews(PerspectiveObject.TOP_RIGHT, false);

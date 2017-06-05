@@ -77,7 +77,9 @@ Require-Bundle: org.apache.commons.io;bundle-version="[2.2.0,3.0.0)",
  org.teiid.designer.extension;bundle-version="[11.0.0,12.0.0)",
  org.teiid.datatools.connectivity;bundle-version="[11.0.0,12.0.0)",
  org.apache.commons.httpclient,
- org.apache.httpcomponents.httpclient
+ org.apache.httpcomponents.httpclient,
+ org.eclipse.ui.forms;bundle-version="3.7.0",
+ org.eclipse.emf.edit.ui;bundle-version="2.12.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.apache.commons.httpclient.auth;version="3.1.0",

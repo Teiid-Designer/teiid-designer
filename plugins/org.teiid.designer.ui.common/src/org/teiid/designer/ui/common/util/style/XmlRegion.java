@@ -30,7 +30,7 @@
  *
  *****************************************************************************/
 
-package org.teiid.designer.runtime.ui.wizards.vdbs.style;
+package org.teiid.designer.ui.common.util.style;
 
 /**
  * A XML region, with a type, a start position (included) and an end position (excluded).

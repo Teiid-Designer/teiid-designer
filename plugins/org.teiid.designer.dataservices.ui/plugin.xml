@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+  JBoss, Home of Professional Open Source.
+
+  See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+
+  See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+-->
+<plugin>
+
+    
+<!-- Eclipse Import Wizards -->
+  <extension
+        point="org.eclipse.ui.editors">
+     <editor
+           class="org.teiid.designer.dataservices.ui.editor.DataServiceProjectEditor"
+           extensions=".xml"
+           icon="icons/profiles.gif"
+           id="org.teiid.designer.dataservices.ui.editor.DataServiceProjectEditorID"
+           name="Data Service Project Editor">
+     </editor>
+  </extension>
+   <extension
+        id="OpenDSProjectAction"
+        name="%OpenDSProjectAction.name"
+        point="org.teiid.designer.ui.modelProjectAction">
+      <projectAction
+         name="org.teiid.designer.dataservices.ui.editor.OpenDSProjectAction"
+         label="%OpenDSProjectAction.label">
+      </projectAction>
+   </extension>
+   <extension
+      point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.dataservices.ui.wizard.NewDataServiceProjectWizard"
+            finalPerspective="modelerPerspective"
+            icon="icons/teiid-server.png"
+            id="NewDataServiceProjectWizardID"
+            name="%NewDataServiceProjectWizard"
+            preferredPerspectives="modelerPerspective"
+            project="true">
+         <description>
+            %NewDataServiceProjectWizardDescription
+         </description>
+      </wizard>
+   </extension>
+</plugin>

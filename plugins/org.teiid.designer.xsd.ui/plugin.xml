@@ -15,7 +15,7 @@
          point="org.teiid.designer.ui.modelEditorPage">
       <class
             tabName="%semanticEditor.tabname"
-            order="3"
+            order="6"
             name="org.teiid.designer.xsd.ui.editor.XsdSemanticsEditorPage">
       </class>
    </extension>
@@ -26,7 +26,7 @@
          point="org.teiid.designer.ui.modelEditorPage">
       <class
             tabName="%simpleDatatypesEditor.tabname"
-            order="1"
+            order="4"
             name="org.teiid.designer.xsd.ui.editor.XsdSimpleDatatypesEditorPage">
       </class>
    </extension>
@@ -37,7 +37,7 @@
          point="org.teiid.designer.ui.modelEditorPage">
       <class
             tabName="%sourceEditor.tabname"
-            order="4"
+            order="7"
             name="org.teiid.designer.xsd.ui.editor.XsdTextEditorPage">
       </class>
    </extension>

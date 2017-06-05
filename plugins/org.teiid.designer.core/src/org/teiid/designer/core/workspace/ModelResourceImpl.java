@@ -106,7 +106,14 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
                     resourceSet.createResource(uri);
                 }
             } catch (DuplicateResourceException dre) {
-                ModelerCore.Util.log(dre);
+            	String message = dre.getMessage();
+            	// Perform a check to see if this is a duplicate resource under the .metadata vdb plugin
+            	// this can be ignored as part of the VDB XML export which can happen if models
+            	// are not synchronized
+            	if( !message.contains(".metadata/.plugins/org.teiid.designer.vdb/") && 
+            		!message.contains("Unable to load the model at file:") ) {
+            		ModelerCore.Util.log(dre);
+            	}
             } catch (ModelWorkspaceException mwe) {
                 ModelerCore.Util.log(mwe);
             }

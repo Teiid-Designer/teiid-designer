@@ -29,6 +29,7 @@ import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.panels.DataSourcePanel;
 import org.teiid.designer.teiidimporter.ui.panels.DataSourcePanelListener;
 import org.teiid.designer.teiidimporter.ui.panels.DataSourcePropertiesPanel;
+import org.teiid.designer.ui.common.util.UiUtil;
 //import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
@@ -197,6 +198,21 @@ public class SelectDataSourcePage extends AbstractWizardPage
     public void setVisible( boolean visible ) {
         if (visible) {
             getControl().setVisible(visible);
+            
+            UiUtil.runInSwtThread(new Runnable() {
+                @Override
+                public void run() {
+            		String existingName = importManager.getDataSourceJndiName();
+            		if( existingName != null ) {
+            			if( existingName.toLowerCase().startsWith("java:/")) {
+            				existingName = existingName.substring(6);
+            			}
+            			dataSourcePanel.setTableSelection(existingName);
+            			dataSourcePanel.fireSelectionChanged(existingName);
+            		}
+                }
+            }, true);
+
         } else {
             super.setVisible(visible);
         }

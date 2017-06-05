@@ -78,6 +78,15 @@
       </specialAction>
    </extension>
    <extension
+        id="GenerateDataServiceAction"
+        name="%generateDataServiceAction"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="org.teiid.designer.runtime.ui.actions.GenerateDataServiceAction"
+         label="%generateDataServiceAction.label">
+      </specialAction>
+   </extension>
+   <extension
         id="DeployVdbAction"
         name="%deployVdbAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
@@ -132,7 +141,7 @@
       </resourceAction>
    </extension>
    <extension
-        id="CreateDataSourceAction"
+        id="CreateVdbDataSourceAction"
         name="%createVdbDataSourceAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
@@ -180,6 +189,15 @@
       <resourceAction
          name="org.teiid.designer.runtime.ui.actions.GenerateDynamicVdbAction"
          label="%generateDynamicVdbAction.label">
+      </resourceAction>
+   </extension>
+   <extension
+        id="GenerateDynamicVdbAction2"
+        name="%generateDynamicVdbAction2.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.actions.GenerateDynamicVdbAction2"
+         label="%generateDynamicVdbAction2.label">
       </resourceAction>
    </extension>
    <extension
@@ -500,4 +518,5 @@
             typeIds="%AllJBTTeiidServerTypes">
       </page>
    </extension>
+   
 </plugin>

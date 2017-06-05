@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -69,6 +70,12 @@ public class ShowDependencyDiagramAction extends TransformationAction implements
         super.selectionChanged(part, selection);
         determineEnablement();
     }
+    
+    @Override
+	public void selectionChanged(SelectionChangedEvent theEvent) {
+		super.selectionChanged(theEvent);
+		determineEnablement();
+	}
 
     //============================================================================================================================
     // Action Methods

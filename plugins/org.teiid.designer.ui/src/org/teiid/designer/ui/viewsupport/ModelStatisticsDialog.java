@@ -59,7 +59,7 @@ public class ModelStatisticsDialog extends Dialog {
         Composite composite = (Composite)super.createDialogArea(parent);
         //add controls to composite as necessary
         
-        text = new StyledText(composite, SWT.NONE);
+        text = new StyledText(composite, SWT.NONE | SWT.BORDER);
         GridData gd = new GridData(GridData.FILL_BOTH);
         gd.widthHint = 400;
         gd.heightHint = 400;

@@ -14,6 +14,7 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -21,12 +22,13 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * @since 8.0
  */
-public class ShowModelStatisticsAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
+public class ShowModelStatisticsAction extends SortableSelectionAction implements ISelectionListener, Comparable, ISelectionAction {
 	 private IFile selectedModel;
 	 
 	public ShowModelStatisticsAction() {
 		super();
 		setImageDescriptor(UiPlugin.getDefault().getImageDescriptor( PluginConstants.Images.MODEL_STATISTICS_ICON));
+		setId(ModelActionConstants.Resource.SHOW_MODEL_STATISTICS_ACTION);
 	}
 
 	@Override

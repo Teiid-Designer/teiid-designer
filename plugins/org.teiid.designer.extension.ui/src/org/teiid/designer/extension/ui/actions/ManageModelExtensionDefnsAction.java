@@ -29,6 +29,7 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.wizards.ManageModelExtensionDefnsWizard;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
@@ -46,6 +47,7 @@ public class ManageModelExtensionDefnsAction extends SortableSelectionAction {
         // setImageDescriptor(DatatoolsUiPlugin.getDefault().getImageDescriptor(DatatoolsUiConstants.Images.VIEW_CONNECTION_ICON));
         // providerFactory = new ConnectionInfoProviderFactory();
         this.registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);
+        setId(ModelActionConstants.Resource.MANAGE_MODEL_EXTENSIONS);
     }
 
     /**

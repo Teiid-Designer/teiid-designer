@@ -75,6 +75,7 @@ public abstract class ModelResourceActionManager {
 				for ( int j=0 ; j<elements.length ; ++j ) {
 					if ( elements[j].getName().equals(actionTag)) {
 						Object helper = elements[j].createExecutableExtension(className);
+						
 						// Set the text label
 						String label = elements[j].getAttribute(labelTag);
 						if( label != null ) {
@@ -177,5 +178,28 @@ public abstract class ModelResourceActionManager {
         	return null;
         
         return menu;
+    }
+    
+    /**
+     * Returns SortableSelectionAction who's ID matches actionId
+     * @param actionId - the stringified action's ID
+     * @return
+     * @since 5.0
+     */
+    public static SortableSelectionAction getAction(String actionId) {
+        Collection specialActions = getActions(null);
+        Iterator iter = specialActions.iterator();
+        Action nextAction = null;
+
+        while (iter.hasNext()) {
+            nextAction = (Action)iter.next();
+            if( nextAction instanceof SortableSelectionAction &&
+                            nextAction.getId() != null &&
+                            nextAction.getId().equals(actionId)) {
+                return (SortableSelectionAction)nextAction;
+            }
+        }
+        
+        return null;
     }
 }
