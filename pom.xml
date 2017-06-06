@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.jboss.tools</groupId>
 		<artifactId>parent</artifactId>
-		<version>4.3.0.Final-SNAPSHOT</version>
+		<version>4.4.3.Final</version>
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>teiid</artifactId>
@@ -24,7 +24,7 @@
 		<td.tpc.artifactId>target-platform</td.tpc.artifactId>
 		<td.tpc.version>4.4.3.Final</td.tpc.version>
 		<td.tpc.type>target</td.tpc.type>
-		<td.tpc.classifier>base-ea</td.tpc.classifier>
+		<td.tpc.classifier>base</td.tpc.classifier>
 
 	</properties>
 
