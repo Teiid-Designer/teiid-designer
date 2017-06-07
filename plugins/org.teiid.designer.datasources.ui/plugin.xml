@@ -18,7 +18,7 @@
             class="org.teiid.designer.datasources.ui.sources.DataSourcesView"
             icon="icons/full/cview16/connection_source.gif"
             id="org.teiid.designer.datasources.ui.sources.DataSourcesViewID"
-            name="Data Sources">
+            name="%datasourcesView.name">
       </view>
    </extension>
     <!-- Extension to allow plugins to contribute to the Modeler Perspective. -->

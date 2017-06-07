@@ -77,7 +77,7 @@ public class DataSourcesSection {
 	        		ExpandableComposite.TITLE_BAR | ExpandableComposite.COMPACT ); //| Section.TWISTIE | Section.EXPANDED  );
 	        
 	        section.setExpanded(false);
-	        section.setText("Connections");
+	        section.setText("Local and Deployed Connections");
 	        section.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 	
 	        GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true); //GridData.FILL_HORIZONTAL); // | GridData.HORIZONTAL_ALIGN_BEGINNING);

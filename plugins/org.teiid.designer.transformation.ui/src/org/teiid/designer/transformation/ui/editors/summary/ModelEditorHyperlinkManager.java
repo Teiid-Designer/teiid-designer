@@ -26,6 +26,7 @@ import org.teiid.designer.transformation.ui.actions.GenerateDependencyReportActi
 import org.teiid.designer.transformation.ui.actions.ShowDependencyDiagramAction;
 import org.teiid.designer.ui.actions.ModelResourceActionManager;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.Messages;
 import org.teiid.designer.ui.common.actions.ModelActionConstants;
 
 public class ModelEditorHyperlinkManager implements ModelActionConstants, ISelectionChangedListener {
@@ -53,42 +54,48 @@ public class ModelEditorHyperlinkManager implements ModelActionConstants, ISelec
 		
 		if( isRelational && ! isVirtual ) {
 			// Add Create Data Source and View PRofile actions
-			createModelHyperLink(parent, "Create Data Source", Resource.CREATE_DATA_SOURCE);
-			createModelHyperLink(parent, "View Connection Info", Resource.VIEW_CONNECTION_PROFILE);
-			createModelHyperLink(parent, "Set Connection Profile", Resource.SET_CONNECTION_PROFILE);
-			createModelHyperLink(parent, "Remove Connection Info", Resource.REMOVE_CONNECTION_INFO);
-			createModelHyperLink(parent, "Set JBoss Data Source Name", Resource.SET_JBOSS_DATA_SOURCE_NAME);
-			createModelHyperLink(parent, "Set Translator Name", Resource.SET_TRANSLATOR_NAME);
-			createModelHyperLink(parent, "Edit Translator Overrides", Resource.EDIT_TRANSLATOR_OVERRIDES);
+			createModelHyperLink(parent, "Create Data Source", Messages.CREATE_DATA_SOURCE_TOOLTIP, Resource.CREATE_DATA_SOURCE);
+			createModelHyperLink(parent, "View Connection Info", Messages.VIEW_CONNECTION_PROFILE_TOOLTIP, Resource.VIEW_CONNECTION_PROFILE);
+			createModelHyperLink(parent, "Set Connection Profile", Messages.SET_CONNECTION_PROFILE_TOOLTIP, Resource.SET_CONNECTION_PROFILE);
+			createModelHyperLink(parent, "Remove Connection Info", Messages.REMOVE_CONNECTION_INFO_TOOLTIP, Resource.REMOVE_CONNECTION_INFO);
+			createModelHyperLink(parent, "Set JBoss Data Source Name", Messages.SET_JBOSS_DATA_SOURCE_NAME_TOOLTIP, Resource.SET_JBOSS_DATA_SOURCE_NAME);
+			createModelHyperLink(parent, "Set Translator Name", Messages.SET_TRANSLATOR_NAME_TOOLTIP, Resource.SET_TRANSLATOR_NAME);
+			createModelHyperLink(parent, "Edit Translator Overrides", Messages.EDIT_TRANSLATOR_OVERRIDES_TOOLTIP, Resource.EDIT_TRANSLATOR_OVERRIDES);
 		}
 
 	}
 	
 	public void addPrimaryHyperLinkActions(Composite parent) {
-		createWizardHyperlink(parent,  "Export Teiid DDL", WizardsIDs.EXPORT_TEIID_DDL);
-		createWizardHyperlink(parent,  "Create VDB", WizardsIDs.NEW_VDB);
+		createWizardHyperlink(parent,  "Export Teiid DDL", Messages.EXPORT_TEIID_DDL_TOOLTIP, WizardsIDs.EXPORT_TEIID_DDL);
+		createWizardHyperlink(parent,  "Create VDB", Messages.NEW_VDB_TOOLTIP, WizardsIDs.NEW_VDB);
 		if( isRelational && isVirtual ) {
-			createModelHyperLink(parent, "Edit Transformation", Resource.EDIT_TRANSFORMATION);
+			createModelHyperLink(parent, "Edit Transformation", Messages.EDIT_TRANSFORMATION_TOOLTIP, Resource.EDIT_TRANSFORMATION);
 		}
 	}
 	
 	public void addGeneralHyperLinkActions(Composite parent) {
-		createModelHyperLink(parent, "Manage Extensions", Resource.MANAGE_MODEL_EXTENSIONS);
-		createModelHyperLink(parent, "Show Model Statistics", Resource.SHOW_MODEL_STATISTICS_ACTION);
+		createModelHyperLink(parent, "Manage Extensions", Messages.MANAGE_MODEL_EXTENSIONS_TOOLTIP, Resource.MANAGE_MODEL_EXTENSIONS);
+		createModelHyperLink(parent, "Show Model Statistics", Messages.SHOW_MODEL_STATISTICS_ACTION_TOOLTIP, Resource.SHOW_MODEL_STATISTICS_ACTION);
 	}
 	
-	private void createWizardHyperlink(Composite parent, String label, String wizardId) {
+	private void createWizardHyperlink(Composite parent, String label, String toolTip, String wizardId) {
 		Hyperlink newHL = toolkit.createHyperlink(parent, label, SWT.NONE); //$NON-NLS-1$
+		if( toolTip != null ) {
+			newHL.setToolTipText(toolTip);
+		}
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(newHL);
 
 		newHL.addHyperlinkListener(new LaunchWizardHyperlinkHandler(iResource, wizardId));
 	}
 	
-	private void createModelHyperLink(Composite parent, String label, String actionId) {
+	private void createModelHyperLink(Composite parent, String label, String toolTip, String actionId) {
 		SortableSelectionAction action = ModelResourceActionManager.getAction(actionId);
 		
 		if( action != null ) {
 			Hyperlink newHL = toolkit.createHyperlink(parent, label, SWT.NONE); //$NON-NLS-1$
+			if( toolTip != null ) {
+				newHL.setToolTipText(toolTip);
+			}
 			GridDataFactory.fillDefaults().grab(true, false).applyTo(newHL);
 	
 			newHL.addHyperlinkListener(new IHyperlinkListener() {

@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.datatools.connectivity.ICategory;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.db.generic.ui.wizard.NewJDBCFilteredCPWizard;
-import org.eclipse.datatools.connectivity.internal.Category;
 import org.eclipse.datatools.connectivity.internal.ui.wizards.NewCPWizard;
 import org.eclipse.datatools.connectivity.internal.ui.wizards.NewCPWizardCategoryFilter;
 import org.eclipse.datatools.connectivity.ui.actions.DeleteAction;
@@ -27,7 +27,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -39,7 +38,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -49,9 +47,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.PluginDropAdapter;
-import org.eclipse.ui.part.PluginTransfer;
-import org.eclipse.ui.part.ResourceTransfer;
-import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.datasources.ui.Messages;
 import org.teiid.designer.datasources.ui.UiConstants;
@@ -60,7 +55,6 @@ import org.teiid.designer.datasources.ui.panels.DataSourceItem;
 import org.teiid.designer.datasources.ui.wizard.CreateDataSourceDialog;
 import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.ui.util.EObjectTransfer;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 public class ConnectionProfilesPanel extends Composite implements UiConstants {
@@ -588,7 +582,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     private boolean profileTreeSelected() {
     	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
     	if( !obj.isEmpty() && (obj.getFirstElement() instanceof RootConnectionNode || 
-    			obj.getFirstElement() instanceof Category) ) {
+    			obj.getFirstElement() instanceof ICategory) ) {
     		return true;
     	}
     	
@@ -597,8 +591,8 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     
     private boolean isJdbcProfileSelected() {
     	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
-    	if( !obj.isEmpty() && obj.getFirstElement() instanceof Category  &&
-    		((Category)obj.getFirstElement()).getName().equals(UiConstants.DATABASE_CONNECTIONS)) {
+    	if( !obj.isEmpty() && obj.getFirstElement() instanceof ICategory  &&
+    		((ICategory)obj.getFirstElement()).getName().equals(UiConstants.DATABASE_CONNECTIONS)) {
     		return true;
     	} else if( isProfileSelected() ) {
     		IConnectionProfile prof = (IConnectionProfile)obj.getFirstElement();
@@ -611,8 +605,8 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     
     private boolean isODAProfileSelected() {
     	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
-    	if( !obj.isEmpty() && obj.getFirstElement() instanceof Category) {
-    		Category cat = ((Category)obj.getFirstElement());
+    	if( !obj.isEmpty() && obj.getFirstElement() instanceof ICategory) {
+    		ICategory cat = ((ICategory)obj.getFirstElement());
     		if( cat.getName().startsWith(UiConstants.ODA_PROFILE_CATEGORY_ID_PREFIX)) {
     			return true;
     		} else if( cat.getParent() != null && cat.getParent().getId().startsWith(UiConstants.ODA_PROFILE_CATEGORY_ID_PREFIX)) {
@@ -629,8 +623,16 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     
     private boolean isTeiidProfileSelected() {
     	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
-    	if( !obj.isEmpty() && obj.getFirstElement() instanceof Category) {
-    		Category cat = ((Category)obj.getFirstElement());
+    	if( !obj.isEmpty() && obj.getFirstElement() instanceof ICategory) {
+    		ICategory cat = ((ICategory)obj.getFirstElement());
+    		if( cat.getId().startsWith(UiConstants.TEIID_PROFILE_CATEGORY_ID_PREFIX)) {
+    			return true;
+    		} else if( cat.getParent() != null && cat.getParent().getId().startsWith(UiConstants.TEIID_PROFILE_CATEGORY_ID_PREFIX)) {
+    			return true;
+    		}
+    	} else if( !obj.isEmpty() && obj.getFirstElement() instanceof TeiidConnectionFolder) {
+    		TeiidConnectionFolder folder = (TeiidConnectionFolder)obj.getFirstElement();
+    		ICategory cat = folder.getCategory();
     		if( cat.getId().startsWith(UiConstants.TEIID_PROFILE_CATEGORY_ID_PREFIX)) {
     			return true;
     		} else if( cat.getParent() != null && cat.getParent().getId().startsWith(UiConstants.TEIID_PROFILE_CATEGORY_ID_PREFIX)) {

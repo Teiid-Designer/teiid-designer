@@ -208,6 +208,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     TableAndToolBar<VdbEntry> udfJarsGroup;
     private Button synchronizeAllButton;
     Button showImportVdbsButton;
+    Button deployDynamicVdbButton;
     Button executeButton;
     Button exportDynamicVdbButton;
     private Label validationDateTimeLabel;
@@ -1609,7 +1610,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     
     private void addSynchronizePanel(Composite parent ) {
     	Composite extraButtonPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.BEGINNING, 2, 2);
-        extraButtonPanel.setLayout(new GridLayout(6, false));
+        extraButtonPanel.setLayout(new GridLayout(7, false));
         
         Label vdbVersionLabel = WidgetFactory.createLabel(extraButtonPanel, "Version"); //$NON-NLS-1$
     	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(vdbVersionLabel);
@@ -1755,7 +1756,26 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }
         
         { // execute VDB button
-        	executeButton = WidgetFactory.createButton(extraButtonPanel, "Execute",//i18n("showImportVdbsButton"), //$NON-NLS-1$
+        	deployDynamicVdbButton = WidgetFactory.createButton(extraButtonPanel, "Deploy",//i18n("showImportVdbsButton"), //$NON-NLS-1$
+                    GridData.HORIZONTAL_ALIGN_BEGINNING);
+        	deployDynamicVdbButton.addSelectionListener(new SelectionAdapter() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( final SelectionEvent event ) {
+                	SortableSelectionAction action = ModelResourceActionManager.getAction(ModelActionConstants.Resource.DEPLOY_VDB);
+                	IResource vdbResource = ((IFileEditorInput)getEditorInput()).getFile();
+                	action.selectionChanged(VdbEditor.this, new StructuredSelection(vdbResource));
+                	action.run();
+                }
+            });
+        }
+        
+        { // execute VDB button
+        	executeButton = WidgetFactory.createButton(extraButtonPanel, "Test",//i18n("showImportVdbsButton"), //$NON-NLS-1$
                     GridData.HORIZONTAL_ALIGN_BEGINNING);
         	executeButton.addSelectionListener(new SelectionAdapter() {
                 /**

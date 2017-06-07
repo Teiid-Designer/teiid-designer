@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.datatools.connectivity.ICategory;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.datasources.ui.UiConstants;
 import org.teiid.designer.datasources.ui.panels.DataSourceItem;
@@ -19,16 +20,17 @@ import org.teiid.designer.datasources.ui.panels.DataSourceManager;
 import org.teiid.designer.datasources.ui.wizard.TeiidDataSourceManager;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 
-public class GlobalConnectionManager {
+public class GlobalConnectionManager implements UiConstants {
 	public static final String PROFILES_NAME = "Local Profiles";
-	public static final String SERVER_CONNECTIONS_NAME = "Deployments";
-	public static final String SERVER_CONNECTIONS_NAME_NO_CONNECTION = "Deployments <not connected>";
+	public static final String SERVER_CONNECTIONS_NAME = "Deployed";
+	public static final String SERVER_CONNECTIONS_NAME_NO_CONNECTION = "Deployed <not connected>";
 	
 	private DataSourceManager dataSourceManager;
 	TeiidDataSourceManager importManager  = new TeiidDataSourceManager();
     private List<DataSourceItem> dataSourceObjList = new ArrayList<DataSourceItem>();
 	
 	RootConnectionNode[] rootNodes;
+	TeiidConnectionFolder[] teiidFolders;
 	
 	public GlobalConnectionManager() {
 		super();
@@ -72,6 +74,25 @@ public class GlobalConnectionManager {
 				   ModelerCore.getTeiidServerManager().isStarted() &&
 				   ModelerCore.getTeiidServerManager().getDefaultServer() != null &&
 				   ModelerCore.getTeiidServerManager().getDefaultServer().isConnected();
+	}
+	
+	public TeiidConnectionFolder[] getTeiidFolders(ICategory profileCategory) {
+		if( teiidFolders == null ) {
+			Collection<TeiidConnectionFolder> nodes = new ArrayList<TeiidConnectionFolder>(10);
+			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_FLAT_FILE_URL_LABEL, TeiidProfileIDs.FLAT_FILE_URL, profileCategory));
+			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_JBOSS_JNDI_LABEL, TeiidProfileIDs.JBOSS_JNDI, profileCategory));
+			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_JDG_LABEL, TeiidProfileIDs.JDG, profileCategory));
+			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_LDAP_LABEL, TeiidProfileIDs.LDAP, profileCategory));
+			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_SALESFORCE_LABEL, TeiidProfileIDs.SALESFORCE, profileCategory));
+			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_WS_ODATA_LABEL, TeiidProfileIDs.WS_ODATA, profileCategory));
+			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_WS_REST_LABEL, TeiidProfileIDs.WS_REST, profileCategory));
+			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_WS_SOAP_LABEL, TeiidProfileIDs.WS_SOAP, profileCategory));
+			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_XML_FILE_LOCAL_LABEL, TeiidProfileIDs.XML_FILE_LOCAL, profileCategory));
+			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_XML_FILE_URL_LABEL, TeiidProfileIDs.XML_FILE_URL, profileCategory));
+			teiidFolders = nodes.toArray(new TeiidConnectionFolder[10]);
+		}
+		
+		return teiidFolders;
 	}
 	
     /**

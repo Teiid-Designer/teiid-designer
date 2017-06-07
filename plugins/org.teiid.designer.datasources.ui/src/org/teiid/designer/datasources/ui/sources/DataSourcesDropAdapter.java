@@ -49,9 +49,6 @@ public class DataSourcesDropAdapter extends PluginDropAdapter {
 
 	@Override
 	public boolean validateDrop(Object target, int operation, TransferData transferType) {
-		// TODO Auto-generated method stub
-		System.out.println("   DataSourcesDropAdapter.validateDrop()  ");
-
         currentTransfer = transferType;
         if (currentTransfer != null && ConnectionProfileTransfer.getInstance().isSupportedType(currentTransfer)) {
             return true;

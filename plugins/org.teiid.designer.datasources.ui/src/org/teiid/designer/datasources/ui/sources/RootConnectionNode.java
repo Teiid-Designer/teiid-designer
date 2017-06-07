@@ -30,4 +30,12 @@ public class RootConnectionNode {
 	public boolean isDataSource() {
 		return type == DATASOURCE;
 	}
+	
+	public String getTooltip() {
+		if( type == PROFILE ) {
+			return "Profile tooltip";
+		} else {
+			return "Deployed connection tooltip";
+		}
+	}
 }

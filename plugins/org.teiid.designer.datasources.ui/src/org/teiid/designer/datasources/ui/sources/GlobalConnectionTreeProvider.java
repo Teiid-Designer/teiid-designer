@@ -14,6 +14,7 @@ import org.eclipse.datatools.connectivity.ICategory;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.datatools.connectivity.internal.Category;
+import org.eclipse.jface.viewers.IToolTipProvider;
 import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
@@ -23,7 +24,7 @@ import org.teiid.designer.datasources.ui.UiPlugin;
 import org.teiid.designer.datasources.ui.panels.DataSourceItem;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileTreeProvider;
 
-public class GlobalConnectionTreeProvider extends ConnectionProfileTreeProvider {
+public class GlobalConnectionTreeProvider extends ConnectionProfileTreeProvider implements IToolTipProvider {
 	GlobalConnectionManager manager;
 	/**
     * This provider provides content and label information for a combination of connection profiles and
@@ -60,6 +61,18 @@ public class GlobalConnectionTreeProvider extends ConnectionProfileTreeProvider 
 			} else {
 				return manager.getDataSources();
 			}
+		} else if( parentElement instanceof ICategory ) {
+			String categoryName = ((ICategory)parentElement).getName();
+			if( categoryName.equals(UiConstants.TEIID_CONNECTIONS) ) {
+				// Add teiid folders
+				return manager.getTeiidFolders((ICategory)parentElement);
+			}
+		} else if( parentElement instanceof TeiidConnectionFolder ) {
+			// Find profiles of this particular type
+			TeiidConnectionFolder folder = (TeiidConnectionFolder)parentElement;
+			Object[] allTeiidProfiles =  super.getChildren(folder.getCategory());
+			
+			return folder.getChildren(allTeiidProfiles);
 		}
 		return super.getChildren(parentElement);
 	}
@@ -98,6 +111,18 @@ public class GlobalConnectionTreeProvider extends ConnectionProfileTreeProvider 
 				text = "ODA";
 			} else if( text.equals(UiConstants.TEIID_CONNECTIONS) ) {
 				text = "Teiid";
+			} else if( text.equals(UiConstants.FLAT_FILE_DATA_SOURCE)) {
+				text = "Flat File";
+			} else if( text.equals(UiConstants.HIVE_DATA_SOURCE)) {
+				text = "Hive";
+			} else if( text.equals(UiConstants.JDBC_DATA_SOURCE)) {
+				text = "JDBC (generic)";
+			} else if( text.equals(UiConstants.MONGODB_DATA_SOURCE)) {
+				text = "MongoDB";
+			} else if( text.equals(UiConstants.WEB_SERVICES_DATA_SOURCE)) {
+				text = "Web Services";
+			} else if( text.equals(UiConstants.XML_DATA_SOURCE)) {
+				text = "XML File";
 			}
 			return text;
 		} if( element instanceof RootConnectionNode ) {
@@ -106,6 +131,8 @@ public class GlobalConnectionTreeProvider extends ConnectionProfileTreeProvider 
 		} else if( element instanceof DataSourceItem ) {
 			DataSourceItem item = (DataSourceItem)element; 
 			return item.getName();
+		} else if(element instanceof TeiidConnectionFolder) {
+			return ((TeiidConnectionFolder)element).getLabel();
 		} else {
 			text = super.getText(element);
 		}
@@ -122,11 +149,11 @@ public class GlobalConnectionTreeProvider extends ConnectionProfileTreeProvider 
 		if( element instanceof RootConnectionNode ) {
 			RootConnectionNode node = (RootConnectionNode)element;
 			if( node.isDataSource() )  {
-				image = UiPlugin.getDefault().getImage(UiConstants.IMAGES.TEIID_SERVER);
+				image = UiPlugin.getDefault().getImage(UiConstants.IMAGES.DEPLOYED_CONNECTIONS);
 			} else {
-				image = UiPlugin.getDefault().getImage(UiConstants.IMAGES.PROFILES);
+				image = UiPlugin.getDefault().getImage(UiConstants.IMAGES.LOCAL_CONNECTIONS);
 			}
-		} else if (element instanceof ICategory) {
+		} else if (element instanceof ICategory || element instanceof TeiidConnectionFolder) {
 			image = PlatformUI.getWorkbench().getSharedImages().getImage(
 					ISharedImages.IMG_OBJ_FOLDER);
 		} else if (element instanceof IConnectionProfile) {
@@ -137,6 +164,11 @@ public class GlobalConnectionTreeProvider extends ConnectionProfileTreeProvider 
 			image = null;
 		}
 		return image;
+	}
+
+	@Override
+	public String getToolTipText(Object element) {
+		return "< IN WORK .. come back later";
 	}
    
    

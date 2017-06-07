@@ -47,6 +47,16 @@ public interface UiConstants {
     @SuppressWarnings( "javadoc" )
     String ODA_CONNECTIONS = "ODA Data Sources";  //$NON-NLS-1$
     @SuppressWarnings( "javadoc" )
+    String HIVE_DATA_SOURCE = "Hive Data Source";  //$NON-NLS-1$
+    @SuppressWarnings( "javadoc" )
+    String JDBC_DATA_SOURCE = "JDBC Data Source";  //$NON-NLS-1$
+    @SuppressWarnings( "javadoc" )
+    String MONGODB_DATA_SOURCE = "MongoDB Data Source";  //$NON-NLS-1$
+    @SuppressWarnings( "javadoc" )
+    String WEB_SERVICES_DATA_SOURCE = "Web Services Data Source";  //$NON-NLS-1$
+    @SuppressWarnings( "javadoc" )
+    String XML_DATA_SOURCE = "XML Data Source";  //$NON-NLS-1$
+    @SuppressWarnings( "javadoc" )
     String TEIID_CONNECTIONS = "Teiid Importer Connections";  //$NON-NLS-1$
     @SuppressWarnings( "javadoc" )
     String FLAT_FILE_DATA_SOURCE = "Flat File Data Source"; //$NON-NLS-1$
@@ -59,7 +69,28 @@ public interface UiConstants {
     String ODA_PROFILE_CATEGORY_ID_PREFIX = "org.eclipse.datatools.connectivity.oda";  //$NON-NLS-1$
     String TEIID_PROFILE_CATEGORY_ID = "org.teiid.designer.import.category";  //$NON-NLS-1$
     String TEIID_PROFILE_CATEGORY_ID_PREFIX = "org.teiid.designer.import";  //$NON-NLS-1$
-    	
+    
+    String TEIID_PROFILE_FLAT_FILE_REMOTE_KEY = "Flat File URL"; //$NON-NLS-1$
+    String TEIID_PROFILE_JBOSS_JNDI_KEY = "JBoss (JNDI) "; //$NON-NLS-1$
+    String TEIID_PROFILE_JDG_KEY = "JDG"; //$NON-NLS-1$
+    String TEIID_PROFILE_LDAP_KEY = "LDAP"; //$NON-NLS-1$
+    String TEIID_PROFILE_SALESFORCE_KEY = "Salesforce"; //$NON-NLS-1$
+    String TEIID_PROFILE_WS_ODATA_KEY = "WS - OData"; //$NON-NLS-1$
+    String TEIID_PROFILE_WS_REST_KEY = "WS - REST"; //$NON-NLS-1$
+    String TEIID_PROFILE_WS_SOAP_KEY = "WS - SOAP"; //$NON-NLS-1$
+    String TEIID_PROFILE_XML_FILE_URL_KEY = "XML File - URL"; //$NON-NLS-1$
+    String TEIID_PROFILE_XML_FILE_LOCAL_KEY = "XML File - Local"; //$NON-NLS-1$
+    
+    String TEIID_PROFILE_FLAT_FILE_URL_LABEL = "Flat File URL"; //$NON-NLS-1$
+    String TEIID_PROFILE_JBOSS_JNDI_LABEL = "JBoss (JNDI) "; //$NON-NLS-1$
+    String TEIID_PROFILE_JDG_LABEL = "JDG"; //$NON-NLS-1$
+    String TEIID_PROFILE_LDAP_LABEL = "LDAP"; //$NON-NLS-1$
+    String TEIID_PROFILE_SALESFORCE_LABEL = "Salesforce"; //$NON-NLS-1$
+    String TEIID_PROFILE_WS_ODATA_LABEL = "WS - OData"; //$NON-NLS-1$
+    String TEIID_PROFILE_WS_REST_LABEL = "WS - REST"; //$NON-NLS-1$
+    String TEIID_PROFILE_WS_SOAP_LABEL = "WS - SOAP"; //$NON-NLS-1$
+    String TEIID_PROFILE_XML_FILE_URL_LABEL = "XML File - URL"; //$NON-NLS-1$
+    String TEIID_PROFILE_XML_FILE_LOCAL_LABEL = "XML File - Local"; //$NON-NLS-1$
     
 	/**
 	 * Private constants used by other constants within this class.
@@ -103,6 +134,10 @@ public interface UiConstants {
         String LAUNCH_RUN_DISABLED = PC.CVIEW16 + "launch_run_disabled.gif";  //$NON-NLS-1$
         String LAUNCH_STOP = PC.CVIEW16 + "launch_stop.gif";  //$NON-NLS-1$
         String LAUNCH_STOP_DISABLED = PC.CVIEW16 + "launch_stop_disabled.gif";  //$NON-NLS-1$
+        
+        String LOCAL_CONNECTIONS = PC.CVIEW16 + "local-connections.png"; //$NON-NLS-1$
+        String DEPLOYED_CONNECTIONS = PC.CVIEW16 + "deployed-connections.png"; //$NON-NLS-1$
+        
     }
     
     interface JdbcTranslatorKeys {
@@ -113,6 +148,19 @@ public interface UiConstants {
     interface JdbcTranslatorDefaults {
     	String TABLE_TYPES = "TABLE";
     	String USE_QUALIFIED_NAME = "false";
+    }
+    
+    interface TeiidProfileIDs {
+    	String FLAT_FILE_URL = "XX";
+    	String JBOSS_JNDI = "org.teiid.designer.datatools.profiles.jbossds.JBossDsConnectionProfile";
+    	String JDG = "org.teiid.designer.datatools.profiles.jdg";
+    	String LDAP = "org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile";
+    	String SALESFORCE = "org.teiid.designer.datatools.salesforce.connectionProfile";
+    	String WS_ODATA = "org.teiid.designer.datatools.profiles.ws.ODataConnectionProfile";
+    	String WS_REST = "org.teiid.designer.datatools.profiles.ws.WSConnectionProfile";
+    	String WS_SOAP = "org.teiid.designer.datatools.profiles.ws.WSSoapConnectionProfile";
+    	String XML_FILE_URL = "org.teiid.designer.datatools.profiles.flatfile.fileurl";
+    	String XML_FILE_LOCAL = "org.teiid.designer.datatools.profiles.xml.localfile";
     }
     
 	/**

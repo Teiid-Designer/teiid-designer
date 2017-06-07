@@ -49,7 +49,7 @@ public interface ModelActionConstants {
         String CREATE_XML_TO_SCALAR_TRANSFORM = "CreateXMLToScalarTransformation"; //$NON-NLS-1$
         String CREATE_SCALAR_TO_XML_TRANSFORM = "CreateScalarToXMLTransformation"; //$NON-NLS-1$
         String MATERIALIZE = "MaterializationAction"; //$NON-NLS-1$
-        String CLEAR_MATERIALIZATIO = "ClearMaterializationAction"; //$NON-NLS-1$
+        String CLEAR_MATERIALIZATION = "ClearMaterializationAction"; //$NON-NLS-1$
         String CREATE_POJO = "CreatePojoAction"; //$NON-NLS-1$
         String CREATE_VIEW_FROM_TABLE = "CreateViewFromTableAction"; //$NON-NLS-1$
         String CREATE_VIEW = "CreateViewInModelAction"; //$NON-NLS-1$

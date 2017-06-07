@@ -44,6 +44,7 @@ import org.teiid.designer.runtime.ui.vdb.VdbDeployer;
 import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
 import org.teiid.designer.ui.actions.ISelectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.vdb.Vdb;
@@ -71,6 +72,7 @@ public class DeployVdbAction extends SortableSelectionAction implements ISelecti
     public DeployVdbAction() {
         super();
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.DEPLOY_VDB));
+        setId(ModelActionConstants.Resource.DEPLOY_VDB);
     }
     
     /**
@@ -81,6 +83,7 @@ public class DeployVdbAction extends SortableSelectionAction implements ISelecti
     public DeployVdbAction(Properties properties) {
         super();
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.DEPLOY_VDB));
+        setId(ModelActionConstants.Resource.DEPLOY_VDB);
         designerProperties = properties;
     }
 
