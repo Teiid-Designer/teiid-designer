@@ -15,7 +15,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.ManagedForm;
-import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.teiid.designer.datasources.ui.UiPlugin;
@@ -26,11 +25,6 @@ public class DataSourcesPanel extends ManagedForm  {
 
     private ScrolledForm parentForm;
     private DataSourcesSection sourcesSection;
-    private DefaultServerSection serverSection;
-//    
-//    private AdvisorHyperLinkListener linkListener;
-//
-//    private StatusActionHandler actionHandler;
 
     /**
      * @since 4.3
@@ -53,8 +47,6 @@ public class DataSourcesPanel extends ManagedForm  {
         Color bkgdColor = toolkit.getColors().getBackground();
         parentForm.setBackground(bkgdColor);
 
-        //this.parentForm.setText(Messages.TeiidActionsManager);
-
         this.parentForm.setLayout(new GridLayout());
 
         this.parentForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -62,13 +54,10 @@ public class DataSourcesPanel extends ManagedForm  {
         FormUtil.tweakColors(toolkit, parentForm.getDisplay());
         this.parentForm.setBackground(bkgdColor);
         
-        Form form = this.parentForm.getForm();
+        this.parentForm.getForm();
         
-//        contributeToMenu(form.getMenuManager());
-
-//        this.linkListener = new AdvisorHyperLinkListener(this.getForm(), this.toolkit, this.actionHandler);
-
         Composite body = parentForm.getBody();
+        
 		//int nColumns = 2;
 		GridLayout gl = new GridLayout(2, false);
 		body.setLayout(gl);
@@ -77,7 +66,7 @@ public class DataSourcesPanel extends ManagedForm  {
 
 		sourcesSection = new DataSourcesSection(toolkit, body);
 		
-		serverSection = new DefaultServerSection(toolkit, body, sourcesSection);
+		new DefaultServerSection(toolkit, body, sourcesSection);
     }
 
     @Override
@@ -111,11 +100,4 @@ public class DataSourcesPanel extends ManagedForm  {
     public void updateStatus( Status theStatus ) {
 
     }
-
-
-
-//    private void contributeToMenu( IMenuManager menuMgr ) {
-//    	AdvisorActionFactory.addActionsLibraryToMenu(menuMgr);
-//        menuMgr.update(true);
-//    }
 }

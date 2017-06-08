@@ -44,7 +44,6 @@ import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.dialog.AbstractPasswordDialog;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
-import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
 /**
@@ -56,11 +55,6 @@ public class CreateDataSourceAction extends SortableSelectionAction implements I
 
     private static String getString( final String id ) {
         return DqpUiConstants.UTIL.getString(I18N_PREFIX + id);
-    }
-
-    private static String getString( final String id,
-                                     final Object value ) {
-        return DqpUiConstants.UTIL.getString(I18N_PREFIX + id, value);
     }
 
     private String pwd;
@@ -129,8 +123,6 @@ public class CreateDataSourceAction extends SortableSelectionAction implements I
             Collection<ModelResource> relationalModels = getRelationalModelsWithConnections();
             final CreateDataSourceWizard dialog = new CreateDataSourceWizard(iww.getShell(), teiidServer, relationalModels, profile);
 
-//            wizard.init(iww.getWorkbench(), new StructuredSelection());
-//            final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
             final int rc = dialog.open();
             if (rc != Window.OK)
                 return;

@@ -7,23 +7,16 @@
 */
 package org.teiid.designer.datasources.ui.sources;
 
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
-import org.teiid.designer.ui.common.util.UiUtil;
 
 public class DataSourcesView extends ViewPart {
-//    private static final String ACTION_LIBRARY_VIEW_HELP_ID = "org.teiid.designer.advisor.ui.actionLibraryView"; //$NON-NLS-1$
 
     private Composite control;
     
     GlobalConnectionManager manager;
-
-    class NameSorter extends ViewerSorter {
-    }
 
     /**
      * The constructor.
@@ -44,9 +37,6 @@ public class DataSourcesView extends ViewPart {
         control.setLayout(layout);
         
         new DataSourcesPanel(control, manager);
-
-        IWorkbenchHelpSystem helpSystem = UiUtil.getWorkbench().getHelpSystem();
-//        helpSystem.setHelp(control, ACTION_LIBRARY_VIEW_HELP_ID);
     }
 
     /**

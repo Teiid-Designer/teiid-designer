@@ -69,17 +69,18 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.EditorPart;
 import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.notification.util.NotificationUtilities;
 import org.teiid.designer.core.transaction.SourcedNotification;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.relational.ui.actions.CreateRelationalIndexAction;
 import org.teiid.designer.relational.ui.actions.CreateRelationalProcedureAction;
 import org.teiid.designer.relational.ui.actions.CreateRelationalTableAction;
+import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.actions.CreateViewIndexAction;
@@ -92,7 +93,6 @@ import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.actions.ModelActionConstants.Special;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
-import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.editors.AbstractModelEditorPageActionBarContributor;
@@ -111,13 +111,9 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, IResourceChangeListener, INotifyChangedListener, ISelectionProvider {
 
-    private static final String LAST_MODIFIED       = "Last Saved: ";  //$NON-NLS-1$
-    private static final String UNDEFINED = "<undefined>";   //$NON-NLS-1$
-	final static String INDENT = "";
-
-    
-    private Color bkgdColor;
-    private final static Color TEXT_COLOR = GlobalUiColorManager.EMPHASIS_COLOR;
+	private static final String SPACE = StringConstants.SPACE;
+	private static final String TAB = StringConstants.TAB;
+	private static final String BLANK = StringConstants.EMPTY_STRING;
     private ModelerActionService actionService;
 
     /**
@@ -196,7 +192,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     	
     	mainControl = parent;
     	
-        String title = "Model Editor";
+        String title = Messages.modelEditor;
         this.setPartName(title);
 
         toolkit = new FormToolkit(parent.getDisplay());
@@ -204,9 +200,6 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
         toolkit.decorateFormHeading(form.getForm());        
         form.setText(title);
         GridLayoutFactory.fillDefaults().applyTo(form.getBody());
-
-//        progressBar = new ProgressBar(form.getBody(), SWT.SMOOTH | SWT.INDETERMINATE);
-//        GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true,  true).applyTo(progressBar);
 
         hyperLinkActionManager = new ModelEditorHyperlinkManager(this);
         
@@ -225,7 +218,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 //        createAdvancedSection(contentsPanel);
 
         
-    	form.setText("Model Editor");
+    	form.setText(Messages.modelEditor);
     	form.setImage(null);
     	
         if( doLayout ) {
@@ -244,16 +237,17 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     private void createOverviewSection(Composite parent) {
         Section section = getToolkit().createSection(parent, 
         		ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
-        String desc = "Model name :   " + modelResource.getItemName() + "                               Location :   " +   modelResource.getPath().removeLastSegments(1).toString();
-        section.setText(desc); //"Summary");
+        String desc = Messages.modelName + SPACE + SPACE + 
+        		modelResource.getItemName() + TAB +
+        		Messages.location + SPACE + 
+        		modelResource.getPath().removeLastSegments(1).toString();
+        section.setText(desc);
         section.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         
-        section.setDescription(LAST_MODIFIED + getDateAsString(iResource.getLocalTimeStamp()));
+        section.setDescription(Messages.lastSaved + getDateAsString(iResource.getLocalTimeStamp()));
 
-//        section.setDescription(desc);
         blueForeground(section.getDescriptionControl());
         GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
-//        overviewSection = section;
         
         Composite composite = getToolkit().createComposite(section);
         GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 10).spacing(5, 10).applyTo(composite);
@@ -271,7 +265,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 	private void createModelContentsSection(Composite parent) {
     	
         Section section = getToolkit().createSection(parent, ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
-        section.setText("Contents");
+        section.setText(Messages.contents);
         GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(section);
         
         // Now add a vertical toolbar to the left and a model contents tree on the right
@@ -286,7 +280,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
         
         ADD_BUTTONS: {
         	// PREVIEW
-        	previewButton = getToolkit().createButton(vertToolbar, "", SWT.PUSH);
+        	previewButton = getToolkit().createButton(vertToolbar, BLANK, SWT.PUSH);
         	previewButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.PREVIEW_DATA_ICON));
         	GridDataFactory.fillDefaults().grab(true, false).applyTo(previewButton);
         	previewButton.setEnabled(false);
@@ -310,7 +304,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 			});
         	
         	if( isRelational) {
-	        	Button addTableButton = getToolkit().createButton(vertToolbar, ""/*"Table..."*/, SWT.PUSH);
+	        	Button addTableButton = getToolkit().createButton(vertToolbar, BLANK, SWT.PUSH);
 	        	if( isVirtual ) {
 	        		addTableButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.NEW_VIRTUAL_TABLE_ICON));
 	        	} else {
@@ -336,7 +330,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 					}
 				});
 	
-	        	Button addProcedureButton = getToolkit().createButton(vertToolbar, ""/*"Procedure..."*/, SWT.PUSH);
+	        	Button addProcedureButton = getToolkit().createButton(vertToolbar, BLANK, SWT.PUSH);
 	        	if( isVirtual ) {
 	        		addProcedureButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.NEW_VIRTUAL_PROCEDURE_ICON));
 	        	} else {
@@ -362,7 +356,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 					}
 				});
 	        	
-	        	Button addIndexButton = getToolkit().createButton(vertToolbar, ""/*"Index..."*/, SWT.PUSH);
+	        	Button addIndexButton = getToolkit().createButton(vertToolbar, BLANK, SWT.PUSH);
 	        	addIndexButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.NEW_INDEX_ICON));
 	        	GridDataFactory.fillDefaults().grab(true, false).applyTo(addIndexButton);
 	        	addIndexButton.addSelectionListener(new SelectionListener() {
@@ -487,7 +481,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 
 	    this.propertiesTab = new TabItem(folderParent, SWT.NONE);
 	    this.propertiesTab.setControl(thePanel);
-	    this.propertiesTab.setText("Actions");
+	    this.propertiesTab.setText(Messages.actions);
 	}
 	
 	private void createDescriptionTab(TabFolder folderParent) {
@@ -529,15 +523,13 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     
     private void createAdvancedSection(Composite parent) {
         Section section = getToolkit().createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
-        section.setText("Advanced");
-        section.setDescription("Additional model information");
+        section.setText(Messages.advanced);
+        section.setDescription(Messages.additionalModelInformation);
         GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(section);
         
         Composite composite = getToolkit().createComposite(section);
         GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).spacing(5, 5).applyTo(composite);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
-
-        
     }
     
     private Composite createDescriptionPanel(Composite parent) {
@@ -545,7 +537,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
         GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).spacing(5, 5).applyTo(composite);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
         
-        editDescriptionHL = getToolkit().createHyperlink(composite, "Edit...", SWT.NONE); //$NON-NLS-1$
+        editDescriptionHL = getToolkit().createHyperlink(composite, Messages.edit, SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(GridData.END, GridData.CENTER).grab(true, false).applyTo(editDescriptionHL);
         editDescriptionHL.addHyperlinkListener(new HyperlinkAdapter() {
           
@@ -604,7 +596,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     private void resetDescription() {
     	if( this.textViewerPanel == null || this.textViewerPanel.isDisposed() ) return;
     	
-        String description = UNDEFINED;
+        String description = Messages.undefined;
 
     	if( getSelectedObject() instanceof EObject ) {
     		String value = ModelObjectUtilities.getDescription((EObject)getSelectedObject());
@@ -635,12 +627,12 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     }
     
     private String getModelDescription() {
-        String description = UNDEFINED;
+        String description = Messages.undefined;
 
         try {
             description = modelResource.getDescription();
             if( description == null ) {
-            	description = UNDEFINED;
+            	description = Messages.undefined;
             }
             
         } catch (ModelerCoreException theException) {
@@ -804,13 +796,6 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 
 
     public void notifyChanged(Notification theNotification) {
-        boolean requiresSave = false;
-        
-        try {
-            requiresSave = this.modelResource.hasUnsavedChanges();
-        } catch (ModelWorkspaceException theException) {
-            UiConstants.Util.log(theException);
-        }
         
         if (theNotification instanceof SourcedNotification) {
             Object source = ((SourcedNotification)theNotification).getSource();
@@ -843,13 +828,6 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
                 }
             }
         }
-        
-//        if( requiresSave ) {
-//            statisticsText.setForeground(UiUtil.getSystemColor(SWT.COLOR_GRAY));
-//        } else {
-//            statisticsText.setForeground(getToolkit().getColors().getForeground());
-//            
-//        }
     }
     
     private void handleNotification(Notification notification) {

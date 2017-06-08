@@ -54,28 +54,64 @@ public class ModelEditorHyperlinkManager implements ModelActionConstants, ISelec
 		
 		if( isRelational && ! isVirtual ) {
 			// Add Create Data Source and View PRofile actions
-			createModelHyperLink(parent, "Create Data Source", Messages.CREATE_DATA_SOURCE_TOOLTIP, Resource.CREATE_DATA_SOURCE);
-			createModelHyperLink(parent, "View Connection Info", Messages.VIEW_CONNECTION_PROFILE_TOOLTIP, Resource.VIEW_CONNECTION_PROFILE);
-			createModelHyperLink(parent, "Set Connection Profile", Messages.SET_CONNECTION_PROFILE_TOOLTIP, Resource.SET_CONNECTION_PROFILE);
-			createModelHyperLink(parent, "Remove Connection Info", Messages.REMOVE_CONNECTION_INFO_TOOLTIP, Resource.REMOVE_CONNECTION_INFO);
-			createModelHyperLink(parent, "Set JBoss Data Source Name", Messages.SET_JBOSS_DATA_SOURCE_NAME_TOOLTIP, Resource.SET_JBOSS_DATA_SOURCE_NAME);
-			createModelHyperLink(parent, "Set Translator Name", Messages.SET_TRANSLATOR_NAME_TOOLTIP, Resource.SET_TRANSLATOR_NAME);
-			createModelHyperLink(parent, "Edit Translator Overrides", Messages.EDIT_TRANSLATOR_OVERRIDES_TOOLTIP, Resource.EDIT_TRANSLATOR_OVERRIDES);
+			createModelHyperLink(parent, 
+					Messages.CREATE_DATA_SOURCE,
+					Messages.CREATE_DATA_SOURCE_TOOLTIP, 
+					Resource.CREATE_DATA_SOURCE);
+			createModelHyperLink(parent, 
+					Messages.VIEW_CONNECTION_INFO, 
+					Messages.VIEW_CONNECTION_PROFILE_TOOLTIP, 
+					Resource.VIEW_CONNECTION_PROFILE);
+			createModelHyperLink(parent, 
+					Messages.SET_CONNECTION_PROFILE, 
+					Messages.SET_CONNECTION_PROFILE_TOOLTIP, 
+					Resource.SET_CONNECTION_PROFILE);
+			createModelHyperLink(parent, 
+					Messages.REMOVE_CONNECTION_INFO, 
+					Messages.REMOVE_CONNECTION_INFO_TOOLTIP, 
+					Resource.REMOVE_CONNECTION_INFO);
+			createModelHyperLink(parent, 
+					Messages.SET_JBOSS_DATA_SOURCE_NAME, 
+					Messages.SET_JBOSS_DATA_SOURCE_NAME_TOOLTIP, 
+					Resource.SET_JBOSS_DATA_SOURCE_NAME);
+			createModelHyperLink(parent, 
+					Messages.SET_TRANSLATOR_NAME, 
+					Messages.SET_TRANSLATOR_NAME_TOOLTIP, 
+					Resource.SET_TRANSLATOR_NAME);
+			createModelHyperLink(parent, 
+					Messages.EDIT_TRANSLATOR_OVERRIDES, 
+					Messages.EDIT_TRANSLATOR_OVERRIDES_TOOLTIP, 
+					Resource.EDIT_TRANSLATOR_OVERRIDES);
 		}
 
 	}
 	
 	public void addPrimaryHyperLinkActions(Composite parent) {
-		createWizardHyperlink(parent,  "Export Teiid DDL", Messages.EXPORT_TEIID_DDL_TOOLTIP, WizardsIDs.EXPORT_TEIID_DDL);
-		createWizardHyperlink(parent,  "Create VDB", Messages.NEW_VDB_TOOLTIP, WizardsIDs.NEW_VDB);
+		createWizardHyperlink(parent,  
+				Messages.EXPORT_TEIID_DDL, 
+				Messages.EXPORT_TEIID_DDL_TOOLTIP, 
+				WizardsIDs.EXPORT_TEIID_DDL);
+		createWizardHyperlink(parent,  
+				Messages.CREATE_VDB, 
+				Messages.NEW_VDB_TOOLTIP, 
+				WizardsIDs.NEW_VDB);
 		if( isRelational && isVirtual ) {
-			createModelHyperLink(parent, "Edit Transformation", Messages.EDIT_TRANSFORMATION_TOOLTIP, Resource.EDIT_TRANSFORMATION);
+			createModelHyperLink(parent, 
+					Messages.EDIT_TRANSFORMATION, 
+					Messages.EDIT_TRANSFORMATION_TOOLTIP, 
+					Resource.EDIT_TRANSFORMATION);
 		}
 	}
 	
 	public void addGeneralHyperLinkActions(Composite parent) {
-		createModelHyperLink(parent, "Manage Extensions", Messages.MANAGE_MODEL_EXTENSIONS_TOOLTIP, Resource.MANAGE_MODEL_EXTENSIONS);
-		createModelHyperLink(parent, "Show Model Statistics", Messages.SHOW_MODEL_STATISTICS_ACTION_TOOLTIP, Resource.SHOW_MODEL_STATISTICS_ACTION);
+		createModelHyperLink(parent, 
+				Messages.MANAGE_EXTENSIONS, 
+				Messages.MANAGE_MODEL_EXTENSIONS_TOOLTIP, 
+				Resource.MANAGE_MODEL_EXTENSIONS);
+		createModelHyperLink(parent, 
+				Messages.SHOW_MODEL_STATISTICS, 
+				Messages.SHOW_MODEL_STATISTICS_ACTION_TOOLTIP, 
+				Resource.SHOW_MODEL_STATISTICS_ACTION);
 	}
 	
 	private void createWizardHyperlink(Composite parent, String label, String toolTip, String wizardId) {
@@ -143,18 +179,6 @@ public class ModelEditorHyperlinkManager implements ModelActionConstants, ISelec
 		if( showDiagramAction.isEnabled() ) {
 			actions.add(showDiagramAction);
 		}
-//		if( isVirtual && isRelational ) {
-//			if( eObject instanceof BaseTable ) {
-//				IAction action1 = getAction(ModelActionConstants.Custom.SHOW_DEPENCENCY_DIAGRAM);
-//				if( action1 != null ) {
-//					actions.add(action1);
-//				}
-//				IAction action2 = getAction(ModelActionConstants.Custom.GENERATE_DEPENDENCY_REPORT);
-//				if( action2 != null ) {
-//					actions.add(action2);
-//				}
-//			}
-//		}
 		
 		return actions;
 	}

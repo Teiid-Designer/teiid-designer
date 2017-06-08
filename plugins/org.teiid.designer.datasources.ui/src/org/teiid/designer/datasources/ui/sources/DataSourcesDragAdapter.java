@@ -51,7 +51,6 @@ public class DataSourcesDragAdapter extends NavigatorDragAdapter {
         if (!selection.isEmpty() && selection.size() == 1) {
         	event.doit = true;
         	event.detail = DND.DROP_NONE;
-        	System.out.println("  DND Object = " + selection.getFirstElement().toString() );
         	
         	ConnectionProfileTransfer.getInstance().setObject(selection.getFirstElement());
         }

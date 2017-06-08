@@ -49,7 +49,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.teiid.designer.datasources.ui.Messages;
 import org.teiid.designer.datasources.ui.UiConstants;
 import org.teiid.designer.datasources.ui.wizard.ITeiidImportServer;
-import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 
 

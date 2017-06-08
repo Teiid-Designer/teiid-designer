@@ -1,4 +1,11 @@
-/* Copied from org.eclipse.ui.views.* packages
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ 
+ * Copied from org.eclipse.ui.views.* packages
  * 
  * The Properties View source was restrictive to use in a dockable View's page object
  * 

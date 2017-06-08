@@ -189,6 +189,30 @@ public class Messages extends NLS {
     public static String ExportDDLToWorkspaceDialog_defaultFileName;
     public static String ExportDDLToWorkspaceDialog_Ok;
     
+    public static String Create;
+    public static String Edit;
+    public static String Delete;
+    public static String GenerateSourceModel;
+    public static String CreateDataSource;
+    public static String CreateConnectionProfile;
+    public static String LocalAndDeployedConnections;
+    public static String DefaultServer;
+    public static String ChangeDefaultServer;
+    public static String Name;
+    public static String TeiidVersion;
+    public static String Start;
+    public static String Stop;
+    public static String DefaultServerConnected;
+    public static String DefaultServerNotConnected;
+    public static String ServerConnected;
+    public static String StopServer;
+    public static String StartServer;
+    public static String ServerNotStarted;
+    public static String LocalProfiles;
+    public static String Deployed;
+    public static String DeployedNotConnected;
+    public static String jndi_name;
+    
     static {
         NLS.initializeMessages("org.teiid.designer.datasources.ui.messages", Messages.class); //$NON-NLS-1$
     }

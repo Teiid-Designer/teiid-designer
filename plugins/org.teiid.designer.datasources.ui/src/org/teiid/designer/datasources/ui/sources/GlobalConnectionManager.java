@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.eclipse.datatools.connectivity.ICategory;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.datasources.ui.Messages;
 import org.teiid.designer.datasources.ui.UiConstants;
 import org.teiid.designer.datasources.ui.panels.DataSourceItem;
 import org.teiid.designer.datasources.ui.panels.DataSourceManager;
@@ -21,9 +22,6 @@ import org.teiid.designer.datasources.ui.wizard.TeiidDataSourceManager;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 
 public class GlobalConnectionManager implements UiConstants {
-	public static final String PROFILES_NAME = "Local Profiles";
-	public static final String SERVER_CONNECTIONS_NAME = "Deployed";
-	public static final String SERVER_CONNECTIONS_NAME_NO_CONNECTION = "Deployed <not connected>";
 	
 	private DataSourceManager dataSourceManager;
 	TeiidDataSourceManager importManager  = new TeiidDataSourceManager();
@@ -53,15 +51,15 @@ public class GlobalConnectionManager implements UiConstants {
 	public RootConnectionNode[] getRootNodes() {
 		if( rootNodes == null ) {
 			Collection<RootConnectionNode> nodes = new ArrayList<RootConnectionNode>(2);
-			nodes.add(new RootConnectionNode(PROFILES_NAME, RootConnectionNode.PROFILE));
+			nodes.add(new RootConnectionNode(Messages.LocalProfiles, RootConnectionNode.PROFILE));
 			if(ModelerCore.getTeiidServerManager() != null && 
 			   ModelerCore.getTeiidServerManager().isStarted() &&
 			   ModelerCore.getTeiidServerManager().getDefaultServer() != null &&
 			   ModelerCore.getTeiidServerManager().getDefaultServer().isConnected()
 					) {
-				nodes.add(new RootConnectionNode(SERVER_CONNECTIONS_NAME, RootConnectionNode.DATASOURCE));
+				nodes.add(new RootConnectionNode(Messages.Deployed, RootConnectionNode.DATASOURCE));
 			} else {
-				nodes.add(new RootConnectionNode(SERVER_CONNECTIONS_NAME_NO_CONNECTION, RootConnectionNode.DATASOURCE));
+				nodes.add(new RootConnectionNode(Messages.DeployedNotConnected, RootConnectionNode.DATASOURCE));
 			}
 			rootNodes = nodes.toArray(new RootConnectionNode[2]);
 		}

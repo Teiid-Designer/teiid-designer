@@ -125,7 +125,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
             }
         };
         
-        this.createAction = new Action("Create") { //$NON-NLS-1$
+        this.createAction = new Action(Messages.Create) { //$NON-NLS-1$
             @Override
             public void run() {
             	if( isDataSourceSelected() || isDataSourceTreeSelected() ) {
@@ -139,7 +139,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
 		};
 		this.createAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(IMAGES.ADD_CONNECTION));
 		
-        this.editAction = new Action("Edit") { //$NON-NLS-1$
+        this.editAction = new Action(Messages.Edit) { //$NON-NLS-1$
             @Override
             public void run() {
             	if( isProfileSelected() ) {
@@ -151,7 +151,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
 		};
 		this.editAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(IMAGES.EDIT_CONNECTION));
 		
-        this.deleteAction = new Action("Delete") { //$NON-NLS-1$
+        this.deleteAction = new Action(Messages.Delete) { //$NON-NLS-1$
             @Override
             public void run() {
             	if( isProfileSelected() ) {
@@ -163,7 +163,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
 		};
 		this.deleteAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(IMAGES.REMOVE_CONNECTION));
 		
-        this.generateSourceModelAction = new Action("Generate Source Model") { //$NON-NLS-1$
+        this.generateSourceModelAction = new Action(Messages.GenerateSourceModel) { //$NON-NLS-1$
             @Override
             public void run() {
             	if( isProfileSelected() ) {
@@ -176,7 +176,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
 		};
 		this.generateSourceModelAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(IMAGES.GENERATE_SOURCE_MODEL));
 		
-		this.createDataSourceFromProfileAction =  new Action("Create Data Source") { //$NON-NLS-1$
+		this.createDataSourceFromProfileAction =  new Action(Messages.CreateDataSource) { //$NON-NLS-1$
             @Override
             public void run() {
             	if( isProfileSelected() ) {
@@ -186,7 +186,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
 		};
 		this.createDataSourceFromProfileAction.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(IMAGES.CREATE_DATA_SOURCE));
 		
-		this.createDataSourceAction =  new Action("Create Data Source") { //$NON-NLS-1$
+		this.createDataSourceAction =  new Action(Messages.CreateDataSource) { //$NON-NLS-1$
             @Override
             public void run() {
             	if( isDataSourceSelected() ) {
@@ -233,7 +233,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
         
         deleteCPButton = new Button(panel, SWT.PUSH);
         deleteCPButton.setImage(UiPlugin.getDefault().getImage(IMAGES.REMOVE_CONNECTION));
-        deleteCPButton.setToolTipText("Delete");//Messages.dataSourcePanel_deleteButtonTooltip);
+        deleteCPButton.setToolTipText(Messages.Delete);
         deleteCPButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         deleteCPButton.setEnabled(false);
         deleteCPButton.addSelectionListener(new SelectionAdapter() {
@@ -252,7 +252,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
         
         editCPButton = new Button(panel, SWT.PUSH);
         editCPButton.setImage(UiPlugin.getDefault().getImage(IMAGES.EDIT_CONNECTION));
-        editCPButton.setToolTipText("Edit"); //Messages.dataSourcePanel_editButtonTooltip);
+        editCPButton.setToolTipText(Messages.Edit);
         editCPButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         editCPButton.setEnabled(false);
         editCPButton.addSelectionListener(new SelectionAdapter() {
@@ -295,16 +295,16 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
 
     	if( isDataSourceSelected() || isDataSourceTreeSelected() ) {
     		if( manager.isServerAvailable() ) {
-    			newCPButton.setToolTipText("Create Data Source");
+    			newCPButton.setToolTipText(Messages.CreateDataSource);
     		}
     		if( isDataSourceSelected() ) {
     			selection = true;
     		}
     	} else if( isProfileSelected() ) {
-    		newCPButton.setToolTipText("Create Connection Profile");
+    		newCPButton.setToolTipText(Messages.CreateConnectionProfile);
     		selection = true;
     	} else {
-    		newCPButton.setToolTipText("Create Connection Profile");
+    		newCPButton.setToolTipText(Messages.CreateConnectionProfile);
     	}
 //    	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
 //    	if( !obj.isEmpty() && 
@@ -507,7 +507,6 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     	if( !obj.isEmpty() && obj.getFirstElement() instanceof IConnectionProfile ) {
     		IConnectionProfile profile = (IConnectionProfile)obj.getFirstElement();
     		if( profile.getCategory().getName().equals(UiConstants.DATABASE_CONNECTIONS) ) {
-    			System.out.println(" Profile Category = " + profile.getCategory().getName());
     			Properties props = new Properties();
     			props.setProperty("profileId", profile.getName());
     			ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.JDBC_IMPORT, new StructuredSelection(), new Properties(), true);

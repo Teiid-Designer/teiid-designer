@@ -37,6 +37,18 @@ public class Messages extends NLS {
     public static String DEPLOY_VDB_TOOLTIP;
     public static String EXECUTE_VDB_TOOLTIP;
     public static String GENERATE_VDB_XML_TOOLTIP;
+    public static String CREATE_DATA_SOURCE;
+    public static String VIEW_CONNECTION_INFO;
+    public static String SET_CONNECTION_PROFILE;
+    public static String REMOVE_CONNECTION_INFO;
+    public static String SET_JBOSS_DATA_SOURCE_NAME;
+    public static String SET_TRANSLATOR_NAME;
+    public static String EDIT_TRANSLATOR_OVERRIDES;
+    public static String EXPORT_TEIID_DDL;
+    public static String CREATE_VDB;
+    public static String EDIT_TRANSFORMATION;
+    public static String MANAGE_EXTENSIONS;
+    public static String SHOW_MODEL_STATISTICS;
     
     public static String CREATE_WEB_SERVICE_FROM_RELATIONAL_TOOLTIP;
     public static String SET_DATATYPE_TOOLTIP;

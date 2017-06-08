@@ -35,9 +35,11 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServer.IOperationListener;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.loading.ComponentLoadingManager;
 import org.teiid.designer.core.loading.IManagedLoading;
+import org.teiid.designer.datasources.ui.Messages;
 import org.teiid.designer.datasources.ui.UiConstants;
 import org.teiid.designer.datasources.ui.UiPlugin;
 import org.teiid.designer.runtime.spi.EventManager;
@@ -144,7 +146,7 @@ public class DefaultServerSection implements IManagedLoading {
         SECTION : {
             defaultServerSection = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.COMPACT | ExpandableComposite.TWISTIE );
             Color bkgdColor = toolkit.getColors().getBackground();
-            defaultServerSection.setText("Default Server"); //$NON-NLS-1$
+            defaultServerSection.setText(Messages.DefaultServer); //$NON-NLS-1$
             defaultServerSection.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
             GridDataFactory.fillDefaults().grab(true, false).applyTo(defaultServerSection);
 
@@ -173,20 +175,20 @@ public class DefaultServerSection implements IManagedLoading {
             /*
              * Default Instance Name
              */
-            Label serverPrefixLabel = toolkit.createLabel(serverDetailsPanel, "Name"); //$NON-NLS-1$
+            Label serverPrefixLabel = toolkit.createLabel(serverDetailsPanel, Messages.Name);
             serverPrefixLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
             GridDataFactory.fillDefaults().grab(false, false).applyTo(serverPrefixLabel);
 
             /*
              * Default Instance status icon (initially blank)
              */
-            defaultServerStatusLabel = toolkit.createLabel(serverDetailsPanel, "", SWT.NONE); //$NON-NLS-1$
+            defaultServerStatusLabel = toolkit.createLabel(serverDetailsPanel, StringConstants.EMPTY_STRING, SWT.NONE);
             GridDataFactory.fillDefaults().grab(false, false).applyTo(defaultServerStatusLabel);
 
             /*
              * Default Instance display name (initially blank)
              */
-            defaultServerLink = toolkit.createHyperlink(serverDetailsPanel, "", SWT.NONE); //$NON-NLS-1$
+            defaultServerLink = toolkit.createHyperlink(serverDetailsPanel, StringConstants.EMPTY_STRING, SWT.NONE);
             GridDataFactory.fillDefaults().grab(true, false).applyTo(defaultServerLink);
             
             createSeparator(serverDetailsPanel, 3,1);
@@ -224,20 +226,20 @@ public class DefaultServerSection implements IManagedLoading {
             /*
              * Teiid instance prefix
              */
-            Label versionPrefixLabel = toolkit.createLabel(defaultServerSectionBody, "Teiid Version"); //$NON-NLS-1$
+            Label versionPrefixLabel = toolkit.createLabel(defaultServerSectionBody, Messages.TeiidVersion);
             versionPrefixLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
             GridDataFactory.fillDefaults().grab(false, false).applyTo(versionPrefixLabel);
             
             /*
              * Default Instance status icon (initially blank)
              */
-            defaultTeiidStatusLabel = toolkit.createLabel(defaultServerSectionBody, "", SWT.NONE); //$NON-NLS-1$
+            defaultTeiidStatusLabel = toolkit.createLabel(defaultServerSectionBody, StringConstants.EMPTY_STRING, SWT.NONE);
             GridDataFactory.fillDefaults().minSize(30,  100).grab(false, false).applyTo(defaultTeiidStatusLabel);
 
             /*
              * Teiid Instance version
              */
-            defaultTeiidVersionLabel = toolkit.createLabel(defaultServerSectionBody, ""); //$NON-NLS-1$
+            defaultTeiidVersionLabel = toolkit.createLabel(defaultServerSectionBody, StringConstants.EMPTY_STRING);
             Font standardFont = defaultTeiidVersionLabel.getFont();
             FontData boldData = standardFont.getFontData()[0];
             boldData.setStyle(SWT.BOLD);
@@ -249,8 +251,6 @@ public class DefaultServerSection implements IManagedLoading {
              * Create the toolbar - contains button to change the default instance.
              */
             createDefaultServerSectionToolbar();
-            
-//	        createSeparator(defaultServerSectionBody, 3, SEPARATOR_HEIGHT);
 
             defaultServerSection.setClient(defaultServerSectionBody);
 
@@ -275,7 +275,7 @@ public class DefaultServerSection implements IManagedLoading {
 
         ImageHyperlink changeDefaultServerLink = toolkit.createImageHyperlink(toolbar, SWT.NONE);
         changeDefaultServerLink.setImage(changeServerImage);
-        changeDefaultServerLink.setToolTipText("Change Default Server"); //$NON-NLS-1$
+        changeDefaultServerLink.setToolTipText(Messages.ChangeDefaultServer);
         changeDefaultServerLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             /**
@@ -297,7 +297,7 @@ public class DefaultServerSection implements IManagedLoading {
 
         startServerLink = toolkit.createImageHyperlink(toolbar, SWT.NONE);
         startServerLink.setImage(startServerImage);
-        startServerLink.setToolTipText("Start"); //$NON-NLS-1$
+        startServerLink.setToolTipText(Messages.Start);
         startServerLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             /**
@@ -317,7 +317,7 @@ public class DefaultServerSection implements IManagedLoading {
         
         stopServerLink = toolkit.createImageHyperlink(toolbar, SWT.NONE);
         stopServerLink.setImage(stopServerImageDisabled);
-        stopServerLink.setToolTipText("Stop"); //$NON-NLS-1$
+        stopServerLink.setToolTipText(Messages.Stop);
         stopServerLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             /**
@@ -422,10 +422,10 @@ public class DefaultServerSection implements IManagedLoading {
         String tooltip = null;
         if (serverConnected) {
             newImage = org.teiid.designer.ui.UiPlugin.getDefault().getImage(PluginConstants.Images.JBOSS_SERVER_STARTED_ICON);
-            tooltip = "Default Server Connected"; //$NON-NLS-1$
+            tooltip = Messages.DefaultServerConnected;
         } else {
             newImage = org.teiid.designer.ui.UiPlugin.getDefault().getImage(PluginConstants.Images.JBOSS_SERVER_STOPPED_ICON);
-            tooltip = "Default Server NOT Connected"; //$NON-NLS-1$
+            tooltip = Messages.DefaultServerNotConnected;
         }
 
         defaultServerStatusLabel.setImage(newImage);
@@ -442,14 +442,14 @@ public class DefaultServerSection implements IManagedLoading {
         startServerLink.setRedraw(false);
         if (serverConnected) {
             startServerLink.setImage(startServerImageDisabled);
-            startServerLink.setToolTipText("Server Connected"); //$NON-NLS-1$
+            startServerLink.setToolTipText(Messages.ServerConnected);
             stopServerLink.setImage(stopServerImage);
-            stopServerLink.setToolTipText("Stop Server"); //$NON-NLS-1$
+            stopServerLink.setToolTipText(Messages.StopServer);
         } else {
             startServerLink.setImage(startServerImage);
-            startServerLink.setToolTipText("Start Server"); //$NON-NLS-1$
+            startServerLink.setToolTipText(Messages.StartServer);
             stopServerLink.setImage(stopServerImageDisabled);
-            stopServerLink.setToolTipText("Server Not Started"); //$NON-NLS-1$
+            stopServerLink.setToolTipText(Messages.ServerNotStarted);
         }
         stopServerLink.setRedraw(true);
         startServerLink.setRedraw(true);
@@ -484,10 +484,10 @@ public class DefaultServerSection implements IManagedLoading {
         String tooltip = null;
         if (teiidConnected) {
             newImage = org.teiid.designer.ui.UiPlugin.getDefault().getImage(PluginConstants.Images.TEIID_SERVER_DEFAULT_ICON);
-            tooltip = "Default Server Connected"; //$NON-NLS-1$
+            tooltip = Messages.DefaultServerConnected;
         } else {
             newImage = org.teiid.designer.ui.UiPlugin.getDefault().getImage(PluginConstants.Images.TEIID_SERVER_DISCONNECTED_ICON);
-            tooltip = "Default Server NOT Connected"; //$NON-NLS-1$
+            tooltip = Messages.DefaultServerNotConnected;
         }
 
         defaultTeiidStatusLabel.setImage(newImage);
@@ -505,8 +505,6 @@ public class DefaultServerSection implements IManagedLoading {
     
 	private void createSeparator(Composite parent, int nColumns, int height) {
 		Composite bottomSep = toolkit.createCompositeSeparator(parent);
-		// TableWrapData layoutData = new TableWrapData(TableWrapData.FILL_GRAB,
-		// TableWrapData.FILL_GRAB, 1, nColumns);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		layoutData.horizontalSpan = nColumns;
 		layoutData.heightHint = height;

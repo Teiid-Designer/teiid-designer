@@ -42,12 +42,5 @@ public class DataSourcesPerspectiveContributor implements IModelerPerspectiveCon
                  PerspectiveObject.TOP_RIGHT);
         
         contributions[0] = connectorsView;
-//        
-//        PerspectiveObject serversView = 
-//                new PerspectiveObject(
-//                     org.teiid.designer.ui.UiConstants.Extensions.TE,
-//                     false,
-//                     PerspectiveObject.TOP_RIGHT);
-//        contributions[1] = serversView;
     }
 }

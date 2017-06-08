@@ -30,14 +30,15 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.views.EditDescriptionDialog;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 public class ModelDescriptionWrapper {
-    private static final String NO_DESCRIPTION_AVAILABLE = "No Description Available";   //$NON-NLS-1$
-    private static final String DESCRIPTION = "Description";   //$NON-NLS-1$
+    private static final String NO_DESCRIPTION_AVAILABLE = Messages.noDescriptionAvailable;   //$NON-NLS-1$
+    private static final String DESCRIPTION = Messages.description;   //$NON-NLS-1$
     
     private Section theSection;
     boolean descriptionChanged = false;
@@ -83,7 +84,7 @@ public class ModelDescriptionWrapper {
         theSection.setClient(sectionBody);
         theSection.setBackground(theParent.getBackground());
         
-        editDescriptionHL = formToolkit.createHyperlink(sectionBody, "Edit...", SWT.NONE); //$NON-NLS-1$
+        editDescriptionHL = formToolkit.createHyperlink(sectionBody, Messages.Edit, SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(editDescriptionHL);
         editDescriptionHL.addHyperlinkListener(new HyperlinkAdapter() {
             
