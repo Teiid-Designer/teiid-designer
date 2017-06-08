@@ -9,6 +9,9 @@ package org.teiid.designer.datasources.ui.sources;
 
 import java.util.Properties;
 
+import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -22,6 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -35,6 +39,8 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServer.IOperationListener;
+import org.eclipse.wst.server.core.ServerUtil;
+import org.eclipse.wst.server.core.internal.Server;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.loading.ComponentLoadingManager;
@@ -54,6 +60,7 @@ import org.teiid.designer.ui.common.graphics.GlobalUiFontManager;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.forms.FormUtil;
 
+@SuppressWarnings("restriction")
 public class DefaultServerSection implements IManagedLoading {
     private FormToolkit toolkit;
     
@@ -328,12 +335,35 @@ public class DefaultServerSection implements IManagedLoading {
             @Override
             public void linkActivated(HyperlinkEvent e) {
                 try {
-                	((IServer)ModelerCore.getTeiidServerManager().getDefaultServer().getParent()).stop(true);
+                	IServer server = ((IServer)ModelerCore.getTeiidServerManager().getDefaultServer().getParent());
+
+                	if( server.getServerType() != null && server.canStop().isOK() ) {
+                		stop(server, getSite().getShell());
+                	} else {
+                		MessageDialog.openInformation(getSite().getShell(), "Stop Server Not Available", "some message.............");
+                	}
                 } catch (Exception ex) {
                     UiConstants.UTIL.log(ex);
                 }
             }
         });
+	}
+	
+	public static void stop(IServer server, Shell shell) {
+		
+		IJobManager jobManager = Job.getJobManager();
+		Job[] jobs = jobManager.find(ServerUtil.SERVER_JOB_FAMILY);
+		for (Job j: jobs) {
+			if (j instanceof Server.StartJob) {
+				Server.StartJob startJob = (Server.StartJob) j;
+				if (startJob.getServer().equals(server)) {
+					startJob.cancel();
+					return;
+				}
+			}
+		}
+		
+		server.stop(false);
 	}
 	
     /**
@@ -522,4 +552,5 @@ public class DefaultServerSection implements IManagedLoading {
 
         UiUtil.runInSwtThread(runnable, false);
 	}
+
 }

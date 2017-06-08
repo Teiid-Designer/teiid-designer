@@ -11,14 +11,19 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -36,8 +41,12 @@ import org.teiid.designer.transformation.model.RelationalViewModelFactory;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
+import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.editors.ModelEditorManager;
+import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
+import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 
 public class ViewBuilderManager implements RelationalConstants, ISQLConstants {
     
@@ -142,6 +151,9 @@ public class ViewBuilderManager implements RelationalConstants, ISQLConstants {
     public void run() {
         final IWorkbenchWindow iww = UiPlugin.getDefault().getCurrentWorkbenchWindow();
         
+        if( sourceTable == null ) {
+        	queryUserForSourceTable();
+        }
     	RelationalModelConverter converter = new RelationalModelConverter();
     	
     	setView((RelationalViewTable)converter.convert(sourceTable, true));
@@ -173,7 +185,7 @@ public class ViewBuilderManager implements RelationalConstants, ISQLConstants {
     		
     		sb.append(SPACE).append(RETURN + TAB + FROM + SPACE).append(modelName + DOT + getSourceTableName());
     		
-    		System.out.println("   SQL = " + sb.toString());
+    		//System.out.println("   SQL = " + sb.toString());
     		
     		getView().setTransformationSQL(sb.toString());
 	        
@@ -244,5 +256,74 @@ public class ViewBuilderManager implements RelationalConstants, ISQLConstants {
         
         return newTable;
     }
+    
+    /**
+     * Opens selection dialog 
+     */
+    private void queryUserForSourceTable() {
+    	
+		final Object[] selections = WidgetUtil.showWorkspaceObjectSelectionDialog(
+						"Select Source Table",
+						"Select a table as the input for your new view",
+						false, null, tableOrViewFilter,
+						new TableOrViewSelectionValidator(),
+						new ModelExplorerLabelProvider(),
+						new ModelExplorerContentProvider());
+
+		if (selections != null && selections.length == 1 ) {
+			if (selections[0] instanceof EObject) {
+				EObject sourceTable = (EObject) selections[0];
+				setSourceTable(sourceTable);
+			}
+		}
+    }
+    
+	final ViewerFilter tableOrViewFilter = new ModelWorkspaceViewerFilter(true, true, false) {
+
+		@Override
+		public boolean select(final Viewer viewer, final Object parent,
+				final Object element) {
+			boolean doSelect = false;
+			if (element instanceof IResource) {
+				// If the project is closed, dont show
+				boolean projectOpen = ((IResource) element).getProject().isOpen();
+				String projectName = ((IResource) element).getProject().getName();
+				boolean isSingleProject = false;
+				if( projectName != null ) {
+					isSingleProject = projectName.equals(getModelProject().getName());
+				}
+				if (projectOpen && isSingleProject) {
+					// Show open projects
+					if (element instanceof IProject) {
+		                IProject project = (IProject)element;
+						try {
+		                	doSelect = project.hasNature(ModelerCore.NATURE_ID);
+		                } catch (CoreException e) {
+		                	ModelerCore.Util.log(e);
+		                }
+					} else if (element instanceof IContainer) {
+						doSelect = true;
+						// Show webservice model files, and not .xsd files
+					} else if (element instanceof IFile && ModelUtil.isModelFile((IFile) element)) {
+						ModelResource theModel = null;
+						try {
+							theModel = ModelUtil.getModelResource((IFile) element, true);
+						} catch (Exception ex) {
+							ModelerCore.Util.log(ex);
+						}
+						if( theModel != null) return true;
+					} else if( element instanceof EObject) {
+						doSelect = true;
+					}
+				}
+			} else if (element instanceof IContainer) {
+				doSelect = true;
+			} else if( element instanceof EObject ) {
+				return true;
+			}
+
+			return doSelect;
+		}
+	};
 
 }

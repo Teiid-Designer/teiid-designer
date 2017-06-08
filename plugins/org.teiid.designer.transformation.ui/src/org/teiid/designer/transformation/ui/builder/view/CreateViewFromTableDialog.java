@@ -342,6 +342,8 @@ public class CreateViewFromTableDialog extends /*Scrollable*/TitleAreaDialog {
 				}
 			}
 		});
+		
+		selectAllNodes();
         
         setMessage("Select columns for view");
         
@@ -412,10 +414,8 @@ public class CreateViewFromTableDialog extends /*Scrollable*/TitleAreaDialog {
 				
 			}
 			
+			validatePage();
 		}
-		
-		validatePage();
-
     }
     
     /**
@@ -424,8 +424,8 @@ public class CreateViewFromTableDialog extends /*Scrollable*/TitleAreaDialog {
     protected void handleBrowseSourceTable() {
     	
 		final Object[] selections = WidgetUtil.showWorkspaceObjectSelectionDialog(
-						"Select View Model",
-						"Select view model as the target for your new view",
+						"Select Source Table",
+						"Select a table as the input for your new view",
 						false, null, tableOrViewFilter,
 						new TableOrViewSelectionValidator(),
 						new ModelExplorerLabelProvider(),
@@ -441,14 +441,10 @@ public class CreateViewFromTableDialog extends /*Scrollable*/TitleAreaDialog {
 				if( builder.getView().getName() != null ) {
 					this.viewNameText.setText(builder.getView().getName());
 				}
-			} else {
 				
+				validatePage();
 			}
-			
 		}
-		
-		validatePage();
-
     }
     
 	private boolean validatePage() {
