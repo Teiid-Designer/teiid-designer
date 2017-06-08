@@ -160,7 +160,7 @@ public class CreateRelationalTableAction extends Action implements INewChildActi
         table.setSupportsUpdate(true);
         
         // Hand the table off to the generic edit dialog
-        RelationalDialogModel dialogModel = new RelationalDialogModel(table, selectedModel);
+        RelationalDialogModel dialogModel = new RelationalDialogModel(table, (IFile)ModelUtilities.getIResource(mr));
         EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
         
         dialog.open();

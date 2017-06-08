@@ -183,7 +183,7 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
             relationalViewTable.setSupportsUpdate(true);
 	        
 	        // Hand the table off to the generic edit dialog
-            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewTable, selectedModel);
+            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewTable, (IFile)ModelUtilities.getIResource(mr));
             EditRelationalObjectDialog editDialog = new EditRelationalObjectDialog(shell, dialogModel);
 
             editDialog.open();

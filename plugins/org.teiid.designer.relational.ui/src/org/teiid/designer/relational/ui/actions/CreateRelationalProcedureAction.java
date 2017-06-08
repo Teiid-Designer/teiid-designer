@@ -184,7 +184,7 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
 	        }
 	        
 	        // Hand the table off to the generic edit dialog
-            RelationalDialogModel dialogModel = new RelationalDialogModel(procedure, selectedModel);
+            RelationalDialogModel dialogModel = new RelationalDialogModel(procedure, (IFile)ModelUtilities.getIResource(mr));
             EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
 	        
 	        dialog.open();
