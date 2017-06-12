@@ -192,15 +192,6 @@
       </resourceAction>
    </extension>
    <extension
-        id="GenerateDynamicVdbAction2"
-        name="%generateDynamicVdbAction2.name"
-        point="org.teiid.designer.ui.modelResourceAction">
-      <resourceAction
-         name="org.teiid.designer.runtime.ui.actions.GenerateDynamicVdbAction2"
-         label="%generateDynamicVdbAction2.label">
-      </resourceAction>
-   </extension>
-   <extension
         id="GenerateArchiveVdbAction"
         name="%generateArchiveVdbAction.name"
         point="org.teiid.designer.ui.modelResourceAction">

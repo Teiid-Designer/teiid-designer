@@ -603,9 +603,11 @@ public class GenerateDynamicVdbDialog extends ScrollableTitleAreaDialog implemen
         dlg.setFileName(ddlFileName);
         String fileStr = dlg.open();
         
-        vdbManager.setFileSystemFullPathAndFile(fileStr);
-        if( StringUtilities.isNotEmpty(fileStr) ) {
-        	locationText.setText(vdbManager.getFileSystemFolder());
+        if( fileStr != null ) { // Could be cancelled
+	        vdbManager.setFileSystemFullPathAndFile(fileStr);
+	        if( StringUtilities.isNotEmpty(fileStr) ) {
+	        	locationText.setText(vdbManager.getFileSystemFolder());
+	        }
         }
     }
     
