@@ -32,7 +32,7 @@ public class GenerateDataServiceAction  extends SortableSelectionAction implemen
      */
     public GenerateDataServiceAction() {
         super(getString("label"), SWT.DEFAULT); //$NON-NLS-1$
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.DYNAMIC_VDB));
+        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.GENERATE_DATA_SERVICE));
         setId(ModelActionConstants.Special.GENERATE_DATA_SERVICE);
         
         worker = new GenerateDataServiceWorker();

@@ -91,6 +91,7 @@ import org.teiid.designer.ui.actions.ModelerSpecialActionManager;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.actions.ModelActionConstants.Special;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
@@ -149,6 +150,8 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     private StyledTextEditor textViewerPanel;
     
     Button previewButton;
+    
+    Button generateDataServiceButton;
     
 	private TabItem propertiesTab;
     ModelObjectPropertiesPanel propertiesPanel;
@@ -302,6 +305,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 				public void widgetDefaultSelected(SelectionEvent e) {
 				}
 			});
+        	previewButton.setToolTipText(org.teiid.designer.ui.common.actions.Messages.PREVIEW_DATA_TOOLTIP);
         	
         	if( isRelational) {
 	        	Button addTableButton = getToolkit().createButton(vertToolbar, BLANK, SWT.PUSH);
@@ -378,6 +382,37 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 					}
 				});
         	}
+        	
+    		Composite bottomSep = getToolkit().createCompositeSeparator(vertToolbar);
+    		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+    		layoutData.horizontalSpan = 1;
+    		layoutData.heightHint = 2;
+    		bottomSep.setLayoutData(layoutData);
+        	
+        	// PREVIEW
+        	generateDataServiceButton = getToolkit().createButton(vertToolbar, BLANK, SWT.PUSH);
+        	generateDataServiceButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.GENERATE_DATA_SERVICE));
+        	GridDataFactory.fillDefaults().grab(true, false).applyTo(previewButton);
+        	generateDataServiceButton.setEnabled(false);
+        	generateDataServiceButton.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					SortableSelectionAction action = ModelerSpecialActionManager.getAction(ModelActionConstants.Special.GENERATE_DATA_SERVICE);
+					if( action != null ) {
+						ISelection selection = modelTreeViewer.getSelection();
+						Object sel = SelectionUtilities.getSelectedEObject(selection);
+						action.setSelection(new StructuredSelection(sel));
+						action.run();
+					}
+					
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+        	generateDataServiceButton.setToolTipText(org.teiid.designer.ui.common.actions.Messages.GENERATE_DATA_SERVICE_TOOLTIP);
         }
         
         modelTree = new Tree(composite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI);
@@ -416,6 +451,10 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 				SortableSelectionAction action = ModelerSpecialActionManager.getAction(Special.PREVIEW_DATA);
 				if( action != null ) {
 					previewButton.setEnabled(action.isApplicable(event.getSelection()));
+				}
+				action = ModelerSpecialActionManager.getAction(ModelActionConstants.Special.GENERATE_DATA_SERVICE);
+				if( action != null ) {
+					generateDataServiceButton.setEnabled(action.isApplicable(event.getSelection()));
 				}
 				
 				propertiesPanel.selectionChanged(event);

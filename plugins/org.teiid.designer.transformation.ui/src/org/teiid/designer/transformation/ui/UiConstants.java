@@ -8,6 +8,7 @@
 package org.teiid.designer.transformation.ui;
 
 import java.util.ResourceBundle;
+
 import org.eclipse.swt.graphics.Color;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
@@ -124,6 +125,8 @@ public interface UiConstants {
 		String CLONE_DISABLED_ICON = PC.CVIEW16 + "clone-disabled.png"; //$NON-NLS-1$
 		
 		String PREVIEW_DATA_ICON = PC.CVIEW16 + "previewData.gif"; //$NON-NLS-1$
+		
+		public static final String GENERATE_DATA_SERVICE = PC.CVIEW16 + "generate-data-service.png"; //$NON-NLS-1$
 	}
     
     interface SQLPanels {
