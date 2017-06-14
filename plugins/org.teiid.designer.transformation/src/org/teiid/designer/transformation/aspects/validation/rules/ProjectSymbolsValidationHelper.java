@@ -23,15 +23,19 @@ import org.teiid.designer.core.validation.ValidationProblem;
 import org.teiid.designer.core.validation.ValidationProblemImpl;
 import org.teiid.designer.core.validation.ValidationResult;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
+import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.query.sql.lang.util.CommandHelper;
+import org.teiid.designer.query.sql.symbol.IAliasSymbol;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.AttributeMappingHelper;
 import org.teiid.designer.transformation.util.TransformationHelper;
+import org.teiid.designer.transformation.util.TransformationSqlHelper;
 import org.teiid.designer.transformation.validation.TransformationValidator;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
@@ -208,6 +212,9 @@ public class ProjectSymbolsValidationHelper {
             // ------------------------------------------------------------------------------
             IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
             Class sourceType = singleElementSymbol.getType();
+            
+
+            
             String problemMsg = null;
             // check only if the source is a valid type
             SqlColumnAspect columnAspect = (SqlColumnAspect)AspectManager.getSqlAspect(outputColumn);
@@ -216,7 +223,21 @@ public class ProjectSymbolsValidationHelper {
                 SqlDatatypeAspect typeAspect = datatype != null ? (SqlDatatypeAspect)AspectManager.getSqlAspect(datatype) : null;
                 if (typeAspect != null) {
                     Class targetType = service.getDataTypeClass(typeAspect.getRuntimeTypeName(datatype));
-                    if (!sourceType.equals(targetType)) {
+                    
+                    boolean isAliasedSymbolsMatch = false;
+                    if (singleElementSymbol instanceof IAliasSymbol) {
+                    	IExpression symbol = ((IAliasSymbol)singleElementSymbol).getSymbol();
+                    	if( symbol instanceof IFunction) {
+        	            	Object dType = TransformationSqlHelper.getElementSymbolType(symbol);
+        	            	if( dType instanceof EObject ) {
+                    			String attTypeName = ModelerCore.getModelEditor().getName((EObject)dType);
+                    			String symTypeName = ModelerCore.getModelEditor().getName(datatype);
+        	            		isAliasedSymbolsMatch =  attTypeName.equalsIgnoreCase(symTypeName);
+        	            	}
+                    	}
+                    }
+                    
+                    if (!isAliasedSymbolsMatch && !sourceType.equals(targetType)) {
                         problemMsg = TransformationPlugin.Util.getString("SqlTransformationMappingRootValidationRule.The_datatype_type_of_the_column_{0}_does_not_match_the_source_column_type._1", //$NON-NLS-1$
                                                                          new Object[] {outputColumnName,
                                                                              service.getDataTypeName(targetType),

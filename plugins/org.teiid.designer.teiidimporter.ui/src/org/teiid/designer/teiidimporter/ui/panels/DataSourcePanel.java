@@ -48,6 +48,7 @@ import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.wizard.CopyDataSourceDialog;
 import org.teiid.designer.teiidimporter.ui.wizard.CreateDataSourceDialog;
 import org.teiid.designer.teiidimporter.ui.wizard.ITeiidImportServer;
+import org.teiid.designer.teiidimporter.ui.wizard.TeiidImportManager;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
@@ -265,7 +266,7 @@ public final class DataSourcePanel extends Composite implements UiConstants {
      * Set the selection in the DataSource table to the specified DataSource name
      * @param dsName the DataSource name
      */
-    private void setTableSelection(String dsName) {
+    public void setTableSelection(String dsName) {
         int selIndex = 0;
         TableItem[] items = this.dataSourcesViewer.getTable().getItems();
         if(dsName==null && items.length>0) {
@@ -441,7 +442,7 @@ public final class DataSourcePanel extends Composite implements UiConstants {
      * Fire Selection changed to the listeners
      * @param selectedSourceName the name of the selected dataSource
      */
-    private void fireSelectionChanged(String selectedSourceName) {
+    public void fireSelectionChanged(String selectedSourceName) {
         for (DataSourcePanelListener listener : this.listeners) {
             listener.selectionChanged(selectedSourceName);
         }
@@ -573,6 +574,16 @@ public final class DataSourcePanel extends Composite implements UiConstants {
             }
         }
     }
+    
+    @Override
+    public void setVisible(boolean visible) {
+    	super.setVisible(visible);
+    	// Make sure if the import manager
+    	String existingName = ((TeiidImportManager)teiidImportServer).getDataSourceJndiName();
+    	if( existingName != null ) {
+    		setTableSelection(existingName);
+    	}
+    	}
 
     /**
      * Public access to refresh the contents of this panel based on external changes to the translator override

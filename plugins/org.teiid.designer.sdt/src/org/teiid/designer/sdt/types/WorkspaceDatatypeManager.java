@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -30,6 +32,7 @@ import org.teiid.core.designer.id.InvalidIDException;
 import org.teiid.core.designer.id.ObjectID;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlDatatypeAspect;
 import org.teiid.designer.core.types.DatatypeConstants;
@@ -57,6 +60,14 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     public WorkspaceDatatypeManager() {
         super();
+        if( getContainer() == null ) {
+    		try {
+				initialize(ModelerCore.getModelContainer());
+			} catch (CoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
     }
 
     /**
@@ -69,8 +80,10 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     }
 
     private void init() throws ModelerCoreException {
-        this.builtInTypesMgr = new BuiltInTypesManager();
-        this.builtInTypesMgr.initialize(this.getContainer());
+    	if( this.builtInTypesMgr == null ) {
+	        this.builtInTypesMgr = new BuiltInTypesManager();
+	        this.builtInTypesMgr.initialize(this.getContainer());
+    	}
     }
 
     // ==================================================================================
@@ -83,7 +96,19 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public DatatypeManager getBuiltInTypeManager() {
+    	if( this.builtInTypesMgr == null ) {
+    		try {
+				init();
+			} catch (ModelerCoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
         return this.builtInTypesMgr;
+    }
+    
+    private BuiltInTypesManager getThisBuildInTypesManager() {
+    	return (BuiltInTypesManager)getBuiltInTypeManager();
     }
 
     /**
@@ -91,7 +116,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public EObject getBuiltInDatatype( final String name ) {
-        return this.builtInTypesMgr.getBuiltInDatatype(name);
+        return getThisBuildInTypesManager().getBuiltInDatatype(name);
     }
 
     /**
@@ -99,7 +124,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public EObject[] getBuiltInPrimitiveTypes() {
-        return this.builtInTypesMgr.getBuiltInPrimitiveTypes();
+        return getThisBuildInTypesManager().getBuiltInPrimitiveTypes();
     }
 
     /**
@@ -107,7 +132,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public EObject getBuiltInPrimitiveType( EObject type ) {
-        return this.builtInTypesMgr.getBuiltInPrimitiveType(type);
+        return getThisBuildInTypesManager().getBuiltInPrimitiveType(type);
     }
 
     /**
@@ -115,7 +140,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public boolean isBinary( EObject type ) {
-        return this.builtInTypesMgr.isBinary(type);
+        return getThisBuildInTypesManager().isBinary(type);
     }
 
     /**
@@ -123,7 +148,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public boolean isCharacter( EObject type ) {
-        return this.builtInTypesMgr.isCharacter(type);
+        return getThisBuildInTypesManager().isCharacter(type);
     }
 
     /**
@@ -131,17 +156,17 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public boolean isNumeric( EObject type ) {
-        return this.builtInTypesMgr.isNumeric(type);
+        return getThisBuildInTypesManager().isNumeric(type);
     }
 
     @Override
 	public boolean isBounded( EObject type ) {
-        return this.builtInTypesMgr.isBounded(type);
+        return getThisBuildInTypesManager().isBounded(type);
     }
 
     @Override
 	public boolean isEnumeration( EObject type ) {
-        return this.builtInTypesMgr.isEnumeration(type);
+        return getThisBuildInTypesManager().isEnumeration(type);
     }
 
     /**
@@ -151,7 +176,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
 	public ObjectID getUuid( final EObject type ) {
         // If the datatype is a built-in type ...
         if (this.isBuiltInDatatype(type)) {
-            return this.builtInTypesMgr.getUuid(type);
+            return getThisBuildInTypesManager().getUuid(type);
         }
 
         // Return the UUID from the aspect
@@ -172,7 +197,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
 	public String getUuidString( EObject type ) {
         // If the datatype is a built-in type ...
         if (this.isBuiltInDatatype(type)) {
-            return this.builtInTypesMgr.getUuidString(type);
+            return getThisBuildInTypesManager().getUuidString(type);
         }
 
         // Return the UUID string from the aspect
@@ -190,7 +215,10 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
 	public String getRuntimeTypeName( final EObject type ) {
         // If the datatype is a built-in type ...
         if (this.isBuiltInDatatype(type)) {
-            return this.builtInTypesMgr.getRuntimeTypeName(type);
+        	if( getThisBuildInTypesManager() == null ) {
+        		System.out.println("  Types Manager == NULL");
+        	}
+            return getThisBuildInTypesManager().getRuntimeTypeName(type);
         }
 
         // Return the runtime type name from the aspect
@@ -232,7 +260,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
         Boolean result = null;
         // If the datatype is a built-in type ...
         if (this.isBuiltInDatatype(type)) {
-            result = this.builtInTypesMgr.getRuntimeTypeFixed(type);
+            result = getThisBuildInTypesManager().getRuntimeTypeFixed(type);
         } else {
             // Return the runtime fixed value from the aspect
             SqlDatatypeAspect aspect = getSqlAspect(type);
@@ -250,7 +278,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
 	public Map getEnterpriseExtensionsMap( final EObject type ) {
         // If the datatype is a built-in type ...
         if (this.isBuiltInDatatype(type)) {
-            return this.builtInTypesMgr.getEnterpriseExtensionsMap(type);
+            return getThisBuildInTypesManager().getEnterpriseExtensionsMap(type);
         }
 
         // Return the runtime type name from the aspect
@@ -290,7 +318,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public EObject getAnySimpleType() {
-        return this.builtInTypesMgr.getAnySimpleType();
+        return getThisBuildInTypesManager().getAnySimpleType();
     }
 
     /**
@@ -298,7 +326,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public EObject getAnyType() {
-        return this.builtInTypesMgr.getAnyType();
+        return getThisBuildInTypesManager().getAnyType();
     }
 
     /**
@@ -306,7 +334,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public EObject getDefaultDatatypeForRuntimeTypeName( final String runtimeTypeName ) {
-        return this.builtInTypesMgr.getDefaultDatatypeForRuntimeTypeName(runtimeTypeName);
+        return getThisBuildInTypesManager().getDefaultDatatypeForRuntimeTypeName(runtimeTypeName);
     }
 
     /**
@@ -328,7 +356,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
 	public EObject getBaseType( final EObject datatype ) {
         // If the datatype is a built-in type ...
         if (this.isBuiltInDatatype(datatype)) {
-            return this.builtInTypesMgr.getBaseType(datatype);
+            return getThisBuildInTypesManager().getBaseType(datatype);
         }
 
         // Get the type from the aspect ...
@@ -371,7 +399,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
         tmp.addAll(Arrays.asList(result));
 
         // Add built-in datatypes to the list
-        tmp.addAll(Arrays.asList(this.builtInTypesMgr.getAllDatatypes()));
+        tmp.addAll(Arrays.asList(getThisBuildInTypesManager().getAllDatatypes()));
 
         // Remove any duplicates
         removeDuplicates(tmp);
@@ -458,7 +486,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     @Override
 	public EObject findDatatype( final String id ) {
         // Check the built-in types manager first ...
-        EObject result = this.builtInTypesMgr.findDatatype(id);
+        EObject result = getThisBuildInTypesManager().findDatatype(id);
         if (result != null) {
             return result;
         }
@@ -478,7 +506,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     @Override
 	public String getRuntimeTypeJavaClassName( final String id ) {
         // Check the built-in types manager first ...
-        String result = this.builtInTypesMgr.getRuntimeTypeJavaClassName(id);
+        String result = getThisBuildInTypesManager().getRuntimeTypeJavaClassName(id);
         if (result != null) {
             return result;
         }
@@ -501,7 +529,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
     @Override
 	public String getRuntimeTypeName( final String id ) {
         // Check the built-in types manager first ...
-        String result = this.builtInTypesMgr.getRuntimeTypeName(id);
+        String result = getThisBuildInTypesManager().getRuntimeTypeName(id);
         if (result != null) {
             return result;
         }
@@ -532,12 +560,12 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
         // then add all the built-in primitive types as subtypes
         SqlDatatypeAspect aspect = getSqlAspect(datatype);
         if (aspect != null && aspect.isURType(datatype)) {
-            EObject[] subtypes = this.builtInTypesMgr.getBuiltInPrimitiveTypes();
+            EObject[] subtypes = getThisBuildInTypesManager().getBuiltInPrimitiveTypes();
             tmp.addAll(Arrays.asList(subtypes));
         }
         // Else if this basetype is a built-in type ...
         else if (aspect != null && aspect.isBuiltInDatatype(datatype)) {
-            EObject[] subtypes = this.builtInTypesMgr.getSubtypes(datatype);
+            EObject[] subtypes = getThisBuildInTypesManager().getSubtypes(datatype);
             tmp.addAll(Arrays.asList(subtypes));
         }
 
@@ -552,7 +580,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
                 // If the basetype is a built-in type then make sure
                 // the EObject reference is to the EMF XSD built-in type
                 if (aspect != null && aspect.isBuiltInDatatype(basetype)) {
-                    basetype = this.builtInTypesMgr.getEmfType(basetype);
+                    basetype = getThisBuildInTypesManager().getEmfType(basetype);
                 }
 
                 // If the datatype has the correct basetype ...
@@ -748,7 +776,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public EObject[] getBuiltInDatatypes() {
-        return this.builtInTypesMgr.getBuiltInDatatypes();
+        return getThisBuildInTypesManager().getBuiltInDatatypes();
     }
 
     /**
@@ -757,7 +785,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public boolean isEnterpriseDatatype( EObject simpleType ) {
-        return this.builtInTypesMgr.isEnterpriseDatatype(resolveWhenProxy(simpleType));
+        return getThisBuildInTypesManager().isEnterpriseDatatype(resolveWhenProxy(simpleType));
     }
 
     /**
@@ -766,7 +794,7 @@ public class WorkspaceDatatypeManager extends AbstractDatatypeManager {
      */
     @Override
 	public EnterpriseDatatypeInfo getEnterpriseDatatypeInfo( XSDSimpleTypeDefinition simpleType ) {
-        return this.builtInTypesMgr.getEnterpriseDatatypeInfo((XSDSimpleTypeDefinition)resolveWhenProxy(simpleType));
+        return getThisBuildInTypesManager().getEnterpriseDatatypeInfo((XSDSimpleTypeDefinition)resolveWhenProxy(simpleType));
     }
 
     /**

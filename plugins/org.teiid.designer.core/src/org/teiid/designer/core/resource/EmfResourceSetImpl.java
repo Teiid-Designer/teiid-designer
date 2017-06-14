@@ -95,7 +95,7 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
                     final ObjectID uuid = IDGenerator.getInstance().stringToObject(uuidString);
 
                     Resource myExistingResource = this.container.getResourceFinder().findByUUID(uuid, false);
-                    if (myExistingResource != null) {
+                    if (myExistingResource != null && !myExistingResource.getURI().toString().contains(".metadata")) {
                         final URI existingResourceUri = myExistingResource.getURI();
                         final Object[] params = new Object[] {URI.decode(uri.toString()),
                             URI.decode(existingResourceUri.toString())};

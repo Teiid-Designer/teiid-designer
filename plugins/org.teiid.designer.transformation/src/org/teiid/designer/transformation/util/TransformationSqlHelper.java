@@ -39,6 +39,8 @@ import org.teiid.designer.metadata.runtime.ColumnRecord;
 import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metadata.runtime.ProcedureParameterRecord;
+import org.teiid.designer.metamodels.function.Function;
+import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.transformation.InputSet;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
@@ -2807,7 +2809,23 @@ public class TransformationSqlHelper implements ISQLConstants {
         // IExpression
         // -------------------------------------
         } else {
-            datatype = symbol.getType();
+        	Object tmpType = null;
+        	if( symbol instanceof IFunction) {
+        		// need to get the functions's return parameter and find it's type
+        		// If there is no RESULT parameter, then return object;
+        		// Look in current project for source model containing the function method
+        		IFunction function = (IFunction)symbol;
+        		
+        		String name = function.getName();
+        		// Find datatype for function
+        		
+        		tmpType = UdfManager.getInstance().getDataType(name);
+        		if( tmpType != null ) {
+        			datatype = tmpType;
+        		}
+        	} else {
+        		datatype = symbol.getType();
+        	}
         }
         return datatype;
     }

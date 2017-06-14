@@ -7,26 +7,42 @@
 */
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.Messages;
+import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.widget.ListMessageDialog;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.vdb.VdbPlugin;
 import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
@@ -38,7 +54,17 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 
     private IFile archiveVdbFile;
     
+    private String xmlFileContents;
+    
+    private boolean editXmlMode;
+    
     private boolean excludeSourceMetadata;
+    
+    boolean saveToWorkspace = true;
+    
+    String vdbXmlFileNameName; // This is the -vdb.xml file name
+    
+    String fileSystemFolder;
 
     /**
      * @param wizard
@@ -57,9 +83,41 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
         setOutputVdbFileName(vdbName + ITeiidVdb.DYNAMIC_VDB_SUFFIX);
         setOutputLocation(this.archiveVdbFile.getParent());
         setVersion(getArchiveVdb().getVersion());
-    }
+        
+        editXmlMode = false;
+		saveToWorkspace = true;
 
-    private void checkDynamicVdbGenerated() throws Exception {
+    }
+    
+    public GenerateDynamicVdbManager(IFile archiveVdbFile) throws Exception {
+        CoreArgCheck.isNotNull(archiveVdbFile);
+
+        this.archiveVdbFile = archiveVdbFile;
+        setArchiveVdb(new XmiVdb(archiveVdbFile));
+
+        String vdbName = getArchiveVdb().getName();
+        setOutputVdbName(vdbName);
+        setOutputVdbFileName(vdbName + ITeiidVdb.DYNAMIC_VDB_SUFFIX);
+        setOutputLocation(this.archiveVdbFile.getParent());
+        setVersion(getArchiveVdb().getVersion());
+        
+        editXmlMode = false;
+		saveToWorkspace = true;
+    }
+    
+    public boolean isEditXmlMode() {
+		return editXmlMode;
+	}
+
+	public void setEditXmlMode(boolean editXmlMode) {
+		this.editXmlMode = editXmlMode;
+	}
+
+	public void setXmlFileContents(String xmlFileContents) {
+		this.xmlFileContents = xmlFileContents;
+	}
+
+	private void checkDynamicVdbGenerated() throws Exception {
         if (isGenerateRequired())
             throw new Exception(Messages.GenerateDynamicVdbWizard_validation_noDynamicVdbGenerated);
     }
@@ -138,8 +196,12 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
     @Override
     public String getDynamicVdbXml() throws Exception {
         checkDynamicVdbGenerated();
+        
+        if( !isEditXmlMode() ) {
+        	xmlFileContents =  super.getDynamicVdbXml();
+        }
 
-        return super.getDynamicVdbXml();
+        return xmlFileContents;
     }
 
     /**
@@ -179,21 +241,14 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
     @Override
     public void write() throws Exception {
         checkDynamicVdbGenerated();
-
-        StringWriter writer = new StringWriter();
-        getDynamicVdb().write(writer);
-
-        String xml = writer.toString();
-
-        IFile destination = getDestination();
-        if( overwriteExistingFiles() && destination.exists() ) {
-        	destination.delete(true, new NullProgressMonitor());
-        }
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes("UTF-8")); //$NON-NLS-1$
-
-        destination.create(inputStream, true, new NullProgressMonitor());
-
-        super.write();
+        
+        // if
+    	
+    	if( saveToWorkspace ) {
+    		saveToWorkspace(xmlFileContents, getOutputLocation(), getOutputVdbFileName());
+    	} else {
+    		saveToFileSystem(xmlFileContents, getFileSystemFolder(), getOutputVdbFileName());
+    	}
     }
 
     /**
@@ -208,7 +263,43 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
      */
     @Override
     public void validate() {
-        super.validate();
+        setStatus(Status.OK_STATUS);
+
+        // Check ouptut vdb name
+        String proposedVdbName = getOutputVdbFileName();
+        String validationMessage = nameValidator.checkValidName(proposedVdbName);
+        if (validationMessage != null) {
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, validationMessage));
+            return;
+        }
+
+        validationMessage = ModelUtilities.vdbNameReservedValidation(proposedVdbName);
+        if (validationMessage != null) {
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, validationMessage));
+            return;
+        }
+
+        // Check Version # is an integer
+        String version = getVersion();
+        if( version == null ) {
+        	// TODO: Status message (cannot be null)
+        }
+
+        // output location can't be null
+        if (getOutputLocation() == null) {
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateVdbWizard_validation_targetLocationUndefined));
+            return;
+        }
+
+        if (!getOutputLocation().exists()) {
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateVdbWizard_validation_targetLocationNotExist));
+            return;
+        }
+
+        if (getOutputVdbFileName() == null) {
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateVdbWizard_validation_vdbFileNameUndefined));
+            return;
+        }
 
 	    if (getStatus().getSeverity() > IStatus.WARNING)
 	        return;
@@ -221,6 +312,36 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
         if (!isGenerateRequired() && getDynamicVdb() == null) {
             setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_noDynamicVdbGenerated));
             return;
+        }
+        
+        // check output location
+        if( saveToWorkspace ) {
+        	// check that workspace location is set
+        	if( getOutputLocation() == null ) {
+        		setStatus(new Status(IStatus.ERROR, PLUGIN_ID, "Workspace project or folder is not defined"));
+        		return;
+        	}
+
+            IFile destination = getDestination();
+            if (destination.exists()) {
+            	int severity = overwriteExistingFiles() ? IStatus.WARNING : IStatus.ERROR;
+                setStatus(new Status(severity, PLUGIN_ID, Messages.GenerateVdbWizard_validation_targetFileAlreadyExists));
+                return;
+            }
+        } else {
+        	if( this.fileSystemFolder == null ) {
+        		setStatus(new Status(IStatus.ERROR, PLUGIN_ID, "File system folder is not defined"));
+        		return;
+        	}
+        }
+        
+        // Check if existing file system vdb.xml exists
+        if( !overwriteExistingFiles() && !saveToWorkspace) {
+        	String fileSystemFullPathAndFile = getFileSystemFolder() + File.separator + getOutputVdbFileName();
+        	File file = new File(fileSystemFullPathAndFile);
+        	if( file.exists()) {
+        		setStatus(new Status(IStatus.ERROR, PLUGIN_ID, "VDB File: " + getOutputVdbFileName() + " already exists"));
+        	}
         }
     }
     
@@ -271,4 +392,111 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 			this.excludeSourceMetadata = excludeSourceMetadata;
 		}
 	}
+	
+
+	public boolean isSaveToWorkspace() {
+		return saveToWorkspace;
+	}
+
+	public void setSaveToWorkspace(boolean saveToWorkspace) {
+		this.saveToWorkspace = saveToWorkspace;
+	}
+
+	public void setFileSystemFullPathAndFile(String fileSystemFullPathAndFile) {
+		// separate the file name and location based on OS-specific file separator
+		int sepIndex = fileSystemFullPathAndFile.lastIndexOf(File.separator);
+		fileSystemFolder = fileSystemFullPathAndFile.substring(0, sepIndex);
+		setOutputVdbFileName(fileSystemFullPathAndFile.substring(sepIndex + 1));
+	}
+
+	public String getFileSystemFolder() {
+		return fileSystemFolder;
+	}
+	
+	private void saveToWorkspace(final String xml, final IContainer workspaceLocation, final String fileName) {
+    	// Create the DDL File
+    	final IRunnableWithProgress op = new IRunnableWithProgress() {
+
+    		/**
+    		 * {@inheritDoc}
+    		 *
+    		 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+    		 */
+    		@Override
+    		public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+    			try {
+    	            final IFile fileToCreate = workspaceLocation.getFile(new Path(fileName));
+    	            
+    	        	InputStream istream = new ByteArrayInputStream(xml.getBytes());
+    	            
+    	        	fileToCreate.create(istream, false, monitor);
+    	        	workspaceLocation.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+    			} catch (final Exception err) {
+    				throw new InvocationTargetException(err);
+    			} finally {
+    				monitor.done();
+    			}
+    		}
+    	};
+
+    	try {
+    		new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(false, true, op);
+    	} catch (Throwable err) {
+    		if (err instanceof InvocationTargetException) {
+    			err = ((InvocationTargetException)err).getTargetException();
+    		}
+    		ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
+    		WidgetUtil.showError("Error saving dynamic vdb to workspace"); //$NON-NLS-1$
+    	}
+    }
+    
+    /**
+     * Export the current DDL to the supplied file
+     * @param fileStr
+     */
+    private void saveToFileSystem(final String xml, final String fileSystemFolderUrl, final String fileName) {
+    	String fileSystemFullPathAndFile = fileSystemFolderUrl + File.separator + fileName;
+        if (fileSystemFullPathAndFile != null) {
+
+        	
+            FileWriter fw = null;
+            BufferedWriter out = null;
+            PrintWriter pw = null;
+            try {
+            	
+                File export = new File(fileSystemFolderUrl, fileName);
+
+                if (export.exists()) {
+                	if(overwriteExistingFiles() ) {
+                        if (!export.delete()) {
+                            throw new Exception(VdbPlugin.UTIL.getString("unableToDelete", export)); //$NON-NLS-1$
+                        }
+                	} else {
+	                    throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationAlreadyExists,
+	                    		getOutputVdbFileName(),
+	                    		fileSystemFolderUrl));
+                	}
+                }
+            	
+            	
+                fw = new FileWriter(fileSystemFullPathAndFile);
+                out = new BufferedWriter(fw);
+                pw = new PrintWriter(out);
+                pw.write(xml);
+
+            } catch (Exception e) {
+                UiConstants.Util.log(IStatus.ERROR, e, "Error saving dynamic vdb to file system"); //$NON-NLS-1$
+            } finally {
+                pw.close();
+                try {
+                    out.close();
+                } catch (java.io.IOException e) {
+                }
+                try {
+                    fw.close();
+                } catch (java.io.IOException e) {
+                }
+            }
+        }
+    }
 }

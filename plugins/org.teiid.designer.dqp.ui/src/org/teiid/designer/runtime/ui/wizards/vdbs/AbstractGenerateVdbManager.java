@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -24,8 +25,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
@@ -126,7 +129,9 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
 
                 @Override
                 public void run() {
-                    wizard.getContainer().updateButtons();
+                	if( wizard != null ) {
+                		wizard.getContainer().updateButtons();
+                	}
                 }
             };
 
@@ -202,6 +207,14 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
      */
     public AbstractGenerateVdbManager(AbstractWizard wizard) {
         this.wizard = wizard;
+    }
+    
+    /**
+     * @param wizard
+     */
+    public AbstractGenerateVdbManager() {
+    	super();
+    	wizard = null;
     }
 
     /**
@@ -413,6 +426,17 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
 
     protected void generateVdbJob(final GeneratorCallback callback) {
         GenerateRunnable runnable = new GenerateRunnable(callback);
+        
+        if( wizard == null ) {
+            try {
+                new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(true, true, runnable);
+            } catch (final InterruptedException e) {
+            } catch (final InvocationTargetException e) {
+                UiConstants.Util.log(e.getTargetException());
+            }
+            return;
+        }
+        
         try {
             wizard.getContainer().run(true, true, runnable);
         } catch (Exception ex) {

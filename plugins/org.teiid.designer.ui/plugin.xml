@@ -47,7 +47,7 @@
          point="org.teiid.designer.ui.modelEditorPage">
       <class
             tabName="%modelTableEditor"
-            order="2"
+            order="3"
             name="org.teiid.designer.ui.table.ModelTableEditor">
       </class>
    </extension>
@@ -513,7 +513,7 @@
                id="org.eclipse.wst.server.ui.ServersView"
                minimized="false"
                relationship="stack"
-               relative="org.eclipse.ui.views.ProblemView">
+               relative="org.teiid.designer.datasources.ui.sources.DataSourcesViewID">
          </view>
       </perspectiveExtension>
    </extension>

@@ -14,6 +14,7 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.jdbc.IResults;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 
 
@@ -46,6 +47,7 @@ public class PreviewTableDataContextAction extends SortableSelectionAction {
         setWiredForSelection(true);
         setToolTipText(getString("tooltip")); //$NON-NLS-1$
         worker = new PreviewDataWorker();
+        setId(ModelActionConstants.Special.PREVIEW_DATA);
     }
 
     /**

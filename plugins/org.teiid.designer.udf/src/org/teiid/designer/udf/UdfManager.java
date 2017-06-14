@@ -585,6 +585,53 @@ public final class UdfManager implements IResourceChangeListener {
     	return functions;
     }
     
+    public synchronized Object getDataType(String fullFunctionName) {
+    	// Expecting ModelName.functionName as input
+    	//
+    	String functionModelName = null;
+    	String functionName = fullFunctionName;
+    	if( fullFunctionName.contains(".") ) {
+    		int endIndex = fullFunctionName.indexOf(".");
+    		functionModelName = functionName.substring(0, endIndex);
+    		functionName = functionName.substring(endIndex+1);
+    	}
+    	Collection<ModelResource> allModels = getRelationalModels();
+    	
+    	for( ModelResource mr : allModels) {
+    		String modelName = mr.getItemName();
+    		if( modelName.endsWith(".xmi")) {
+    			modelName = modelName.substring(0, (modelName.length()-4));
+    		}
+    		if( modelName.equals(functionModelName) ) {
+	    		
+		    	Collection<Procedure> modelFunctions = getFunctions(mr);
+		    	
+		    	for( Procedure proc : modelFunctions ) {
+		    		if( proc.getName().equalsIgnoreCase(functionName) ) {
+			    		for( Object obj : proc.getParameters() ) {
+			    			ProcedureParameter param = (ProcedureParameter)obj;
+			    			if( param.getDirection().equals(DirectionKind.RETURN_LITERAL) )
+			    				return param.getType();
+			    		}
+		    		}
+		    	}
+    		}
+    	}
+    	return null;
+    }
+    
+    private IProject getProject(ModelResource mr) {
+    	IProject proj = null;
+    	
+    	try {
+			proj = mr.getUnderlyingResource().getProject();
+		} catch (ModelWorkspaceException ex) {
+			UdfPlugin.UTIL.log(ex);
+		}
+    	
+    	return proj;
+    }
+    
     private Collection<ModelResource> getRelationalModels() {
     	Collection<ModelResource> relationalMdls = new ArrayList<ModelResource>();
     	

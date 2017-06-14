@@ -61,6 +61,8 @@ public class JndiNameInModelHelper {
 	}
 
 	public void setJNDINameInTxn(ModelResource modelResource, String newJNDIName) {
+		String jndiName = newJNDIName;
+		
 		boolean requiredStart = ModelerCore.startTxn(true, true, "Set Data Source JNDI Name", this); //$NON-NLS-1$
 		boolean succeeded = false;
 		try {
@@ -69,7 +71,9 @@ public class JndiNameInModelHelper {
 			if (editor != null) {
 				boolean isDirty = editor.isDirty();
 
-				connectionInfoHelper.setJNDIName(modelResource, newJNDIName);
+				if( !jndiName.startsWith(JNDI_PREFIX)) jndiName = JNDI_PREFIX + jndiName;
+				
+				connectionInfoHelper.setJNDIName(modelResource, jndiName);
 
 				if (!isDirty && editor.isDirty()) {
 					editor.doSave(new NullProgressMonitor());

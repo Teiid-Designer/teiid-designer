@@ -29,6 +29,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.event.ModelResourceEvent;
@@ -44,6 +45,7 @@ public class BuildModelImportsAction extends Action implements ISelectionListene
     public BuildModelImportsAction() {
         super();
         setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.BUILD_MODEL_IMPORTS_ICON));
+        setId(ModelActionConstants.Resource.BUILD_MODEL_IMPORTS);
     }
 
     @Override

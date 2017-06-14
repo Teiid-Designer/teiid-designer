@@ -307,6 +307,26 @@
       </specialAction>
    </extension>
    <extension
+		id="CreateViewFromTableAction"
+		name="%createViewFromTableAction.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="org.teiid.designer.transformation.ui.builder.view.CreateViewFromTableAction"
+         label="%createViewFromTableAction.label">
+      </specialAction>
+   </extension>
+   <extension
+		id="CreateViewInModelAction"
+		name="%createViewInModelAction.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="org.teiid.designer.transformation.ui.builder.view.CreateViewInModelAction"
+         label="%createViewInModelAction.label">
+      </specialAction>
+   </extension>
+   
+   
+   <extension
          point="org.teiid.designer.ui.common.editorPreferences">
          <editorPreferenceComponent
          	class="org.teiid.designer.transformation.ui.preferences.TransformationEditorPreferencesComponent"/>
@@ -435,5 +455,15 @@
                class="org.eclipse.core.resources.IFile">
          </selection>
       </wizard>
+   </extension>
+   <extension
+      id="org.teiid.designer.transformation.ui.editors.summary.modelEditorMainPage"
+      name="%modelEditorMainPage.name"
+      point="org.teiid.designer.ui.modelEditorPage">
+      <class
+            tabName="%modelEditorMainPage.tabname"
+            order="0"
+            name="org.teiid.designer.transformation.ui.editors.summary.ModelEditorMainPage">
+      </class>
    </extension>
 </plugin>

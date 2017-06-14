@@ -140,7 +140,6 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
         if(isRelationalSourceModel) {
             getImportManager().setTargetModelName(((IFile)selectedObj).getName());
         }
-        
 	}
 	
 	/*
@@ -262,6 +261,10 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
 	@Override
 	public void setProperties(Properties properties) {
     	this.designerProperties = properties;
+    	String jndiName = this.designerProperties.getProperty("JndiName");
+    	if( jndiName != null ) {
+    		getImportManager().setDataSourceJndiName(jndiName);
+    	}
 	}
 	
 	protected boolean openProjectExists() {
