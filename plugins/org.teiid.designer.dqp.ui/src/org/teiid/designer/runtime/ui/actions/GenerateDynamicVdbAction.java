@@ -9,27 +9,23 @@ package org.teiid.designer.runtime.ui.actions;
 
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.Messages;
-import org.teiid.designer.runtime.ui.DqpUiConstants.Images;
 import org.teiid.designer.runtime.ui.wizards.vdbs.GenerateDynamicVdbDialog;
 import org.teiid.designer.runtime.ui.wizards.vdbs.GenerateDynamicVdbManager;
-import org.teiid.designer.runtime.ui.wizards.vdbs.GenerateDynamicVdbWizard;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-import org.teiid.designer.vdb.ui.VdbUiPlugin;
 
 public class GenerateDynamicVdbAction extends SortableSelectionAction implements DqpUiConstants {
     private static final String label = DqpUiConstants.UTIL.getString("label"); //$NON-NLS-1$

@@ -29,6 +29,7 @@ import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
@@ -46,7 +47,9 @@ import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.query.sql.lang.util.CommandHelper;
+import org.teiid.designer.query.sql.symbol.IAliasSymbol;
 import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
@@ -313,6 +316,20 @@ public class TransformationMappingHelper implements ISQLConstants {
         boolean typesMatch = false;
         if (seSymbol != null && attribute != null) {
             Class symType = seSymbol.getType();
+            if (seSymbol instanceof IAliasSymbol) {
+            	IExpression symbol = ((IAliasSymbol)seSymbol).getSymbol();
+            	if( symbol instanceof IFunction) {
+	            	Object dType = TransformationSqlHelper.getElementSymbolType(symbol);
+	            	if( dType instanceof EObject ) {
+	            		symType = dType.getClass();
+	            		if( attribute instanceof Column){
+	            			String attTypeName = ModelerCore.getModelEditor().getName((EObject)dType);
+	            			String symTypeName = ModelerCore.getModelEditor().getName(((Column)attribute).getType());
+	            			return attTypeName.equalsIgnoreCase(symTypeName);
+	            		}
+	            	}
+            	}
+            }
             
             IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
             if (symType != null && (symType == service.getDefaultDataClass(DataTypeName.NULL) || RuntimeTypeConverter.isExplicitMatch(seSymbol, attribute))) {

@@ -118,7 +118,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 
 	private void checkDynamicVdbGenerated() throws Exception {
         if (isGenerateRequired())
-            throw new Exception(Messages.GenerateDynamicVdbWizard_validation_noDynamicVdbGenerated);
+            throw new Exception(Messages.GenerateDynamicVdbManager_validation_noDynamicVdbGenerated);
     }
 
     /**
@@ -220,13 +220,13 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
                 if (!export.delete())
                     throw new Exception(VdbPlugin.UTIL.getString("unableToDelete", export)); //$NON-NLS-1$
         	}
-            throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationAlreadyExists,
+            throw new Exception(NLS.bind(Messages.GenerateDynamicVdbManager_exportLocationAlreadyExists,
             		getOutputVdbFileName(),
                                          directory));
         }
         
         if (!export.createNewFile())
-            throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationFailedToCreateFile,
+            throw new Exception(NLS.bind(Messages.GenerateDynamicVdbManager_exportLocationFailedToCreateFile,
             		getOutputVdbFileName(),
                                          directory));
 
@@ -304,12 +304,12 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 	        return;
 
         if (!getOutputVdbFileName().toLowerCase().endsWith(ITeiidVdb.DYNAMIC_VDB_SUFFIX)) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_vdbMissingXmlExtension));
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbManager_validation_vdbMissingXmlExtension));
             return;
         }
 
         if (!isGenerateRequired() && getDynamicVdb() == null) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_noDynamicVdbGenerated));
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbManager_validation_noDynamicVdbGenerated));
             return;
         }
         
@@ -471,7 +471,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
                             throw new Exception(VdbPlugin.UTIL.getString("unableToDelete", export)); //$NON-NLS-1$
                         }
                 	} else {
-	                    throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationAlreadyExists,
+	                    throw new Exception(NLS.bind(Messages.GenerateDynamicVdbManager_exportLocationAlreadyExists,
 	                    		getOutputVdbFileName(),
 	                    		fileSystemFolderUrl));
                 	}

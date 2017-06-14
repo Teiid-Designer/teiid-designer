@@ -25,11 +25,11 @@ public class Messages extends NLS {
     public static String GenerateVdbWizard_validation_targetLocationNotExist;
     public static String GenerateVdbWizard_validation_targetFileAlreadyExists;
 
-    public static String GenerateDynamicVdbWizard_title;
-    public static String GenerateDynamicVdbWizard_validation_vdbMissingXmlExtension;
-    public static String GenerateDynamicVdbWizard_validation_noDynamicVdbGenerated;
-    public static String GenerateDynamicVdbWizard_exportLocationAlreadyExists;
-    public static String GenerateDynamicVdbWizard_exportLocationFailedToCreateFile;
+    public static String GenerateDynamicVdbManager_title;
+    public static String GenerateDynamicVdbManager_validation_vdbMissingXmlExtension;
+    public static String GenerateDynamicVdbManager_validation_noDynamicVdbGenerated;
+    public static String GenerateDynamicVdbManager_exportLocationAlreadyExists;
+    public static String GenerateDynamicVdbManager_exportLocationFailedToCreateFile;
 
     public static String GenerateDynamicVdbPageOne_title;
     public static String GenerateDynamicVdbPageOne_summaryGroupName;
