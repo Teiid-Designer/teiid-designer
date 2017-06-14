@@ -862,6 +862,14 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	return options;
     }
     
+    private Map<String, String> getIndexOptions(Index ap) {
+    	Map<String, String> options = new HashMap<String, String>();
+    	if( this.includeNIS && ap.getNameInSource() != null) {
+    		options.put(NAMEINSOURCE, ap.getNameInSource());
+    	}
+    	return options;
+    }
+    
     private String getOptions(EObject eobject) {
     	OptionsStatement options = new OptionsStatement();
     	
@@ -1151,6 +1159,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         	options.putAll( getFKOptions((ForeignKey)modelObject));
     	} else if( modelObject instanceof AccessPattern ) {
         	options.putAll( getAPOptions((AccessPattern)modelObject));
+    	}  else if( modelObject instanceof Index ) {
+        	options.putAll( getIndexOptions((Index)modelObject));
     	} 
 
     	Collection<String> extensionNamespaces = medAggregator.getSupportedNamespacePrefixes(modelObject);

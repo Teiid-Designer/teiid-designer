@@ -2,20 +2,25 @@ package org.teiid.designer.transformation.ui.actions;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.transformation.reverseeng.ReverseEngConstants.Mode;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.wizards.jdg.MaterializationWizard;
 import org.teiid.designer.transformation.ui.wizards.jdg.Messages;
+import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
+import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 public class CreatePojoAction extends SortableSelectionAction {
@@ -75,6 +80,20 @@ public class CreatePojoAction extends SortableSelectionAction {
     @Override
     public void run() {
         final IWorkbenchWindow iww = UiPlugin.getDefault().getCurrentWorkbenchWindow();
+        
+        // Check first that none of the columns in the table have a biginteger datatype
+    	final Table theTable = (Table)SelectionUtilities.getSelectedEObject(getSelection());
+    	for( Object col : theTable.getColumns() ) {
+    		EObject datatype = ((Column)col).getType();
+    		String typeName = ModelObjectUtilities.getName(datatype);
+    		if(IDataTypeManagerService.DataTypeName.BIGINTEGER.toString().equalsIgnoreCase(typeName) ) {
+    			MessageDialog.openError(iww.getShell(), org.teiid.designer.transformation.ui.Messages.CreatePojoAction_invalidDatatypeTitle,
+    					NLS.bind(org.teiid.designer.transformation.ui.Messages.CreatePojoAction_invalidDatatypeMessage, typeName)); 
+    			return;
+    		}
+    	}
+    	
+        
 
         final MaterializationWizard wizard = new MaterializationWizard(Mode.POJO);
         wizard.setWindowTitle(Messages.MaterializationWizard_Title_Pojo_Only);

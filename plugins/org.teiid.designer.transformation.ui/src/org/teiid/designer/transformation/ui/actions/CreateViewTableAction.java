@@ -36,6 +36,8 @@ import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.editor.EditRelationalObjectDialog;
 import org.teiid.designer.transformation.model.RelationalViewModelFactory;
 import org.teiid.designer.transformation.ui.Messages;
+import org.teiid.designer.transformation.ui.builder.view.CreateViewOptionsDialog;
+import org.teiid.designer.transformation.ui.builder.view.ViewBuilderManager;
 import org.teiid.designer.transformation.ui.editors.TransformationDialogModel;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.actions.INewChildAction;
@@ -149,9 +151,9 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
 
 		return result;
 	}
-
+	
 	@Override
-   public void run() {
+	public void run() {
         // If properties were passed in, use it's model as the selection - if available
         if (this.designerProperties != null) {
             IFile propsViewModel = DesignerPropertiesUtil.getViewModel(this.designerProperties);
@@ -159,24 +161,44 @@ public class CreateViewTableAction extends Action implements INewChildAction, IN
         }
 		if( selectedModel != null ) {
 	        ModelResource mr = ModelUtilities.getModelResource(selectedModel);
-	        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-	        
+	        run(mr);
+		}
+	}
+
+    public void run(ModelResource mr) {
+
+        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+        
+        boolean useBasicEditor = true;
+        CreateViewOptionsDialog dialog = new CreateViewOptionsDialog(shell, null);
+        dialog.open();
+        if (dialog.getReturnCode() == Window.OK) {
+        	useBasicEditor = dialog.useBasicEditor();
+        }
+        
+        if( dialog.getReturnCode() == Window.CANCEL) return;
+        
+        if( useBasicEditor ) {
             relationalViewTable = new RelationalViewTable();
             relationalViewTable.setSupportsUpdate(true);
 	        
 	        // Hand the table off to the generic edit dialog
-            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewTable, selectedModel);
-            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
+            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewTable, (IFile)ModelUtilities.getIResource(mr));
+            EditRelationalObjectDialog editDialog = new EditRelationalObjectDialog(shell, dialogModel);
 
-	        dialog.open();
+            editDialog.open();
 	        
-	        if (dialog.getReturnCode() == Window.OK) {
+	        if (editDialog.getReturnCode() == Window.OK) {
 	        	this.newViewTable = createViewTableInTxn(mr, relationalViewTable);
 	        } else {
 	        	this.relationalViewTable = null;
 	        	this.newViewTable = null;
 	        }
-		}
+        } else {
+        	ViewBuilderManager builder = new ViewBuilderManager(mr);
+        	
+        	builder.run();
+        }
 		
 	}
 

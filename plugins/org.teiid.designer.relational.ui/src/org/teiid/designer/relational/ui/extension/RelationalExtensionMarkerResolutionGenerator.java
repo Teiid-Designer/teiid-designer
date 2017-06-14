@@ -9,7 +9,7 @@ import org.eclipse.ui.IMarkerResolutionGenerator;
 
 
 public class RelationalExtensionMarkerResolutionGenerator implements IMarkerResolutionGenerator {
-	private static final String IS_OLD_RELATIONAL_MED = "isOldRelationalMed"; //$NON-NLS-1$
+	public static final String IS_OLD_RELATIONAL_MED = "isOldRelationalMed"; //$NON-NLS-1$
 	    @Override
 	    public IMarkerResolution[] getResolutions(IMarker marker) {
 	    	Collection<IMarkerResolution> resolutions = new ArrayList<IMarkerResolution>();

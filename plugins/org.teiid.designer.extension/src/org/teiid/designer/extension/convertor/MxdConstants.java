@@ -42,6 +42,11 @@ public interface MxdConstants extends StringConstants {
      * IMPL keyword
      */
     String IMPL = "Impl"; //$NON-NLS-1$
+    
+    /**
+     * IMPL keyword
+     */
+    String GEOMETRY = "GEOMETRY"; //$NON-NLS-1$
 
     /**
      * Attributes used by Extension metadata annotation
@@ -158,6 +163,8 @@ public interface MxdConstants extends StringConstants {
         DOUBLE(Double.class),
 
         FLOAT(Float.class),
+        
+        GEOMETRY(MxdConstants.GEOMETRY),
 
         INTEGER(Integer.class),
 

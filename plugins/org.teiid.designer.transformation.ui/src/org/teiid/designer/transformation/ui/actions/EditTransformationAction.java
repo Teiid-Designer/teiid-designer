@@ -22,6 +22,7 @@ import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.EditTransformationHelper;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
@@ -42,6 +43,7 @@ public class EditTransformationAction extends SortableSelectionAction implements
     public EditTransformationAction() {
         super(label, SWT.DEFAULT);
         setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.EDIT_TRANSFORMATION_ICON));
+        setId(ModelActionConstants.Resource.EDIT_TRANSFORMATION);
         setToolTipText(tooltip);
     }
     @Override

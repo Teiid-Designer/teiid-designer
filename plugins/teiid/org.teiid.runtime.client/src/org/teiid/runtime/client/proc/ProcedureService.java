@@ -79,8 +79,13 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         	// Need to check for d-quotes and triple d-quote the column alias.
         	String aliasColumnName = columnName;
         	boolean aliasColumn = false;
-        	if( columnName.startsWith(D_QUOTE) ) {
-        		aliasColumnName = D_QUOTE + D_QUOTE + columnName + D_QUOTE + D_QUOTE;
+        	if( columnName.startsWith(D_QUOTE)) {
+        		if(!columnName.startsWith(D_QUOTE + D_QUOTE + D_QUOTE) ) {
+        			aliasColumnName = D_QUOTE + D_QUOTE + columnName + D_QUOTE + D_QUOTE;
+        		} else {
+        			int len = columnName.length();
+        			columnName = columnName.substring(2, len-2);
+        		}
         		aliasColumn = true;
         	}
             sb.append(alias).append(DOT).append(columnName);
@@ -99,7 +104,12 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         sb = new StringBuffer();
         i=0;
         for( ITeiidColumnInfo columnStr : columnInfoList) {
-            sb.append(columnStr.getSymbolName()).append(SPACE).append(columnStr.getDatatype());
+        	String columnName = columnStr.getSymbolName();
+        	if(columnName.startsWith(D_QUOTE + D_QUOTE + D_QUOTE) ) {
+    			int len = columnName.length();
+    			columnName = columnName.substring(2, len-2);
+        	}
+            sb.append(columnName).append(SPACE).append(columnStr.getDatatype());
             if( metadataFileInfo.isFixedWidthColumns()) {
                 sb.append(SPACE).append(WIDTH).append(SPACE).append(Integer.toString(columnStr.getWidth()));
                 if(columnStr.isNoTrim()) {

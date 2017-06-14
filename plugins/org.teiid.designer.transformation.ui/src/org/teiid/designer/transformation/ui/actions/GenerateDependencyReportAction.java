@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPart;
@@ -61,7 +62,13 @@ public class GenerateDependencyReportAction extends TransformationAction impleme
         determineEnablement();
     }
 
-    /**
+    @Override
+	public void selectionChanged(SelectionChangedEvent theEvent) {
+		super.selectionChanged(theEvent);
+		determineEnablement();
+	}
+
+	/**
      * @see org.eclipse.jface.action.Action#run()
      * @since 4.0
      */

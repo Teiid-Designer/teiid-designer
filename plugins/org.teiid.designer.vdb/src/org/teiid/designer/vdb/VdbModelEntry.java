@@ -625,14 +625,18 @@ public class VdbModelEntry extends VdbIndexedEntry {
 
                 final String translatorName = this.sourceInfo.getSource(0).getTranslatorName();
                 final String resourceTranslatorName = helper.getTranslatorName(mr);
-                if (!CoreStringUtil.isEmpty(resourceTranslatorName)
-                    && !CoreStringUtil.equals(translatorName, resourceTranslatorName)) {
-                    this.sourceInfo.getSource(0).setTranslatorName(resourceTranslatorName == null ? EMPTY_STRING : resourceTranslatorName);
-                }
-
-                Properties translatorProps = helper.getTranslatorProperties(mr);
-                if (!translatorProps.isEmpty()) {
-                    updateTranslatorOverrides(translatorProps);
+                // Note that the user might be using a translator override. Check that first and ignore if override
+                if( !isTranslatorOverride(translatorName) ) {
+	                if (!CoreStringUtil.isEmpty(resourceTranslatorName)
+	                    && !CoreStringUtil.equals(translatorName, resourceTranslatorName)) {
+	                    this.sourceInfo.getSource(0).setTranslatorName(resourceTranslatorName == null ? EMPTY_STRING : resourceTranslatorName);
+	                }
+	                
+	
+	                Properties translatorProps = helper.getTranslatorProperties(mr);
+	                if (!translatorProps.isEmpty()) {
+	                    updateTranslatorOverrides(translatorProps);
+	                }
                 }
 
                 final String jndiName = this.sourceInfo.getSource(0).getJndiName();
@@ -732,6 +736,16 @@ public class VdbModelEntry extends VdbIndexedEntry {
     void replaceImport(VdbEntry oldEntry, VdbEntry newEntry) {
         imports.remove(oldEntry);
         imports.add(newEntry);
+    }
+    
+    private boolean isTranslatorOverride(String translator) {
+    	if( translator == null ) return false;
+    	
+    	for( TranslatorOverride to : getVdb().getTranslators()) {
+    		if( to.getName().equalsIgnoreCase(translator)) return true;
+    	}
+    	
+    	return false;
     }
 
     /**

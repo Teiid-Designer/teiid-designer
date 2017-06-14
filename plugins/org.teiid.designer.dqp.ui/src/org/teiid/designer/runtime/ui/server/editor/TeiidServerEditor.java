@@ -910,14 +910,14 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
         		teiidServer.getTeiidAdminInfo().getPort(), 
         		adminUname, 
         		adminPwd, 
-        		teiidServer.getTeiidAdminInfo().isSecure());
+        		serverOptions.contains(ServerOptions.ADMIN_SECURE_CONNECTION));
         
         teiidServer.getTeiidJdbcInfo().setAll(
         		teiidServer.getTeiidAdminInfo().getHost(), 
         		finalJdbcPort, 
         		jdbcUserNameText.getText(), 
         		jdbcPasswdText.getText(), 
-        		teiidServer.getTeiidAdminInfo().isSecure());
+        		serverOptions.contains(ServerOptions.JDBC_SECURE_CONNECTION));
 
         dirty = false;
         firePropertyChange(IEditorPart.PROP_DIRTY);
@@ -1042,7 +1042,8 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
 
         			}
         		} catch (Exception e) {
-        			if(! e.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+        			if(! e.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE) &&
+        			   ! e.getMessage().contains(TeiidParentServerListener.JBAS012174_CODE) ) {
         				e.printStackTrace();
         			}
         		}

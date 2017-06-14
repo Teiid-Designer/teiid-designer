@@ -835,7 +835,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
         }
 
         if (defaultToWorkspaceMgr && result == null) {
-            result = ModelerCore.getWorkspaceDatatypeManager();
+            result = registry.register(DEFAULT_DATATYPE_MANAGER_KEY, ModelerCore.getWorkspaceDatatypeManager());
         }
 
         return result;

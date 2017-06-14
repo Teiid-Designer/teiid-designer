@@ -58,6 +58,8 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
     public static boolean VERBOSE = false;
 
     public static boolean ZIP_ACCESS_VERBOSE = false;
+    
+    public static boolean isShutDown = true;
 
     /**
      * The singleton manager
@@ -175,8 +177,14 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
             	ModelerCore.Util.log(IStatus.ERROR,
                                          ModelerCore.Util.getString("ModelWorkspaceManager.Error_encountered_starting_ModelWorkspaceManager_1")); //$NON-NLS-1$
             }
+            
+            isShutDown = false;
         }
         return manager;
+    }
+    
+    public final static boolean isShutDown() {
+    	return isShutDown;
     }
 
     public final static void shutdown() throws CoreException {
@@ -198,6 +206,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
                                                1,
                                                ModelerCore.Util.getString("ModelWorkspaceManager.Error_encountered_shutting_down_ModelWorkspaceManager_2"), t)); //$NON-NLS-1$
         } finally {
+        	isShutDown = true;
             manager = null;
         }
     }

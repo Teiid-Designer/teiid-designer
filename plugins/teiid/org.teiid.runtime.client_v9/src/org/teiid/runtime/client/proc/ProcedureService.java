@@ -73,7 +73,25 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         int i=0;
         int nColumns = columnInfoList.size();
         for(ITeiidColumnInfo columnStr : columnInfoList) {
-            sb.append(alias).append(DOT).append(columnStr.getSymbolName());
+        	String columnName = columnStr.getSymbolName();
+        	
+        	// Column names may contain spaces and/or odd characters as long as they are double-quoted
+        	// Need to check for d-quotes and triple d-quote the column alias.
+        	String aliasColumnName = columnName;
+        	boolean aliasColumn = false;
+        	if( columnName.startsWith(D_QUOTE)) {
+        		if(!columnName.startsWith(D_QUOTE + D_QUOTE + D_QUOTE) ) {
+        			aliasColumnName = D_QUOTE + D_QUOTE + columnName + D_QUOTE + D_QUOTE;
+        		} else {
+        			int len = columnName.length();
+        			columnName = columnName.substring(2, len-2);
+        		}
+        		aliasColumn = true;
+        	}
+            sb.append(alias).append(DOT).append(columnName);
+            if( aliasColumn ) {
+            	sb.append(SPACE).append(AS).append(SPACE).append(aliasColumnName);
+            }
             
             if(i < (nColumns-1)) {
                 sb.append(COMMA).append(SPACE);
@@ -86,7 +104,12 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         sb = new StringBuffer();
         i=0;
         for( ITeiidColumnInfo columnStr : columnInfoList) {
-            sb.append(columnStr.getSymbolName()).append(SPACE).append(columnStr.getDatatype());
+        	String columnName = columnStr.getSymbolName();
+        	if(columnName.startsWith(D_QUOTE + D_QUOTE + D_QUOTE) ) {
+    			int len = columnName.length();
+    			columnName = columnName.substring(2, len-2);
+        	}
+            sb.append(columnName).append(SPACE).append(columnStr.getDatatype());
             if( metadataFileInfo.isFixedWidthColumns()) {
                 sb.append(SPACE).append(WIDTH).append(SPACE).append(Integer.toString(columnStr.getWidth()));
                 if(columnStr.isNoTrim()) {
@@ -100,7 +123,12 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
             i++;
         }
         
-        String proc = S_QUOTE + metadataFileInfo.getDataFile().getName() + S_QUOTE;
+        String fileName = metadataFileInfo.getDataFile().getName();
+        if( metadataFileInfo.getDataFileFilter() != null ) {
+        	fileName = metadataFileInfo.getDataFileFilter();
+        }
+        String proc = S_QUOTE + fileName + S_QUOTE;
+
         if( metadataFileInfo.isUrl() ) {
             proc = S_QUOTE + GET + S_QUOTE
                     + COMMA + SPACE + NULL.toLowerCase()
@@ -144,13 +172,13 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
             String quote = metadataFileInfo.getQuote();
             if( ! DEFAULT_QUOTE.equals(quote)) {
                 sb.append(QUOTE_STR); //$NON-NLS-1$
-                sb.append(SPACE).append('\'').append(quote).append('\'');
+                sb.append(SPACE).append(S_QUOTE).append(quote).append(S_QUOTE);
             }
         } else if(metadataFileInfo.doIncludeEscape() ) {
             String escape = metadataFileInfo.getEscape();
             if( ! DEFAULT_ESCAPE.equals(escape)) {
                 sb.append(ESCAPE_STR); //$NON-NLS-1$
-                sb.append(SPACE).append('\'').append(escape).append('\'');
+                sb.append(SPACE).append(S_QUOTE).append(escape).append(S_QUOTE);
             }
         }
         

@@ -32,6 +32,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.runtime.DqpPlugin;
@@ -45,6 +46,7 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 public class DependentObjectHelper {
     private EObject targetObject;
     private Set<EObject> sourceTables = new HashSet<EObject>();
+    private Set<EObject> sourceFunctions = new HashSet<EObject>();
 
     boolean includeIntermediates = true;
 
@@ -87,6 +89,7 @@ public class DependentObjectHelper {
     }
     
     public Set<EObject> getDependentObjects() {
+    	sourceTables.addAll(sourceFunctions);
     	return sourceTables;
     }
 
@@ -113,6 +116,9 @@ public class DependentObjectHelper {
                     if( nextSourceEObject instanceof Table ) {
                     	addMaterializedTables((Table)nextSourceEObject);
                     }
+                } else {
+                	// need to look into the source model to find any source functions
+                	addSourceFunctions(ModelUtil.getModel(nextSourceEObject));
                 }
             }
         }
@@ -136,6 +142,16 @@ public class DependentObjectHelper {
             		addSourceTable((Table)obj);    
             	}
             }
+        }
+    }
+    
+    private void addSourceFunctions(ModelResource mr) throws ModelWorkspaceException {
+        for( Object obj : mr.getAllRootEObjects()) {
+        	if( obj instanceof Procedure ) {
+        		if( ((Procedure)obj).isFunction() ) {
+        			sourceFunctions.add((Procedure)obj);
+        		}
+        	}
         }
     }
  

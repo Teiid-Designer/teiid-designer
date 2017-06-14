@@ -52,7 +52,8 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
                 return adaptServer((IServer) adaptableObject, ServerOptions.ADD_TO_REGISTRY, ServerOptions.CONNECT);
             }
         } catch (Exception ex) {
-        	if(! ex.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+        	if(! ex.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE) && 
+        	   ! ex.getMessage().contains(TeiidParentServerListener.MISSING_NLS_MESSAGE)) {
         		// Teiid really isn't installed and this is called as part of this factory's extension point.
         		// So look for the 
         		DqpPlugin.Util.log(IStatus.ERROR, ex, "Failed to determine if server supports teiid"); //$NON-NLS-1$

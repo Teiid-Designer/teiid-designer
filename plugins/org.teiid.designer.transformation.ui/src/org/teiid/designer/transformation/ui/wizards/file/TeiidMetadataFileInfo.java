@@ -15,13 +15,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.validation.rules.StringNameValidator;
+import org.teiid.designer.metamodels.relational.RelationalPlugin;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.query.IProcedureService;
 import org.teiid.designer.query.IQueryService;
@@ -39,8 +41,9 @@ import org.teiid.designer.transformation.ui.UiConstants;
 
 public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants, ITeiidMetadataFileInfo {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataFileInfo.class);
+	private static char[] THESE_INVALID_CHARS = {' ', '.', '-'};
 	
-	private static final StringNameValidator validator = new RelationalStringNameValidator(false);
+	protected final NameValidator validator = new NameValidator(false);
 	
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
@@ -561,7 +564,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 					nextTok = nextTok.substring(1, nextTok.length()-1);
 				}
 				if( nextTok != null && nextTok.length() > 0 ) {
-					names.add(nextTok);
+					String colName = checkAndConvertName(nextTok);
+					names.add(colName);
 				}
 			}
 			
@@ -599,6 +603,17 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		validate();
 	}
 	
+	private String checkAndConvertName(String colName) {
+		// Check to see if all characters are letters or numbers
+		// if not, then double-quote the name
+		String result = validator.checkNameCharacters(colName);
+		if( StringUtilities.isNotEmpty(result)) {
+			return StringConstants.DQUOTE + colName + StringConstants.DQUOTE;
+		}
+		
+		return colName;
+	}
+	
 	@Override
 	public void validate() {
 		if( this.useHeaderForColumnNames ) {
@@ -610,7 +625,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		
 		if( this.columnInfoList.size() == 1 ) {
 			// COULD HAVE ONE COLUMN, SO VALIDATE
-			String message = TeiidMetadataFileInfo.validator.checkValidName(this.columnInfoList.iterator().next().getSymbolName());
+			String message = validator.checkValidName(this.columnInfoList.iterator().next().getSymbolName());
 			if( message != null ) {
 				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("status.noHeaderFound"))); //$NON-NLS-1$
 				return;
@@ -1084,4 +1099,73 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		return this.rowDelimiterOption;
 	}
     
+	class NameValidator extends RelationalStringNameValidator {
+		
+		public NameValidator(boolean isTable, boolean restrictChars) {
+			super(isTable, restrictChars);
+			// TODO Auto-generated constructor stub
+		}
+
+		public NameValidator(boolean isTable) {
+			super(isTable);
+			// TODO Auto-generated constructor stub
+		}
+		
+		@Override
+		public String checkNameCharacters(String name) {
+	        CoreArgCheck.isNotNull(name);
+
+	        // Go through the string and ensure that each character is valid ...
+	        
+	        int length = name.length();
+	        
+	        if (length == 0) {
+	        	return null;
+	        }
+	        
+	        char c = name.charAt(0);
+
+	        String msg = null;
+	        
+	        for (int index = 1; index < length; index++) {
+	        	c = name.charAt(index);
+	        	msg = isValidChar(c, index);
+
+	            if (msg != null) {
+	            	return msg;
+	            }
+	        }
+
+	        // Valid, so return no error message
+	        return null;
+		}
+
+		@Override
+		protected String isValidChar(char c, int index) {
+			boolean valid = true;
+			
+			String result = super.isValidChar(c, index);
+			if( StringUtilities.isNotEmpty(result) ) {
+				return result;
+			}
+			
+			if( index == 0 ) {
+				valid = Character.isLetter(c);
+			} else {
+				for( char nextChar : THESE_INVALID_CHARS ) {
+					if( c == nextChar ) {
+						valid = false;
+						break;
+					}
+				}
+			}
+			
+			if( !valid ) {
+				final Object[] params = new Object[] {new Character(c), new Integer(index+1), getValidNonLetterOrDigitMessageSuffix()};
+			    return RelationalPlugin.Util.getString("RelationalStringNameValidator.nameIsInvalidTheCharacterAt", params); //$NON-NLS-1$
+			}
+			
+			return null;
+		}
+	}
 }

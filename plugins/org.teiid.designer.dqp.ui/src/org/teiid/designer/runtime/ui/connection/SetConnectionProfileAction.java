@@ -43,6 +43,7 @@ import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.impl.JdbcFactoryImpl;
 import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
@@ -68,6 +69,7 @@ public class SetConnectionProfileAction extends SortableSelectionAction  impleme
     public SetConnectionProfileAction() {
         super(label, SWT.DEFAULT);
         setImageDescriptor(DatatoolsUiPlugin.getDefault().getImageDescriptor(DatatoolsUiConstants.Images.SET_CONNECTION_ICON));
+        setId(ModelActionConstants.Resource.SET_CONNECTION_PROFILE);
     }
 
     /**

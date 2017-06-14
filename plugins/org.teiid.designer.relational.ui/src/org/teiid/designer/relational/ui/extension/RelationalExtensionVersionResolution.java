@@ -1,6 +1,7 @@
 package org.teiid.designer.relational.ui.extension;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IFile;
@@ -11,9 +12,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IMarkerResolution;
+import org.eclipse.ui.views.markers.WorkbenchMarkerResolution;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
@@ -30,7 +33,7 @@ import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-public class RelationalExtensionVersionResolution  implements IMarkerResolution {
+public class RelationalExtensionVersionResolution extends WorkbenchMarkerResolution implements IMarkerResolution {
 
 	private String medID;
 
@@ -260,5 +263,30 @@ public class RelationalExtensionVersionResolution  implements IMarkerResolution 
     private static Shell getShell() {
         return UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     }
+
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Image getImage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IMarker[] findOtherMarkers(IMarker[] markers) {
+		Collection<IMarker> result = new ArrayList<IMarker>();
+		
+		
+		for( IMarker marker : markers ) {
+	    	if( marker.getAttribute(RelationalExtensionMarkerResolutionGenerator.IS_OLD_RELATIONAL_MED, false) ) {
+	    		result.add(marker);
+	    	}
+		}
+		return result.toArray(new IMarker[0]);
+	}
 
 }

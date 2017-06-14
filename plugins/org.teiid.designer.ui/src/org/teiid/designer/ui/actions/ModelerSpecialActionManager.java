@@ -72,7 +72,6 @@ public abstract class ModelerSpecialActionManager {
                         
                         // Set the text label
                         String label = elements[j].getAttribute(labelTag);
-                        ((Action)helper).setId(actionID);
 						if( label != null ) {
 							((Action)helper).setText(label);
 						}

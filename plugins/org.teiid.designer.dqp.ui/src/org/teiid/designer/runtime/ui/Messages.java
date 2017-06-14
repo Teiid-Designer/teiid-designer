@@ -110,6 +110,31 @@ public class Messages extends NLS {
     public static String PreviewDataWorker_vdbDeploymentErrorTitle;
     public static String PreviewDataWorker_previewVdbJndiMissingErrorTitle;
     
+    public static String GenerateDynamicVdbDialog_dynamicVdbDefinition;
+    public static String GenerateDynamicVdbDialog_options;
+    public static String GenerateDynamicVdbDialog_name;
+    public static String GenerateDynamicVdbDialog_fileName;
+    public static String GenerateDynamicVdbDialog_selectedVdbFile;
+    public static String GenerateDynamicVdbDialog_saveAsVdbXmlFile;
+    public static String GenerateDynamicVdbDialog_initialMessage;
+    public static String GenerateDynamicVdbDialog_okMessage;
+    public static String GenerateDynamicVdbDialog_location;
+    public static String GenerateDynamicVdbDialog_locationUndefined;
+    public static String GenerateDynamicVdbDialog_browse;
+    public static String GenerateDynamicVdbDialog_saveToWorkspace;
+    public static String GenerateDynamicVdbDialog_saveToFileSystem;
+    public static String GenerateDynamicVdbDialog_fileContents;
+    public static String GenerateDynamicVdbDialog_allowEditXml;
+    public static String GenerateDynamicVdbDialog_reset;
+    public static String GenerateDynamicVdbDialog_overwriteFilesOptionLabel;
+    public static String GenerateDynamicVdbDialog_overwriteVDBOptionTooltip;
+    public static String GenerateDynamicVdbDialog_version;
+    public static String GenerateDynamicVdbDialog_dynamicVdbNameTooltip;
+    public static String GenerateDynamicVdbDialog_dynamicVdbFileNameToolTip;
+    public static String GenerateDynamicVdbDialog_excludeSourceDdlMetadata;
+    public static String GenerateDynamicVdbDialog_suppressDefaultAttributesOption;
+public static String GenerateDynamicVdbDialog_suppressDefaultAttributesOptionTooltip;
+    
     static {
         NLS.initializeMessages("org.teiid.designer.runtime.ui.messages", Messages.class); //$NON-NLS-1$
     }

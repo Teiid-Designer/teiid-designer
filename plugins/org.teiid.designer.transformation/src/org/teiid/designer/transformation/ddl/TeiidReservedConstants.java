@@ -151,6 +151,7 @@ public interface TeiidReservedConstants extends StringConstants {
         String BLOB = "BLOB";
         String CLOB = "CLOB";
         String XML = "XML";
+        String GEOMETRY = "GEOMETRY"; //$NON-NLS-1$
     }
     
     public interface Reserved {

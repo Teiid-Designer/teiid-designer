@@ -588,7 +588,9 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     @Override
 	public void removeNotificationListener( ModelWorkspaceNotificationListener listener ) {
         CoreArgCheck.isNotNull(listener);
-        ModelWorkspaceManager.getModelWorkspaceManager().removeNotificationListener(listener);
+        if (!ModelWorkspaceManager.isShutDown() ) {
+        	ModelWorkspaceManager.getModelWorkspaceManager().removeNotificationListener(listener);
+        }
     }
 
     /**

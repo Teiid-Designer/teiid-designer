@@ -34,21 +34,21 @@ public class AdvisorPerspectiveContributor implements IModelerPerspectiveContrib
     }
     
     private void createContributions() {
-    	contributions = new PerspectiveObject[2];
+    	contributions = new PerspectiveObject[1];
     	
-        PerspectiveObject connectorsView = 
+        PerspectiveObject guidesView = 
             new PerspectiveObject(
                  AdvisorUiConstants.Extensions.GUIDES_VIEW_ID,
                  false,
-                 PerspectiveObject.TOP_RIGHT);
+                 PerspectiveObject.TOP_LEFT);
         
-        contributions[0] = connectorsView;
+        contributions[0] = guidesView;
         
-        PerspectiveObject statusView = 
-                new PerspectiveObject(
-                     AdvisorUiConstants.Extensions.STATUS_VIEW_ID,
-                     false,
-                     PerspectiveObject.BOTTOM_LEFT);
-        contributions[1] = statusView;
+//        PerspectiveObject statusView = 
+//                new PerspectiveObject(
+//                     AdvisorUiConstants.Extensions.STATUS_VIEW_ID,
+//                     false,
+//                     PerspectiveObject.BOTTOM_LEFT);
+//        contributions[1] = statusView;
     }
 }

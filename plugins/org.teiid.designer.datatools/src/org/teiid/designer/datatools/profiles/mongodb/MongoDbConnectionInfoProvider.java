@@ -75,7 +75,7 @@ public class MongoDbConnectionInfoProvider  extends ConnectionInfoHelper impleme
            	connectionProps.put(IMongoDbProfileConstants.PROP_REMOTE_SERVER_LIST, baseProps.get(IMongoDbProfileConstants.PROP_REMOTE_SERVER_LIST));
         } else if( (!CoreStringUtil.isEmpty(baseProps.getProperty(IMongoDbProfileConstants.CP_SERVER_HOST_KEY))) && (!CoreStringUtil.isEmpty(baseProps.getProperty(IMongoDbProfileConstants.CP_SERVER_PORT_KEY))) ) {
         	String host = baseProps.getProperty(IMongoDbProfileConstants.CP_SERVER_HOST_KEY);
-        	String port = baseProps.getProperty(IMongoDbProfileConstants.CP_SERVER_HOST_KEY);
+        	String port = baseProps.getProperty(IMongoDbProfileConstants.CP_SERVER_PORT_KEY);
            	connectionProps.put(IMongoDbProfileConstants.PROP_REMOTE_SERVER_LIST, host+":"+port); //$NON-NLS-1$
         }
         

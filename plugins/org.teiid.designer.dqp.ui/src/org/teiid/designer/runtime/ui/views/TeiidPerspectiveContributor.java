@@ -38,13 +38,14 @@ public class TeiidPerspectiveContributor implements IModelerPerspectiveContribut
     }
     
     private void createContributions() {
-        PerspectiveObject connectorsView = 
-            new PerspectiveObject(
-                 DqpUiConstants.Extensions.CONNECTORS_VIEW_ID,
-                 false,
-                 PerspectiveObject.BOTTOM_RIGHT);
-        contributions = new PerspectiveObject[1];
-        contributions[0] = connectorsView;
-
+    	contributions = new PerspectiveObject[0];
+    	
+//        PerspectiveObject connectorsView = 
+//            new PerspectiveObject(
+//                 DqpUiConstants.Extensions.CONNECTORS_VIEW_ID,
+//                 false,
+//                 PerspectiveObject.TOP_RIGHT);
+//        contributions = new PerspectiveObject[1];
+//        contributions[0] = connectorsView;
     }
 }
