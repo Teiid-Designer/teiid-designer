@@ -119,14 +119,14 @@ public interface IExecutionAdmin {
      * JNDI name is set as 'java:/mySource' (java context is added).  When the sources created by any other user are retrieved 
      * from the server, however, it is not guaranteed that the dsName and jndi name will match.
      * @param displayName the data source display name
-     * @param dsName the data source name
+     * @param jndiName the data source name
      * @param typeName the translator type name
      * @param properties the list of teiid-related connection properties
      * @return true if data source is created. false if it already exists
      * @throws Exception if data source creation fails
      */
      ITeiidDataSource getOrCreateDataSource(String displayName,
-                                                          String dsName,
+                                                          String jndiName,
                                                           String typeName,
                                                           Properties properties) throws Exception;
 

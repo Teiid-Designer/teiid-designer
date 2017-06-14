@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -79,8 +80,6 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
     private static final String HIDDEN_PASSWORD = "********"; //$NON-NLS-1$
     private static final String NEW_BUTTON = DqpUiConstants.UTIL.getString("Button.newLabel"); //$NON-NLS-1$
     private static final String EDIT_BUTTON = DqpUiConstants.UTIL.getString("Button.editLabel"); //$NON-NLS-1$
-    
-    private static final String JNDI_PREFIX = "java:/";  //$NON-NLS-1$
 
     private static String getString( final String id ) {
         return DqpUiConstants.UTIL.getString(I18N_PREFIX + id);
@@ -180,19 +179,10 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
         if (selectedModelResource != null) {
         	ConnectionInfoHelper helper = new ConnectionInfoHelper();
         	dataSourceName = helper.getJndiProperty(selectedModelResource);
-            // Strip off "java:/"
-            String nameOnly = StringConstants.EMPTY_STRING;
 
-            if( !StringUtilities.isEmpty(dataSourceName) ) {
-            	nameOnly = dataSourceName;
-            	if( dataSourceName.startsWith(JNDI_PREFIX) ) {
-            		nameOnly = dataSourceName.substring(6);
-            	}
-            	dataSourceName = nameOnly;
+            if( StringUtilities.isEmpty(dataSourceName) ) {
+            	dataSourceName = JndiUtil.addJavaPrefix(ModelUtil.getName(selectedModelResource));
             }
-        	if( dataSourceName == null ) {
-        		dataSourceName = ModelUtil.getName(selectedModelResource);
-        	}
         }
 
         this.dataSourceNameText = WidgetFactory.createTextField(mainPanel, GridData.FILL_HORIZONTAL, 1, dataSourceName);
@@ -692,7 +682,7 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
 
         public DataSourceNameValidator( int minLength,
                                         int maxLength ) {
-            super(minLength, maxLength, new char[] {UNDERSCORE_CHARACTER, '-', '.'});
+            super(minLength, maxLength, new char[] {UNDERSCORE_CHARACTER, '-', '.', ':', '/'});
         }
 
         @Override

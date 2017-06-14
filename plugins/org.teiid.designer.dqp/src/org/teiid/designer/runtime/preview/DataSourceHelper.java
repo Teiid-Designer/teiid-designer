@@ -12,6 +12,7 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
@@ -58,11 +59,7 @@ public class DataSourceHelper {
 			// Show Error Dialog
 			// return false
 			for( String jndiName : jndiNameModelMap.keySet() ) {
-				String shortName = jndiName;
-				if( jndiName.startsWith("java:/") ) {
-					shortName = jndiName.substring(6, jndiName.length());
-				}
-				ITeiidDataSource ds = teiidServer.getDataSource(shortName);
+				ITeiidDataSource ds = teiidServer.getDataSource(jndiName);
 				if( ds == null && jndiName != null) {
 					missingJndiNames.add(jndiName);
 				}
@@ -84,11 +81,7 @@ public class DataSourceHelper {
 		IStatus status = Status.OK_STATUS;
 		for( String jndiName : missingJndiNames ) {
 			try {
-				String shortJndiName = jndiName;
-				if( jndiName.startsWith("java:/") ) {
-					shortJndiName = jndiName.substring(6, jndiName.length());
-				}
-				status = handleCreateDataSource(jndiNameModelMap.get(jndiName), shortJndiName);
+				status = handleCreateDataSource(jndiNameModelMap.get(jndiName), jndiName);
 			} catch (Exception e) {
 				return new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.DataSourceHelper_dataSourceFailedToDeploy, jndiName));
 			}
@@ -100,6 +93,8 @@ public class DataSourceHelper {
     public IStatus handleCreateDataSource(ModelResource modelResource, String jndiName) throws Exception {
     	IStatus status = Status.OK_STATUS;
     	
+		String shortJndiName = JndiUtil.removeJavaPrefix(jndiName);
+    	
     	DataSourceConnectionHelper helper = new DataSourceConnectionHelper(modelResource);
 
         IStatus propertiesStatus = passwordOk(helper);
@@ -108,7 +103,7 @@ public class DataSourceHelper {
         	
         String dsType = helper.getDataSourceType();
 			
-		getServer().getOrCreateDataSource(jndiName, jndiName, dsType, teiidRelatedProperties);
+		getServer().getOrCreateDataSource(shortJndiName, jndiName, dsType, teiidRelatedProperties);
     	
     	return status;
     }

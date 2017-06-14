@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -41,7 +42,6 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 
 public class JndiNameInModelHelper {
     private static final String DIALOG_TITLE = DqpUiConstants.UTIL.getString("EnterDataSourceJNDINameDialog.title"); //$NON-NLS-1$
-    private static final String JNDI_PREFIX = "java:/";  //$NON-NLS-1$
     
 	private ConnectionInfoHelper connectionInfoHelper;
 
@@ -51,14 +51,10 @@ public class JndiNameInModelHelper {
 
 	public String getExistingJndiName(ModelResource mr) {
 		String existingName = connectionInfoHelper.getJndiProperty(mr);
-        // Strip off "java:/"
         String nameOnly = StringConstants.EMPTY_STRING;
 
         if( !StringUtilities.isEmpty(existingName) ) {
-        	nameOnly = existingName;
-        	if( existingName.startsWith(JNDI_PREFIX) ) {
-        		nameOnly = existingName.substring(6);
-        	}
+        	nameOnly = JndiUtil.removeJavaPrefix(existingName);
         }
         
         return nameOnly;
@@ -113,7 +109,7 @@ public class JndiNameInModelHelper {
 			if( StringUtilities.isEmpty(newJNDIName) ) {
 				setJNDINameInTxn(mr, null);
 			} else if( existingName == null || !existingName.equals(newJNDIName)) {
-	        	setJNDINameInTxn(mr, JNDI_PREFIX + newJNDIName);
+	        	setJNDINameInTxn(mr, /*JNDI_PREFIX +*/ newJNDIName);
 	        	return true;
 	        }
 		}

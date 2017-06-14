@@ -60,8 +60,8 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.jdbc.TeiidDriver;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidRuntimePlugin;
-
-
+import org.teiid.runtime.client.admin.v9.Admin9Factory.AdminImpl;
+import org.teiid.runtime.client.admin.v9.AdminUtil;
 
 /**
  *
@@ -75,15 +75,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
     private static int VDB_LOADING_TIMEOUT_SEC = 300;
 
     private final Admin admin;
-    protected Map<String, ITeiidTranslator> translatorByNameMap;
-    protected Collection<String> dataSourceNames;
-    protected Map<String, ITeiidDataSource> dataSourceByNameMap;
-    protected Set<String> dataSourceTypeNames;
     private final EventManager eventManager;
     private final ITeiidServer teiidServer;
     private final AdminSpec adminSpec;
     private Map<String, ITeiidVdb> teiidVdbs;
-    private final ModelConnectionMatcher connectionMatcher;
+    private final ConnectionManager connectionManager;
 
     private boolean loaded = false;
     private boolean refreshing = false;
@@ -103,7 +99,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
         this.teiidServer = teiidServer;
         this.adminSpec = AdminSpec.getInstance(teiidServer.getServerVersion());
         this.eventManager = teiidServer.getEventManager();
-        this.connectionMatcher = new ModelConnectionMatcher();
+        this.connectionManager = new ConnectionManager(teiidServer, ((AdminImpl)this.admin).getConnection());
         
         init();
     }
@@ -125,35 +121,34 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
         this.teiidServer = teiidServer;
         this.eventManager = teiidServer.getEventManager();
-        this.connectionMatcher = new ModelConnectionMatcher();
+        this.connectionManager = new ConnectionManager(teiidServer, ((AdminImpl)this.admin).getConnection());
+        
 
         init();
     }
 
     @Override
     public boolean dataSourceExists( String name ) {
-        // Check if exists, return false
-        if (this.dataSourceNames.contains(name)) {
-            return true;
-        }
-
-        return false;
+    	return connectionManager.dataSourceExists(name);
     }
 
     @Override
     public void deleteDataSource( String dsName ) throws Exception {
         // Check if exists, return false
-        if (this.dataSourceNames.contains(dsName)) {
-            this.admin.deleteDataSource(dsName);
+    	String jndiName = AdminUtil.addJavaPrefix(dsName);
+    	
+    	// get data source
+    	ITeiidDataSource existingTDS = this.connectionManager.getDataSource(jndiName);
+    	ITeiidDataSource copyTDS = new TeiidDataSource(existingTDS.getDisplayName(), jndiName, existingTDS.getType());
+    	this.connectionManager.deleteDataSource(jndiName);
+    	
+        refreshDataSources();
 
-            ITeiidDataSource tds = this.dataSourceByNameMap.get(dsName);
-            
-            refreshDataSources();
-
-            if (tds != null) {
-                this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveDataSourceEvent(tds));
-            }
-        }
+        // Check that local name list contains new dsName
+        existingTDS = this.connectionManager.getDataSource(jndiName); //this.dataSourceByNameMap.get(dsName);
+        if( existingTDS == null ) {
+        	this.eventManager.notifyListeners(ExecutionConfigurationEvent.createRemoveDataSourceEvent(copyTDS));
+        } 
     }
 
     @Override
@@ -253,26 +248,23 @@ public class ExecutionAdmin implements IExecutionAdmin {
     public void disconnect() {
     	// 
     	this.admin.close();
-        this.translatorByNameMap = new HashMap<String, ITeiidTranslator>();
-        this.dataSourceNames = new ArrayList<String>();
-        this.dataSourceByNameMap = new HashMap<String, ITeiidDataSource>();
-        this.dataSourceTypeNames = new HashSet<String>();
+        this.connectionManager.disconnect();
         this.teiidVdbs = new HashMap<String, ITeiidVdb>();
     }
 
     @Override
     public ITeiidDataSource getDataSource(String name) {
-        return this.dataSourceByNameMap.get(name);
+    	return this.connectionManager.getDataSource(name);
     }
     
     @Override
 	public Collection<ITeiidDataSource> getDataSources() {
-        return this.dataSourceByNameMap.values();
+    	return this.connectionManager.getDataSources();
     }
 
     @Override
 	public Set<String> getDataSourceTypeNames() {
-        return this.dataSourceTypeNames;
+    	return this.connectionManager.getDataSourceTypeNames();
     }
 
     /**
@@ -283,82 +275,89 @@ public class ExecutionAdmin implements IExecutionAdmin {
     }
 
     @Override
-    public ITeiidDataSource getOrCreateDataSource( String displayName,
-                                                  String dsName,
-                                                  String typeName,
-                                                  Properties properties ) throws Exception {
-        ArgCheck.isNotEmpty(displayName, "displayName"); //$NON-NLS-1$
-        ArgCheck.isNotEmpty(dsName, "dsName"); //$NON-NLS-1$
-        ArgCheck.isNotEmpty(typeName, "typeName"); //$NON-NLS-1$
-        ArgCheck.isNotEmpty(properties, "properties"); //$NON-NLS-1$
+	public ITeiidDataSource getOrCreateDataSource(String displayName, 
+												 String jndiName, 
+												 String dataSourceType,
+												 Properties properties) throws Exception {
+		ArgCheck.isNotEmpty(displayName, "displayName"); //$NON-NLS-1$
+		ArgCheck.isNotEmpty(jndiName, "jndiName"); //$NON-NLS-1$
+		ArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
+		ArgCheck.isNotEmpty(properties, "properties"); //$NON-NLS-1$
 
-        // Check if exists, return false
-        if (dataSourceExists(dsName)) {
-            ITeiidDataSource tds = this.dataSourceByNameMap.get(dsName);
-            if (tds != null) {
-                return tds;
-            }
-        }
+		if (!AdminUtil.hasJavaPrefix(jndiName)) {
+			throw new TeiidExecutionException(
+					9996, 
+					"JNDI name : " + jndiName + " does not include the java:/ prefix");
+		}
 
-        // For JDBC types, find the matching installed driver.  This is done currently by matching
-        // the profile driver classname to the installed driver classname
-        String connProfileDriverClass = properties.getProperty("driver-class");  //$NON-NLS-1$
-        if("connector-jdbc".equals(typeName)) {  //$NON-NLS-1$
-            // List of driver jars on the connection profile
-            String jarList = properties.getProperty("jarList");  //$NON-NLS-1$
-            
-            // Get first driver name with the driver class that matches the connection profile
-            String dsNameMatch = getDSMatchForDriverClass(connProfileDriverClass);
-            
-            // If a matching datasource was found, set typename
-            if(dsNameMatch!=null) {
-                typeName=dsNameMatch;
-            // No matching datasource, attempt to deploy the driver if jarList is populated.
-            } else if(jarList!=null && jarList.trim().length()>0) {
-                // Try to deploy the jars
-                deployJars(this.admin,jarList);
-                
-                refresh();
-                
-                // Retry the name match after deployment.
-                dsNameMatch = getDSMatchForDriverClass(connProfileDriverClass);
-                if(dsNameMatch!=null) {
-                    typeName=dsNameMatch;
-                }
-            }
-        }
-        // Verify the "typeName" exists.
-        if (!this.dataSourceTypeNames.contains(typeName)) {
-            if("connector-jdbc".equals(typeName)) {  //$NON-NLS-1$
-                throw new TeiidExecutionException(
-                		ITeiidDataSource.ERROR_CODES.JDBC_DRIVER_SOURCE_NOT_FOUND,
-                		Messages.getString(Messages.ExecutionAdmin.jdbcSourceForClassNameNotFound, connProfileDriverClass, getServer()));
-            } else {
-                throw new TeiidExecutionException(
-                		ITeiidDataSource.ERROR_CODES.DATA_SOURCE_TYPE_DOES_NOT_EXIST_ON_SERVER,
-                		Messages.getString(Messages.ExecutionAdmin.dataSourceTypeDoesNotExist, typeName, getServer()));
-            }
-        }
+		// Check if exists, return false
+		if (dataSourceExists(jndiName)) {
+			ITeiidDataSource tds = this.connectionManager.getDataSource(jndiName); // dataSourceByNameMap.get(dsName);
+			if (tds != null) {
+				return tds;
+			}
+		}
 
-        this.admin.createDataSource(dsName, typeName, properties);
+		boolean isJdbc = "connector-jdbc".equals(dataSourceType);
 
-        // call admin.refresh() to clear cached resource info
-        this.admin.refresh();
-        
-        refreshDataSources();
+		// For JDBC types, find the matching installed driver. This is done
+		// currently by matching
+		// the profile driver classname to the installed driver classname
+		String connProfileDriverClass = properties.getProperty("driver-class"); //$NON-NLS-1$
+		if (isJdbc) {
+			// List of driver jars on the connection profile
+			String jarList = properties.getProperty("jarList"); //$NON-NLS-1$
 
-        // Check that local name list contains new dsName
-        ITeiidDataSource tds = this.dataSourceByNameMap.get(dsName);
-        if( tds != null ) {
-        	this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
-        	return tds;
-        } 
+			// Get first driver name with the driver class that matches the
+			// connection profile
+			String dsNameMatch = getDSMatchForDriverClass(connProfileDriverClass);
 
-        // We shouldn't get here if data source was created
-        throw new TeiidExecutionException(
-        		ITeiidDataSource.ERROR_CODES.DATA_SOURCE_COULD_NOT_BE_CREATED,
-        		Messages.getString(Messages.ExecutionAdmin.errorCreatingDataSource, dsName, typeName));
-    }
+			// If a matching datasource was found, set typename
+			if (dsNameMatch != null) {
+				dataSourceType = dsNameMatch;
+				// No matching datasource, attempt to deploy the driver if
+				// jarList is populated.
+			} else if (jarList != null && jarList.trim().length() > 0) {
+				// Try to deploy the jars
+				deployJars(this.admin, jarList);
+
+				refresh();
+
+				// Retry the name match after deployment.
+				dsNameMatch = getDSMatchForDriverClass(connProfileDriverClass);
+				if (dsNameMatch != null) {
+					dataSourceType = dsNameMatch;
+				}
+			}
+		}
+		// Verify the "typeName" exists.
+		if (!this.connectionManager.dataSourceTypeExists(dataSourceType)) {
+			if (isJdbc) { // $NON-NLS-1$
+				throw new TeiidExecutionException(ITeiidDataSource.ERROR_CODES.JDBC_DRIVER_SOURCE_NOT_FOUND,
+						Messages.getString(Messages.ExecutionAdmin.jdbcSourceForClassNameNotFound,
+								connProfileDriverClass, getServer()));
+			} else {
+				throw new TeiidExecutionException(
+						ITeiidDataSource.ERROR_CODES.DATA_SOURCE_TYPE_DOES_NOT_EXIST_ON_SERVER, Messages.getString(
+								Messages.ExecutionAdmin.dataSourceTypeDoesNotExist, dataSourceType, getServer()));
+			}
+		}
+
+		this.connectionManager.createDataSource(jndiName, dataSourceType, isJdbc, properties);
+
+		refreshDataSources();
+
+		// Check that local name list contains new dsName
+		ITeiidDataSource tds = this.connectionManager.getDataSource(jndiName);
+		if (tds != null) {
+			this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
+			return tds;
+		}
+
+		// We shouldn't get here if data source was created
+		throw new TeiidExecutionException(ITeiidDataSource.ERROR_CODES.DATA_SOURCE_COULD_NOT_BE_CREATED,
+				Messages.getString(Messages.ExecutionAdmin.errorCreatingDataSource, jndiName, dataSourceType));
+	}
 
     /**
      * Look for an installed driver that has the driverClass which matches the supplied driverClass name.
@@ -501,46 +500,22 @@ public class ExecutionAdmin implements IExecutionAdmin {
     @Override
     public ITeiidTranslator getTranslator( String name ) {
         ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
-        return this.translatorByNameMap.get(name);
+        return this.connectionManager.getTranslator(name); 
     }
 
     @Override
     public Collection<ITeiidTranslator> getTranslators() {
-        return Collections.unmodifiableCollection(translatorByNameMap.values());
+    	return this.connectionManager.getTranslators();
     }
 
     @Override
     public Set<String> getDataSourceTemplateNames() throws Exception {
-        return this.dataSourceTypeNames;
+    	return this.connectionManager.getDataSourceTypeNames();
     }
     
-    @SuppressWarnings("unchecked")
 	@Override
     public Collection<TeiidPropertyDefinition> getTemplatePropertyDefns(String templateName) throws Exception {
-    	
-        Collection<? extends PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(templateName);
-
-        Collection<TeiidPropertyDefinition> teiidPropDefns = new ArrayList<TeiidPropertyDefinition>();
-        
-        for (PropertyDefinition propDefn : propDefs) {
-            TeiidPropertyDefinition teiidPropertyDefn = new TeiidPropertyDefinition();
-            
-            teiidPropertyDefn.setName(propDefn.getName());
-            teiidPropertyDefn.setDisplayName(propDefn.getDisplayName());
-            teiidPropertyDefn.setDescription(propDefn.getDescription());
-            teiidPropertyDefn.setPropertyTypeClassName(propDefn.getPropertyTypeClassName());
-            teiidPropertyDefn.setDefaultValue(propDefn.getDefaultValue());
-            teiidPropertyDefn.setAllowedValues(propDefn.getAllowedValues());
-            teiidPropertyDefn.setModifiable(propDefn.isModifiable());
-            teiidPropertyDefn.setConstrainedToAllowedValues(propDefn.isConstrainedToAllowedValues());
-            teiidPropertyDefn.setAdvanced(propDefn.isAdvanced());
-            teiidPropertyDefn.setRequired(propDefn.isRequired());
-            teiidPropertyDefn.setMasked(propDefn.isMasked());
-            
-            teiidPropDefns.add(teiidPropertyDefn);
-        }
-        
-        return teiidPropDefns;
+    	return this.connectionManager.getTemplatePropertyDefns(templateName);
     }
 
     /*
@@ -615,10 +590,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     }
     
     private void init() throws Exception {
-        this.translatorByNameMap = new HashMap<String, ITeiidTranslator>();
-        this.dataSourceNames = new ArrayList<String>();
-        this.dataSourceByNameMap = new HashMap<String, ITeiidDataSource>();
-        this.dataSourceTypeNames = new HashSet<String>();
+    	this.connectionManager.init();
         refreshVDBs();
     }
 
@@ -669,14 +641,14 @@ public class ExecutionAdmin implements IExecutionAdmin {
     	Exception resultException = null;
     	
     	try {
+    		
 	    	try {
-	    		refreshDataSourceTypes();
+	    		refreshDataSources();
 	    	} catch (Exception ex) {
 	    		resultException = ex;
 	    	}
-	
 	    	try {
-	    		refreshDataSources();
+	    		refreshDataSourceTypes();
 	    	} catch (Exception ex) {
 	    		resultException = ex;
 	    	}
@@ -707,20 +679,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     }
     
     protected void refreshDataSources() throws Exception {
-        this.dataSourceByNameMap.clear();
-        this.dataSourceNames = new ArrayList<String>(this.admin.getDataSourceNames());
-        
-        Collection<ITeiidDataSource> tdsList = connectionMatcher.findTeiidDataSources(this.dataSourceNames);
-        for (ITeiidDataSource ds : tdsList) {
-            // Get Properties for the source
-            Properties dsProps = this.admin.getDataSource(ds.getName());
-            // Transfer properties to the ITeiidDataSource
-            ds.getProperties().clear();
-            ds.getProperties().putAll(dsProps);
-
-        	// put ds into map
-            this.dataSourceByNameMap.put(ds.getName(), ds);
-        }
+    	this.connectionManager.refreshDataSources();
     }
 
     /**
@@ -730,21 +689,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @throws Exception
      */
     protected void refreshTranslators() throws Exception {
-    	Collection<? extends Translator> translators = this.admin.getTranslators();
-        for (Translator translator : translators ) {
-            if (translator.getName() != null) {
-            	TeiidTranslator teiidTranslator = null;
-            	
-            	Collection<? extends PropertyDefinition> propDefs  = 
-            			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.OVERRIDE);
-            	Collection<? extends PropertyDefinition> importPropDefs  = 
-            			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.IMPORT);
-            	Collection<? extends PropertyDefinition> extPropDefs  = 
-            			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.EXTENSION_METADATA);
-            	teiidTranslator = new TeiidTranslator(translator, propDefs, importPropDefs, extPropDefs, teiidServer);
-            	this.translatorByNameMap.put(translator.getName(), teiidTranslator);
-            }
-        }
+    	this.connectionManager.refreshTranslators();
     }
 
     protected void refreshVDBs() throws Exception {
@@ -758,9 +703,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     }
     
     protected void refreshDataSourceTypes() throws Exception {
-        // populate data source type names set
-        this.dataSourceTypeNames = new HashSet<String>(this.admin.getDataSourceTemplateNames());
-    }
+    	this.connectionManager.refreshDataSourceTypes();    }
 
     /**
      * @param translator the translator whose properties are being changed (never <code>null</code>)

@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.ui.views.content;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.server.core.IServer;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.runtime.connection.SourceConnectionBinding;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
@@ -82,18 +83,23 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
     @Override
     public String getName() {
         if (value instanceof ITeiidDataSource) {
-        	String nodeName = null;
+        	String poolName = null;
+        	
             if (((ITeiidDataSource) value).getDisplayName() != null) {
-            	nodeName = ((ITeiidDataSource) value).getDisplayName();
+            	poolName = ((ITeiidDataSource) value).getDisplayName();
             }
-            nodeName = ((ITeiidDataSource) value).getName();
-            
+            poolName = ((ITeiidDataSource) value).getName();
+        	
             String jndiName = ((ITeiidDataSource)value).getPropertyValue("jndi-name"); //$NON-NLS-1$
-            if(jndiName!=null && !jndiName.isEmpty()) {
-            	nodeName += " [JNDI: " + jndiName + "]";  //$NON-NLS-1$ //$NON-NLS-2$
+            String nodeName;
+            if(StringUtilities.isNotEmpty(jndiName)) {
+            	nodeName = jndiName;
             } else {
-            	nodeName += " [JNDI: java:/" + nodeName + "]";  //$NON-NLS-1$ //$NON-NLS-2$
+            	nodeName = poolName;
             }
+           
+            nodeName += " - - - [pool-name = " + poolName + "]";  //$NON-NLS-1$ //$NON-NLS-2$
+
             return nodeName;
         }
         

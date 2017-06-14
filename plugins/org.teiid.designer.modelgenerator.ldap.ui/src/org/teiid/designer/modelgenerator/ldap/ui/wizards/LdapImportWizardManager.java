@@ -577,6 +577,9 @@ public class LdapImportWizardManager implements IChangeNotifier {
             ITeiidServer teiidServer = DataSourceConnectionHelper.getServer();
             
     		String dsName = getJBossJndiName();
+    		if( dsName.startsWith("java:/") ) {
+    			dsName = dsName.substring(6);
+    		}
     		String jndiName = getJBossJndiName();
     		DataSourceConnectionHelper helper = new DataSourceConnectionHelper(model, getConnectionProfile());
     		

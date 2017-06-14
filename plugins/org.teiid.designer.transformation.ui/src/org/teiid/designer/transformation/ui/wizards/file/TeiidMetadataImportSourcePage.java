@@ -1095,7 +1095,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 			this.info.setSourceModelName(initialName);
 			
 			if( StringUtilities.isEmpty(this.info.getJBossJndiName()) && DataSourceConnectionHelper.isServerConnected() ) {
-				this.info.setJBossJndiNameName(initialName);
+				this.info.setJBossJndiNameName("java:/" + initialName + "_DS");
 			}
     	}
     	if( fileName_wo_extension != null && (this.info.getViewModelName() == null || this.info.getViewModelName().length() == 0) ) {

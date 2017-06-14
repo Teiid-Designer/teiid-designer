@@ -17,6 +17,16 @@ public class DataSourceItem extends Object implements Serializable {
 	 */
 	public DataSourceItem() {
 	}
+	
+	/**
+	 * 
+	 */
+	public DataSourceItem(String name, String jndiName, String driver) {
+		super();
+		this.name = name;
+		this.jndiName = jndiName;
+		this.driver = driver;
+	}
 		
 	/**
 	 * Get the DataSource name

@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
@@ -132,7 +133,8 @@ public class JDGProfilePropertyPage extends ProfileDetailsPropertyPage
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
-				setProperty(IJBossDsProfileConstants.JNDI_PROP_ID, jndiText.getText());
+	            String jndiName = JndiUtil.addJavaPrefix(jndiText.getText());
+	            setProperty(IJBossDsProfileConstants.JNDI_PROP_ID, jndiName);
 			}
 		});
     	
@@ -347,7 +349,6 @@ public class JDGProfilePropertyPage extends ProfileDetailsPropertyPage
 				
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					System.out.println("schemaAnotationsRB SELECTED");
 					updateState();
 				}
 				

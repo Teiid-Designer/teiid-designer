@@ -33,15 +33,23 @@ public class DataSourceConnectionHelper {
 	}
 	
     public Properties getModelConnectionProperties() {
-        if (provider != null) {
-            Properties properties = provider.getTeiidRelatedProperties(cp);
-            
-            if (properties != null && !properties.isEmpty()) {
-                return properties;
-            }
+    	IConnectionInfoProvider theProvider = null;
+    	
+        try {
+        	theProvider = getProvider();
+        } catch (Exception e) {
+            // If provider throws exception its OK because some models may not have connection info.
         }
         
-        return null;
+        if( theProvider != null ) {
+        	Properties properties = theProvider.getTeiidRelatedProperties(cp);
+        
+	        if (properties != null && !properties.isEmpty()) {
+	            return properties;
+	        }
+        }
+        
+        return new Properties();
     }
     
     public String getDataSourceType() {
