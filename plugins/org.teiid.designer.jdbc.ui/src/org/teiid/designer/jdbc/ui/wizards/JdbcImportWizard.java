@@ -989,6 +989,9 @@ public class JdbcImportWizard extends AbstractWizard
     	
     	if( importer.doCreateDataSource() && DataSourceConnectionHelper.isServerConnected() ) {
     		String dsName = importer.getJBossJndiName();
+    		if( dsName.startsWith("java:/") ) {
+    			dsName = dsName.substring(6);
+    		}
     		String jndiName = importer.getJBossJndiName();
 
         	Properties connProps = helper.getModelConnectionProperties();

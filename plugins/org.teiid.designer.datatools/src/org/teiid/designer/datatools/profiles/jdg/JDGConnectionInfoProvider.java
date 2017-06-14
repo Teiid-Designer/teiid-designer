@@ -100,13 +100,6 @@ public class JDGConnectionInfoProvider  extends ConnectionInfoHelper implements 
 		}
 		
 		connectionProps.setProperty(CLASS_NAME, IJDGProfileConstants.REQUIRED_CLASS_NAME);
-		
-		System.out.println("JDGConnectionInfoProvider.getTeiidRelatedProps()");
-		System.out.println("  ====================================");
-		for( Object prop : connectionProps.keySet() ) {
-			System.out.println("   key = " + (String)prop + "  value = " + connectionProps.getProperty((String)prop));
-		}
-		System.out.println("  ====================================");
 
         return connectionProps;
 	}

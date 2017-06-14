@@ -17,24 +17,24 @@ public class TeiidDataSource implements Comparable<TeiidDataSource>, ITeiidDataS
 
     private boolean isPreview = false;
 
-    public TeiidDataSource( String displayName,
-                            String dataSourceName,
-                            String dataSourceType ) {
-        this(displayName, dataSourceName, dataSourceType, new Properties());
-    }
+	public TeiidDataSource(String displayName, 
+						   String dataSourceName, 
+						   String dataSourceType) {
+		this(displayName, dataSourceName, dataSourceType, new Properties());
+	}
 
-    public TeiidDataSource( String displayName,
-                            String dataSourceName,
-                            String dataSourceType,
-                            Properties properties) {
-        ArgCheck.isNotEmpty(dataSourceName, "dataSourceName"); //$NON-NLS-1$
-        ArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
+	public TeiidDataSource(String displayName, 
+						   String dataSourceName, 
+						   String dataSourceType, 
+						   Properties properties) {
+		ArgCheck.isNotEmpty(dataSourceName, "dataSourceName"); //$NON-NLS-1$
+		ArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
 
-        this.displayName = displayName;
-        this.dataSourceName = dataSourceName;
-        this.dataSourceType = dataSourceType;
-        this.properties = properties;
-    }
+		this.displayName = displayName;
+		this.dataSourceName = dataSourceName;
+		this.dataSourceType = dataSourceType;
+		this.properties = properties;
+	}
 
     /**
      * {@inheritDoc}

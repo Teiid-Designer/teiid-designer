@@ -345,11 +345,14 @@ public class DataSourceManager implements UiConstants {
      * Create a map of class-name to the associated DataSource template name.  This
      * matches the className of the datasource to the 'managedconnectionfactory-class' name from the template.
      * @param teiidDataSources the collection of Teiid DataSources
+     * 
+     * NOTE:  there can be multiple resource adapters defined with different ID's that use the same connection factory
+     * So grabbing the ID name for the first 
+     * 
      * @return Map of RA class-name to DS template name
      */
     public Map<String,String> getClassNameDriverNameMap(Collection<ITeiidDataSource> teiidDataSources) {
     	Map<String,String> raClassToDriverNameMap = new HashMap<String,String>();
-    	
     	// Get all distinct class-names from dataSources
     	Set<String> dsClassNames = new HashSet<String>();
     	for(ITeiidDataSource ds : teiidDataSources) {
@@ -388,6 +391,34 @@ public class DataSourceManager implements UiConstants {
         }
     	
     	return raClassToDriverNameMap;
+    }
+    
+    public String getDriver(ITeiidDataSource dataSource) {
+        String driverName = dataSource.getProperties().getProperty(DRIVER_KEY);
+        if( driverName != null ) {
+        	return driverName;
+        }
+        
+    	String className = dataSource.getPropertyValue("class-name"); //$NON-NLS-1$
+		if(!CoreStringUtil.isEmpty(className)) {
+			// Now try to find a template name associated with this data source
+			
+//	    	// Get all available templates from the server
+//	        Set<String> availableTemplateNames;
+//	        try {
+//	        	availableTemplateNames = teiidImportServer.getDataSourceTemplateNames();
+//	        } catch (Exception ex) {
+//	        	availableTemplateNames = Collections.emptySet();
+//	            UTIL.log(ex);
+//	        }
+			
+        	String dsTemplateName = findDSTemplateWithMatchingClass(className);
+        	if(!CoreStringUtil.isEmpty(dsTemplateName)) {
+        		return dsTemplateName;
+        	}
+		}
+		
+		return null;
     }
     
     /**

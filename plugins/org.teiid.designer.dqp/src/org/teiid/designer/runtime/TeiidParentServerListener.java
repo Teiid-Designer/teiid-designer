@@ -41,6 +41,7 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
      * The following exception is being caught during server start.
      * Could not execute "read-children-names" for undefined. Failure was "JBAS013493: System boot is in process; execution of remote management operations is not currently available".
      */
+
     public static String JBAS013493_CODE = "JBAS013493"; //$NON-NLS-1$
     public static String JBAS012174_CODE = "JBAS012174"; //$NON-NLS-1$
     
@@ -81,7 +82,8 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
         try {
             factory.adaptServer(server, ServerOptions.NO_CHECK_CONNECTION, ServerOptions.ADD_TO_REGISTRY);
         } catch (final Exception ex) {
-        	if(! ex.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE)) {
+        	if(! ex.getMessage().contains(TeiidParentServerListener.JBAS013493_CODE) &&
+        	   ! ex.getMessage().contains(TeiidParentServerListener.MISSING_NLS_MESSAGE)) {
         		DqpPlugin.handleException(ex);
         	}
         }
