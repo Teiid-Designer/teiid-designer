@@ -132,7 +132,7 @@ public class CreateRelationalIndexAction  extends Action implements INewChildAct
 	        RelationalIndex index = new RelationalIndex();
 	        
 	        // Hand the table off to the generic edit dialog
-	        RelationalDialogModel dialogModel = new RelationalDialogModel(index, selectedModel);
+	        RelationalDialogModel dialogModel = new RelationalDialogModel(index, (IFile)ModelUtilities.getIResource(mr));
 	        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
 	        
 	        dialog.open();

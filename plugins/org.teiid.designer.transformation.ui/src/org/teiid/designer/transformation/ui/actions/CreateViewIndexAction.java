@@ -163,7 +163,7 @@ public class CreateViewIndexAction  extends Action implements INewChildAction, I
             relationalViewIndex = new RelationalViewIndex();
 	        
 	        // Hand the table off to the generic edit dialog
-            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewIndex, selectedModel);
+            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewIndex, (IFile)ModelUtilities.getIResource(mr));
             EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
 
 	        dialog.open();

@@ -492,6 +492,19 @@ public abstract class ModelUtilities implements UiConstants {
         return null;
     }
     
+    public static IResource getIResource(ModelResource modelResource) {
+    	IResource resource = null;
+    	
+    	try {
+    		resource = modelResource.getUnderlyingResource();
+    	} catch (ModelWorkspaceException ex) {
+    		String message = "[ModelUtilities.getIResource()] ERROR: exception finding Resource for model"; //$NON-NLS-1$
+     	        UiConstants.Util.log(IStatus.ERROR, ex, message);
+    	}
+
+    	return resource;
+    }
+    
     public static IProject getProject(Object object) {
     	ModelResource mr = getModelResource(object);
     	

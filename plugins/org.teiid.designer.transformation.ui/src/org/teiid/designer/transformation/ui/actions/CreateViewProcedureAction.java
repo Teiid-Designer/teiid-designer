@@ -179,7 +179,7 @@ public class CreateViewProcedureAction extends Action implements INewChildAction
 	        procedureTypeDialog.open();
 	        
 	        if (procedureTypeDialog.getReturnCode() == Window.OK) {
-	            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewProcedure, selectedModel);
+	            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewProcedure, (IFile)ModelUtilities.getIResource(mr));
 	            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
 	
 		        dialog.open();
