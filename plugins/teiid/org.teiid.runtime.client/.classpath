@@ -18,7 +18,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jboss-threads.jar" sourcepath="libsrc/jboss-threads-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jboss-as-controller.jar" sourcepath="libsrc/jboss-as-controller-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jboss-as-cli.jar" sourcepath="libsrc/jboss-as-cli-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jboss-dmr.jar" sourcepath="libsrc/jboss-dmr-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-dmr.jar" sourcepath="/home/blafond/Development/Designer/jboss-source-jars/jboss-dmr-1.1.1.Final-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jboss-as-controller-client.jar" sourcepath="libsrc/jboss-as-controller-client-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/nux.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xom.jar" sourcepath="libsrc/xom-sources.jar"/>
