@@ -30,11 +30,12 @@
  *
  *****************************************************************************/
 
-package org.teiid.designer.runtime.ui.wizards.vdbs.style;
+package org.teiid.designer.ui.common.util.style;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.designer.runtime.ui.wizards.vdbs.style.XmlRegion.XmlRegionType;
+
+import org.teiid.designer.ui.common.util.style.XmlRegion.XmlRegionType;
 
 /**
  * A class that builds style ranges from a XML input.

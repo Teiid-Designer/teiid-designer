@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.ui.actions;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -20,21 +21,25 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.Messages;
+import org.teiid.designer.runtime.ui.DqpUiConstants.Images;
+import org.teiid.designer.runtime.ui.wizards.vdbs.GenerateDynamicVdbDialog;
+import org.teiid.designer.runtime.ui.wizards.vdbs.GenerateDynamicVdbManager;
 import org.teiid.designer.runtime.ui.wizards.vdbs.GenerateDynamicVdbWizard;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
+import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
 
 public class GenerateDynamicVdbAction extends SortableSelectionAction implements DqpUiConstants {
     private static final String label = DqpUiConstants.UTIL.getString("label"); //$NON-NLS-1$
-
     /**
      * @since 5.0
      */
     public GenerateDynamicVdbAction() {
         super(label, SWT.DEFAULT);
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.DYNAMIC_VDB));
+        setId(ModelActionConstants.Resource.GENERATE_VDB_XML);
     }
 
     /**
@@ -53,26 +58,28 @@ public class GenerateDynamicVdbAction extends SortableSelectionAction implements
      */
     @Override
     public void run() {
-        final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
         
         Object obj = SelectionUtilities.getSelectedObject(getSelection());
         if (obj instanceof IFile) {
             IFile vdbXmlFile = (IFile)obj;
-
+            
             try {
-                GenerateDynamicVdbWizard wizard = new GenerateDynamicVdbWizard(vdbXmlFile);
+                GenerateDynamicVdbManager vdbManager = new GenerateDynamicVdbManager(vdbXmlFile);
 
-                WizardDialog wd = new WizardDialog(getShell(), wizard);
-                wd.open();
+                GenerateDynamicVdbDialog dialog = new GenerateDynamicVdbDialog(getShell(), vdbManager);
+                
+                if( dialog.open() == IDialogConstants.OK_ID) {
+                    vdbManager.write();
+                }
                 return;
             } catch (Exception ex) {
-                MessageDialog.openError(iww.getShell(),
+                MessageDialog.openError(getShell(),
                                         Messages.GenerateDynamicVdbAction_exceptionTitle,
                                         ex.getLocalizedMessage());
             }
         }
 
-        MessageDialog.openInformation(iww.getShell(), 
+        MessageDialog.openInformation(getShell(), 
         		Messages.GenerateDynamicVdbAction_nothingExportedTitle, 
         		Messages.GenerateDynamicVdbAction_nothingExportedMessage);
 

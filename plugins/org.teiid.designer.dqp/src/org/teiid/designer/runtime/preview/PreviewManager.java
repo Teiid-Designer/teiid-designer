@@ -45,6 +45,7 @@ import org.teiid.designer.runtime.importer.Messages;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.transformation.ddl.TeiidModelToDdlGenerator;
 
 import net.jcip.annotations.ThreadSafe;
@@ -330,25 +331,26 @@ public final class PreviewManager {
 //        String fullVdbName = deployedVdb.getPropertyValue("deployment-name"); //$NON-NLS-1$
 //        return fullVdbName;
 //    }
+    
+	public IStatus createDynamicVdb() throws ModelWorkspaceException {
+		if( ModelerCore.getTeiidServerVersion().isGreaterThan(TeiidServerVersion.Version.TEIID_8_13_5) ) {
+			return createDynamicVdb(vdbName, "1.0", "Importer VDB", deploymentName);
+		} else {
+			// pre Wildfly/Teiid 9.0 version
+			return createDynamicVdb(vdbName, "1", "Importer VDB", deploymentName);
+		}
+	}
         
-    /*
-     * Create a new, blank deployment for the provided vdbName and version
-     * @param vdbName name of the VDB
-     * @param vdbVersion the VDB version
-     * @param translatorName the translator
-     * @param datasourceName the dataSource name
-     * @param datasourceJndeName the dataSource jndi name
-     * @param modelProps the model properties
-     * @return the VDB deployment string
-     */
-    public IStatus createDynamicVdb() throws ModelWorkspaceException {
+
+	public IStatus createDynamicVdb(String vdbName, String version, String description, String deploymentName) throws ModelWorkspaceException {
     	
         StringBuffer sb = new StringBuffer();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"); //$NON-NLS-1$
-        sb.append("\n<vdb name=\""+ vdbName +"\" version=\"1\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        sb.append("\n\t<description>Importer VDB</description>"); //$NON-NLS-1$
+        sb.append("\n<vdb name=\""+ vdbName + "\" version=\"" + version + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+        if( StringUtilities.isNotEmpty(description) ) {
+        	sb.append("\n\t<description>" + description + "</description>"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
         sb.append("\n\t<property name=\"UseConnectorMetadata\" value=\"true\" />"); //$NON-NLS-1$
-        sb.append("\n\t<property name=\"deployment-name\" value=\""+ deploymentName +"\" />"); //$NON-NLS-1$ //$NON-NLS-2$
         
         Collection<VdbSourceModelInfo> vdbImports = getVdbSourceModelInfos();
         
