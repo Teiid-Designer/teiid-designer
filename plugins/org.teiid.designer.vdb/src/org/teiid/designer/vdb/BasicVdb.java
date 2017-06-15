@@ -407,9 +407,10 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	 */
 	@Override
 	public void setConnectionType(String newConnectionType) {
+        final String old = this.securityDomain;
 		if( StringUtilities.areDifferent(this.connectionType, newConnectionType)) {
 			this.connectionType = newConnectionType;
-			setChanged(true);
+			setModified(this, Event.CONNECTION_TYPE, old, newConnectionType);
 		}
 	}
 

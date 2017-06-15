@@ -206,7 +206,9 @@ public class DynamicVdb extends BasicVdb {
                             vdb.setAuthenticationType(value);
                         } else if (Xml.AUTO_GENERATE_REST_WAR.equals(name)) {
                             vdb.setAutoGenerateRESTWar(Boolean.parseBoolean(value));
-                        }  else {
+                        } else if (Xml.CONNECTION_TYPE.equals(name)) {
+                            vdb.setConnectionType(value);
+                        } else {
                             vdb.setProperty(name, value);
                         }
                     }

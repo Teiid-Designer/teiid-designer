@@ -28,6 +28,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -37,6 +38,7 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbConstants;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
 import org.teiid.designer.vdb.ui.util.RestVdbUtil;
@@ -60,6 +62,15 @@ public class PropertiesPanel {
 	Button addLanguageButton;
 	Button removeLanguageButton;
 	
+	/*
+	 
+    	NONE- disallow new connections.
+    	BY_VERSION- the default setting. Allow connections only if the version is specified or if this is the earliest BY_VERSION vdb and there are no vdbs marked as ANY.
+    	ANY- allow connections with or without a version specified.
+
+	 */
+	Combo connectionType;
+	
 	Text securityDomainText;
 	Text gssPatternText;
 	Text passwordPatternText;
@@ -75,7 +86,7 @@ public class PropertiesPanel {
 	
 	/**
      * @param parent
-     * @param editor
+     * @param vdb
      */
     public PropertiesPanel(Composite parent, Vdb vdb) {
     	super();
@@ -117,6 +128,28 @@ public class PropertiesPanel {
 				
 			}
 		});
+    	
+        WidgetFactory.createLabel(propertiesGroup, i18n("connectionType")); //$NON-NLS-1$
+        connectionType = new Combo(propertiesGroup, SWT.READ_ONLY | SWT.DROP_DOWN);
+        connectionType.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        connectionType.setItems(VdbConstants.CONNECTION_TYPES);
+        
+        String type = vdb.getConnectionType();
+        if( VdbConstants.ConnectionTypes.ANY.equalsIgnoreCase(type) ) {
+        	connectionType.select(2);
+        } else if( VdbConstants.ConnectionTypes.BY_VERSION.equalsIgnoreCase(type) ) {
+        	connectionType.select(1);
+        } else {
+            connectionType.select(0);
+        }
+
+        this.connectionType.addModifyListener(new ModifyListener() {
+            @Override
+			public void modifyText( final ModifyEvent event ) {
+                vdb.setConnectionType(connectionType.getText());
+            }
+        });
     	
     	{ // SECURITY PROPERTIES
 	    	label = new Label(propertiesGroup, SWT.NONE);

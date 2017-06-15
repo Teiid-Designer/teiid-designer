@@ -164,6 +164,11 @@ public class VdbElement implements Serializable {
         	String versionString = vdb.getValidationVersion();
         	getProperties().add(new PropertyElement(Vdb.Xml.VALIDATION_VERSION, versionString));
         }
+        
+        if (vdb.getConnectionType() != null) {
+        	String type = vdb.getConnectionType();
+        	getProperties().add(new PropertyElement(Vdb.Xml.CONNECTION_TYPE, type));
+        }
 
         Properties properties = vdb.getProperties();
         for( Entry<Object, Object> entry : properties.entrySet()) {

@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
@@ -424,6 +425,22 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
     		@Override
     		public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
     			try {
+    				final IFile fileExists = workspaceLocation.getFile(new Path(fileName));
+    				if( fileExists.exists() ) {
+    					boolean doWrite = false;
+    					if( !overwriteExistingFiles()) {
+    						// Shouldn't get here, but adding a check just in case.
+    						doWrite = MessageDialog.openQuestion(Display.getCurrent().getActiveShell(),
+    								"File Exists", "File exists, do you wish to overwrite?");  //$NON-NLS-1$  //$NON-NLS-2$
+    					}
+    					if( doWrite ) {
+    						fileExists.delete(true, monitor);
+    					} else {
+    						// Do nothing
+    						return;
+    					}
+    				}
+    				
     	            final IFile fileToCreate = workspaceLocation.getFile(new Path(fileName));
     	            
     	        	InputStream istream = new ByteArrayInputStream(xml.getBytes());
