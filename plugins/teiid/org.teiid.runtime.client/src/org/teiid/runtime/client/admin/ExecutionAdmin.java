@@ -358,6 +358,9 @@ public class ExecutionAdmin implements IExecutionAdmin {
             }
         }
 
+        if("teiid".equals(dataSourceType) ) {
+        	isJdbc = true;
+        }
         this.connectionManager.createDataSource(jndiName, dataSourceType, isJdbc, properties);
         
         refreshDataSources();
