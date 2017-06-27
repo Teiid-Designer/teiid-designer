@@ -16,6 +16,7 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.teiid.designer.ExtensionRegistryUtils;
 import org.teiid.designer.IExtensionRegistryCallback;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
@@ -174,7 +175,7 @@ public class TeiidDataSourceFactory {
         	 model.getFullPath().removeFileExtension().lastSegment(),
              jndiName, ITeiidDataSource.ERROR_CODES.DATASOURCE_REQUIRED_PASSWORD_NOT_DEFINED); 
     	 } else {
-             ITeiidDataSource tds = teiidServer.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
+             ITeiidDataSource tds = teiidServer.getOrCreateDataSource(jndiName, JndiUtil.addJavaPrefix(jndiName), dataSourceType, props);
              tds.setPreview(previewVdb);
              return tds;
          }

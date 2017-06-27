@@ -9,6 +9,7 @@ package org.teiid.runtime.client.admin.v8;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -21,13 +22,15 @@ import org.jboss.dmr.ModelNode;
 import org.teiid.adminapi.AdminComponentException;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.DomainAware;
+import org.teiid.adminapi.Session;
 import org.teiid.adminapi.impl.AdminObjectImpl;
 import org.teiid.adminapi.jboss.MetadataMapper;
+import org.teiid.adminapi.jboss.VDBMetadataMapper.SessionMetadataMapper;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 
 public class AdminConnectionManager {
-	private ModelControllerClient connection;
+	private final ModelControllerClient connection;
 	private boolean domainMode = false;
 	private String profileName = "ha";
 	private ITeiidServerVersion teiidServerVersion;
@@ -37,6 +40,11 @@ public class AdminConnectionManager {
 		this.connection = connection;
 		this.teiidServerVersion = teiidServerVersion;
 	}
+	
+    
+    public ModelControllerClient getConnection() {
+    	return this.connection;
+    }
 	
 	public void cliCall(String operationName, String[] address, String[] params, ResultCallback callback) throws AdminException {			
 
@@ -132,7 +140,7 @@ public class AdminConnectionManager {
         }
 		return request;
 	}
-	
+
     /**
      * Execute an operation synchronously.
      *
@@ -234,5 +242,20 @@ public class AdminConnectionManager {
     		return returnList;
     	}
     	return getList(operationResult, mapper);
+	}
+	
+	public Collection<? extends Session> getSessions() throws AdminException {
+		final ModelNode request = buildRequest("teiid", "list-sessions");//$NON-NLS-1$
+		if (request != null) {
+	        try {
+	            ModelNode outcome = this.connection.execute(request);
+	            if (Util.isSuccess(outcome)) {
+	                return getDomainAwareList(outcome, SessionMetadataMapper.INSTANCE);
+	            }
+	        } catch (IOException e) {
+	        	 throw new AdminComponentException(e);
+	        }
+		}
+        return Collections.emptyList();
 	}
 }

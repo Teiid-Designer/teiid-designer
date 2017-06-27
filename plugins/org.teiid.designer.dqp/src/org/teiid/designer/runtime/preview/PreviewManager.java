@@ -425,7 +425,8 @@ public final class PreviewManager {
             boolean isActive = getDefaultServer().isVdbActive(vdbName);
             boolean isLoading = getDefaultServer().isVdbLoading(vdbName);
             boolean hasFailed = getDefaultServer().hasVdbFailed(vdbName);
-            boolean hasValidityErrors = !getDefaultServer().getVdb(vdbName).getValidityErrors().isEmpty();
+            ITeiidVdb vdb = getDefaultServer().getVdb(vdbName);
+            boolean hasValidityErrors = vdb == null ? false : !vdb.getValidityErrors().isEmpty();
             if(!isLoading || hasFailed || hasValidityErrors || isActive) return true;
         } while (System.currentTimeMillis() < waitUntil);
         return false;

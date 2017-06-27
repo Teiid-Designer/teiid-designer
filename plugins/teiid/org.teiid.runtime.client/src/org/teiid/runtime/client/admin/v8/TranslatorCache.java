@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.as.cli.Util;
-import org.jboss.as.controller.client.ModelControllerClient;
 import org.jboss.dmr.ModelNode;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.Admin.TranlatorPropertyType;
@@ -45,10 +44,10 @@ public class TranslatorCache implements AdminConstants {
 	
 	private Map<String, ITeiidTranslator> teiidTranslatorByNameMap;
 	
-	public TranslatorCache(ModelControllerClient connection, ITeiidServer teiidServer) {
+	public TranslatorCache(AdminConnectionManager adminConnectionManager, ITeiidServer teiidServer) {
 		super();
 		
-		this.manager = new AdminConnectionManager(connection, teiidServer.getServerVersion());
+		this.manager = adminConnectionManager;
 		this.teiidServer = teiidServer;
 		
 		this.translatorByNameMap = new HashMap<String, Translator>();
