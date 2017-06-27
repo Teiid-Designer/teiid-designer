@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
@@ -108,8 +109,12 @@ public final class PreviewManager {
 			try {
 				generateDynamicVdb();
 			} catch (ModelWorkspaceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if( e.getModelStatus().getSeverity() == IStatus.ERROR &&
+						e.getModelStatus().getCode() == 9991 ) {
+					dynamicVdbStatus = e.getModelStatus();
+				} else {
+					e.printStackTrace();
+				}
 			}
 		}
 		return dynamicVdbStatus;
