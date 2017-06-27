@@ -73,6 +73,7 @@ public final class Messages extends NLS {
     public static String DataSourceHelper_requiredPasswordWasNotSet;
     
     public static String PreviewManager_jndiNameMissingMessage;
+    public static String PreviewManager_matTableNotSet;
 
     static {
         NLS.initializeMessages("org.teiid.designer.runtime.preview.messages", Messages.class); //$NON-NLS-1$

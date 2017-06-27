@@ -23,12 +23,16 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.mapping.MappingRoot;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.internal.UIPlugin;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelStatus;
+import org.teiid.designer.core.workspace.ModelStatusImpl;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -135,12 +139,21 @@ public class DependentObjectHelper {
         if( table.isMaterialized() ) {
             EObject tableRef = table.getMaterializedTable();
             // Get model resource and ALL tables in it
-            ModelResource mr = ModelUtil.getModel(tableRef);
             
-            for( Object obj : mr.getAllRootEObjects()) {
-            	if( obj instanceof Table ) {
-            		addSourceTable((Table)obj);    
-            	}
+            // if tableRef == null then need to throw exception
+            
+            if( tableRef != null ) {
+	            ModelResource mr = ModelUtil.getModel(tableRef);
+	            
+	            for( Object obj : mr.getAllRootEObjects()) {
+	            	if( obj instanceof Table ) {
+	            		addSourceTable((Table)obj);    
+	            	}
+	            }
+            } else {
+            	ModelStatus status = new ModelStatusImpl(IStatus.ERROR, 9991, 
+            			NLS.bind(org.teiid.designer.runtime.preview.Messages.PreviewManager_matTableNotSet, table.getName()) );
+            	throw new ModelWorkspaceException(status);
             }
         }
     }
