@@ -30,7 +30,10 @@ import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.relational.Column;
+import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.ProcedureParameter;
+import org.teiid.designer.metamodels.relational.ProcedureResult;
 import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
@@ -741,30 +744,57 @@ public class TransformationMappingHelper implements ISQLConstants {
                         // Get the list of unMatchedNames in the VirtualGroup
                         List unmatchedVirtualNames = removeNames(currentTargetAttrNames, matchedNames);
 
-                        if (unmatchedVirtualNames.size() != 0) {
-                            // Modify query if there's a name conflict
-                            resetSelectSqlOnNameConflict(validCommand, transMappingRoot, true, txnSource);
-                            return TRANSFORMATION_ISSUE;
-                        }
 
                         // Get the list of Extra Names in the Select List
                         List extraSymbolNames = removeNames(projectedSymbolNames, matchedNames);
 
+                        if (unmatchedVirtualNames.size() != 0) {
+                        	if (targetGroup instanceof ProcedureResult && unmatchedVirtualNames.contains("resultSet")
+                        			&& extraSymbolNames.size() == 1 ) {
+                        		// we have a simple result parameter
+                        		// then reset the name of result set column IF there is only one of them
+                        		ProcedureResult result = (ProcedureResult)targetGroup;
+                        		if( result != null && result.getColumns().size() == 1) {
+                        			ModelerCore.getModelEditor().rename((EObject)result.getColumns().get(0), (String)extraSymbolNames.get(0));
+                        			extraSymbolNames.clear();
+                        		}
+                        	} else {
+                        		// Modify query if there's a name conflict
+                        		resetSelectSqlOnNameConflict(validCommand, transMappingRoot, true, txnSource);
+                            	return TRANSFORMATION_ISSUE;
+                        	}
+                        }
+                        
                         // Add the New Elements to the Target Group
                         if (extraSymbolNames.size() != 0) {
                             //create a resultset if none exists
                             if (TransformationHelper.isSqlProcedure(targetGroup)) {
                                 SqlProcedureAspect procAspect = (SqlProcedureAspect)AspectManager.getSqlAspect(targetGroup);
                                 EObject rs = (EObject)procAspect.getResult(targetGroup);
-                                if (rs == null) {
-                                    targetGroup = TransformationHelper.createProcResultSet(targetGroup);
-                                } 
+                                if (rs == null); {
+                                	boolean hasReturnParam = false;
+                                	// Look at parameters and do not add a result set if there is a RETURNS direction on one
+                                	for( Object child : procAspect.getParameters(targetGroup) ) {
+                                		ProcedureParameter param = (ProcedureParameter)child;
+                                		if( param.getDirection().getValue() == DirectionKind.RETURN) {
+                                			hasReturnParam = true;
+//                                			extraSymbolNames.remove("result");
+                                			break;
+                                		}
+                                	}
+                                	
+                                	if( !hasReturnParam ) {
+                                		targetGroup = TransformationHelper.createProcResultSet(targetGroup);
+                                	}
+                                }
                             }
 
-                            // Get the Map of ProjectedSymbol Name to the corresponding EObject (if exists)
-                            Map eObjectMap = TransformationSqlHelper.getProjectedSymbolAndProcInputEObjects(validCommand);
-
-                            addTargetAttributes(extraSymbolNames, eObjectMap, targetGroup, txnSource);
+                            if( !extraSymbolNames.isEmpty() ) {
+	                            // Get the Map of ProjectedSymbol Name to the corresponding EObject (if exists)
+	                            Map eObjectMap = TransformationSqlHelper.getProjectedSymbolAndProcInputEObjects(validCommand);
+	
+	                            addTargetAttributes(extraSymbolNames, eObjectMap, targetGroup, txnSource);
+                            }
                             changed = true;
                         }
                     }
@@ -796,7 +826,9 @@ public class TransformationMappingHelper implements ISQLConstants {
                     changed = AttributeMappingHelper.updateAttributeMappings(transMappingRoot, txnSource) || changed;
 
                     succeeded = true;
-                } finally {
+                } catch (ModelerCoreException e) {
+                	TransformationPlugin.Util.log(IStatus.ERROR, e, "Problem reconciling SQL to target attributes");
+				} finally {
                     if (requiredStart) {
                         if (succeeded) {
                             ModelerCore.commitTxn();

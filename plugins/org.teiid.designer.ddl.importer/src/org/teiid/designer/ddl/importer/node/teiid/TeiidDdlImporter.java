@@ -613,7 +613,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_COLUMNS)) {
 				RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
 				procedure.setResultSet(result);
-				initialize(result, procedureNode);
+				initialize(result, procedureNode, child.getName());
 
 				List<AstNode> resultOptionNodes = new ArrayList<AstNode>();
 				
@@ -629,9 +629,20 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 				processOptions(resultOptionNodes, result);
 				
 			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_DATA_TYPE)) {
-				// Add a parameter with RETURN direction
-				RelationalParameter param = createProcedureParameter(child, procedure);
-				param.setDirection(DirectionKind.RETURN_LITERAL.toString());
+				RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
+				procedure.setResultSet(result);
+				initialize(result, procedureNode, "resultSet");
+				
+				RelationalColumn newColumn = createColumn(child,result);
+				// name the new column with the child name property
+//				newColumn.setName(child.getName());
+				
+//				// Add a parameter with RETURN direction
+//				RelationalParameter param = createProcedureParameter(child, procedure);
+//				if( param.getName().equalsIgnoreCase("resultSet") ) {
+//					param.setName("result");
+//				}
+//				param.setDirection(DirectionKind.RETURN_LITERAL.toString());
 			} else if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
 				procOptionNodes.add(child);
 			}
