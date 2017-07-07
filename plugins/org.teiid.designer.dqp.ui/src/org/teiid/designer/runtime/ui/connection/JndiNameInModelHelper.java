@@ -71,7 +71,7 @@ public class JndiNameInModelHelper {
 			if (editor != null) {
 				boolean isDirty = editor.isDirty();
 
-				if( !jndiName.startsWith(JNDI_PREFIX)) jndiName = JNDI_PREFIX + jndiName;
+				if( !jndiName.startsWith(JndiUtil.JAVA_PREFIX)) jndiName = JndiUtil.JAVA_PREFIX + jndiName;
 				
 				connectionInfoHelper.setJNDIName(modelResource, jndiName);
 
