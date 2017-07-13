@@ -13,6 +13,9 @@
        
 		<module name="org.infinispan.client.hotrod" slot="jdg-6.6" optional="true" services="export"/>
 		<module name="org.infinispan.protostream" slot="jdg-6.6" optional="true" services="export"/>
+		
+		<module name="org.infinispan.client.hotrod" slot="jdg-7.1" optional="true" services="export"/>
+		<module name="org.infinispan.protostream" slot="jdg-7.1" optional="true" services="export"/>
       
     </dependencies>
 </module>
