@@ -2603,19 +2603,24 @@ public class SQLStringVisitor extends LanguageVisitor
             registerNodes(args, 1);
             append(")"); //$NON-NLS-1$
         } else if (name.equalsIgnoreCase(SourceSystemFunctions.TRIM)) {
-            append(name);
-            append(SQLConstants.Tokens.LPAREN);
-            String value = (String)((Constant)args[0]).getValue();
-            if (!value.equalsIgnoreCase(BOTH)) {
-                append(((Constant)args[0]).getValue());
-                append(" "); //$NON-NLS-1$
-            }
+        	append(name);
+        	append(Tokens.LPAREN);
+        	Object arg_1 = args[0];
+        	String value_1 = "";
+        	if( arg_1 != null) {
+        		value_1 = (String)((Constant)arg_1).getValue();
+        	}
+        	if (!value_1.equalsIgnoreCase(BOTH)) {
+                append(value_1);
+                append(Tokens.SPACE);
+        	}
             append(args[1]);
-            append(" "); //$NON-NLS-1$
+            append(Tokens.SPACE);
             append(FROM);
-            append(" "); //$NON-NLS-1$
+            append(Tokens.SPACE);
             append(args[2]);
-            append(")"); //$NON-NLS-1$
+            append(")"); //$NON-NLS-1$$
+
         } else {
             append(name);
             append("("); //$NON-NLS-1$
