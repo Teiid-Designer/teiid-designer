@@ -66,6 +66,7 @@ import net.jcip.annotations.ThreadSafe;
  */
 @ThreadSafe
 public class VdbModelEntry extends VdbIndexedEntry {
+	private static String NAME = "name"; //$NON-NLS-1$
 
     /**
      * @param path the model path (may not be <code>null</code>)
@@ -517,7 +518,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
         	for( TranslatorOverride to : overrides) {
         		for( VdbSource source : this.sourceInfo.getSources() ) {
         			String translatorName = source.getTranslatorName();
-	        		if( translatorName != null && translatorName.toString().equalsIgnoreCase(to.getType()) ) {
+	        		if( translatorName != null && !translatorName.toString().equalsIgnoreCase(to.getType()) ) {
 	        			return to;
 	        		}
         		}
@@ -548,36 +549,43 @@ public class VdbModelEntry extends VdbIndexedEntry {
             return;
         }
     	TranslatorOverride to = getTranslatorOverride();
+    	TranslatorOverrideProperty[] toProps = null;
+    	
     	String oldTranslator = this.sourceInfo.getSource(0).getTranslatorName();
     	String newTranslator = null;
     	if( to == null ) {
-    		String toName = null;
+    		String toName = oldTranslator;
     		if( !oldTranslator.startsWith(this.sourceInfo.getSource(0).getName()) ) {
     			toName = this.sourceInfo.getSource(0).getName() + '_' + oldTranslator;
     		}
     		to = new TranslatorOverride(getVdb(), toName, oldTranslator, null);
     		newTranslator = toName;
-    		this.sourceInfo.getSource(0).setTranslatorName(toName);
+    		this.sourceInfo.getSource(0).setTranslatorName(newTranslator);
     		getVdb().addTranslator(to);
+    	} else {
+    		toProps = to.getOverrideProperties();
     	}
-    	
-    	TranslatorOverrideProperty[] toProps = to.getOverrideProperties();
     	
         Set<Object> keys = props.keySet();
         for (Object nextKey : keys) {
-        	boolean existing = "name".equals(nextKey); //$NON-NLS-1$
-        	// Look through current TO props to see if already defined
-    		for( TranslatorOverrideProperty toProp : toProps ) {
-    			if( toProp.getDefinition().getId().equals(nextKey) ) {
+        	boolean existing = false;
+        	
+        	if( toProps != null && toProps.length > 0 ) {
+	        	existing = NAME.equals(nextKey); //$NON-NLS-1$
+	        	// Look through current TO props to see if already defined
+	
+	    		for( TranslatorOverrideProperty toProp : toProps ) {
+	    			if( toProp.getDefinition().getId().equals(nextKey) && !existing) {
+	
+	    				// This is an override case
+	    				toProp.setValue(props.getProperty((String)nextKey));
+	    				existing = true;
+	    				break;
+	    			}
+	    		}
+        	}
 
-    				// This is an override case
-    				toProp.setValue(props.getProperty((String)nextKey));
-    				existing = true;
-    				break;
-    			}
-    		}
-
-    		if( !existing ) {
+    		if( !existing && !NAME.equals(nextKey)) {
     			to.addProperty(new TranslatorOverrideProperty(new TranslatorPropertyDefinition((String) nextKey, "dummy"), props.getProperty((String)nextKey))); //$NON-NLS-1$
     		}
     	}
@@ -631,12 +639,13 @@ public class VdbModelEntry extends VdbIndexedEntry {
 	                    && !CoreStringUtil.equals(translatorName, resourceTranslatorName)) {
 	                    this.sourceInfo.getSource(0).setTranslatorName(resourceTranslatorName == null ? EMPTY_STRING : resourceTranslatorName);
 	                }
-	                
-	
-	                Properties translatorProps = helper.getTranslatorProperties(mr);
-	                if (!translatorProps.isEmpty()) {
-	                    updateTranslatorOverrides(translatorProps);
-	                }
+                } else {
+                	this.sourceInfo.getSource(0).setTranslatorName(translatorName);
+                }
+
+                Properties translatorProps = helper.getTranslatorProperties(mr);
+                if (!translatorProps.isEmpty()) {
+                    updateTranslatorOverrides(translatorProps);
                 }
 
                 final String jndiName = this.sourceInfo.getSource(0).getJndiName();
