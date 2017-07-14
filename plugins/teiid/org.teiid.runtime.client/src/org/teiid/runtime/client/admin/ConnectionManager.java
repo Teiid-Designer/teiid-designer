@@ -202,7 +202,11 @@ public class ConnectionManager {
     public Collection<ITeiidTranslator> getTranslators() {
     	return this.translatorCache.getTranslators();
     }
+
     public Collection<TeiidPropertyDefinition> getTemplatePropertyDefns(String templateName) throws Exception {
-    	return this.translatorCache.getTemplatePropertyDefns(templateName);
+    	Collection<TeiidPropertyDefinition> result = new ArrayList<TeiidPropertyDefinition>();
+    	result.addAll(this.translatorCache.getTemplatePropertyDefns(templateName));
+    	result.addAll(dataSourceCache.getTemplatePropertyDefns(templateName));
+    	return result;
     }
 }

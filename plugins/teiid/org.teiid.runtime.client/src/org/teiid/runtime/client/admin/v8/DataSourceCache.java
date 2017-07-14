@@ -21,6 +21,7 @@ import org.teiid.adminapi.impl.PropertyDefinitionMetadata;
 import org.teiid.adminapi.jboss.MetadataMapper;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidRuntimePlugin;
@@ -295,6 +296,36 @@ public class DataSourceCache implements AdminConstants {
 		
     	return props;
 	}
+	
+    @SuppressWarnings("unchecked")
+	public Collection<TeiidPropertyDefinition> getTemplatePropertyDefns(String templateName) throws Exception {
+    	
+        Collection<? extends PropertyDefinition> propDefs = getTemplatePropertyDefinitions(templateName);
+
+        Collection<TeiidPropertyDefinition> teiidPropDefns = new ArrayList<TeiidPropertyDefinition>();
+        
+        for (PropertyDefinition propDefn : propDefs) {
+            TeiidPropertyDefinition teiidPropertyDefn = new TeiidPropertyDefinition();
+            
+            teiidPropertyDefn.setName(propDefn.getName());
+            teiidPropertyDefn.setDisplayName(propDefn.getDisplayName());
+            teiidPropertyDefn.setDescription(propDefn.getDescription());
+            teiidPropertyDefn.setPropertyTypeClassName(propDefn.getPropertyTypeClassName());
+            teiidPropertyDefn.setDefaultValue(propDefn.getDefaultValue());
+            teiidPropertyDefn.setAllowedValues(propDefn.getAllowedValues());
+            teiidPropertyDefn.setModifiable(propDefn.isModifiable());
+            teiidPropertyDefn.setConstrainedToAllowedValues(propDefn.isConstrainedToAllowedValues());
+            teiidPropertyDefn.setAdvanced(propDefn.isAdvanced());
+            teiidPropertyDefn.setRequired(propDefn.isRequired());
+            teiidPropertyDefn.setMasked(propDefn.isMasked());
+            
+            teiidPropDefns.add(teiidPropertyDefn);
+        }
+        
+        return teiidPropDefns;
+}
+
+
 	
 	class AbstractMetadatMapper implements MetadataMapper<String>{
 		@Override
