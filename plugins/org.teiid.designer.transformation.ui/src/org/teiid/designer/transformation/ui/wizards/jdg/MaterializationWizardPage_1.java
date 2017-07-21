@@ -41,6 +41,7 @@ public class MaterializationWizardPage_1 extends AbstractWizardPage implements U
 	Text locationField;
 	Label locationLabel;
 	Text cacheNameField;
+	Text stagingCacheNameField;
 	
 	Combo jdgVersionCombo;
     
@@ -215,8 +216,10 @@ public class MaterializationWizardPage_1 extends AbstractWizardPage implements U
 				if( is7DOT1) {
 					manager.setJdgVersion(JDG_VERSION.JDG_7_DOT_1);
 					cacheNameField.setEnabled(true);
+					stagingCacheNameField.setEnabled(true);
 				} else {
 					cacheNameField.setEnabled(false);
+					stagingCacheNameField.setEnabled(false);
 					manager.setJdgVersion(JDG_VERSION.JDG_6_DOT_6);
 				}
 				validate();
@@ -234,7 +237,7 @@ public class MaterializationWizardPage_1 extends AbstractWizardPage implements U
         ((GridData)cacheLabel.getLayoutData()).verticalAlignment = GridData.CENTER;
         
         this.cacheNameField = WidgetFactory.createTextField(jdgOptionsGroup);
-        this.cacheNameField.setToolTipText(Messages.MaterializationWizardPage_1_SourceModelNameTooltip);
+        this.cacheNameField.setToolTipText(Messages.MaterializationWizardPage_1_CacheTooltip);
         
         String cacheName = manager.getJdgCacheName();
         if( ! StringUtilities.isEmpty(cacheName) ) {
@@ -243,7 +246,6 @@ public class MaterializationWizardPage_1 extends AbstractWizardPage implements U
         this.cacheNameField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         ((GridData)this.cacheNameField.getLayoutData()).horizontalSpan = 1;
         ((GridData)this.cacheNameField.getLayoutData()).verticalAlignment = GridData.CENTER;
-//        GridDataFactory.swtDefaults().grab(true,  true).applyTo(modelNameField);
         
         this.cacheNameField.addModifyListener(new ModifyListener() {
 			
@@ -258,6 +260,39 @@ public class MaterializationWizardPage_1 extends AbstractWizardPage implements U
 				} else {
 					jdgCacheName = ""; //$NON-NLS-1$
 					manager.setJdgCacheName(jdgCacheName);
+				}
+				 validate();
+			}
+		});
+        
+    	Label stagingCacheLabel = WidgetFactory.createLabel(jdgOptionsGroup, Messages.MaterializationWizardPage_1_StagingCacheLabel); 
+    	stagingCacheLabel.setToolTipText(Messages.MaterializationWizardPage_1_StagingCacheTooltip);
+        ((GridData)stagingCacheLabel.getLayoutData()).verticalAlignment = GridData.CENTER;
+        
+        this.stagingCacheNameField = WidgetFactory.createTextField(jdgOptionsGroup);
+        this.stagingCacheNameField.setToolTipText(Messages.MaterializationWizardPage_1_StagingCacheTooltip);
+        
+        String stagingCacheName = manager.getJdgCacheName();
+        if( ! StringUtilities.isEmpty(stagingCacheName) ) {
+        	this.stagingCacheNameField.setText(stagingCacheName);
+        }
+        this.stagingCacheNameField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        ((GridData)this.stagingCacheNameField.getLayoutData()).horizontalSpan = 1;
+        ((GridData)this.stagingCacheNameField.getLayoutData()).verticalAlignment = GridData.CENTER;
+        
+        this.stagingCacheNameField.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				if( synchronizing ) return;
+				
+				String jdgCacheName = stagingCacheNameField.getText();
+				 if( ! StringUtilities.isEmpty(modelName) ) {
+					
+					 manager.setJdgStagingCacheName(jdgCacheName);
+				} else {
+					jdgCacheName = ""; //$NON-NLS-1$
+					manager.setJdgStagingCacheName(jdgCacheName);
 				}
 				 validate();
 			}

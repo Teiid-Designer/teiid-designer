@@ -80,6 +80,7 @@ public class MaterializedModelManager implements ReverseEngConstants {
     private String pojoPackageName;
     private String annotationType = PROTOBUF;
     private String jdgCacheName;
+    private String jdgStagingCacheName;
     
     private File pojoFileSystemFolder;
     private IContainer pojoWorkspaceFolder;
@@ -483,8 +484,16 @@ public class MaterializedModelManager implements ReverseEngConstants {
 		return jdgCacheName;
 	}
 
-	public void setJdgCacheName(String jdgCacheName) {
-		this.jdgCacheName = jdgCacheName;
+	public void setJdgCacheName(String name) {
+		this.jdgCacheName = name;
+	}
+	
+	public String getJdgStagingCacheName() {
+		return jdgStagingCacheName;
+	}
+
+	public void setJdgStagingCacheName(String name) {
+		this.jdgStagingCacheName = name;
 	}
 
 
@@ -510,6 +519,17 @@ public class MaterializedModelManager implements ReverseEngConstants {
 	        	if( StringUtilities.isEmpty(jdgCacheName) ) {
 	        		return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 
 		        			TransformationPlugin.Util.getString("MaterializedModelManager_jdgCacheNameMissingError")); //$NON-NLS-1$
+	        	}
+	        	
+	        	if( StringUtilities.isEmpty(jdgStagingCacheName) ) {
+	        		return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 
+		        			TransformationPlugin.Util.getString("MaterializedModelManager_jdgStagingCacheNameMissingError")); //$NON-NLS-1$
+	        	}
+	        	
+	        	if( !StringUtilities.areDifferent(jdgCacheName, jdgStagingCacheName)) {
+	        		return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 
+		        			TransformationPlugin.Util.getString("MaterializedModelManager_jdgCacheNameIdenticalError")); //$NON-NLS-1$
+	        		
 	        	}
 	        }
             
@@ -587,7 +607,9 @@ public class MaterializedModelManager implements ReverseEngConstants {
 	        		stagingTable, InfinispanCacheModelExtensionConstants.PropertyIds.PRIMARY_TABLE, modelName + StringConstants.DOT + matTable.getName());
     	} else {
 	        getExtensionAssistant().setPropertyValue(
-	        		stagingTable, InfinispanHotrodModelExtensionConstants.PropertyIds.CACHE, jdgCacheName);
+	        		matTable, InfinispanHotrodModelExtensionConstants.PropertyIds.CACHE, jdgCacheName);
+	        getExtensionAssistant().setPropertyValue(
+	        		stagingTable, InfinispanHotrodModelExtensionConstants.PropertyIds.CACHE, jdgStagingCacheName);
     	}
     }
     

@@ -26,6 +26,8 @@ public class Messages extends org.teiid.designer.relational.ui.Messages {
     public static String MaterializationWizardPage_1_JDGOptionsGroupName;
     public static String MaterializationWizardPage_1_CacheLabel;
     public static String MaterializationWizardPage_1_CacheTooltip;
+    public static String MaterializationWizardPage_1_StagingCacheLabel;
+    public static String MaterializationWizardPage_1_StagingCacheTooltip;
     public static String MaterializationWizardPage_1_JdgVersionComboLabel;
     public static String MaterializationWizardPage_1_JdgVersionComboTooltip;
     
