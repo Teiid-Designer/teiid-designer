@@ -23,6 +23,11 @@ public class Messages extends org.teiid.designer.relational.ui.Messages {
     public static String MaterializationWizardPage_1_SourceModelName;
     public static String MaterializationWizardPage_1_SourceModelNameTooltip;
     public static String MaterializationWizardPage_1_SourceModelLocationLabel;
+    public static String MaterializationWizardPage_1_JDGOptionsGroupName;
+    public static String MaterializationWizardPage_1_CacheLabel;
+    public static String MaterializationWizardPage_1_CacheTooltip;
+    public static String MaterializationWizardPage_1_JdgVersionComboLabel;
+    public static String MaterializationWizardPage_1_JdgVersionComboTooltip;
     
     public static String MaterializationWizardPage_2_Title;
     public static String MaterializationWizardPage_2_Message;

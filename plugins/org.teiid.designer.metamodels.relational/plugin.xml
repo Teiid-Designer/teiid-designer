@@ -219,6 +219,14 @@
       </extensionDefinition>
    </extension>
    
+   <extension
+         point="org.teiid.designer.extension.modelExtensionProvider">
+      <extensionDefinition
+            className="org.teiid.designer.metamodels.relational.extension.InfinispanHotrodModelExtensionAssistant"
+            path="infinispan-hotrod.mxd">
+      </extensionDefinition>
+   </extension>
+   
 <!-- Designates valid extensible metamodel -->
    <extension
          point="org.teiid.designer.extension.extensibleMetamodelProvider">

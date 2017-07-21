@@ -37,6 +37,8 @@ public interface ReverseEngConstants {
     
     String INFINISPAN_EXT_ASSISTANT_NS = "infinispan"; //$NON-NLS-1$
     
+    String INFINISPAN_HOTROD_EXT_ASSISTANT_NS = "infinispan-hotrod"; //$NON-NLS-1$
+    
     String RELATIONAL_EXT_ASSISTANT_NS = "relational"; //$NON-NLS-1$
     
     String SOURCE_MODEL_NAME_SUFFIX = "JDGSource"; //$NON-NLS-1$
@@ -45,4 +47,13 @@ public interface ReverseEngConstants {
     	MATERIALIZE,
     	POJO
     }
+    
+    
+    String[] JDG_VERSIONS = {"6.6", "7.1"};  //$NON-NLS-1$  //$NON-NLS-2$
+    
+    public enum JDG_VERSION {
+    	JDG_6_DOT_6,
+    	JDG_7_DOT_1
+    }
+
 }
