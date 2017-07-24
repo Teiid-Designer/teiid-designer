@@ -163,7 +163,7 @@ public class CreateViewProcedureAction extends Action implements INewChildAction
 	}
 
 	@Override
-   public void run() {
+	public void run() {
         // If properties were passed in, use it's model as the selection - if available
         if (this.designerProperties != null) {
             IFile propsViewModel = DesignerPropertiesUtil.getViewModel(this.designerProperties);
@@ -171,29 +171,33 @@ public class CreateViewProcedureAction extends Action implements INewChildAction
         }
 		if( selectedModel != null ) {
 	        ModelResource mr = ModelUtilities.getModelResource(selectedModel);
-	        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-	        
-            relationalViewProcedure = new RelationalViewProcedure();
-	        SelectProcedureTypeDialog procedureTypeDialog = new SelectProcedureTypeDialog(shell, relationalViewProcedure);
-	        
-	        procedureTypeDialog.open();
-	        
-	        if (procedureTypeDialog.getReturnCode() == Window.OK) {
-	            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewProcedure, (IFile)ModelUtilities.getIResource(mr));
-	            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
-	
-		        dialog.open();
-		        
-		        if (dialog.getReturnCode() == Window.OK) {
-		        	this.newViewProcedure = createViewProcedureInTxn(mr, relationalViewProcedure);
-		        } else {
-		        	this.relationalViewProcedure = null;
-		        	this.newViewProcedure = null;
-		        }
-	        }
+	        run(mr);
 		}
-		
 	}
+	
+	public void run(ModelResource mr) {
+        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+        
+        relationalViewProcedure = new RelationalViewProcedure();
+        SelectProcedureTypeDialog procedureTypeDialog = new SelectProcedureTypeDialog(shell, relationalViewProcedure);
+        
+        procedureTypeDialog.open();
+        
+        if (procedureTypeDialog.getReturnCode() == Window.OK) {
+            TransformationDialogModel dialogModel = new TransformationDialogModel(relationalViewProcedure, selectedModel);
+            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
+
+	        dialog.open();
+	        
+	        if (dialog.getReturnCode() == Window.OK) {
+	        	this.newViewProcedure = createViewProcedureInTxn(mr, relationalViewProcedure);
+	        } else {
+	        	this.relationalViewProcedure = null;
+	        	this.newViewProcedure = null;
+	        }
+        }
+	}
+
 
     private EObject createViewProcedureInTxn( ModelResource modelResource, RelationalViewProcedure viewProcedure ) {
     	EObject newTable = null;

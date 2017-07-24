@@ -124,24 +124,27 @@ public class CreateRelationalIndexAction  extends Action implements INewChildAct
 	}
 
 	@Override
-   public void run() {
+    public void run() {
 		if( selectedModel != null ) {
 	        ModelResource mr = ModelUtilities.getModelResource(selectedModel);
-	        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-	        
-	        RelationalIndex index = new RelationalIndex();
-	        
-	        // Hand the table off to the generic edit dialog
-	        RelationalDialogModel dialogModel = new RelationalDialogModel(index, (IFile)ModelUtilities.getIResource(mr));
-	        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
-	        
-	        dialog.open();
-	        
-	        if (dialog.getReturnCode() == Window.OK) {
-	        	createIndexInTxn(mr, index);
-	        }
+	        run(mr);
 		}
-		
+	}
+	
+	public void run(ModelResource mr) {
+        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+        
+        RelationalIndex index = new RelationalIndex();
+        
+        // Hand the table off to the generic edit dialog
+        RelationalDialogModel dialogModel = new RelationalDialogModel(index, selectedModel);
+        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
+        
+        dialog.open();
+        
+        if (dialog.getReturnCode() == Window.OK) {
+        	createIndexInTxn(mr, index);
+        }
 	}
 
     private void createIndexInTxn(ModelResource modelResource, RelationalIndex index) {

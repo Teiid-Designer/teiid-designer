@@ -79,7 +79,9 @@ public class AdminConnectionManager {
         } catch (OperationFormatException e) {
         	throw new AdminComponentException("Failed to build operation", e); //$NON-NLS-1$
         } catch (IOException e) {
-        	 throw new AdminComponentException(e);
+        	if( ! e.getMessage().contains("JBAS010641: ModelControllerClient is closed")) {
+        		throw new AdminComponentException(e);
+        	}
         }
 	}
 	

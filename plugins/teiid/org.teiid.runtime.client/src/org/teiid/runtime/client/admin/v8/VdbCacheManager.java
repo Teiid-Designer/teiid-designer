@@ -91,7 +91,9 @@ public class VdbCacheManager implements AdminConstants {
 	    try {
 			vdbs = Collections.unmodifiableCollection(getRawVDBs());
 		} catch (AdminException e) {
-			throw new AdminComponentException(e);
+        	if( ! e.getMessage().contains("JBAS010641: ModelControllerClient is closed")) {
+        		throw new AdminComponentException(e);
+        	}
 		}
 	    
 

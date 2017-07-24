@@ -12,6 +12,7 @@ import java.util.Collection;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -147,7 +148,13 @@ public class ModelEditorHyperlinkManager implements ModelActionConstants, ISelec
 				@Override
 				public void linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent e) {
 					action.selectionChanged(editorPage, new StructuredSelection(iResource));
-					action.run();
+					if(  action.isEnabled() ) {
+						action.run();
+					} else {
+						MessageDialog.openWarning(editorPage.getEditorSite().getShell(), "Action Not Supported", 
+								action.getText() + " not supported for model " + iResource.getName());
+					}
+					
 				}
 			});
 		}
