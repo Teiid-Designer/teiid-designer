@@ -50,7 +50,6 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.util.style.XmlRegion;
 import org.teiid.designer.ui.common.util.style.XmlRegionAnalyzer;
 import org.teiid.designer.ui.common.widget.Label;
@@ -69,7 +68,7 @@ public class GenerateDynamicVdbDialog extends ScrollableTitleAreaDialog implemen
 	private TabItem optionsTab;
 	
     private Text dynamicVdbName;
-    private Label dynamicVdbLocationText;
+    //private Label dynamicVdbLocationText;
     private Text dynamicVdbFileName;
     private Text vdbVersionText;
     private Button workspaceRB;
@@ -470,7 +469,7 @@ public class GenerateDynamicVdbDialog extends ScrollableTitleAreaDialog implemen
 		resetButton.setEnabled(canEdit);
 		if( !canEdit ) {
 			vdbManager.generate();
-            IStatus status = vdbManager.getStatus();
+            //IStatus status = vdbManager.getStatus();
             setXmlContents(getVdbXml());
 		}
 		resetButton.setEnabled(canEdit);

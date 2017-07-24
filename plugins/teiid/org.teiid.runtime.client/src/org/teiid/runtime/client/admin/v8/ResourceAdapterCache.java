@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.jboss.as.controller.client.ModelControllerClient;
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
 import org.teiid.adminapi.AdminException;
@@ -44,9 +43,9 @@ public class ResourceAdapterCache implements AdminConstants {
 	
 	private Set<String> deployedResourceAdaptorNames;
 	
-	public ResourceAdapterCache(ModelControllerClient connection, ITeiidServer teiidServer) {
+	public ResourceAdapterCache(AdminConnectionManager adminConnectionManager, ITeiidServer teiidServer) {
 		super();
-		this.manager = new AdminConnectionManager(connection, teiidServer.getServerVersion());
+		this.manager = adminConnectionManager;
 		this.poolNameToIDMap = new  HashMap<String, String>();
 		this.poolNameToTeiidDataSourceMap = new HashMap<String, CommonDataSource>();
 		this.jndiNameToTeiidDataSourceMap = new HashMap<String, CommonDataSource>();
@@ -196,13 +195,6 @@ public class ResourceAdapterCache implements AdminConstants {
 		this.manager.cliCall(REMOVE, new String[] { SUBSYSTEM, RESOURCE_ADAPTERS, RESOURCE_ADAPTER, cds.getResourceAdapterID(),
 				CONNECTION_DEFINITIONS, cds.getDisplayName() }, null,
 				new ResultCallback());
-		
-		//AS-4776 HACK - BEGIN
-		if (resourceAdapterIDs.contains(cds.getResourceAdapterID())) {
-			this.manager.cliCall(REMOVE, new String[] { SUBSYSTEM, RESOURCE_ADAPTERS, RESOURCE_ADAPTER, cds.getDisplayName()}, null,
-					new ResultCallback());
-			
-		}
 	}
 	
 	public CommonDataSource create(String displayName, String jndiName,	String templateName, Properties properties)	throws AdminException {

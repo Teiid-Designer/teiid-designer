@@ -611,6 +611,10 @@ public interface Vdb extends VdbConstants {
         /**
          */
         String AUTHENTICATION_TYPE = "authenticationType"; //$NON-NLS-1$
+        
+        /**
+         */
+        String CONNECTION_TYPE = "connection-type"; //$NON-NLS-1$
     }
 
     /**
@@ -677,6 +681,10 @@ public interface Vdb extends VdbConstants {
         /**
          */
         String USE_CONNECTOR_METADATA = "UseConnectorMetadata"; //$NON-NLS-1$
+        
+        /**
+         */
+        String CONNECTION_TYPE = "connection-type"; //$NON-NLS-1$
     }
 
     /**

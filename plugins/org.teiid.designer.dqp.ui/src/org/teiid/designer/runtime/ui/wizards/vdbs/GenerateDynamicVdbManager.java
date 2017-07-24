@@ -13,20 +13,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
@@ -90,6 +88,8 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
     }
     
     public GenerateDynamicVdbManager(IFile archiveVdbFile) throws Exception {
+    	super();
+    	
         CoreArgCheck.isNotNull(archiveVdbFile);
 
         this.archiveVdbFile = archiveVdbFile;
@@ -119,7 +119,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 
 	private void checkDynamicVdbGenerated() throws Exception {
         if (isGenerateRequired())
-            throw new Exception(Messages.GenerateDynamicVdbWizard_validation_noDynamicVdbGenerated);
+            throw new Exception(Messages.GenerateDynamicVdbManager_validation_noDynamicVdbGenerated);
     }
 
     /**
@@ -221,13 +221,13 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
                 if (!export.delete())
                     throw new Exception(VdbPlugin.UTIL.getString("unableToDelete", export)); //$NON-NLS-1$
         	}
-            throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationAlreadyExists,
+            throw new Exception(NLS.bind(Messages.GenerateDynamicVdbManager_exportLocationAlreadyExists,
             		getOutputVdbFileName(),
                                          directory));
         }
         
         if (!export.createNewFile())
-            throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationFailedToCreateFile,
+            throw new Exception(NLS.bind(Messages.GenerateDynamicVdbManager_exportLocationFailedToCreateFile,
             		getOutputVdbFileName(),
                                          directory));
 
@@ -305,12 +305,12 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 	        return;
 
         if (!getOutputVdbFileName().toLowerCase().endsWith(ITeiidVdb.DYNAMIC_VDB_SUFFIX)) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_vdbMissingXmlExtension));
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbManager_validation_vdbMissingXmlExtension));
             return;
         }
 
         if (!isGenerateRequired() && getDynamicVdb() == null) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_noDynamicVdbGenerated));
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbManager_validation_noDynamicVdbGenerated));
             return;
         }
         
@@ -425,6 +425,22 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
     		@Override
     		public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
     			try {
+    				final IFile fileExists = workspaceLocation.getFile(new Path(fileName));
+    				if( fileExists.exists() ) {
+    					boolean doWrite = false;
+    					if( !overwriteExistingFiles()) {
+    						// Shouldn't get here, but adding a check just in case.
+    						doWrite = MessageDialog.openQuestion(Display.getCurrent().getActiveShell(),
+    								"File Exists", "File exists, do you wish to overwrite?");  //$NON-NLS-1$  //$NON-NLS-2$
+    					}
+    					if( doWrite ) {
+    						fileExists.delete(true, monitor);
+    					} else {
+    						// Do nothing
+    						return;
+    					}
+    				}
+    				
     	            final IFile fileToCreate = workspaceLocation.getFile(new Path(fileName));
     	            
     	        	InputStream istream = new ByteArrayInputStream(xml.getBytes());
@@ -472,7 +488,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
                             throw new Exception(VdbPlugin.UTIL.getString("unableToDelete", export)); //$NON-NLS-1$
                         }
                 	} else {
-	                    throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationAlreadyExists,
+	                    throw new Exception(NLS.bind(Messages.GenerateDynamicVdbManager_exportLocationAlreadyExists,
 	                    		getOutputVdbFileName(),
 	                    		fileSystemFolderUrl));
                 	}

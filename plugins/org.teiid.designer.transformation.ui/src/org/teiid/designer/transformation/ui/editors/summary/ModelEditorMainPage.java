@@ -324,7 +324,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 							action.run(modelResource);
 						} else {
 							CreateRelationalTableAction action = new CreateRelationalTableAction();
-							action.run(modelResource);
+							action.run();
 						}
 						
 					}
@@ -347,10 +347,10 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 					public void widgetSelected(SelectionEvent e) {
 						if( isVirtual ) {
 							CreateViewProcedureAction action = new CreateViewProcedureAction();
-							action.run(modelResource);
+							action.run();
 						} else {
 							CreateRelationalProcedureAction action = new CreateRelationalProcedureAction();
-							action.run(modelResource);
+							action.run();
 						}
 						
 					}
@@ -369,10 +369,10 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 					public void widgetSelected(SelectionEvent e) {
 						if( isVirtual ) {
 							CreateViewIndexAction action = new CreateViewIndexAction();
-							action.run(modelResource);
+							action.run();
 						} else {
 							CreateRelationalIndexAction action = new CreateRelationalIndexAction();
-							action.run(modelResource);
+							action.run();
 						}
 						
 					}

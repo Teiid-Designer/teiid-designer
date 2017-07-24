@@ -66,7 +66,6 @@ implements Extensions, IPerspectiveFactory, ModelerPerspectiveContributorExtensi
                          IPageLayout thePage) {
         theFolder.addView(theViewId);
         thePage.addShowViewShortcut(theViewId);
-        System.out.println("    >>>  ModelerPerspectiveFactory.addView()  ID = " + theViewId);
     }
 
     /* (non-Javadoc)

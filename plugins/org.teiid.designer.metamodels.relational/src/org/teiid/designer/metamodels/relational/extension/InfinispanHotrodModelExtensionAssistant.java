@@ -20,9 +20,9 @@ import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
-import org.teiid.designer.metamodels.relational.extension.InfinispanCacheModelExtensionConstants.PropertyIds;
+import org.teiid.designer.metamodels.relational.extension.InfinispanHotrodModelExtensionConstants.PropertyIds;
 
-public class InfinispanCacheModelExtensionAssistant  extends EmfModelObjectExtensionAssistant {
+public class InfinispanHotrodModelExtensionAssistant extends EmfModelObjectExtensionAssistant {
 
 	/**
 	 * Saves the relational MED to a model if necessary.
@@ -58,7 +58,13 @@ public class InfinispanCacheModelExtensionAssistant  extends EmfModelObjectExten
 		// must be table in a physical model
 		if (propDefn != null && ModelUtil.isPhysical(modelObject)) {
 			if (modelObject instanceof BaseTable) {
-				if (PropertyIds.PRIMARY_TABLE.equals(propId)) {
+				if (PropertyIds.CACHE.equals(propId) ||
+					PropertyIds.MERGE.equals(propId) ||
+					PropertyIds.MESSAGE_NAME.equals(propId) ||
+					PropertyIds.PARENT_COLUMN_NAME.equals(propId) ||
+					PropertyIds.PARENT_TAG.equals(propId) ||
+					PropertyIds.PSEUDO.equals(propId) ||
+					PropertyIds.TAG.equals(propId)) {
 					return propDefn;
 				}
 			}
@@ -73,10 +79,11 @@ public class InfinispanCacheModelExtensionAssistant  extends EmfModelObjectExten
 		return super.supportsMedOperation(proposedOperationName, context);
 	}
     
-    public static InfinispanCacheModelExtensionAssistant getInstance() {
+    public static InfinispanHotrodModelExtensionAssistant getInstance() {
     	final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
-        final String prefix = InfinispanCacheModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
-        return (InfinispanCacheModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
+        final String prefix = InfinispanHotrodModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+        return (InfinispanHotrodModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
     }
     
 }
+

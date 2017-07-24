@@ -158,41 +158,38 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
 	}
 
 	@Override
-	public void run() {
+   public void run() {
 		if( selectedModel != null ) {
 	        ModelResource mr = ModelUtilities.getModelResource(selectedModel);
-	        run(mr);
+	        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+	        
+	        RelationalProcedure procedure = new RelationalProcedure();
+	        
+	        SelectProcedureTypeDialog procedureTypeDialog = new SelectProcedureTypeDialog(shell, procedure);
+	        
+	        procedureTypeDialog.open();
+	        
+	        if (procedureTypeDialog.getReturnCode() == Window.OK) {
+		        if( procedure.isNativeQueryProcedure() ) {
+		        	RelationalProcedureResultSet resultSet = new RelationalProcedureResultSet("ResultSet");
+		        	RelationalColumn column = new RelationalColumn("output");
+		        	column.setDatatype("object");
+		        	resultSet.addColumn(column);
+		        	procedure.setResultSet(resultSet);
+		        }
+		        
+		        // Hand the table off to the generic edit dialog
+	            RelationalDialogModel dialogModel = new RelationalDialogModel(procedure, (IFile)ModelUtilities.getIResource(mr));
+	            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
+		        
+		        dialog.open();
+		        
+		        if (dialog.getReturnCode() == Window.OK) {
+		        	createProcedureInTxn(mr, procedure);
+		        }
+	        }
 		}
-	}
-	
-	public void run(ModelResource mr) {
-        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-        
-        RelationalProcedure procedure = new RelationalProcedure();
-        
-        SelectProcedureTypeDialog procedureTypeDialog = new SelectProcedureTypeDialog(shell, procedure);
-        
-        procedureTypeDialog.open();
-        
-        if (procedureTypeDialog.getReturnCode() == Window.OK) {
-	        if( procedure.isNativeQueryProcedure() ) {
-	        	RelationalProcedureResultSet resultSet = new RelationalProcedureResultSet("ResultSet");
-	        	RelationalColumn column = new RelationalColumn("output");
-	        	column.setDatatype("object");
-	        	resultSet.addColumn(column);
-	        	procedure.setResultSet(resultSet);
-	        }
-	        
-	        // Hand the table off to the generic edit dialog
-            RelationalDialogModel dialogModel = new RelationalDialogModel(procedure, (IFile)ModelUtilities.getIResource(mr));
-            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
-	        
-	        dialog.open();
-	        
-	        if (dialog.getReturnCode() == Window.OK) {
-	        	createProcedureInTxn(mr, procedure);
-	        }
-        }
+		
 	}
 
     private void createProcedureInTxn(ModelResource modelResource, RelationalProcedure procedure) {

@@ -1233,6 +1233,16 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         					options.put(propId, value);
         				}
         			}
+    			}  else if(ns.equals(INFINISPAN_HOTROD_PREFIX)) {
+        			for( ModelExtensionPropertyDefinition ext : defns) {
+        				String propId = ext.getId();
+        				String value = assistant.getOverriddenValue(modelObject, propId);
+
+        				if( value != null ) {
+        					propId = propId.replace(INFINISPAN_HOTROD_PREFIX, TEIID_INFINISPAN_HOTROD_PREFIX);
+        					options.put(propId, value);
+        				}
+        			}
     			}
 
     		}

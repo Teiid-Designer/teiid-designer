@@ -44,7 +44,10 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.UniqueKey;
+import org.teiid.designer.metamodels.relational.extension.InfinispanCacheModelExtensionAssistant;
 import org.teiid.designer.metamodels.relational.extension.InfinispanCacheModelExtensionConstants;
+import org.teiid.designer.metamodels.relational.extension.InfinispanHotrodModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.InfinispanHotrodModelExtensionConstants;
 import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.reverseeng.ReverseEngConstants;
@@ -76,6 +79,8 @@ public class MaterializedModelManager implements ReverseEngConstants {
     private String pojoClassName;
     private String pojoPackageName;
     private String annotationType = PROTOBUF;
+    private String jdgCacheName;
+    private String jdgStagingCacheName;
     
     private File pojoFileSystemFolder;
     private IContainer pojoWorkspaceFolder;
@@ -89,6 +94,8 @@ public class MaterializedModelManager implements ReverseEngConstants {
     private MultiStatus result;
     
     private Mode mode;
+    
+    private JDG_VERSION jdgVersion = JDG_VERSION.JDG_7_DOT_1;
     
     public MaterializedModelManager(EObject selectedTableOrView, Mode mode) {
     	this.mode = mode;
@@ -139,6 +146,7 @@ public class MaterializedModelManager implements ReverseEngConstants {
     
     public MultiStatus execute() {
       
+    	boolean isJDG7DOT1 = (jdgVersion == JDG_VERSION.JDG_7_DOT_1);
         try {  
 
         	ModelResource newSourceModel = constructRelationalModel();
@@ -157,9 +165,12 @@ public class MaterializedModelManager implements ReverseEngConstants {
             addValue(newSourceModel, stagingTable, getModelResourceContents(newSourceModel));
             
             String modelName = ModelUtil.getName(newSourceModel);
-            getExtensionAssistant().setPropertyValue(
-            		stagingTable, InfinispanCacheModelExtensionConstants.PropertyIds.PRIMARY_TABLE, modelName + StringConstants.DOT + matTable.getName());
+            
+            setInfinispanConnectionProperties(modelName, stagingTable, matTable);
 
+            String stageTableStr = sourceModelName + "." + stagingTable.getName();
+            String matTableStr = sourceModelName + "." + matTable.getName();
+            
             /*
             	"teiid_rel:MATVIEW_AFTER_LOAD_SCRIPT" 'execute {jdgsourcemodelname}.native(''swap cache names'');'
 				"teiid_rel:MATVIEW_BEFORE_LOAD_SCRIPT" 'execute {jdgsourcemodelname}.native(''truncate cache'');',
@@ -167,9 +178,19 @@ public class MaterializedModelManager implements ReverseEngConstants {
 
 				where {jdgsourcemodelname} as the new JDG Source Model that is created.
              */
-            String afterLoadScriptStr = "execute " + sourceModelName + ".native(\'\'swap cache names\'\');";
             String beforeLoadScriptStr = "execute " + sourceModelName + ".native(\'\'truncate cache\'\');";
-            String stageTableStr = sourceModelName + "." + stagingTable.getName();
+            String afterLoadScriptStr = "execute " + sourceModelName + ".native(\'\'swap cache names\'\');";
+            
+            if( isJDG7DOT1 ) {
+            	// "teiid_rel:MATVIEW_BEFORE_LOAD_SCRIPT" '
+            	// execute StockJDGSource.native(''truncate StockJDGSource.ST_StockCache'');',
+            	beforeLoadScriptStr = "execute " + sourceModelName + ".native(\'\'truncate " + stageTableStr + "\'\');";
+            	// "teiid_rel:MATVIEW_AFTER_LOAD_SCRIPT" '
+            	// execute StockJDGSource.native(''rename StockJDGSource.ST_StockCache StockJDGSource.StockCache'');'
+            	afterLoadScriptStr = "execute " + sourceModelName + ".native(\'\'rename " 
+            			+ stageTableStr + StringConstants.SPACE + matTableStr + "\'\');";
+            }
+            
             
             ModelObjectExtensionAssistant assistant = getRelationalExtensionAssistant();
             assistant.setPropertyValue(selectedViewOrTable, RelationalModelExtensionConstants.PropertyIds.MATVIEW_AFTER_LOAD_SCRIPT, afterLoadScriptStr);
@@ -450,6 +471,31 @@ public class MaterializedModelManager implements ReverseEngConstants {
 	public boolean isPojoMode() {
 		return this.mode == Mode.POJO;
 	}
+	
+	public JDG_VERSION getJdgVersion() {
+		return this.jdgVersion;
+	}
+	
+	public void setJdgVersion(JDG_VERSION version) {
+		this.jdgVersion = version;
+	}
+	
+	public String getJdgCacheName() {
+		return jdgCacheName;
+	}
+
+	public void setJdgCacheName(String name) {
+		this.jdgCacheName = name;
+	}
+	
+	public String getJdgStagingCacheName() {
+		return jdgStagingCacheName;
+	}
+
+	public void setJdgStagingCacheName(String name) {
+		this.jdgStagingCacheName = name;
+	}
+
 
 	public IStatus validate(int pageNumber) {
 		if( pageNumber == 1 ) {
@@ -467,11 +513,31 @@ public class MaterializedModelManager implements ReverseEngConstants {
 				return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 
 						TransformationPlugin.Util.getString("MaterializedModelManager_sourceModelNameIsUndefined")); //$NON-NLS-1$
 			}
+	        
+	        if( jdgVersion == JDG_VERSION.JDG_7_DOT_1 ) {
+	        	// make sure CACHE is not null
+	        	if( StringUtilities.isEmpty(jdgCacheName) ) {
+	        		return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 
+		        			TransformationPlugin.Util.getString("MaterializedModelManager_jdgCacheNameMissingError")); //$NON-NLS-1$
+	        	}
+	        	
+	        	if( StringUtilities.isEmpty(jdgStagingCacheName) ) {
+	        		return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 
+		        			TransformationPlugin.Util.getString("MaterializedModelManager_jdgStagingCacheNameMissingError")); //$NON-NLS-1$
+	        	}
+	        	
+	        	if( !StringUtilities.areDifferent(jdgCacheName, jdgStagingCacheName)) {
+	        		return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 
+		        			TransformationPlugin.Util.getString("MaterializedModelManager_jdgCacheNameIdenticalError")); //$NON-NLS-1$
+	        		
+	        	}
+	        }
             
 	        if( this.selectedViewOrTable.isMaterialized() ) {
 	        	return new Status(IStatus.WARNING, TransformationPlugin.PLUGIN_ID, 
 	        			TransformationPlugin.Util.getString("MaterializedModelManager_viewAlreadyMaterializedError", selectedViewOrTable.getName())); //$NON-NLS-1$
 	        }
+
 		} else if( pageNumber == 2 ) {
 			if( this.doCreatePojo() ) {
 				if( StringUtilities.isEmpty(pojoPackageName) ) {
@@ -535,13 +601,28 @@ public class MaterializedModelManager implements ReverseEngConstants {
         return resrc;
     }
     
+    private void setInfinispanConnectionProperties(String modelName, Table stagingTable, Table matTable) throws Exception {
+    	if( getJdgVersion() == JDG_VERSION.JDG_6_DOT_6 ) {
+	        getExtensionAssistant().setPropertyValue(
+	        		stagingTable, InfinispanCacheModelExtensionConstants.PropertyIds.PRIMARY_TABLE, modelName + StringConstants.DOT + matTable.getName());
+    	} else {
+	        getExtensionAssistant().setPropertyValue(
+	        		matTable, InfinispanHotrodModelExtensionConstants.PropertyIds.CACHE, jdgCacheName);
+	        getExtensionAssistant().setPropertyValue(
+	        		stagingTable, InfinispanHotrodModelExtensionConstants.PropertyIds.CACHE, jdgStagingCacheName);
+    	}
+    }
+    
     private ModelObjectExtensionAssistant getExtensionAssistant() {
-        final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
-        return (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(INFINISPAN_EXT_ASSISTANT_NS);
+    	if( getJdgVersion() == JDG_VERSION.JDG_6_DOT_6 ) {
+    		return InfinispanCacheModelExtensionAssistant.getInstance();
+    	} else {
+	        return InfinispanHotrodModelExtensionAssistant.getInstance();
+    	}
     }
     
     private ModelObjectExtensionAssistant getRelationalExtensionAssistant() {
-        final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
-        return (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(RELATIONAL_EXT_ASSISTANT_NS);
+	        final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+	        return (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(RELATIONAL_EXT_ASSISTANT_NS);
     }
 }

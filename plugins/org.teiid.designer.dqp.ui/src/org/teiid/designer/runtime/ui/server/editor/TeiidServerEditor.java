@@ -11,7 +11,6 @@ import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -155,12 +154,6 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
 
     private Label jdbcPingResultLabel;
     
-    private Section overviewSection;
-    
-    private Section adminSection;
-    
-    private Section jdbcSection;
-    
     private Label noTeiidLabel;
 
     private ServerResourceCommandManager commandManager;
@@ -257,25 +250,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
                 return;
 
             if (form.getBody().isDisposed())  return;
-            
-//            try {
-//				TeiidServerAdapterFactory adapterFactory = new TeiidServerAdapterFactory();
-//				if (parentServer.getServerState() == IServer.STATE_STARTED) {
-//					ITeiidServer teiidServer = adapterFactory.adaptServer(parentServer);
-//					if( teiidServer == null ) {
-//						disposeContents();
-//						
-//		                buildNoTeiidLabel(true);
-//		                
-//						return;
-//					}
-//				} else {
-//					
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-            
+
             resetServerEditorPanel();
         }
     };
@@ -453,9 +428,6 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
             jdbcSSLCheckbox = null;
             jdbcPingHyperlink = null;
             jdbcPingResultLabel = null;
-            overviewSection = null;
-            adminSection = null;            
-            jdbcSection = null;
         }
     }
 
@@ -478,7 +450,6 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
         Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR);
         section.setText(UTIL.getString("TeiidServerOverviewSection.title")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
-        overviewSection = section;
         
         Composite composite = toolkit.createComposite(section);
         GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 10).spacing(5, 20).applyTo(composite);
@@ -541,7 +512,6 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
         Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR);
         section.setText(UTIL.getString("TeiidServerAdminSection.title")); //$NON-NLS-1$ 
         GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
-        adminSection = section;
         
         Composite composite = toolkit.createComposite(section);
         GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(5, 10).spacing(5, 20).applyTo(composite);
@@ -620,7 +590,6 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading, IS
         Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR);
         section.setText(UTIL.getString("TeiidServerJDBCSection.title")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
-        jdbcSection = section;
         
         Composite composite = toolkit.createComposite(section);
         GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(5, 10).spacing(5, 20).applyTo(composite);

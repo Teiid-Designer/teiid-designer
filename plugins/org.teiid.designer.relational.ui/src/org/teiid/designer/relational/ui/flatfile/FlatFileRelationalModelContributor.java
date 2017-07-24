@@ -116,6 +116,8 @@ public class FlatFileRelationalModelContributor implements INewModelWizardContri
 
 		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
 		EObject blobType = datatypeManager.findDatatype("blob"); //$NON-NLS-1$
+		EObject timestampType = datatypeManager.findDatatype("timestamp"); //$NON-NLS-1$
+		EObject integerType = datatypeManager.findDatatype("int"); //$NON-NLS-1$
 		
     	Procedure proc = factory.createProcedure();
     	proc.setName("getFiles"); //$NON-NLS-1$
@@ -135,12 +137,34 @@ public class FlatFileRelationalModelContributor implements INewModelWizardContri
     		column_1.setType(blobType);
     	}
     	addValue(result, column_1, result.getColumns());
+    	
     	Column column_2 = factory.createColumn();
     	column_2.setName("filePath"); //$NON-NLS-1$
     	if( stringType != null) {
     		column_2.setType(stringType);
     	}
     	addValue(result, column_2, result.getColumns());
+    	
+    	Column column_3 = factory.createColumn();
+    	column_3.setName("lastModified"); //$NON-NLS-1$
+    	if( timestampType != null) {
+    		column_3.setType(timestampType);
+    	}
+    	addValue(result, column_3, result.getColumns());
+    	
+    	Column column_4 = factory.createColumn();
+    	column_4.setName("created"); //$NON-NLS-1$
+    	if( timestampType != null) {
+    		column_4.setType(timestampType);
+    	}
+    	addValue(result, column_4, result.getColumns());
+    	
+    	Column column_5 = factory.createColumn();
+    	column_5.setName("size"); //$NON-NLS-1$
+    	if( integerType != null) {
+    		column_5.setType(integerType);
+    	}
+    	addValue(result, column_5, result.getColumns());
     	
     	addValue(mr, proc, getModelResourceContents(mr));
 
@@ -149,6 +173,8 @@ public class FlatFileRelationalModelContributor implements INewModelWizardContri
 	private void addGetTextFilesProcedure(ModelResource mr) throws ModelerCoreException {
 		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
 		EObject clobType = datatypeManager.findDatatype("clob"); //$NON-NLS-1$
+		EObject timestampType = datatypeManager.findDatatype("timestamp"); //$NON-NLS-1$
+		EObject integerType = datatypeManager.findDatatype("int"); //$NON-NLS-1$
 		
     	Procedure proc = factory.createProcedure();
     	proc.setName("getTextFiles"); //$NON-NLS-1$
@@ -175,6 +201,27 @@ public class FlatFileRelationalModelContributor implements INewModelWizardContri
     		column_2.setType(stringType);
     	}
     	addValue(result, column_2, result.getColumns());
+    	
+    	Column column_3 = factory.createColumn();
+    	column_3.setName("lastModified"); //$NON-NLS-1$
+    	if( timestampType != null) {
+    		column_3.setType(timestampType);
+    	}
+    	addValue(result, column_3, result.getColumns());
+    	
+    	Column column_4 = factory.createColumn();
+    	column_4.setName("created"); //$NON-NLS-1$
+    	if( timestampType != null) {
+    		column_4.setType(timestampType);
+    	}
+    	addValue(result, column_4, result.getColumns());
+    	
+    	Column column_5 = factory.createColumn();
+    	column_5.setName("size"); //$NON-NLS-1$
+    	if( integerType != null) {
+    		column_5.setType(integerType);
+    	}
+    	addValue(result, column_5, result.getColumns());
     	
     	addValue(mr, proc, getModelResourceContents(mr));
 

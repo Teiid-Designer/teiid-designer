@@ -185,7 +185,7 @@ public class RelationalPlugin extends Plugin {
     @Override
     public void stop(BundleContext context) throws Exception {
         // unregister workspace listener
-        if ( !ModelWorkspaceManager.isShutDown() && this.workspaceListener != null) {
+        if (!ModelWorkspaceManager.isShutDown() && this.workspaceListener != null) {
             ModelWorkspaceManager.getModelWorkspaceManager().removeNotificationListener(this.workspaceListener);
         }
 

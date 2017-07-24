@@ -11,6 +11,7 @@ import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.sql.lang.SimpleNode;
+import org.teiid.translator.SourceSystemFunctions;
 
 /**
  *
@@ -154,15 +155,17 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
         Expression newArg[] = new Expression[] { args[index],  constant};
         
         // Replace old expression with new expression, using old as arg
-        Function func = createASTNode(ASTNodes.FUNCTION);
-        func.setName(functionDescriptor.getName());
-        func.setArgs(newArg);
-        args[index] = func;
-        
-        // Set function descriptor and type of new function
-        func.setFunctionDescriptor(functionDescriptor);
-        func.setType(t);
-        func.makeImplicit();
+        if( !getName().equalsIgnoreCase(SourceSystemFunctions.TRIM)) {
+	        Function func = createASTNode(ASTNodes.FUNCTION);
+	        func.setName(functionDescriptor.getName());
+	        func.setArgs(newArg);
+	        args[index] = func;
+
+	        // Set function descriptor and type of new function
+	        func.setFunctionDescriptor(functionDescriptor);
+	        func.setType(t);
+	        func.makeImplicit();
+        }
     }
 
     /**

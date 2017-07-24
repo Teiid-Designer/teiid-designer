@@ -11,25 +11,22 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.dmr.ModelNode;
 import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
@@ -37,9 +34,6 @@ import org.jboss.ide.eclipse.as.management.core.IAS7ManagementDetails;
 import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
 import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
 import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.PropertyDefinition;
-import org.teiid.adminapi.Translator;
-import org.teiid.adminapi.VDB;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.annotation.Removed;
@@ -61,7 +55,11 @@ import org.teiid.jdbc.TeiidDriver;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidRuntimePlugin;
 import org.teiid.runtime.client.admin.v9.Admin9Factory.AdminImpl;
+import org.teiid.runtime.client.admin.v9.AdminConnectionManager;
 import org.teiid.runtime.client.admin.v9.AdminUtil;
+import org.teiid.runtime.client.admin.v9.VdbCacheManager;
+
+
 
 /**
  *
@@ -71,15 +69,18 @@ import org.teiid.runtime.client.admin.v9.AdminUtil;
 public class ExecutionAdmin implements IExecutionAdmin {
 
     private static String PLUGIN_ID = "org.teiid.runtime.client";  //$NON-NLS-1$
-    private static String DYNAMIC_VDB_SUFFIX = "-vdb.xml"; //$NON-NLS-1$
-    private static int VDB_LOADING_TIMEOUT_SEC = 300;
 
     private final Admin admin;
     private final EventManager eventManager;
     private final ITeiidServer teiidServer;
     private final AdminSpec adminSpec;
-    private Map<String, ITeiidVdb> teiidVdbs;
     private final ConnectionManager connectionManager;
+    private final VdbCacheManager vdbManager;
+    private final AdminConnectionManager adminConnectionManager;
+    
+    
+    private static VdbCacheManager vdbManagerInstance;
+    private static AdminConnectionManager adminConnectionManagerInstance;
 
     private boolean loaded = false;
     private boolean refreshing = false;
@@ -99,7 +100,9 @@ public class ExecutionAdmin implements IExecutionAdmin {
         this.teiidServer = teiidServer;
         this.adminSpec = AdminSpec.getInstance(teiidServer.getServerVersion());
         this.eventManager = teiidServer.getEventManager();
-        this.connectionManager = new ConnectionManager(teiidServer, ((AdminImpl)this.admin).getConnection());
+        this.adminConnectionManager = new AdminConnectionManager(((AdminImpl)this.admin).getConnection(), teiidServer.getServerVersion());
+        this.connectionManager = new ConnectionManager(teiidServer, adminConnectionManager);
+        this.vdbManager = new VdbCacheManager(teiidServer, admin, this.adminConnectionManager);
         
         init();
     }
@@ -121,10 +124,24 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
         this.teiidServer = teiidServer;
         this.eventManager = teiidServer.getEventManager();
-        this.connectionManager = new ConnectionManager(teiidServer, ((AdminImpl)this.admin).getConnection());
-        
+        this.adminConnectionManager = new AdminConnectionManager(((AdminImpl)this.admin).getConnection(), teiidServer.getServerVersion());
+        this.connectionManager = new ConnectionManager(teiidServer, adminConnectionManager);
+        this.vdbManager = new VdbCacheManager(teiidServer, admin, this.adminConnectionManager);
 
         init();
+    }
+    
+    public static VdbCacheManager getVdbManager() {
+    	return vdbManagerInstance;
+    }
+
+    public static AdminConnectionManager getAdminConnectionManager() {
+    	return adminConnectionManagerInstance;
+    }
+
+    private boolean isLessThanTeiidEight() {
+        ITeiidServerVersion minVersion = teiidServer.getServerVersion().getMinimumVersion();
+        return minVersion.isLessThan(Version.TEIID_8_0);
     }
 
     @Override
@@ -159,17 +176,8 @@ public class ExecutionAdmin implements IExecutionAdmin {
     @Override
     public void deployVdb( IFile vdbFile, String version) throws Exception {
         ArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
-
-        String vdbDeploymentName = vdbFile.getFullPath().lastSegment();
-        String vdbName = vdbFile.getFullPath().removeFileExtension().lastSegment();
-
-    	String vdbVersion = "1";
-    	
-    	if( version != null ) {
-    		vdbVersion = version;
-    	}
         
-        doDeployVdb(vdbDeploymentName, getVdbName(vdbName), vdbVersion, vdbFile.getContents());
+    	this.vdbManager.deploy(vdbFile, version);
     }
  
     @Override
@@ -177,67 +185,8 @@ public class ExecutionAdmin implements IExecutionAdmin {
         ArgCheck.isNotNull(deploymentName, "deploymentName"); //$NON-NLS-1$
         ArgCheck.isNotNull(inStream, "inStream"); //$NON-NLS-1$
 
-        // Check dynamic VDB deployment name
-        if(!deploymentName.endsWith(DYNAMIC_VDB_SUFFIX)) {
-            throw new Exception(Messages.getString(Messages.ExecutionAdmin.dynamicVdbInvalidName, deploymentName));
-        }
-        
-        // Get VDB name
-        String vdbName = deploymentName.substring(0, deploymentName.indexOf(DYNAMIC_VDB_SUFFIX));
-    	
-        // Deploy the VDB
-        // TODO: Dont assume vdbVersion
-        doDeployVdb(deploymentName,vdbName,"1",inStream);
+        this.vdbManager.deploy(deploymentName, inStream);
     }
-    
-    private void doDeployVdb(String deploymentName, String vdbName, String vdbVersion, InputStream inStream) throws Exception {
-        adminSpec.deploy(admin, deploymentName, inStream);
-        // Give a 0.5 sec pause for the VDB to finish loading metadata.
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-        }   
-                      
-        // Refresh VDBs list
-        refreshVDBs();
-
-        // TODO should get version from vdbFile
-        VDB vdb = admin.getVDB(vdbName, vdbVersion);
-
-        // If the VDB is still loading, refresh again and potentially start refresh job
-        if(vdb.getStatus().equals(adminSpec.getLoadingVDBStatus()) && vdb.getValidityErrors().isEmpty()) {
-            // Give a 0.5 sec pause for the VDB to finish loading metadata.
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-            }   
-            // Refresh again to update vdb states
-            refreshVDBs();
-            vdb = admin.getVDB(vdbName, vdbVersion);
-            // Determine if still loading, if so start refresh job.  User will get dialog that the
-            // vdb is still loading - and try again in a few seconds
-            if(vdb.getStatus().equals(adminSpec.getLoadingVDBStatus()) && vdb.getValidityErrors().isEmpty()) {
-                final Job refreshVDBsJob = new RefreshVDBsJob(vdbName);
-                refreshVDBsJob.schedule();
-            }
-        }
-
-        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb.getName()));
-    }
-    
-
-	private String getVdbName(String originalVdbName) throws Exception {
-		String vdbName = originalVdbName;
-		int firstIndex = vdbName.indexOf('.');
-		int lastIndex = vdbName.lastIndexOf('.');
-		if (firstIndex != -1) {
-			if (firstIndex != lastIndex) {
-				throw new Exception(Messages.getString(Messages.ExecutionAdmin.invalidVdbName, originalVdbName));
-			}
-			vdbName = vdbName.substring(0, firstIndex);
-		}
-		return vdbName;
-	}
     
     @Override
     public String getSchema(String vdbName, String vdbVersion, String modelName) throws Exception {
@@ -249,22 +198,22 @@ public class ExecutionAdmin implements IExecutionAdmin {
     	// 
     	this.admin.close();
         this.connectionManager.disconnect();
-        this.teiidVdbs = new HashMap<String, ITeiidVdb>();
+        this.vdbManager.disconnect();
     }
 
     @Override
     public ITeiidDataSource getDataSource(String name) {
-    	return this.connectionManager.getDataSource(name);
+        return this.connectionManager.getDataSource(name); 
     }
     
     @Override
 	public Collection<ITeiidDataSource> getDataSources() {
-    	return this.connectionManager.getDataSources();
+        return this.connectionManager.getDataSources();
     }
 
     @Override
 	public Set<String> getDataSourceTypeNames() {
-    	return this.connectionManager.getDataSourceTypeNames();
+        return this.connectionManager.getDataSourceTypeNames();
     }
 
     /**
@@ -275,89 +224,90 @@ public class ExecutionAdmin implements IExecutionAdmin {
     }
 
     @Override
-	public ITeiidDataSource getOrCreateDataSource(String displayName, 
-												 String jndiName, 
-												 String dataSourceType,
-												 Properties properties) throws Exception {
-		ArgCheck.isNotEmpty(displayName, "displayName"); //$NON-NLS-1$
-		ArgCheck.isNotEmpty(jndiName, "jndiName"); //$NON-NLS-1$
-		ArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
-		ArgCheck.isNotEmpty(properties, "properties"); //$NON-NLS-1$
+    public ITeiidDataSource getOrCreateDataSource( String displayName,
+                                                  String jndiName,
+                                                  String dataSourceType,
+                                                  Properties properties ) throws Exception {
+        ArgCheck.isNotEmpty(displayName, "displayName"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(jndiName, "jndiName"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
+        ArgCheck.isNotEmpty(properties, "properties"); //$NON-NLS-1$
+        
+        if(! AdminUtil.hasJavaPrefix(jndiName) ) {
+            throw new TeiidExecutionException(
+            		9996,
+            		"JNDI name : " + jndiName + " does not include the java:/ prefix");
+        }
 
-		if (!AdminUtil.hasJavaPrefix(jndiName)) {
-			throw new TeiidExecutionException(
-					9996, 
-					"JNDI name : " + jndiName + " does not include the java:/ prefix");
-		}
+        // Check if exists, return false
+        if (dataSourceExists(jndiName)) {
+            ITeiidDataSource tds = this.connectionManager.getDataSource(jndiName); //dataSourceByNameMap.get(dsName);
+            if (tds != null) {
+                return tds;
+            }
+        }
+        
+        boolean isJdbc = "connector-jdbc".equals(dataSourceType);
 
-		// Check if exists, return false
-		if (dataSourceExists(jndiName)) {
-			ITeiidDataSource tds = this.connectionManager.getDataSource(jndiName); // dataSourceByNameMap.get(dsName);
-			if (tds != null) {
-				return tds;
-			}
-		}
+        // For JDBC types, find the matching installed driver.  This is done currently by matching
+        // the profile driver classname to the installed driver classname
+        String connProfileDriverClass = properties.getProperty("driver-class");  //$NON-NLS-1$
+        if(isJdbc) {
+            // List of driver jars on the connection profile
+            String jarList = properties.getProperty("jarList");  //$NON-NLS-1$
+            
+            // Get first driver name with the driver class that matches the connection profile
+            String dsNameMatch = getDSMatchForDriverClass(connProfileDriverClass);
+            
+            // If a matching datasource was found, set typename
+            if(dsNameMatch!=null) {
+            	dataSourceType=dsNameMatch;
+            // No matching datasource, attempt to deploy the driver if jarList is populated.
+            } else if(jarList!=null && jarList.trim().length()>0) {
+                // Try to deploy the jars
+                deployJars(this.admin,jarList);
+                
+                refresh();
+                
+                // Retry the name match after deployment.
+                dsNameMatch = getDSMatchForDriverClass(connProfileDriverClass);
+                if(dsNameMatch!=null) {
+                	dataSourceType=dsNameMatch;
+                }
+            }
+        }
+        // Verify the "typeName" exists.
+        if (!this.connectionManager.dataSourceTypeExists(dataSourceType)) {
+            if(isJdbc) {  //$NON-NLS-1$
+                throw new TeiidExecutionException(
+                		ITeiidDataSource.ERROR_CODES.JDBC_DRIVER_SOURCE_NOT_FOUND,
+                		Messages.getString(Messages.ExecutionAdmin.jdbcSourceForClassNameNotFound, connProfileDriverClass, getServer()));
+            } else {
+                throw new TeiidExecutionException(
+                		ITeiidDataSource.ERROR_CODES.DATA_SOURCE_TYPE_DOES_NOT_EXIST_ON_SERVER,
+                		Messages.getString(Messages.ExecutionAdmin.dataSourceTypeDoesNotExist, dataSourceType, getServer()));
+            }
+        }
 
-		boolean isJdbc = "connector-jdbc".equals(dataSourceType);
+        if("teiid".equals(dataSourceType) ) {
+        	isJdbc = true;
+        }
+        this.connectionManager.createDataSource(jndiName, dataSourceType, isJdbc, properties);
+        
+        refreshDataSources();
 
-		// For JDBC types, find the matching installed driver. This is done
-		// currently by matching
-		// the profile driver classname to the installed driver classname
-		String connProfileDriverClass = properties.getProperty("driver-class"); //$NON-NLS-1$
-		if (isJdbc) {
-			// List of driver jars on the connection profile
-			String jarList = properties.getProperty("jarList"); //$NON-NLS-1$
+        // Check that local name list contains new dsName
+        ITeiidDataSource tds = this.connectionManager.getDataSource(jndiName);
+        if( tds != null ) {
+        	this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
+        	return tds;
+        } 
 
-			// Get first driver name with the driver class that matches the
-			// connection profile
-			String dsNameMatch = getDSMatchForDriverClass(connProfileDriverClass);
-
-			// If a matching datasource was found, set typename
-			if (dsNameMatch != null) {
-				dataSourceType = dsNameMatch;
-				// No matching datasource, attempt to deploy the driver if
-				// jarList is populated.
-			} else if (jarList != null && jarList.trim().length() > 0) {
-				// Try to deploy the jars
-				deployJars(this.admin, jarList);
-
-				refresh();
-
-				// Retry the name match after deployment.
-				dsNameMatch = getDSMatchForDriverClass(connProfileDriverClass);
-				if (dsNameMatch != null) {
-					dataSourceType = dsNameMatch;
-				}
-			}
-		}
-		// Verify the "typeName" exists.
-		if (!this.connectionManager.dataSourceTypeExists(dataSourceType)) {
-			if (isJdbc) { // $NON-NLS-1$
-				throw new TeiidExecutionException(ITeiidDataSource.ERROR_CODES.JDBC_DRIVER_SOURCE_NOT_FOUND,
-						Messages.getString(Messages.ExecutionAdmin.jdbcSourceForClassNameNotFound,
-								connProfileDriverClass, getServer()));
-			} else {
-				throw new TeiidExecutionException(
-						ITeiidDataSource.ERROR_CODES.DATA_SOURCE_TYPE_DOES_NOT_EXIST_ON_SERVER, Messages.getString(
-								Messages.ExecutionAdmin.dataSourceTypeDoesNotExist, dataSourceType, getServer()));
-			}
-		}
-
-		this.connectionManager.createDataSource(jndiName, dataSourceType, isJdbc, properties);
-
-		refreshDataSources();
-
-		// Check that local name list contains new dsName
-		ITeiidDataSource tds = this.connectionManager.getDataSource(jndiName);
-		if (tds != null) {
-			this.eventManager.notifyListeners(ExecutionConfigurationEvent.createAddDataSourceEvent(tds));
-			return tds;
-		}
-
-		// We shouldn't get here if data source was created
-		throw new TeiidExecutionException(ITeiidDataSource.ERROR_CODES.DATA_SOURCE_COULD_NOT_BE_CREATED,
-				Messages.getString(Messages.ExecutionAdmin.errorCreatingDataSource, jndiName, dataSourceType));
-	}
+        // We shouldn't get here if data source was created
+        throw new TeiidExecutionException(
+        		ITeiidDataSource.ERROR_CODES.DATA_SOURCE_COULD_NOT_BE_CREATED,
+        		Messages.getString(Messages.ExecutionAdmin.errorCreatingDataSource, jndiName, dataSourceType));
+    }
 
     /**
      * Look for an installed driver that has the driverClass which matches the supplied driverClass name.
@@ -437,17 +387,25 @@ public class ExecutionAdmin implements IExecutionAdmin {
                     try {
                         adminSpec.deploy(admin, fileName, iStream);
                         
-                        // call admin.refresh() to clear cached resource info
-                        this.admin.refresh();
+                        refresh();
                         
                     } catch (Exception ex) {
                         // Jar deployment failed
                         TeiidRuntimePlugin.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentFailed, theFile.getPath()));
                     }
+
+                    if( iStream != null ) {
+                    	try {
+							iStream.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+                    }
                 } else {
                     // Could not read the file
                     TeiidRuntimePlugin.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotReadable, theFile.getPath()));
                 }
+
             } else {
                 // The file was not found
                 TeiidRuntimePlugin.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotFound, theFile.getPath()));
@@ -471,15 +429,18 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 try {
                     adminSpec.deploy(admin, fileName, iStream);
                     
-                    // call admin.refresh() to clear cached resource info
-                    this.admin.refresh();
+                    refresh();
                     
-                    refreshDataSourceTypes();
                 } catch (Exception ex) {
                     // Jar deployment failed
                     TeiidRuntimePlugin.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentFailed, jarOrRarFile.getPath()));
                     throw ex;
+                } finally {
+                    if( iStream != null ) {
+                    	iStream.close();
+                    }
                 }
+
             } else {
                 // Could not read the file
                 TeiidRuntimePlugin.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotReadable, jarOrRarFile.getPath()));
@@ -505,12 +466,12 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     @Override
     public Collection<ITeiidTranslator> getTranslators() {
-    	return this.connectionManager.getTranslators();
+        return this.connectionManager.getTranslators();
     }
 
     @Override
     public Set<String> getDataSourceTemplateNames() throws Exception {
-    	return this.connectionManager.getDataSourceTypeNames();
+        return this.connectionManager.getDataSourceTypeNames();
     }
     
 	@Override
@@ -524,14 +485,18 @@ public class ExecutionAdmin implements IExecutionAdmin {
      */
     @Override
     public Properties getDataSourceProperties(String name) throws Exception {
+        if (isLessThanTeiidEight()) {
+            // Teiid 7.7.x does not support
+            return null;
+        }
+
         return getDataSource(name).getProperties();
     }
 
     @Override
     public ITeiidVdb getVdb( String name ) {
         ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
-
-        return teiidVdbs.get(name);
+        return this.vdbManager.getVdb(name);
     }
     
     @Override
@@ -586,12 +551,15 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     @Override
     public Collection<ITeiidVdb> getVdbs() {
-        return Collections.unmodifiableCollection(teiidVdbs.values());
+        return this.vdbManager.getVdbs();
     }
     
     private void init() throws Exception {
-    	this.connectionManager.init();
-        refreshVDBs();
+        this.connectionManager.init();
+        this.vdbManager.init();
+        
+        vdbManagerInstance = this.vdbManager;
+        adminConnectionManagerInstance = this.adminConnectionManager;
     }
 
     private void internalSetPropertyValue( ITeiidTranslator translator,
@@ -633,20 +601,18 @@ public class ExecutionAdmin implements IExecutionAdmin {
      */
     public void refresh() throws Exception {
     	refreshing = true;
-   
-    	// Clears any cached data source or translator info prior to reloading
-    	this.admin.refresh();
     	
         // populate data source type names
     	Exception resultException = null;
     	
     	try {
-    		
+	
 	    	try {
 	    		refreshDataSources();
 	    	} catch (Exception ex) {
 	    		resultException = ex;
 	    	}
+	    	
 	    	try {
 	    		refreshDataSourceTypes();
 	    	} catch (Exception ex) {
@@ -693,17 +659,12 @@ public class ExecutionAdmin implements IExecutionAdmin {
     }
 
     protected void refreshVDBs() throws Exception {
-        Collection<? extends VDB> vdbs = Collections.unmodifiableCollection(this.admin.getVDBs());
-        
-        teiidVdbs = new HashMap<String, ITeiidVdb>();
-
-        for (VDB vdb : vdbs) {
-            teiidVdbs.put(vdb.getName(), new TeiidVdb(vdb, teiidServer));
-        }
+    	this.vdbManager.refresh();
     }
     
     protected void refreshDataSourceTypes() throws Exception {
-    	this.connectionManager.refreshDataSourceTypes();    }
+    	this.connectionManager.refreshDataSourceTypes();
+    }
 
     /**
      * @param translator the translator whose properties are being changed (never <code>null</code>)
@@ -913,95 +874,14 @@ public class ExecutionAdmin implements IExecutionAdmin {
         throw new Exception(Messages.getString(Messages.ExecutionAdmin.cannotLoadDriverClass, driverClass));
     }
 
-    // REMOVED IN 8.0
     @Override
     @Deprecated
+    @Removed(Version.TEIID_8_0)
     public void mergeVdbs( String sourceVdbName, int sourceVdbVersion, 
                                             String targetVdbName, int targetVdbVersion ) throws Exception {
-        throw new UnsupportedOperationException();     
+        if (!AnnotationUtils.isApplicable(getClass().getMethod("mergeVdbs", String.class, int.class, String.class, int.class), getServer().getServerVersion()))  //$NON-NLS-1$
+            throw new UnsupportedOperationException(Messages.getString(Messages.ExecutionAdmin.mergeVdbUnsupported));
+
+        admin.mergeVDBs(sourceVdbName, sourceVdbVersion, targetVdbName, targetVdbVersion);        
     }
-
-    /**
-     * Executes VDB refresh when a VDB is loading - as a background job.
-     */
-    class RefreshVDBsJob extends Job {
-
-        String vdbName;
-        
-        /**
-         * RefreshVDBsJob constructor
-         * @param vdbName the name of the VDB to monitor
-         */
-        public RefreshVDBsJob(String vdbName ) {
-            super("VDB Refresh"); //$NON-NLS-1$
-            this.vdbName = vdbName;
-            
-            setSystem(false);
-            setUser(true);
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-         */
-        @Override
-        protected IStatus run( IProgressMonitor monitor ) {
-            monitor.beginTask("VDB Refresh", //$NON-NLS-1$
-                              IProgressMonitor.UNKNOWN);
-
-            try {
-                waitForVDBLoad(this.vdbName);
-            } catch (Exception ex) {
-            }
-
-            monitor.done();
-
-            return Status.OK_STATUS;
-        }
-        
-        /*
-         * Wait for the VDB to finish loading.  Will check status every 5 secs and return when the VDB is loaded.
-         * If not loaded within 30sec, it will timeout
-         * @param vdbName the name of the VDB
-         */
-        private void waitForVDBLoad(String vdbName) throws Exception {
-            long waitUntil = System.currentTimeMillis() + VDB_LOADING_TIMEOUT_SEC*1000;
-            boolean first = true;
-            do {
-                // Pauses 5 sec
-                if (!first) {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
-                } else {
-                    first = false;
-                }
-                
-                // Refreshes from adminApi
-                refreshVDBs();
-                
-                // Get the VDB
-                ITeiidVdb vdb = getVdb(vdbName);
-                
-                // Stop waiting if any conditions have been met
-                if(vdb!=null) {
-                	boolean hasValidityErrors = !vdb.getValidityErrors().isEmpty();
-                	if(  !vdb.hasModels() || vdb.hasFailed()  || !vdb.isLoading() 
-                	   || vdb.isActive()  || vdb.wasRemoved() || hasValidityErrors ) {
-                		return;
-                	} 
-                } else {
-                    return;
-                }
-            } while (System.currentTimeMillis() < waitUntil);
-            
-            refreshVDBs();
-            return;
-        }
-
-    }
-    
 }

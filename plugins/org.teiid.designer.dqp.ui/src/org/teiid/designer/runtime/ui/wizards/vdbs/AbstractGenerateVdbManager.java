@@ -208,7 +208,7 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
     public AbstractGenerateVdbManager(AbstractWizard wizard) {
         this.wizard = wizard;
     }
-    
+
     /**
      * @param wizard
      */

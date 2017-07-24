@@ -926,7 +926,12 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
         private String getText( int columnIndex, ModelExtensionDefinition element ) {
             switch (columnIndex) {
                 case ColumnIndexes.BUILT_IN:
+                	if (element.isBuiltIn())
+                		return "X";
+                	return CoreStringUtil.Constants.EMPTY_STRING;
                 case ColumnIndexes.IMPORTED:
+                	if (element.isImported())
+                		return "X";
                     return CoreStringUtil.Constants.EMPTY_STRING;
 
                 case ColumnIndexes.NAMESPACE_PREFIX:

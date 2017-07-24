@@ -202,7 +202,7 @@ public class WSWizardUtils {
 			String password = null;
 			userName = connProperties.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
             password = connProperties.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
-            if (connProperties.getProperty(ICredentialsCommon.SECURITY_TYPE_ID).equals(ICredentialsCommon.SecurityType.Digest.name())){
+            if (ICredentialsCommon.SecurityType.Digest.name().equals(connProperties.getProperty(ICredentialsCommon.SECURITY_TYPE_ID))){
             	resolved = URLHelper.resolveUrlWithDigest(url, userName, password, connPropMap, true);
             }else{
             	resolved = URLHelper.resolveUrl(url, userName, password, connPropMap, true);

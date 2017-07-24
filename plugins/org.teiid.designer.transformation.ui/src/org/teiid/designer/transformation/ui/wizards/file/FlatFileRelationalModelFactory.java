@@ -135,6 +135,8 @@ public class FlatFileRelationalModelFactory implements UiConstants {
 
 		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
 		EObject blobType = datatypeManager.findDatatype("blob"); //$NON-NLS-1$
+		EObject timestampType = datatypeManager.findDatatype("timestamp"); //$NON-NLS-1$
+		EObject integerType = datatypeManager.findDatatype("int"); //$NON-NLS-1$
 		
     	Procedure proc = factory.createProcedure();
     	proc.setName(GET_FILES);
@@ -162,6 +164,27 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	}
     	addValue(result, column_2, result.getColumns());
     	
+    	Column column_3 = factory.createColumn();
+    	column_3.setName("lastModified"); //$NON-NLS-1$
+    	if( timestampType != null) {
+    		column_3.setType(timestampType);
+    	}
+    	addValue(result, column_3, result.getColumns());
+    	
+    	Column column_4 = factory.createColumn();
+    	column_4.setName("created"); //$NON-NLS-1$
+    	if( timestampType != null) {
+    		column_4.setType(timestampType);
+    	}
+    	addValue(result, column_4, result.getColumns());
+    	
+    	Column column_5 = factory.createColumn();
+    	column_5.setName("size"); //$NON-NLS-1$
+    	if( integerType != null) {
+    		column_5.setType(integerType);
+    	}
+    	addValue(result, column_5, result.getColumns());
+    	
     	addValue(mr, proc, getModelResourceContents(mr));
 
 	}
@@ -169,6 +192,8 @@ public class FlatFileRelationalModelFactory implements UiConstants {
 	private void addGetTextFilesProcedure(ModelResource mr) throws ModelerCoreException {
 		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
 		EObject clobType = datatypeManager.findDatatype("clob"); //$NON-NLS-1$
+		EObject timestampType = datatypeManager.findDatatype("timestamp"); //$NON-NLS-1$
+		EObject integerType = datatypeManager.findDatatype("int"); //$NON-NLS-1$
 		
     	Procedure proc = factory.createProcedure();
     	proc.setName(GET_TEXT_FILES);
@@ -197,6 +222,27 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     		column_2.setLength(DEFAULT_STRING_LENGTH);
     	}
     	addValue(result, column_2, result.getColumns());
+    	
+    	Column column_3 = factory.createColumn();
+    	column_3.setName("lastModified"); //$NON-NLS-1$
+    	if( timestampType != null) {
+    		column_3.setType(timestampType);
+    	}
+    	addValue(result, column_3, result.getColumns());
+    	
+    	Column column_4 = factory.createColumn();
+    	column_4.setName("created"); //$NON-NLS-1$
+    	if( timestampType != null) {
+    		column_4.setType(timestampType);
+    	}
+    	addValue(result, column_4, result.getColumns());
+    	
+    	Column column_5 = factory.createColumn();
+    	column_5.setName("size"); //$NON-NLS-1$
+    	if( integerType != null) {
+    		column_5.setType(integerType);
+    	}
+    	addValue(result, column_5, result.getColumns());
     	
     	addValue(mr, proc, getModelResourceContents(mr));
 

@@ -148,26 +148,22 @@ public class CreateRelationalTableAction extends Action implements INewChildActi
    public void run() {
 		if( selectedModel != null ) {
 	        ModelResource mr = ModelUtilities.getModelResource(selectedModel);
-	        run(mr);
+	        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
+	        
+	        RelationalTable table = new RelationalTable();
+	        table.setSupportsUpdate(true);
+	        
+	        // Hand the table off to the generic edit dialog
+	        RelationalDialogModel dialogModel = new RelationalDialogModel(table, (IFile)ModelUtilities.getIResource(mr));
+	        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
+	        
+	        dialog.open();
+	        
+	        if (dialog.getReturnCode() == Window.OK) {
+	        	createTableInTxn(mr, table);
+	        }
 		}
 		
-	}
-	
-   public void run(ModelResource mr) {
-        final Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
-        
-        RelationalTable table = new RelationalTable();
-        table.setSupportsUpdate(true);
-        
-        // Hand the table off to the generic edit dialog
-        RelationalDialogModel dialogModel = new RelationalDialogModel(table, (IFile)ModelUtilities.getIResource(mr));
-        EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
-        
-        dialog.open();
-        
-        if (dialog.getReturnCode() == Window.OK) {
-        	createTableInTxn(mr, table);
-        }
 	}
 
     private void createTableInTxn(ModelResource modelResource, RelationalTable table) {

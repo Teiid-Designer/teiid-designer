@@ -128,6 +128,8 @@ public interface TeiidDDLConstants {
 		public static final String TEIID_MONGO_PREFIX = "teiid_mongo";  //$NON-NLS-1$
 	    public static final String MONGODB_PREFIX = "mongodb";  //$NON-NLS-1$";  //$NON-NLS-1$
 	    
+	    public static final String TEIID_INFINISPAN_HOTROD_PREFIX = "teiid_ispn"; //$NON-NLS-1$
+	    public static final String INFINISPAN_HOTROD_PREFIX = "infinispan-hotrod"; //$NON-NLS-1$
 
 	    /*
 	     * Teiid's EXCEL extension properties

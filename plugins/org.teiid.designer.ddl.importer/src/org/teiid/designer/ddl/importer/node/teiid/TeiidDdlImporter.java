@@ -73,6 +73,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 	private static final String NS_TEIID_ACCUMULO = "teiid_accumulo"; //$NON-NLS-1$
     private static final String NS_TEIID_EXCEL = "teiid_excel"; //$NON-NLS-1$
     private static final String NS_TEIID_JPA = "teiid_jpa"; //$NON-NLS-1$
+    private static final String NS_TEIID_ISPN = "teiid_ispn"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_ODATA = "odata"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_WEBSERVICE= "ws"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_MONGO = "mongodb"; //$NON-NLS-1$
@@ -81,6 +82,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 	private static final String NS_DESIGNER_ACCUMULO = "accumulo"; //$NON-NLS-1$
     private static final String NS_DESIGNER_EXCEL = "excel"; //$NON-NLS-1$
     private static final String NS_DESIGNER_JPA = "jpa2"; //$NON-NLS-1$
+    private static final String NS_DESIGNER_INFINISPAN_HOTROD = "infinispan-hotrod"; //$NON-NLS-1$
 
 	private static final String REST_COLON_PREFIX= "REST:";  //$NON-NLS-1$
 	private static final String REST_URI = "URI";  //$NON-NLS-1$
@@ -613,7 +615,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_COLUMNS)) {
 				RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
 				procedure.setResultSet(result);
-				initialize(result, procedureNode);
+				initialize(result, procedureNode, child.getName());
 
 				List<AstNode> resultOptionNodes = new ArrayList<AstNode>();
 				
@@ -629,9 +631,12 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 				processOptions(resultOptionNodes, result);
 				
 			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_DATA_TYPE)) {
-				// Add a parameter with RETURN direction
-				RelationalParameter param = createProcedureParameter(child, procedure);
-				param.setDirection(DirectionKind.RETURN_LITERAL.toString());
+				RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
+				procedure.setResultSet(result);
+				initialize(result, procedureNode, "resultSet"); //$NON-NLS-1$
+				
+				createColumn(child,result);
+
 			} else if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
 				procOptionNodes.add(child);
 			}
@@ -1596,6 +1601,10 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 			designerNS = NS_DESIGNER_EXCEL;
 		} else if(NS_TEIID_JPA.equals(teiidNamespace)) {
 			designerNS = NS_DESIGNER_JPA;
+		} else if(NS_TEIID_JPA.equals(teiidNamespace)) {
+			designerNS = NS_DESIGNER_JPA;
+		} else if(NS_TEIID_ISPN.equals(teiidNamespace)) {
+			designerNS = NS_DESIGNER_INFINISPAN_HOTROD;
 		}
 		return designerNS;
 	}

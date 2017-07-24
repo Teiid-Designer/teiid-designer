@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.vdb;
 
+import javax.print.DocFlavor.BYTE_ARRAY;
+
 import org.teiid.core.designer.util.StringConstants;
 
 
@@ -93,4 +95,16 @@ public interface VdbConstants extends StringConstants {
      * The prefix used before the workspace identifier when creating a Preview VDB name.
      */
     String DOT_VDB = ".vdb"; //$NON-NLS-1$
+    
+    /** Constants for the SourceHandler extension point */
+    interface ConnectionTypes {
+        String NONE = "NONE"; //$NON-NLS-1$
+        String BY_VERSION = "BY_VERSION"; //$NON-NLS-1$
+        String ANY = "ANY"; //$NON-NLS-1$
+    }
+    
+    /**
+     * 
+     */
+    String[] CONNECTION_TYPES = {ConnectionTypes.NONE, ConnectionTypes.BY_VERSION, ConnectionTypes.ANY};
 }

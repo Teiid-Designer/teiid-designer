@@ -108,13 +108,14 @@ public class MxdConvertor {
 
     /**
      * @param namespacePrefix name denoting type of data, eg. odata, mongodb
+     * @param namespace name defining the namespace URL  eg.  http://www.teiid.org/translator/mongodb/2013
      * @param modelType the type of model represented by the translator
      * @param metaClasses collection of meta classes extracted from a file using {@link #read(File)}
      * @param output the destination output stream of the resulting xml
      *
      * @throws Exception
      */
-    public void write(String namespacePrefix, ModelType.Type modelType, Collection<MetaclassType> metaClasses, OutputStream output) throws Exception {
+    public void write(String namespacePrefix, String namespace, ModelType.Type modelType, Collection<MetaclassType> metaClasses, OutputStream output) throws Exception {
         ModelExtension element = factory.createModelExtension();
 
         // Namespace already included: xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
@@ -129,7 +130,13 @@ public class MxdConvertor {
 
         // namespaceUri="http://www.jboss.org/teiiddesigner/ext/odata/2012"
         // namespaceUri="http://www.teiid.org/translator/mongodb/2013"
-        String namespaceUri = NAMESPACE_URI.replace("{NAME}", namespacePrefix); //$NON-NLS-1$
+
+        String namespaceUri = null;
+        if( namespace != null ) {
+        	namespaceUri = namespace;
+        } else {
+        	namespaceUri = NAMESPACE_URI.replace("{NAME}", namespacePrefix); //$NON-NLS-1$
+        }
         element.setNamespaceUri(namespaceUri);
 
         // model type
@@ -172,11 +179,19 @@ public class MxdConvertor {
         		}
         	}
         }
+        String namespace = null;
+        if( extensions.size() > 0 ) {
+        	String propName = ((TeiidPropertyDefinition)extensions.toArray()[0]).getName();
+        	if( propName.startsWith("{http")) {
+        		int endIndex = propName.indexOf("}");
+        		namespace = propName.substring(1, endIndex);
+        	}
+        }
         
         try {
             ModelType.Type modelType = ModelType.Type.PHYSICAL;
             Collection<MetaclassType> metaClasses = read(extensions);
-            write(name, modelType, metaClasses, output);
+            write(name, namespace, modelType, metaClasses, output);
             return true;
         } catch (IllegalArgumentException e) {
             throw new Exception(e);

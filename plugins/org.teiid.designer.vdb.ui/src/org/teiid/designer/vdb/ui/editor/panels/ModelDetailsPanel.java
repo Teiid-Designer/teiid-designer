@@ -466,6 +466,7 @@ public class ModelDetailsPanel {
         	multiSourceCB.setEnabled(true);
     		multiSourceCB.setSelection(enable);
     		addColumnCB.setEnabled(enable);
+    		addColumnCB.setSelection(enable && selectedVdbModelEntry.getSourceInfo().isAddColumn());
     		columnAliasText.setEnabled(enable);
     		addButton.setEnabled(enable);
     		deleteButton.setEnabled(selectedVdbModelEntry.getSourceInfo().getSourceCount() > 1 && !bindingsViewer.getSelection().isEmpty());

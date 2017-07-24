@@ -496,12 +496,12 @@ public abstract class ModelUtilities implements UiConstants {
     	IResource resource = null;
     	
     	try {
-			resource = modelResource.getUnderlyingResource();
-		} catch (ModelWorkspaceException ex) {
-			String message = "[ModelUtilities.getIResource()] ERROR: exception finding Resource for model"; //$NON-NLS-1$
-            UiConstants.Util.log(IStatus.ERROR, ex, message);
-		}
-    	
+    		resource = modelResource.getUnderlyingResource();
+    	} catch (ModelWorkspaceException ex) {
+    		String message = "[ModelUtilities.getIResource()] ERROR: exception finding Resource for model"; //$NON-NLS-1$
+     	        UiConstants.Util.log(IStatus.ERROR, ex, message);
+    	}
+
     	return resource;
     }
     

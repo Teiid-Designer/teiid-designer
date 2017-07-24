@@ -1113,13 +1113,13 @@ public class ColumnItemProvider extends RelationalEntityItemProvider implements 
     public Object getImage( Object object ) {
     	// check the column's reference to a primary key value?
     	final Column column = (Column)object;
-    	
+
     	if( column.getUniqueKeys().size() > 0 ) {
     		return getResourceLocator().getImage("full/obj16/column-is-key"); //$NON-NLS-1$
     	} else if( column.getForeignKeys().size() > 0 ) {
     		return getResourceLocator().getImage("full/obj16/column-is-foreign-key"); //$NON-NLS-1$
     	}
-    	
+
         return getResourceLocator().getImage("full/obj16/Column"); //$NON-NLS-1$
     }
 

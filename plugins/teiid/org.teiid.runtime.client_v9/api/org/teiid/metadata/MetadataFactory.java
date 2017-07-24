@@ -40,6 +40,7 @@ import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod.PushDown;
@@ -70,6 +71,9 @@ public class MetadataFactory implements Serializable {
     private static final String TEIID_SPATIAL = "teiid_spatial"; //$NON-NLS-1$
     private static final String TEIID_LDAP = "teiid_ldap"; //$NON-NLS-1$
     private static final String TEIID_REST = "teiid_rest"; //$NON-NLS-1$
+	private static final String TEIID_PI = "teiid_pi"; //$NON-NLS-1$
+	private static final String TEIID_COUCHBASE = "teiid_couchbase"; //$NON-NLS-1$
+	private static final String TEIID_INFINISPAN = "teiid_ispn"; //$NON-NLS-1$
 
 	private static final long serialVersionUID = 8590341087771685630L;
 

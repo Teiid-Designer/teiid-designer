@@ -127,7 +127,10 @@ public class MaterializationWizardPage_2 extends AbstractWizardPage implements U
 
 		}
 		
-		
+		if( this.manager.getJdgVersion() == JDG_VERSION.JDG_7_DOT_1 ) {
+			this.createPojoCB.setEnabled(false);
+		}
+
 		
 		{ // ==========  POJO Package and Class name info ========================
 			// Add widgets to page
@@ -409,7 +412,11 @@ public class MaterializationWizardPage_2 extends AbstractWizardPage implements U
 
 		setControl(hostPanel);
 
-		setMessage(Messages.MaterializationWizardPage_2_Message);
+		if( this.manager.getJdgVersion() == JDG_VERSION.JDG_7_DOT_1 ) {
+			setMessage("JDG 7.1 does not require POJO.  Click FINISH to complete materialization");
+		} else {
+			setMessage(Messages.MaterializationWizardPage_2_Message);
+		}
 
 		setPageComplete(true);
 	}
@@ -462,7 +469,11 @@ public class MaterializationWizardPage_2 extends AbstractWizardPage implements U
 			if( manager.doGenerateModule()) {
 				setMessage(Messages.MaterializationWizardPage_2_ClickFinish_PojoAndModule);
 			} else {
-				setMessage(Messages.MaterializationWizardPage_2_ClickFinish_Pojo);
+				if( this.manager.getJdgVersion() == JDG_VERSION.JDG_7_DOT_1 ) {
+					setMessage("JDG 7.1 does not require POJO.  Click FINISH to complete materialization");
+				} else {
+					setMessage(Messages.MaterializationWizardPage_2_Message);
+				}
 			}
 			setPageComplete(true);
 		} else if( status.getSeverity() == IStatus.WARNING) {
@@ -504,6 +515,7 @@ public class MaterializationWizardPage_2 extends AbstractWizardPage implements U
     		this.moduleZipFileNameField.setEnabled(doGenerateModule);
     		this.workspaceLocationBrowseButton.setEnabled(doCreatePojo);
     	}
+		this.createPojoCB.setEnabled(this.manager.getJdgVersion() == JDG_VERSION.JDG_6_DOT_6);
     	
     	// Set image for location
     	IContainer location = this.manager.getPojoWorkspaceFolder();

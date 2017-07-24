@@ -610,8 +610,6 @@ public class JdbcImportOptionsPage extends WizardPage implements
         	this.virtualModelBox.setSelection(false);
         	this.virtualModelBox.setEnabled(false);
             this.browseSelectedModelBtn.setEnabled(false);
-        	this.updateCheckBox.setSelection(false);
-        	this.updateCheckBox.setEnabled(false);
            	this.fullyQualifiedNamesCheckBox.setSelection(false);
            	this.fullyQualifiedNamesCheckBox.setEnabled(false);
         	this.includeCatalogCheckBox.setSelection(false);

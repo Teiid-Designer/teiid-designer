@@ -355,7 +355,7 @@ public class TestMxdConvertor implements Constants {
         File outputFile = File.createTempFile(this.getClass().getSimpleName(), StringConstants.DOT + StringConstants.XML);
         outputFile.deleteOnExit();
         FileOutputStream output = new FileOutputStream(outputFile);
-        convertor.write("odata", ModelType.Type.PHYSICAL, metaClasses, output);
+        convertor.write("odata", null, ModelType.Type.PHYSICAL, metaClasses, output);
         output.close();
 
         InputStream inputStream = new FileInputStream(outputFile);

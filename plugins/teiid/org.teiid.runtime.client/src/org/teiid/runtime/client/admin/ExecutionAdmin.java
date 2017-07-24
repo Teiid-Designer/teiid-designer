@@ -25,10 +25,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.dmr.ModelNode;
 import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
@@ -36,7 +34,6 @@ import org.jboss.ide.eclipse.as.management.core.IAS7ManagementDetails;
 import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
 import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
 import org.teiid.adminapi.Admin;
-import org.teiid.adminapi.VDB;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.annotation.Removed;
@@ -58,7 +55,9 @@ import org.teiid.jdbc.TeiidDriver;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidRuntimePlugin;
 import org.teiid.runtime.client.admin.v8.Admin8Factory.AdminImpl;
+import org.teiid.runtime.client.admin.v8.AdminConnectionManager;
 import org.teiid.runtime.client.admin.v8.AdminUtil;
+import org.teiid.runtime.client.admin.v8.VdbCacheManager;
 
 
 
@@ -70,15 +69,18 @@ import org.teiid.runtime.client.admin.v8.AdminUtil;
 public class ExecutionAdmin implements IExecutionAdmin {
 
     private static String PLUGIN_ID = "org.teiid.runtime.client";  //$NON-NLS-1$
-    private static String DYNAMIC_VDB_SUFFIX = "-vdb.xml"; //$NON-NLS-1$
-    private static int VDB_LOADING_TIMEOUT_SEC = 300;
 
     private final Admin admin;
     private final EventManager eventManager;
     private final ITeiidServer teiidServer;
     private final AdminSpec adminSpec;
-    private Map<String, ITeiidVdb> teiidVdbs;
     private final ConnectionManager connectionManager;
+    private final VdbCacheManager vdbManager;
+    private final AdminConnectionManager adminConnectionManager;
+    
+    
+    private static VdbCacheManager vdbManagerInstance;
+    private static AdminConnectionManager adminConnectionManagerInstance;
 
     private boolean loaded = false;
     private boolean refreshing = false;
@@ -98,7 +100,9 @@ public class ExecutionAdmin implements IExecutionAdmin {
         this.teiidServer = teiidServer;
         this.adminSpec = AdminSpec.getInstance(teiidServer.getServerVersion());
         this.eventManager = teiidServer.getEventManager();
-        this.connectionManager = new ConnectionManager(teiidServer, ((AdminImpl)this.admin).getConnection());
+        this.adminConnectionManager = new AdminConnectionManager(((AdminImpl)this.admin).getConnection(), teiidServer.getServerVersion());
+        this.connectionManager = new ConnectionManager(teiidServer, adminConnectionManager);
+        this.vdbManager = new VdbCacheManager(teiidServer, admin, this.adminConnectionManager);
         
         init();
     }
@@ -120,20 +124,24 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
         this.teiidServer = teiidServer;
         this.eventManager = teiidServer.getEventManager();
-//      this.connectionMatcher = new ModelConnectionMatcher();
-        this.connectionManager = new ConnectionManager(teiidServer, ((AdminImpl)this.admin).getConnection());
+        this.adminConnectionManager = new AdminConnectionManager(((AdminImpl)this.admin).getConnection(), teiidServer.getServerVersion());
+        this.connectionManager = new ConnectionManager(teiidServer, adminConnectionManager);
+        this.vdbManager = new VdbCacheManager(teiidServer, admin, this.adminConnectionManager);
 
         init();
+    }
+    
+    public static VdbCacheManager getVdbManager() {
+    	return vdbManagerInstance;
+    }
+
+    public static AdminConnectionManager getAdminConnectionManager() {
+    	return adminConnectionManagerInstance;
     }
 
     private boolean isLessThanTeiidEight() {
         ITeiidServerVersion minVersion = teiidServer.getServerVersion().getMinimumVersion();
         return minVersion.isLessThan(Version.TEIID_8_0);
-    }
-    
-    private boolean isLessThanTeiidEightSeven() {
-        ITeiidServerVersion minVersion = teiidServer.getServerVersion().getMinimumVersion();
-        return minVersion.isLessThan(Version.TEIID_8_7);
     }
 
     @Override
@@ -168,21 +176,8 @@ public class ExecutionAdmin implements IExecutionAdmin {
     @Override
     public void deployVdb( IFile vdbFile, String version) throws Exception {
         ArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
-
-        String vdbDeploymentName = vdbFile.getFullPath().lastSegment();
-        String vdbName = vdbFile.getFullPath().removeFileExtension().lastSegment();
         
-        // For Teiid Version less than 8.7, do explicit undeploy (TEIID-2873)
-    	if(isLessThanTeiidEightSeven()) {
-    		undeployVdb(vdbName);
-    	}
-    	
-    	String vdbVersion = "1";
-    	if( version != null) {
-    		vdbVersion = version;
-    	}
-        
-        doDeployVdb(vdbDeploymentName, getVdbName(vdbName), vdbVersion, vdbFile.getContents());
+    	this.vdbManager.deploy(vdbFile, version);
     }
  
     @Override
@@ -190,72 +185,8 @@ public class ExecutionAdmin implements IExecutionAdmin {
         ArgCheck.isNotNull(deploymentName, "deploymentName"); //$NON-NLS-1$
         ArgCheck.isNotNull(inStream, "inStream"); //$NON-NLS-1$
 
-        // Check dynamic VDB deployment name
-        if(!deploymentName.endsWith(DYNAMIC_VDB_SUFFIX)) {
-            throw new Exception(Messages.getString(Messages.ExecutionAdmin.dynamicVdbInvalidName, deploymentName));
-        }
-        
-        // Get VDB name
-        String vdbName = deploymentName.substring(0, deploymentName.indexOf(DYNAMIC_VDB_SUFFIX));
-
-        // For Teiid Version less than 8.7, do explicit undeploy (TEIID-2873)
-    	if(isLessThanTeiidEightSeven()) {
-    		undeployDynamicVdb(vdbName);
-    	}
-    	
-        // Deploy the VDB
-        // TODO: Dont assume vdbVersion
-        doDeployVdb(deploymentName,vdbName,"1",inStream);
+        this.vdbManager.deploy(deploymentName, inStream);
     }
-    
-    private void doDeployVdb(String deploymentName, String vdbName, String vdbVersion, InputStream inStream) throws Exception {
-        adminSpec.deploy(admin, deploymentName, inStream);
-        // Give a 0.5 sec pause for the VDB to finish loading metadata.
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-        }   
-                      
-        // Refresh VDBs list
-        refreshVDBs();
-
-        // TODO should get version from vdbFile
-        VDB vdb = admin.getVDB(vdbName, vdbVersion);
-
-        // If the VDB is still loading, refresh again and potentially start refresh job
-        if(vdb.getStatus().equals(adminSpec.getLoadingVDBStatus()) && vdb.getValidityErrors().isEmpty()) {
-            // Give a 0.5 sec pause for the VDB to finish loading metadata.
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-            }   
-            // Refresh again to update vdb states
-            refreshVDBs();
-            vdb = admin.getVDB(vdbName, vdbVersion);
-            // Determine if still loading, if so start refresh job.  User will get dialog that the
-            // vdb is still loading - and try again in a few seconds
-            if(vdb.getStatus().equals(adminSpec.getLoadingVDBStatus()) && vdb.getValidityErrors().isEmpty()) {
-                final Job refreshVDBsJob = new RefreshVDBsJob(vdbName);
-                refreshVDBsJob.schedule();
-            }
-        }
-
-        this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb.getName()));
-    }
-    
-
-	private String getVdbName(String originalVdbName) throws Exception {
-		String vdbName = originalVdbName;
-		int firstIndex = vdbName.indexOf('.');
-		int lastIndex = vdbName.lastIndexOf('.');
-		if (firstIndex != -1) {
-			if (firstIndex != lastIndex) {
-				throw new Exception(Messages.getString(Messages.ExecutionAdmin.invalidVdbName, originalVdbName));
-			}
-			vdbName = vdbName.substring(0, firstIndex);
-		}
-		return vdbName;
-	}
     
     @Override
     public String getSchema(String vdbName, String vdbVersion, String modelName) throws Exception {
@@ -267,7 +198,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     	// 
     	this.admin.close();
         this.connectionManager.disconnect();
-        this.teiidVdbs = new HashMap<String, ITeiidVdb>();
+        this.vdbManager.disconnect();
     }
 
     @Override
@@ -358,6 +289,9 @@ public class ExecutionAdmin implements IExecutionAdmin {
             }
         }
 
+        if("teiid".equals(dataSourceType) ) {
+        	isJdbc = true;
+        }
         this.connectionManager.createDataSource(jndiName, dataSourceType, isJdbc, properties);
         
         refreshDataSources();
@@ -562,8 +496,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     @Override
     public ITeiidVdb getVdb( String name ) {
         ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
-
-        return teiidVdbs.get(name);
+        return this.vdbManager.getVdb(name);
     }
     
     @Override
@@ -618,12 +551,15 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     @Override
     public Collection<ITeiidVdb> getVdbs() {
-        return Collections.unmodifiableCollection(teiidVdbs.values());
+        return this.vdbManager.getVdbs();
     }
     
     private void init() throws Exception {
         this.connectionManager.init();
-        refreshVDBs();
+        this.vdbManager.init();
+        
+        vdbManagerInstance = this.vdbManager;
+        adminConnectionManagerInstance = this.adminConnectionManager;
     }
 
     private void internalSetPropertyValue( ITeiidTranslator translator,
@@ -665,8 +601,6 @@ public class ExecutionAdmin implements IExecutionAdmin {
      */
     public void refresh() throws Exception {
     	refreshing = true;
-   
-    	// Clears any cached data source or translator info prior to reloading
     	
         // populate data source type names
     	Exception resultException = null;
@@ -725,13 +659,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     }
 
     protected void refreshVDBs() throws Exception {
-        Collection<? extends VDB> vdbs = Collections.unmodifiableCollection(this.admin.getVDBs());
-        
-        teiidVdbs = new HashMap<String, ITeiidVdb>();
-
-        for (VDB vdb : vdbs) {
-            teiidVdbs.put(vdb.getName(), new TeiidVdb(vdb, teiidServer));
-        }
+    	this.vdbManager.refresh();
     }
     
     protected void refreshDataSourceTypes() throws Exception {
@@ -956,88 +884,4 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
         admin.mergeVDBs(sourceVdbName, sourceVdbVersion, targetVdbName, targetVdbVersion);        
     }
-
-    /**
-     * Executes VDB refresh when a VDB is loading - as a background job.
-     */
-    class RefreshVDBsJob extends Job {
-
-        String vdbName;
-        
-        /**
-         * RefreshVDBsJob constructor
-         * @param vdbName the name of the VDB to monitor
-         */
-        public RefreshVDBsJob(String vdbName ) {
-            super("VDB Refresh"); //$NON-NLS-1$
-            this.vdbName = vdbName;
-            
-            setSystem(false);
-            setUser(true);
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-         */
-        @Override
-        protected IStatus run( IProgressMonitor monitor ) {
-            monitor.beginTask("VDB Refresh", //$NON-NLS-1$
-                              IProgressMonitor.UNKNOWN);
-
-            try {
-                waitForVDBLoad(this.vdbName);
-            } catch (Exception ex) {
-            }
-
-            monitor.done();
-
-            return Status.OK_STATUS;
-        }
-        
-        /*
-         * Wait for the VDB to finish loading.  Will check status every 5 secs and return when the VDB is loaded.
-         * If not loaded within 30sec, it will timeout
-         * @param vdbName the name of the VDB
-         */
-        private void waitForVDBLoad(String vdbName) throws Exception {
-            long waitUntil = System.currentTimeMillis() + VDB_LOADING_TIMEOUT_SEC*1000;
-            boolean first = true;
-            do {
-                // Pauses 5 sec
-                if (!first) {
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
-                } else {
-                    first = false;
-                }
-                
-                // Refreshes from adminApi
-                refreshVDBs();
-                
-                // Get the VDB
-                ITeiidVdb vdb = getVdb(vdbName);
-                
-                // Stop waiting if any conditions have been met
-                if(vdb!=null) {
-                	boolean hasValidityErrors = !vdb.getValidityErrors().isEmpty();
-                	if(  !vdb.hasModels() || vdb.hasFailed()  || !vdb.isLoading() 
-                	   || vdb.isActive()  || vdb.wasRemoved() || hasValidityErrors ) {
-                		return;
-                	} 
-                } else {
-                    return;
-                }
-            } while (System.currentTimeMillis() < waitUntil);
-            
-            refreshVDBs();
-            return;
-        }
-
-    }
-    
 }

@@ -7,8 +7,10 @@
 */
 package org.teiid.runtime.client.admin.v8;
 
+import java.io.IOException;
 import java.io.InputStream;
 import org.teiid.adminapi.Admin;
+import org.teiid.adminapi.AdminComponentException;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.VDB;
 import org.teiid.adminapi.VDB.Status;
@@ -16,6 +18,7 @@ import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.runtime.client.admin.AdminSpec;
+import org.teiid.runtime.client.admin.ExecutionAdmin;
 
 /**
  *
@@ -65,11 +68,23 @@ public class Admin8Spec extends AdminSpec {
 
     @Override
     public void deploy(Admin admin, String fileName, InputStream iStream) throws AdminException {
-        admin.deploy(fileName, iStream);
+    	if( ExecutionAdmin.getVdbManager() != null)  {
+    		try {
+				ExecutionAdmin.getVdbManager().deploy(fileName, iStream);
+			} catch (IOException e) {
+				throw new AdminComponentException("Failed to deploy vdb operation", e); //$NON-NLS-1$
+			}
+    	} else {
+    		throw new AdminComponentException("VDB cache unavailable. Check server state."); //$NON-NLS-1$
+    	}
     }
 
     @Override
     public void undeploy(Admin admin, String vdbName, String version) throws AdminException {
-        admin.undeploy(vdbName);
+    	if( ExecutionAdmin.getVdbManager() != null)  {
+			ExecutionAdmin.getVdbManager().undeploy(vdbName);
+    	} else {
+    		throw new AdminComponentException("VDB cache unavailable. Check server state."); //$NON-NLS-1$
+    	}
     }
 }

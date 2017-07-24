@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
@@ -185,15 +186,18 @@ public class CreateVdbDataSourceAction  extends SortableSelectionAction implemen
         if (rc != Window.OK)
             return;
 
+        String jndiName = JndiUtil.addJavaPrefix(info.getJndiName());
+        
         // if datasource already exists, user has 'OKd' the dialog and elected to replace it
-        ITeiidDataSource vdbDS = teiidServer.getDataSource(info.getJndiName());
+        ITeiidDataSource vdbDS = teiidServer.getDataSource(jndiName);
         if( vdbDS != null ) {
-        	teiidServer.deleteDataSource(info.getJndiName());
+        	teiidServer.deleteDataSource(jndiName);
         }
+
 
         // creates the data source
         teiidServer.getOrCreateDataSource(info.getDisplayName(),
-                                          info.getJndiName(),
+        								  jndiName,
                                           "teiid", //$NON-NLS-1$
                                           info.getProperties());
     }

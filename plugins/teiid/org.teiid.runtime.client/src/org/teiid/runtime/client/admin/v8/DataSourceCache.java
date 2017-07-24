@@ -12,7 +12,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.jboss.as.cli.Util;
-import org.jboss.as.controller.client.ModelControllerClient;
 import org.jboss.dmr.ModelNode;
 import org.teiid.adminapi.AdminComponentException;
 import org.teiid.adminapi.AdminException;
@@ -46,9 +45,9 @@ public class DataSourceCache implements AdminConstants {
     
 	private HashMap<String, Collection<PropertyDefinition>> translatorTempPropDefs;
 	
-	public DataSourceCache(ModelControllerClient connection, ITeiidServer teiidServer) {
+	public DataSourceCache(AdminConnectionManager adminConnectionManager, ITeiidServer teiidServer) {
 		super();
-		this.manager = new AdminConnectionManager(connection, teiidServer.getServerVersion());
+		this.manager = adminConnectionManager;
 		this.poolNameToTeiidDataSourceMap = new HashMap<String, CommonDataSource>();
 		this.jndiNameToTeiidDataSourceMap = new HashMap<String, CommonDataSource>();
 		this.installedJdbcDrivers = new HashSet<String>();
@@ -324,7 +323,8 @@ public class DataSourceCache implements AdminConstants {
         }
         
         return teiidPropDefns;
-    }
+}
+
 
 	
 	class AbstractMetadatMapper implements MetadataMapper<String>{

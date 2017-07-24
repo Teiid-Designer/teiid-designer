@@ -16,7 +16,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
-import org.jboss.as.controller.client.ModelControllerClient;
 import org.teiid.adminapi.AdminException;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.designer.WorkspaceUUIDService;
@@ -24,6 +23,7 @@ import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
+import org.teiid.runtime.client.admin.v8.AdminConnectionManager;
 import org.teiid.runtime.client.admin.v8.AdminUtil;
 import org.teiid.runtime.client.admin.v8.CommonDataSource;
 import org.teiid.runtime.client.admin.v8.DataSourceCache;
@@ -41,7 +41,7 @@ public class ConnectionManager {
     private DataSourceCache dataSourceCache;
     private ResourceAdapterCache resourceAdapterCache;
     private TranslatorCache translatorCache;
-    
+
     /**
      * Constructor used for testing purposes only. 
      * 
@@ -49,13 +49,13 @@ public class ConnectionManager {
      * @param teiidServer the server this admin belongs to (never <code>null</code>)
      * @throws Exception if there is a problem connecting the server
      */
-    ConnectionManager(ITeiidServer teiidServer, ModelControllerClient connection) throws Exception {
+    ConnectionManager(ITeiidServer teiidServer, AdminConnectionManager adminConnectionManager) throws Exception {
         ArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
-        ArgCheck.isNotNull(connection, "connection"); //$NON-NLS-1$
+        ArgCheck.isNotNull(adminConnectionManager, "adminConnectionManager"); //$NON-NLS-1$
         
-        this.dataSourceCache = new DataSourceCache(connection, teiidServer);
-        this.resourceAdapterCache = new ResourceAdapterCache(connection, teiidServer);
-        this.translatorCache = new TranslatorCache(connection, teiidServer);
+        this.dataSourceCache = new DataSourceCache(adminConnectionManager, teiidServer);
+        this.resourceAdapterCache = new ResourceAdapterCache(adminConnectionManager, teiidServer);
+        this.translatorCache = new TranslatorCache(adminConnectionManager, teiidServer);
         
         this.allDataSources = new ArrayList<ITeiidDataSource>();
     }
@@ -64,6 +64,7 @@ public class ConnectionManager {
      * The prefix used before the workspace identifier when creating a Preview VDB name.
      */
     public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
+
     
     public Collection<ITeiidDataSource> findTeiidDataSources( Collection<String> names) {
         Collection<ITeiidDataSource> dataSources = new ArrayList<ITeiidDataSource>();
@@ -201,6 +202,7 @@ public class ConnectionManager {
     public Collection<ITeiidTranslator> getTranslators() {
     	return this.translatorCache.getTranslators();
     }
+
     public Collection<TeiidPropertyDefinition> getTemplatePropertyDefns(String templateName) throws Exception {
     	Collection<TeiidPropertyDefinition> result = new ArrayList<TeiidPropertyDefinition>();
     	result.addAll(this.translatorCache.getTemplatePropertyDefns(templateName));
