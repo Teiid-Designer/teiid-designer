@@ -175,6 +175,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     
     static final String CONFIRM_DIRTY_MODELS_DIALOG_TITLE = i18n("confirmDirtyModelsDialogTitle"); //$NON-NLS-1$
     static final String CONFIRM_DIRTY_MODELS_DIALOG_MESSAGE= i18n("confirmDirtyModelsSynchronizeMessage"); //$NON-NLS-1$
+    static final String VDB_REQUIRES_SAVE_DIALOG_TITLE=i18n("vdbRequiresSaveTitle"); //$NON-NLS-1$
+    static final String VDB_REQUIRES_SAVE_DIALOG_MESSAGE=i18n("vdbRequiresSaveMessage"); //$NON-NLS-1$
     static final String CONFIRM_DIALOG_TITLE = i18n("confirmDialogTitle"); //$NON-NLS-1$
     static final String CONFIRM_SYNCHRONIZE_MESSAGE = i18n("confirmSynchronizeMessage"); //$NON-NLS-1$
     static final String CONFIRM_SYNCHRONIZE_ALL_MESSAGE = i18n("confirmSynchronizeAllMessage"); //$NON-NLS-1$
@@ -1793,8 +1795,9 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             });
         }
         { // execute VDB button
-        	exportDynamicVdbButton = WidgetFactory.createButton(extraButtonPanel, "Export as XML",//i18n("showImportVdbsButton"), //$NON-NLS-1$
+        	exportDynamicVdbButton = WidgetFactory.createButton(extraButtonPanel, i18n("saveAsXml"), //$NON-NLS-1$
                     GridData.HORIZONTAL_ALIGN_BEGINNING);
+        	exportDynamicVdbButton.setToolTipText(i18n("saveAsXmlTooltip"));
         	exportDynamicVdbButton.addSelectionListener(new SelectionAdapter() {
                 /**
                  * {@inheritDoc}
@@ -1803,6 +1806,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                  */
                 @Override
                 public void widgetSelected( final SelectionEvent event ) {
+                	if( isDirty() ) {
+                		MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+                				VDB_REQUIRES_SAVE_DIALOG_TITLE,
+                				VDB_REQUIRES_SAVE_DIALOG_MESSAGE);
+                		return;
+                	} 
                 	SortableSelectionAction action = ModelResourceActionManager.getAction(ModelActionConstants.Resource.GENERATE_VDB_XML);
                 	IResource vdbResource = ((IFileEditorInput)getEditorInput()).getFile();
                 	action.selectionChanged(VdbEditor.this, new StructuredSelection(vdbResource));

@@ -701,10 +701,11 @@ public class DataRoleWizard extends AbstractWizard {
             @Override
             protected Control createDialogArea( final Composite parent ) {
                 final Composite dlgPanel = (Composite)super.createDialogArea(parent);
+                ((GridLayout)dlgPanel.getLayout()).numColumns = 2;
                 dlgPanel.setLayoutData(new GridData(400, 80));
-                Group group = WidgetFactory.createGroup(dlgPanel, label,
-                		GridData.FILL_BOTH, 1, 1);
-                final Text nameText = WidgetFactory.createTextField(group, GridData.FILL_HORIZONTAL);
+                Label theLabel = new Label(dlgPanel, SWT.NONE);
+                theLabel.setText(label);
+                final Text nameText = WidgetFactory.createTextField(dlgPanel, GridData.FILL_HORIZONTAL);
                 if (text != null) {
                     nameText.setText(text);
                 }
