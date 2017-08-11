@@ -1146,4 +1146,10 @@ public class MockProject implements IProject {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+    @Override
+    public void clearCachedDynamicReferences() {
+        // TODO Auto-generated method stub
+        
+    }
 }
