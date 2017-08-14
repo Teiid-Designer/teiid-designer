@@ -62,6 +62,7 @@ public interface UiConstants {
         String SHOW_REGISTRY_VIEW_ACTION = REGISTRY_VIEW;
         String UNREGISTER_MED = FOLDER + "unregister-med.png";  //$NON-NLS-1$
         String VIEW_MED_ACTION = FOLDER + "viewMed.gif"; //$NON-NLS-1$
+        String SEARCH = FOLDER + "search.png"; //$NON-NLS-1$
     }
 
     interface Form {

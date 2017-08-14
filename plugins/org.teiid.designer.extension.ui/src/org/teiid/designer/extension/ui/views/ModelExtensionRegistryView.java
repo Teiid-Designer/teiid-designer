@@ -213,8 +213,7 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
         this.findMedReferencesAction.setEnabled(false);
 
         try {
-            URL imageUrl = new URL("platform:/plugin/org.eclipse.search/icons/full/etool16/search.gif"); //$NON-NLS-1$
-            this.findMedReferencesAction.setImageDescriptor(ImageDescriptor.createFromURL(imageUrl));
+            this.findMedReferencesAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(org.teiid.designer.extension.ui.UiConstants.ImageIds.SEARCH));
         } catch (Exception e) {
             ErrorHandler.toExceptionDialog(e);
         }

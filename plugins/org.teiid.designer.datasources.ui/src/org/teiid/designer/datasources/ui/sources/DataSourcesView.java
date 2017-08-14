@@ -7,8 +7,8 @@
 */
 package org.teiid.designer.datasources.ui.sources;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
@@ -31,11 +31,8 @@ public class DataSourcesView extends ViewPart {
     @Override
     public void createPartControl( Composite parent ) {
         control = new Composite(parent, SWT.NONE);
-        FillLayout layout = new FillLayout();
-        layout.marginHeight = 0;
-        layout.marginWidth = 0;
-        control.setLayout(layout);
-        
+        GridLayoutFactory.fillDefaults().margins(0, 0).applyTo(control);
+
         new DataSourcesPanel(control, manager);
     }
 
