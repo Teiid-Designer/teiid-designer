@@ -1,8 +1,8 @@
 package org.teiid.designer.advisor.ui.views.guides;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.ViewPart;
@@ -40,10 +40,7 @@ public class TeiidGuidesView extends ViewPart {
     @Override
     public void createPartControl( Composite parent ) {
         control = new Composite(parent, SWT.NONE);
-        FillLayout layout = new FillLayout();
-        layout.marginHeight = 0;
-        layout.marginWidth = 0;
-        control.setLayout(layout);
+        GridLayoutFactory.fillDefaults().margins(0, 0).applyTo(control);
 
         new TeiidGuidesPanel(control);
 

@@ -43,7 +43,7 @@ public class TeiidGuidesPanel extends ManagedForm
 
         this.parentForm = this.getForm();
 
-        this.parentForm.setAlwaysShowScrollBars(true);
+        this.parentForm.setAlwaysShowScrollBars(false);
         initGUI();
     }
 

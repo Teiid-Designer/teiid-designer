@@ -210,6 +210,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
         groupGD.heightHint=GROUP_HEIGHT_160;
         groupGD.verticalAlignment=GridData.BEGINNING;
         panel.setLayoutData(groupGD);
+        panel.setBackground(parent.getBackground());
         
         newCPButton = new Button(panel, SWT.PUSH);
         newCPButton.setImage(UiPlugin.getDefault().getImage(IMAGES.ADD_CONNECTION));
@@ -675,9 +676,11 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     }
     
     public void refresh() {
-    	manager.refreshDataSourceList();
-    	treeViewer.refresh();//manager);
-    	this.treeViewer.expandToLevel(2);
+    	if( treeViewer != null && ! treeViewer.getTree().isDisposed() ) {
+	    	manager.refreshDataSourceList();
+	    	treeViewer.refresh();
+	    	this.treeViewer.expandToLevel(2);
+    	}
     }
     
     protected void initDragAndDrop() {

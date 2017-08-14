@@ -92,9 +92,8 @@ public class ProjectStatusSection implements AdvisorUiConstants.Groups {
         
         SECTION : {
 	        this.section = this.toolkit.createSection(parent, 
-	        		ExpandableComposite.TITLE_BAR | ExpandableComposite.COMPACT ); //| Section.TWISTIE | Section.EXPANDED  );
+	        		ExpandableComposite.TITLE_BAR | ExpandableComposite.COMPACT | Section.EXPANDED ); //| Section.TWISTIE | Section.EXPANDED  );
 	        
-	        section.setExpanded(false);
 	        section.setText(Messages.Status);
 	        section.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
 	
@@ -155,8 +154,6 @@ public class ProjectStatusSection implements AdvisorUiConstants.Groups {
 
         sectionBody.pack(true);
         section.setClient(sectionBody);
-
-        section.setExpanded(true);
         
         setEnabledState();
 

@@ -279,6 +279,7 @@ public class DefaultServerSection implements IManagedLoading {
 	private void createDefaultServerSectionToolbar() {
         // configure section toolbar
         toolbar = FormUtil.createSectionToolBar(this.defaultServerSection, toolkit);
+        toolbar.setBackground(this.defaultServerSection.getTitleBarBackground());
 
         ImageHyperlink changeDefaultServerLink = toolkit.createImageHyperlink(toolbar, SWT.NONE);
         changeDefaultServerLink.setImage(changeServerImage);
@@ -336,7 +337,9 @@ public class DefaultServerSection implements IManagedLoading {
             public void linkActivated(HyperlinkEvent e) {
                 try {
                 	IServer server = ((IServer)ModelerCore.getTeiidServerManager().getDefaultServer().getParent());
-
+                	
+                	if( ! ModelerCore.isDefaultTeiidConnected() ) return;
+                	
                 	if( server.getServerType() != null && server.canStop().isOK() ) {
                 		stop(server, getSite().getShell());
                 	} else {
