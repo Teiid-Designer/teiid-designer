@@ -154,7 +154,6 @@ public class ComponentCategory implements Cloneable {
             section.pack(true);
 
             section.setVisible(visible);
-            section.setExpanded(visible);
 
             return section;
         } // endif
@@ -174,7 +173,6 @@ public class ComponentCategory implements Cloneable {
                 // see what to change:
                 if (section != null) {
                     // change section:
-                    section.setExpanded(visible);
                     section.setVisible(visible);
                 } else {
                     // no section, just body:
