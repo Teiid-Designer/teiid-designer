@@ -45,6 +45,8 @@ public interface IPropertiesContext {
 	public static final String NO_OPEN_PROJECT = "noOpenProject"; //$NON-NLS-1$
 	public static final String OPEN_PROJECTS_EXIST = "openProjectsExist"; //$NON-NLS-1$
 	
+	public static final String KEY_CONNECTION_PROFILE_ID = "connectionProfileID"; //$NON-NLS-1$
+	
 	public static final String KEY_GUIDE_ID = "guideID"; //$NON-NLS-1$
 
 	/**

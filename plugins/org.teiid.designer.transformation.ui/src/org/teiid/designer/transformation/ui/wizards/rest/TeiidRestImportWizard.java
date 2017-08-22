@@ -149,7 +149,9 @@ public class TeiidRestImportWizard extends TeiidMetadataImportWizard {
             sourcePage.setDesignerProperties(desProps);
 		}
 		
-		this.optionsPage.setDesignerProperties(desProps);
+		if( optionsPage != null ) {
+			this.optionsPage.setDesignerProperties(desProps);
+		}
 		
     	if( !openProjectExists()) {
 			DesignerPropertiesUtil.setProjectStatus(desProps, IPropertiesContext.NO_OPEN_PROJECT);

@@ -65,6 +65,10 @@ public class JndiNameHelper  extends StringNameValidator {
     		if( !JndiUtil.hasJavaPrefix(name) ) {
     			return UiConstants.Util.getString("JndiNameHelper.jndiPrefixErrorMessage"); //$NON-NLS-1$
     		}
+    		String shortName = JndiUtil.removeJavaPrefix(name);
+    		if( StringUtilities.isEmpty(shortName) ) {
+    			return UiConstants.Util.getString("JndiNameHelper.jndiEmptyMessage"); //$NON-NLS-1$
+    		}
     	} else {
     		if( addPrefix ) {
     			String prefix = UiConstants.Util.getString("JndiNameHelper.errorMessagesPrefix"); //$NON-NLS-1$

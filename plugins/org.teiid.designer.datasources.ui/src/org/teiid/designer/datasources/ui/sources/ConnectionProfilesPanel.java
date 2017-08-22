@@ -55,6 +55,8 @@ import org.teiid.designer.datasources.ui.panels.DataSourceItem;
 import org.teiid.designer.datasources.ui.wizard.CreateDataSourceDialog;
 import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.viewsupport.DesignerProperties;
+import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 public class ConnectionProfilesPanel extends Composite implements UiConstants {
@@ -509,25 +511,36 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     		IConnectionProfile profile = (IConnectionProfile)obj.getFirstElement();
     		if( profile.getCategory().getName().equals(UiConstants.DATABASE_CONNECTIONS) ) {
     			Properties props = new Properties();
-    			props.setProperty("profileId", profile.getName());
-    			ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.JDBC_IMPORT, new StructuredSelection(), new Properties(), true);
+    			props.setProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID, profile.getName());
+
+    			ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.JDBC_IMPORT, new StructuredSelection(), props, true);
     		} else if( profile.getCategory().getName().equals(UiConstants.TEIID_CONNECTIONS)) {
-    			
+    			Properties props = new Properties();
+    			props.setProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID, profile.getName());
     			
     			if( profile.getProviderId().equals(ModelActionConstants.ProfileIDs.REST_WS) ) {
-    				ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.REST_WS_IMPORT, new StructuredSelection(), new Properties(), true);
+    				ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.REST_WS_IMPORT, new StructuredSelection(), props, true);
     			} else if( profile.getProviderId().equals(ModelActionConstants.ProfileIDs.REST_WS) ) {
-    				ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.REST_WS_IMPORT, new StructuredSelection(), new Properties(), true);
+    				ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.REST_WS_IMPORT, new StructuredSelection(), props, true);
     			} else if( profile.getProviderId().equals(ModelActionConstants.ProfileIDs.SALESFORCE) ) {
-    				ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.SALESFORCE_IMPORT, new StructuredSelection(), new Properties(), true);
+    				ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.SALESFORCE_IMPORT, new StructuredSelection(), props, true);
     			} else if( profile.getProviderId().equals(ModelActionConstants.ProfileIDs.FILE_URL_REMOTE) ) {
-    				ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.FLAT_FILE_IMPORT, new StructuredSelection(), new Properties(), true);
+    				ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.FLAT_FILE_IMPORT, new StructuredSelection(), props, true);
     			} else {
-    				System.out.println("  Profile ID = " + profile.getProviderId());
+    				MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Feature not yet implemented", 
+    						"Creating a source model from the profile " + profile.getProviderId() + " has not yet been implemented" + 
+    						"\n\nUse corresponding Import > Teiid Designer option for this connection type.");
+    				
     			}
     			//ModelerUiViewUtils.launchWizard(profile.getProviderId(), new StructuredSelection(), new Properties(), true);
     		} else if( profile.getCategory().getName().equals(UiConstants.FLAT_FILE_DATA_SOURCE) ) {
-    			ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.FLAT_FILE_IMPORT, new StructuredSelection(), new Properties(), true);
+    			Properties props = new Properties();
+    			props.setProperty(IPropertiesContext.KEY_LAST_CONNECTION_PROFILE_ID, profile.getName());
+    			ModelerUiViewUtils.launchWizard(ModelActionConstants.WizardsIDs.FLAT_FILE_IMPORT, new StructuredSelection(), props, true);
+    		} else {
+     			MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "Feature not yet implemented", 
+     					"Creating a source model from the profile " + profile.getProviderId() + " has not yet been implemented" + 
+     					"\n\nUse corresponding Import > Teiid Designer option for this connection type.");
     		}
     	}
     }
