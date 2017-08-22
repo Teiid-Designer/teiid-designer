@@ -76,6 +76,7 @@ import org.teiid.designer.jdbc.ui.util.JdbcUiUtil;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.ui.UiConstants;
+import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.dialog.FolderSelectionDialog;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
@@ -86,6 +87,7 @@ import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.util.JndiNameHelper;
 import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
@@ -183,6 +185,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
     
     private Text jndiNameField;
     private String jndiName;
+    private JndiNameHelper jndiNameValidator;
     private Button autoCreateDataSource;
     private Button setUpdatableCB;
     
@@ -197,6 +200,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
      */
     protected JdbcImportOptionsPage() {
         super(JdbcImportOptionsPage.class.getSimpleName(), TITLE, null);
+        jndiNameValidator = new JndiNameHelper();
     }
 
     // ===========================================================================================================================
@@ -375,6 +379,13 @@ public class JdbcImportOptionsPage extends WizardPage implements
         	Group theGroup = WidgetFactory.createGroup(mainPanel, getString("jndiGroup"), SWT.NONE, 2, 3); //$NON-NLS-1$
         	theGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             
+            
+            final String message = UiConstants.Util.getString("EnterDataSourceJNDINameDialog.message"); //$NON-NLS-1$
+
+            final org.teiid.designer.ui.common.widget.Label msgLabel = WidgetFactory.createLabel(theGroup, message);
+            msgLabel.setText(message);
+            GridDataFactory.fillDefaults().span(3, 1).align(GridData.BEGINNING, GridData.CENTER).grab(true, false).applyTo(msgLabel);
+        	
         	org.teiid.designer.ui.common.widget.Label label = WidgetFactory.createLabel(theGroup, getString("jndiLabel")); //$NON-NLS-1$
             label.setToolTipText(getString("jndiToolTip")); //$NON-NLS-1$
             
@@ -395,15 +406,20 @@ public class JdbcImportOptionsPage extends WizardPage implements
 				
 				@Override
 				public void modifyText(ModifyEvent e) {
-					
-					if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
-						jndiName = jndiNameField.getText();
-						importer.setJBossJndiNameName(jndiName);
-					} else {
-						jndiName = ""; //$NON-NLS-1$
-						importer.setJBossJndiNameName(null);
-					}
-					
+					String name = jndiNameField.getText();
+					String jndiStatus = jndiNameValidator.checkValidName(name);
+    				if( StringUtilities.isEmpty(jndiStatus)) {
+    					jndiName = name;
+    					importer.setJBossJndiNameName(jndiName);
+    					msgLabel.setText(message);
+    					msgLabel.setImage(null);
+    				} else {
+    					msgLabel.setText(jndiStatus);
+    					msgLabel.setImage(UiPlugin.getDefault().getImage(UiPlugin.Images.ERROR_ICON));
+    					jndiName = name;
+    					importer.setJBossJndiNameName(name);
+    				}
+    				validatePage(false);
 				}
 			});
     	        
@@ -651,7 +667,10 @@ public class JdbcImportOptionsPage extends WizardPage implements
              this.nameText.setText(name);
         } else {
 	        name = wizard.getModelName();
-	        
+	        this.folder = wizard.getFolder();
+	        if( this.folder != null ) {
+	        	this.folderText.setText(this.folder.getFullPath().makeRelative().toString());
+	        }
         }
         this.nameText.setText(name);
         if( importer.getJBossJndiName() == null ) {
@@ -1178,7 +1197,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
                 wizard.setModelName(name);
                 wizard.setFolder(folder);
                 if (model != wizard.getUpdatedModel()) {
-                    List newlySelectedNodes = new ArrayList();
+                    List<JdbcNode> newlySelectedNodes = new ArrayList<JdbcNode>();
                     //collect newly selected nodes
                     collectNewlySelectedNodes(db.getChildren(), newlySelectedNodes, getOriginalImportSettings(model));
                     //reset the model to be updated. this reset the import setting
@@ -1186,6 +1205,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
                     // Removed previously excluded nodes that have now been selected for import
                     removeExcludedNodes(newlySelectedNodes);
                 }
+                
+                if( !firstTime) {
+	                // Check JNDI name
+	                String jndiResult = jndiNameValidator.checkValidName(this.importer.getJBossJndiName());
+	                if( !StringUtilities.isEmpty(jndiResult) ) {
+	                	WizardUtil.setPageComplete(this, jndiResult, ERROR); //$NON-NLS-1$ //$NON-NLS-2$
+	                }
+                }
+                
                 getContainer().updateButtons();
             } else if (folder != null) {
             	// During initialization (firstTime) auto-set the update-check-box for the user
@@ -1202,7 +1230,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
         }
     }
 
-    private void collectNewlySelectedNodes(JdbcNode[] children, List newlySelectedNodes, JdbcImportSettings settings) throws CoreException{
+    private void collectNewlySelectedNodes(JdbcNode[] children, List<JdbcNode> newlySelectedNodes, JdbcImportSettings settings) throws CoreException{
         if(children == null) {
             return;
         }
@@ -1240,16 +1268,14 @@ public class JdbcImportOptionsPage extends WizardPage implements
         return((JdbcImportWizard)getWizard()).getSource().getImportSettings();
     }
 
-    private void removeExcludedNodes(List nodes) throws CoreException{
+    private void removeExcludedNodes(List<JdbcNode> nodes) throws CoreException{
         if(nodes.isEmpty()) {
             return;
         }
 
         final JdbcImportSettings settings = ((JdbcImportWizard)getWizard()).getSource().getImportSettings();
         if (settings != null) {
-            Iterator iter = nodes.iterator();
-            while(iter.hasNext()){
-                final JdbcNode node = (JdbcNode)iter.next();
+        	for( JdbcNode node : nodes) {
                 node.setSelected(true);
                 for (final Iterator objIter = settings.getExcludedObjectPaths().iterator(); objIter.hasNext();) {
                     final IPath path = new Path((String)objIter.next());

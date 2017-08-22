@@ -23,30 +23,30 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
-import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
+import org.teiid.designer.ui.util.JndiNameHelper;
 
 public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implements UiConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportDataSourcePage.class);
 	private static final String TITLE = getString("title"); //$NON-NLS-1$
+	private static final String INITIAL_MESSAGE = org.teiid.designer.ui.UiConstants.Util.getString("EnterDataSourceJNDINameDialog.message"); //$NON-NLS-1$
 
 	private static String getString(final String id) {
 		return Util.getString(I18N_PREFIX + id);
-	}
-	
-	private static String getString(final String id, final Object var) {
-		return Util.getString(I18N_PREFIX + id, var);
 	}
 
 	private final TeiidMetadataImportInfo info;
     
     private Text jndiNameField;
     private String jndiName;
+    private JndiNameHelper jndiNameValidator;
     private Button autoCreateDataSource;
     
     private boolean synchronizing;
@@ -54,6 +54,7 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
 	public TeiidMetadataImportDataSourcePage(TeiidMetadataImportInfo fileInfo) {
 		super(TeiidFlatFileImportOptionsPage.class.getSimpleName(), TITLE);
 		this.info = fileInfo;
+		jndiNameValidator = new JndiNameHelper();
 	}
 
 	@Override
@@ -99,14 +100,16 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
 			public void modifyText(ModifyEvent e) {
 				if( synchronizing ) return;
 				
-				if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
-					jndiName = jndiNameField.getText();
+				String name = jndiNameField.getText();
+				String jndiStatus = jndiNameValidator.checkValidName(name);
+				if( StringUtilities.isEmpty(jndiStatus)) {
+					jndiName = name;
 					info.setJBossJndiNameName(jndiName);
 				} else {
-					jndiName = ""; //$NON-NLS-1$
-					info.setJBossJndiNameName(null);
+					jndiName = name;
+					info.setJBossJndiNameName(jndiName);
 				}
-				
+				validatePage();
 			}
 		});
 	        
@@ -183,6 +186,7 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
         } else {
         	if( this.info.getSourceModelName() != null ) {
         		this.jndiName = StringUtilities.removeXmiExtension(this.info.getSourceModelName()) + "_DS";
+        		this.jndiName = JndiUtil.addJavaPrefix(this.jndiName);
                 this.info.setJBossJndiNameName(this.jndiName);
                 this.jndiNameField.setText(this.info.getJBossJndiName());
         	} else {
@@ -191,5 +195,15 @@ public class TeiidMetadataImportDataSourcePage extends AbstractWizardPage implem
         }
                 
         synchronizing = false;
+    }
+    
+    private void validatePage() {
+        String jndiResult = jndiNameValidator.checkValidName(this.info.getJBossJndiName());
+        if( !StringUtilities.isEmpty(jndiResult) ) {
+        	WizardUtil.setPageComplete(this, jndiResult, ERROR); //$NON-NLS-1$ //$NON-NLS-2$
+        } else {
+        	setPageComplete(true);
+        	setMessage(INITIAL_MESSAGE);
+        }
     }
 }

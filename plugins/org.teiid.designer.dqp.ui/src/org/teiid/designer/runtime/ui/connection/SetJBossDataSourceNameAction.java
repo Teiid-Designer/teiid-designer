@@ -20,12 +20,13 @@ import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.util.JndiNameHelper;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 public class SetJBossDataSourceNameAction extends SortableSelectionAction  implements IConnectionAction {
     private static final String ACTION_TITLE = DqpUiConstants.UTIL.getString("SetJBossDataSourceNameAction.title"); //$NON-NLS-1$
-    private JndiNameInModelHelper jndiHelper;
+    private JndiNameHelper jndiHelper;
 
     /**
      * @since 5.0
@@ -33,7 +34,7 @@ public class SetJBossDataSourceNameAction extends SortableSelectionAction  imple
     public SetJBossDataSourceNameAction() {
         super(ACTION_TITLE, SWT.DEFAULT);
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SET_CONNECTION_ICON));
-        this.jndiHelper = new JndiNameInModelHelper();
+        this.jndiHelper = new JndiNameHelper();
         setId(ModelActionConstants.Resource.SET_JBOSS_DATA_SOURCE_NAME);
     }
 

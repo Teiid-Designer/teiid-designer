@@ -21,6 +21,7 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.core.util.KeyInValueHashMap;
 import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -577,9 +578,6 @@ public class LdapImportWizardManager implements IChangeNotifier {
             ITeiidServer teiidServer = DataSourceConnectionHelper.getServer();
             
     		String dsName = getJBossJndiName();
-    		if( dsName.startsWith("java:/") ) {
-    			dsName = dsName.substring(6);
-    		}
     		String jndiName = getJBossJndiName();
     		DataSourceConnectionHelper helper = new DataSourceConnectionHelper(model, getConnectionProfile());
     		
@@ -587,7 +585,7 @@ public class LdapImportWizardManager implements IChangeNotifier {
         	
         	String dsType = helper.getDataSourceType();
     		try {
-				teiidServer.getOrCreateDataSource(dsName, jndiName, dsType, connProps);
+				teiidServer.getOrCreateDataSource(JndiUtil.removeJavaPrefix(dsName), jndiName, dsType, connProps);
 			} catch (Exception e) {
 				DatatoolsUiConstants.UTIL.log(e);
 			}

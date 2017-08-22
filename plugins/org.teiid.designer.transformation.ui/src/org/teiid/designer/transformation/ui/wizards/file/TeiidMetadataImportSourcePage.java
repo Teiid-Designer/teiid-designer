@@ -1030,7 +1030,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     		this.info.setSourceModelName(newName);
     		this.sourceModelFilePath = this.info.getSourceModelLocation();
     		this.info.setSourceModelExists(sourceModelExists());
-    		
+    		this.info.setJBossJndiNameName("java:/" + newName + "_DS");
     	}
 
     	validatePage();
@@ -1061,6 +1061,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         if( this.info.getSourceModelName() != null ) {
         	this.sourceModelFilePath = this.info.getSourceModelLocation();
         	this.sourceModelFileText.setText(this.info.getSourceModelName());
+        	this.info.setJBossJndiNameName("java:/" + this.info.getSourceModelName() + "_DS");
         } else {
         	this.sourceModelFileText.setText(StringConstants.EMPTY_STRING);
         }

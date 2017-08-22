@@ -39,6 +39,7 @@ public class Messages extends NLS {
     public static String createDataSourcePanelOk;
     public static String createDataSourcePanelErrorNameExists;
     public static String editDataSourcePanelEnterChanges;
+    public static String createDataSourcePanel_JndiNameErrorMessage;
     
     public static String dataSourcePropertiesPanel_nameColText;
     public static String dataSourcePropertiesPanel_valueColText;

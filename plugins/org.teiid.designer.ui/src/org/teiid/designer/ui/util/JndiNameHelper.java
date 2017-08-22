@@ -1,12 +1,4 @@
-
-/*
- * JBoss, Home of Professional Open Source.
- *
- * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
- *
- * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
- */
-package org.teiid.designer.runtime.ui.connection;
+package org.teiid.designer.ui.util;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
@@ -29,35 +21,64 @@ import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.JndiUtil;
+import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import org.teiid.designer.runtime.ui.DqpUiConstants;
-import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.ui.common.UiPlugin;
+import org.teiid.designer.ui.UiConstants;
+import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Dialog;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 
-public class JndiNameInModelHelper {
-    private static final String DIALOG_TITLE = DqpUiConstants.UTIL.getString("EnterDataSourceJNDINameDialog.title"); //$NON-NLS-1$
+public class JndiNameHelper  extends StringNameValidator {
+    private static final String DIALOG_TITLE = UiConstants.Util.getString("EnterDataSourceJNDINameDialog.title"); //$NON-NLS-1$
     
 	private ConnectionInfoHelper connectionInfoHelper;
-
-	public JndiNameInModelHelper() {
-		this.connectionInfoHelper = new ConnectionInfoHelper();
+	
+	public JndiNameHelper() {
+		this(StringNameValidator.DEFAULT_MINIMUM_LENGTH, StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
 	}
+	
+    public JndiNameHelper( int minLength,
+                                    int maxLength ) {
+        super(minLength, maxLength, new char[] {UNDERSCORE_CHARACTER, '-', '.', ':', '/'});
+        
+        this.connectionInfoHelper = new ConnectionInfoHelper();
+    }
 
+    @Override
+    public String getValidNonLetterOrDigitMessageSuffix() {
+        return UiConstants.Util.getString("JndiNameHelper.or_other_valid_characters"); //$NON-NLS-1$
+    }
+    @Override
+    public String checkValidName( final String name ) {
+    	return checkValidName(name, true);
+    }
+    
+    protected String checkValidName(final String name, boolean addPrefix) {
+    	String msg = super.checkValidName(name);
+    	
+    	// One last check for java prefix
+    	if( msg == null ) {
+    		if( !JndiUtil.hasJavaPrefix(name) ) {
+    			return UiConstants.Util.getString("JndiNameHelper.jndiPrefixErrorMessage"); //$NON-NLS-1$
+    		}
+    	} else {
+    		if( addPrefix ) {
+    			String prefix = UiConstants.Util.getString("JndiNameHelper.errorMessagesPrefix"); //$NON-NLS-1$
+    			msg = prefix + msg;
+    		}
+    	}
+    	
+    	return msg;
+    }
+    
 	public String getExistingJndiName(ModelResource mr) {
 		String existingName = connectionInfoHelper.getJndiProperty(mr);
-        String nameOnly = StringConstants.EMPTY_STRING;
 
-        if( !StringUtilities.isEmpty(existingName) ) {
-        	nameOnly = JndiUtil.removeJavaPrefix(existingName);
-        }
-        
-        return nameOnly;
+        return existingName;
 	}
 
 	public void setJNDINameInTxn(ModelResource modelResource, String newJNDIName) {
@@ -71,7 +92,7 @@ public class JndiNameInModelHelper {
 			if (editor != null) {
 				boolean isDirty = editor.isDirty();
 
-				if( !jndiName.startsWith(JndiUtil.JAVA_PREFIX)) jndiName = JndiUtil.JAVA_PREFIX + jndiName;
+				jndiName = JndiUtil.addJavaPrefix(jndiName);
 				
 				connectionInfoHelper.setJNDIName(modelResource, jndiName);
 
@@ -82,10 +103,10 @@ public class JndiNameInModelHelper {
 			}
 		} catch (Exception e) {
 			MessageDialog.openError(Display.getCurrent().getActiveShell(),
-					DqpUiConstants.UTIL.getString("SetConnectionInfo.exceptionMessage"), e.getMessage()); //$NON-NLS-1$
-			IStatus status = new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID,
-					DqpUiConstants.UTIL.getString("SetConnectionInfo.exceptionMessage"), e); //$NON-NLS-1$
-			DqpUiConstants.UTIL.log(status);
+					UiConstants.Util.getString("SetConnectionInfo.exceptionMessage"), e.getMessage()); //$NON-NLS-1$
+			IStatus status = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID,
+					UiConstants.Util.getString("SetConnectionInfo.exceptionMessage"), e); //$NON-NLS-1$
+			UiConstants.Util.log(status);
 
 			return;
 		} finally {
@@ -178,14 +199,14 @@ public class JndiNameInModelHelper {
             dlgPanel.setLayoutData(pgd);
             ((GridLayout)dlgPanel.getLayout()).numColumns = COLUMN_COUNT;
             
-            final String message = DqpUiConstants.UTIL.getString("EnterDataSourceJNDINameDialog.message"); //$NON-NLS-1$
+            final String message = UiConstants.Util.getString("EnterDataSourceJNDINameDialog.message"); //$NON-NLS-1$
 
             final Label msgLabel = WidgetFactory.createLabel(dlgPanel, message);
             GridData gd = new GridData(SWT.BEGINNING, SWT.CENTER, true, true);
             gd.horizontalSpan = 2;
             msgLabel.setLayoutData(gd);
             
-            WidgetFactory.createLabel(dlgPanel, DqpUiConstants.UTIL.getString("EnterDataSourceJNDINameDialog.nameLabel") + StringConstants.SPACE); //$NON-NLS-1$
+            WidgetFactory.createLabel(dlgPanel, UiConstants.Util.getString("EnterDataSourceJNDINameDialog.nameLabel") + StringConstants.SPACE); //$NON-NLS-1$
             this.jndiNameField = WidgetFactory.createTextField(dlgPanel);
             if( this.jndiName != null && this.jndiName.length() > 0 ) {
             	this.jndiNameField.setText(this.jndiName);
@@ -194,14 +215,16 @@ public class JndiNameInModelHelper {
     			
     			@Override
     			public void modifyText(ModifyEvent e) {
-    				if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
+    				String name = jndiNameField.getText();
+    				String status = validate(name);
+    				if( StringUtilities.isEmpty(status)) {
     					jndiName = jndiNameField.getText();
     					msgLabel.setText(message);
     					msgLabel.setImage(null);
     				} else {
-    					jndiName = ""; //$NON-NLS-1$
-    					msgLabel.setText("Warning: JNDI name is empty");
-    					msgLabel.setImage(DqpUiPlugin.getDefault().getImage(DqpUiConstants.Images.WARNING_ICON));
+    					msgLabel.setText(status);
+    					msgLabel.setImage(UiPlugin.getDefault().getImage(UiPlugin.Images.ERROR_ICON));
+    					enable(false);
     				}
     				
     			}
@@ -209,6 +232,15 @@ public class JndiNameInModelHelper {
             
 
             return dlgPanel;
+        }
+        
+        private void enable(boolean enable) {
+        	getButton(IDialogConstants.OK_ID).setEnabled(enable);
+        }
+        
+        private String validate(String name) {
+        	// validate the JNDI name and return message, can be null
+        	return JndiNameHelper.this.checkValidName(name, false);
         }
         
         /**<p>
@@ -242,5 +274,4 @@ public class JndiNameInModelHelper {
         
         
     }
-
 }

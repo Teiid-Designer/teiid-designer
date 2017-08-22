@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
@@ -192,7 +193,7 @@ public class TeiidRestImportProcessor extends TeiidMetadataImportProcessor {
 //	        		dsType = WS_DS_TYPE;
 //	        	}
         		try {
-					teiidServer.getOrCreateDataSource(dsName, jndiName, dsType, connProps);
+					teiidServer.getOrCreateDataSource(JndiUtil.removeJavaPrefix(dsName), jndiName, dsType, connProps);
 				} catch (Exception e) {
 					DatatoolsUiConstants.UTIL.log(e);
 				}

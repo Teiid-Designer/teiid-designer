@@ -44,10 +44,10 @@ import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.Stopwatch;
 import org.teiid.core.designer.util.StringUtilities;
-import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.compare.DifferenceReport;
 import org.teiid.designer.compare.ui.wizard.IDifferencingWizard;
 import org.teiid.designer.compare.ui.wizard.ShowDifferencesPage;
@@ -82,7 +82,6 @@ import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionAssistant;
 import org.teiid.designer.metamodels.relational.extension.CoreModelExtensionConstants;
-import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -586,11 +585,11 @@ public class JdbcImportWizard extends AbstractWizard
                       final IStructuredSelection inputSelection ) {
         IStructuredSelection selection = inputSelection;
 
-        Object seletedObj = selection.getFirstElement();
+        Object selectedObj = selection.getFirstElement();
         boolean isSourceModel = false;
         try {
-            if (seletedObj instanceof IFile) {
-                ModelResource modelResource = ModelUtil.getModelResource((IFile)seletedObj, false);
+            if (selectedObj instanceof IFile) {
+                ModelResource modelResource = ModelUtil.getModelResource((IFile)selectedObj, false);
                 isSourceModel = ModelUtilities.isPhysical(modelResource);
             }
         } catch (Exception e) {
@@ -605,47 +604,49 @@ public class JdbcImportWizard extends AbstractWizard
         this.importer = new JdbcImporter();
 
         // If not null, set folder to current selection if a folder or to containing folder if a model object
-        if (!selection.isEmpty() && 
-        	(selection.getFirstElement() instanceof IProject && ((IProject)selection.getFirstElement()).isOpen() ) ) {
-            final Object obj = selection.getFirstElement();
-            final IContainer folder = ModelUtil.getContainer(obj);
-            try {
-                if (folder != null && folder.getProject().getNature(ModelerCore.NATURE_ID) != null) {
-                    this.folder = folder;
-                }
-            } catch (final CoreException err) {
-                Util.log(err);
-                WidgetUtil.showError(err);
-            }
-            ModelResource model = null;
-            try {
-                model = JdbcRelationalUtil.getPhysicalModifiableRelationalModel(obj);
-                if (model != null) {
-                    for (final Iterator iter = model.getAllRootEObjects().iterator(); iter.hasNext();) {
-                        if (iter.next() instanceof JdbcSource) {
-                            // If we want to support multiple source settings for a given model, then the importer needs
-                            // to be updated to figure out which one to use initially during an update
-                            this.importer.setUpdatedModel(model);
-                            String name = FileUtils.getFilenameWithoutExtension(model.getItemName());
-                            String validName = CoreValidationRulesUtil.getValidString(name, null, -1);
-                            if (validName != null) {
-                                name = validName;
-                                while (name.indexOf(UNDERSCORE_TWO) > -1) {
-                                    name = name.replaceAll(UNDERSCORE_TWO, UNDERSCORE_ONE);
-                                }
-                            }
-                            this.modelName = name + ModelerCore.MODEL_FILE_EXTENSION;
-                            break;
-                        }
-                    }
-                }
-            } catch (final ModelWorkspaceException err) {
-                if (model != null && !model.hasErrors()) {
-                    // Unexpected ...
-                    Util.log(err);
-                }
-                WidgetUtil.showError(err);
-            }
+        if (!selection.isEmpty() ) {
+        	if( selectedObj instanceof IContainer && ((IContainer)selectedObj).getProject().isOpen() ) {
+	            final IContainer folder = (IContainer)selectedObj;
+	            try {
+	                if (folder != null && folder.getProject().getNature(ModelerCore.NATURE_ID) != null) {
+	                    this.folder = folder;
+	                }
+	            } catch (final CoreException err) {
+	                Util.log(err);
+	                WidgetUtil.showError(err);
+	            }
+        	} else if (selectedObj instanceof IFile) {
+	        	this.folder = ((IFile)selectedObj).getParent();
+	            ModelResource model = null;
+	            try {
+	                model = JdbcRelationalUtil.getPhysicalModifiableRelationalModel(selectedObj);
+	                if (model != null) {
+	                    for (final Iterator iter = model.getAllRootEObjects().iterator(); iter.hasNext();) {
+	                        if (iter.next() instanceof JdbcSource) {
+	                            // If we want to support multiple source settings for a given model, then the importer needs
+	                            // to be updated to figure out which one to use initially during an update
+	                            this.importer.setUpdatedModel(model);
+	                            String name = FileUtils.getFilenameWithoutExtension(model.getItemName());
+	                            String validName = CoreValidationRulesUtil.getValidString(name, null, -1);
+	                            if (validName != null) {
+	                                name = validName;
+	                                while (name.indexOf(UNDERSCORE_TWO) > -1) {
+	                                    name = name.replaceAll(UNDERSCORE_TWO, UNDERSCORE_ONE);
+	                                }
+	                            }
+	                            this.modelName = name + ModelerCore.MODEL_FILE_EXTENSION;
+	                            break;
+	                        }
+	                    }
+	                }
+	            } catch (final ModelWorkspaceException err) {
+	                if (model != null && !model.hasErrors()) {
+	                    // Unexpected ...
+	                    Util.log(err);
+	                }
+	                WidgetUtil.showError(err);
+	            }
+        	}
         } else {
         	openProjectExists = ModelerUiViewUtils.workspaceHasOpenModelProjects();
             if( !openProjectExists ) {

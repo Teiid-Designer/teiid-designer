@@ -482,6 +482,8 @@ public class LdapDefinitionPage extends WizardPage
                 return ;
             }
         }
+        // Check JNDI name
+        
 
         if (sourceModelPanel.sourceModelExists()) {
             if (!sourceModelPanel.sourceModelHasConnectionProfile()) {
@@ -501,7 +503,7 @@ public class LdapDefinitionPage extends WizardPage
 
     void resetCPComboItems() {
         if (connectionProfilesCombo != null) {
-            ArrayList profileList = new ArrayList();
+            ArrayList<IConnectionProfile> profileList = new ArrayList<IConnectionProfile>();
             for (IConnectionProfile prof : profileWorker.getProfiles()) {
                 profileList.add(prof);
             }

@@ -27,6 +27,7 @@ import org.teiid.designer.compare.MergeProcessor;
 import org.teiid.designer.compare.ModelerComparePlugin;
 import org.teiid.designer.compare.util.CompareUtil;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
@@ -380,9 +381,6 @@ public class SalesforceImportWizardManager {
             ITeiidServer teiidServer = DataSourceConnectionHelper.getServer();
             
     		String dsName = getJBossJndiName();
-    		if( dsName.startsWith("java:/") ) {
-    			dsName = dsName.substring(6);
-    		}
     		String jndiName = getJBossJndiName();
     		DataSourceConnectionHelper helper = new DataSourceConnectionHelper(model, getConnectionProfile());
     		
@@ -390,7 +388,7 @@ public class SalesforceImportWizardManager {
         	
         	String dsType = helper.getDataSourceType();
     		try {
-				teiidServer.getOrCreateDataSource(dsName, jndiName, dsType, connProps);
+				teiidServer.getOrCreateDataSource(JndiUtil.removeJavaPrefix(dsName), jndiName, dsType, connProps);
 			} catch (Exception e) {
 	            IStatus status = new org.eclipse.core.runtime.Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage());
 	            Activator.getDefault().getLog().log(status);

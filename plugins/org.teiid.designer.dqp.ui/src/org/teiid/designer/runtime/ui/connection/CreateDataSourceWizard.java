@@ -45,7 +45,6 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.util.JndiUtil;
-import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -62,6 +61,7 @@ import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.widget.ScrollableTitleAreaDialog;
+import org.teiid.designer.ui.util.JndiNameHelper;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
 
@@ -111,7 +111,7 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
     // private JdbcManager jdbcManager;
     private ConnectionInfoProviderFactory providerFactory;
     // private IConnectionProfile selectedProfile;
-    private StringNameValidator dataSourceNameValidator;
+    private JndiNameHelper dataSourceNameValidator;
 
     boolean hasModelResources = false;
 
@@ -623,16 +623,14 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
 
     private String checkValidName( String name ) {
         if (dataSourceNameValidator == null) {
-            dataSourceNameValidator = new DataSourceNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
-                                                                  StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
+            dataSourceNameValidator = new JndiNameHelper();
         }
         return dataSourceNameValidator.checkValidName(name);
     }
 
     private boolean isValidName( String name ) {
         if (dataSourceNameValidator == null) {
-            dataSourceNameValidator = new DataSourceNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
-                                                                  StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
+            dataSourceNameValidator = new JndiNameHelper();
         }
         return dataSourceNameValidator.isValidName(name);
     }
@@ -701,20 +699,6 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
          */
         public String getValue() {
             return value;
-        }
-
-    }
-
-    class DataSourceNameValidator extends StringNameValidator {
-
-        public DataSourceNameValidator( int minLength,
-                                        int maxLength ) {
-            super(minLength, maxLength, new char[] {UNDERSCORE_CHARACTER, '-', '.', ':', '/'});
-        }
-
-        @Override
-        public String getValidNonLetterOrDigitMessageSuffix() {
-            return DqpUiConstants.UTIL.getString("DataSourceNameValidator.or_other_valid_characters"); //$NON-NLS-1$
         }
 
     }

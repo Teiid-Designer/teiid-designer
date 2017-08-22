@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,12 +25,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.wizard.ITeiidImportServer;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.util.JndiNameHelper;
 
 
 /**
@@ -63,7 +67,7 @@ public final class CreateDataSourcePanel extends Composite implements UiConstant
         super(parent, SWT.NONE);
         this.teiidImportServer = teiidImportServer;
         this.dataSourceManager = new DataSourceManager(teiidImportServer);
-        this.nameValidator = new StringNameValidator(new char[] {'_','-'});
+        this.nameValidator = new JndiNameHelper();
         
         this.editDSName = editDSName;
         if(this.editDSName!=null) {
@@ -274,14 +278,17 @@ public final class CreateDataSourcePanel extends Composite implements UiConstant
             return new Status(IStatus.ERROR, PLUGIN_ID, Messages.createDataSourcePanelErrorNameEmpty);
         }
         
+        JndiNameHelper dataSourceNameValidator = new JndiNameHelper();
+        
         // For new Source, cannot duplicate name
         if(isCreateNew && existingSourceNames.contains(dsName)) {
             return new Status(IStatus.ERROR, PLUGIN_ID, Messages.createDataSourcePanelErrorNameExists);
         }
         
-        // Check for invalid chars
-        if(!this.nameValidator.isValidName(dsName)) {
-            return new Status(IStatus.ERROR, PLUGIN_ID, Messages.errorNameInvalid);
+        String jndiResult = dataSourceNameValidator.checkValidName(dsName);
+        if( !StringUtilities.isEmpty(jndiResult) ) {
+        	return new Status(IStatus.ERROR, PLUGIN_ID, jndiResult); //
+        			//NLS.bind(Messages.createDataSourcePanel_JndiNameErrorMessage, "  " + jndiResult) ); //$NON-NLS-1$
         }
         
         return new Status(IStatus.OK, PLUGIN_ID, Messages.createDataSourcePanelOk);        

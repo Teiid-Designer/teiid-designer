@@ -31,6 +31,7 @@ import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.types.DatatypeManager;
+import org.teiid.designer.core.util.JndiUtil;
 import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -613,7 +614,7 @@ public class ImportWsdlProcessor {
         	
         	String dsType = helper.getDataSourceType();
     		try {
-				teiidServer.getOrCreateDataSource(dsName, jndiName, dsType, connProps);
+				teiidServer.getOrCreateDataSource(JndiUtil.removeJavaPrefix(dsName), jndiName, dsType, connProps);
 			} catch (Exception e) {
 				DatatoolsUiConstants.UTIL.log(e);
 			}

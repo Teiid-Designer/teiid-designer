@@ -47,6 +47,7 @@ import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
+import org.teiid.designer.ui.util.JndiNameHelper;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
@@ -61,7 +62,7 @@ public class SetConnectionProfileAction extends SortableSelectionAction  impleme
     
     private Properties designerProperties;
     private IConnectionProfile connectionProfile;
-    private static JndiNameInModelHelper jndiHelper = new JndiNameInModelHelper();
+    private static JndiNameHelper jndiHelper = new JndiNameHelper();
 
     /**
      * @since 5.0

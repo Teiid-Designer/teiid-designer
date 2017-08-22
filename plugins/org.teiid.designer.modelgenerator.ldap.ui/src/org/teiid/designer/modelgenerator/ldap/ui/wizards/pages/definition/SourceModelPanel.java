@@ -8,6 +8,7 @@
 package org.teiid.designer.modelgenerator.ldap.ui.wizards.pages.definition;
 
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -22,7 +23,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -41,8 +42,10 @@ import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiConstants;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizardManager;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapPageUtils;
+import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.util.JndiNameHelper;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.MetamodelSelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
@@ -53,11 +56,14 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
  * @since 8.0
  */
 public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiConstants {
+	
+	private static final String JNDI_MESSAGE = org.teiid.designer.ui.UiConstants.Util.getString("EnterDataSourceJNDINameDialog.message"); //$NON-NLS-1$
     // Source Model Definition
     private Text sourceModelFileText;
     private Text sourceModelContainerText;
     private Text jndiNameField;
     private String jndiName;
+    private JndiNameHelper jndiNameValidator;
     private Button autoCreateDataSource;
 
     private IConnectionInfoHelper connectionInfoHelper;
@@ -90,6 +96,7 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
     private void init(Composite parent) {
 
         this.connectionInfoHelper = new ConnectionInfoHelper();
+        this.jndiNameValidator = new JndiNameHelper();
 
         SOURCE_MODEL_INFO: {
             Group group = WidgetFactory.createGroup(parent, getString("sourceModelDefinition"), GridData.FILL_HORIZONTAL, 1, 3); //$NON-NLS-1$
@@ -163,6 +170,9 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
             	GridLayoutFactory.fillDefaults().numColumns(2).margins(10,  10).applyTo(theGroup);
             	GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(theGroup);
 
+                final org.teiid.designer.ui.common.widget.Label msgLabel = WidgetFactory.createLabel(theGroup, JNDI_MESSAGE);
+                GridDataFactory.fillDefaults().span(3, 1).align(GridData.BEGINNING, GridData.CENTER).grab(true, false).applyTo(msgLabel);
+            	
                 Label nameLabel = new Label(theGroup, SWT.NULL);
                 nameLabel.setText(getString("jndiLabel")); //$NON-NLS-1$
                 nameLabel.setToolTipText(getString("jndiToolTip")); //$NON-NLS-1$
@@ -183,15 +193,19 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
         			
         			@Override
         			public void modifyText(ModifyEvent e) {
-        				
-        				if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
-        					jndiName = jndiNameField.getText();
+    					String name = jndiNameField.getText();
+    					String jndiStatus = jndiNameValidator.checkValidName(name);
+        				if( StringUtilities.isEmpty(jndiStatus)) {
+        					jndiName = name;
         					importManager.setJBossJndiNameName(jndiName);
+        					msgLabel.setText(JNDI_MESSAGE);
+        					msgLabel.setImage(null);
         				} else {
-        					jndiName = ""; //$NON-NLS-1$
-        					importManager.setJBossJndiNameName(null);
+        					msgLabel.setText(jndiStatus);
+        					msgLabel.setImage(UiPlugin.getDefault().getImage(UiPlugin.Images.ERROR_ICON));
+        					jndiName = name;
+        					importManager.setJBossJndiNameName(name);
         				}
-        				
         			}
         		});
         	        
