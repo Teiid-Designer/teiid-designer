@@ -225,6 +225,7 @@ public class JndiNameHelper  extends StringNameValidator {
     					jndiName = jndiNameField.getText();
     					msgLabel.setText(message);
     					msgLabel.setImage(null);
+    					enable(true);
     				} else {
     					msgLabel.setText(status);
     					msgLabel.setImage(UiPlugin.getDefault().getImage(UiPlugin.Images.ERROR_ICON));
