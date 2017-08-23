@@ -100,7 +100,7 @@ public class ModelObjectPropertySheetPage
             if ( selection != null && ! selection.isEmpty() ) {
                 try {
                     currentSelection = selection;
-                    if( super.getSaveablePart() != null ) {
+                    if( part != null ) {
                     	super.selectionChanged(part, selection);
                     }
                 } catch (Exception e) {
@@ -108,7 +108,7 @@ public class ModelObjectPropertySheetPage
                 }
             } else if ( selection != null ) {
                 try {
-                	if( super.getSaveablePart() != null ) {
+                	if( part != null ) {
                 		super.selectionChanged(part, selection);
                 	}
                 } catch (Exception e) {
