@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.jboss.tools</groupId>
 		<artifactId>parent</artifactId>
-		<version>4.4.3.Final</version>
+		<version>4.5.0.Final-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>teiid</artifactId>
@@ -38,6 +38,19 @@
 	</modules>
 
 	<repositories>
+		<repository>
+			<id>jboss-releases</id>
+			<name>JBoss Early Access</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/releases/org/jboss/tools/integration-stack/target-platform/</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
 		<repository>
 			<id>jboss-public-repository-group</id>
 			<name>JBoss Public Repository Group</name>
@@ -93,6 +106,7 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+
 	</repositories>
 
 	<build>
