@@ -204,9 +204,11 @@ public class ConnectionManager {
     }
 
     public Collection<TeiidPropertyDefinition> getTemplatePropertyDefns(String templateName) throws Exception {
-    	Collection<TeiidPropertyDefinition> result = new ArrayList<TeiidPropertyDefinition>();
-    	result.addAll(this.translatorCache.getTemplatePropertyDefns(templateName));
-    	result.addAll(dataSourceCache.getTemplatePropertyDefns(templateName));
-    	return result;
+    	
+    	if( this.resourceAdapterCache.isResourceAdapter(templateName) ) {
+    		return this.resourceAdapterCache.getTemplatePropertyDefns(templateName);
+    	}
+    	
+    	return this.dataSourceCache.getTemplatePropertyDefns(templateName);
     }
 }

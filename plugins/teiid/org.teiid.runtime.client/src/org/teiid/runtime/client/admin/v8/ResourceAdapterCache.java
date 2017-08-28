@@ -23,8 +23,10 @@ import org.jboss.dmr.ModelType;
 import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.AdminProcessingException;
 import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.adminapi.impl.PropertyDefinitionMetadata;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidRuntimePlugin;
 import org.teiid.runtime.client.admin.TeiidDataSource;
@@ -42,6 +44,8 @@ public class ResourceAdapterCache implements AdminConstants {
 	private Map<String, String> raIDToModuleMap;
 	
 	private Set<String> deployedResourceAdaptorNames;
+	
+	private HashMap<String, Collection<PropertyDefinition>> resoureAdapterTempPropDefs;
 	
 	public ResourceAdapterCache(AdminConnectionManager adminConnectionManager, ITeiidServer teiidServer) {
 		super();
@@ -381,4 +385,84 @@ public class ResourceAdapterCache implements AdminConstants {
 		this.manager.cliCall(ACTIVATE, new String[] { SUBSYSTEM, RESOURCE_ADAPTERS, RESOURCE_ADAPTER, rarName },
 				null, new ResultCallback());
 	}
+	
+	public Collection<PropertyDefinition> getTemplatePropertyDefinitions(String templateName) throws AdminException {
+		if( resoureAdapterTempPropDefs == null ) {
+			this.resoureAdapterTempPropDefs = new HashMap<String, Collection<PropertyDefinition>>();
+		}
+		
+		Collection<PropertyDefinition> props = this.resoureAdapterTempPropDefs.get(templateName);
+		
+		if(  props == null ) {
+			props = loadTemplatePropertyDefinition(templateName);
+			this.resoureAdapterTempPropDefs.put(templateName, props);
+		}
+
+        return props;
+	}
+	
+	public boolean isResourceAdapter(String name) {
+		return resourceAdapterIDs.contains(name);
+	}
+	
+	private Collection<PropertyDefinition> loadTemplatePropertyDefinition(String templateName) throws AdminException {
+		if( resoureAdapterTempPropDefs == null ) {
+			this.resoureAdapterTempPropDefs = new HashMap<String, Collection<PropertyDefinition>>();
+		}
+		
+		Collection<PropertyDefinition> props = new ArrayList<PropertyDefinition>();
+		
+		BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
+
+    	// get resource adapter node properties
+		manager.cliCall(READ_RAR_DESCRIPTION, new String[] {SUBSYSTEM, TEIID}, new String[] {RAR_NAME, templateName}, builder);
+		
+    	// get resource adapter properties
+		manager.cliCall(READ_RESOURCE_DESCRIPTION, new String[] {
+				SUBSYSTEM, RESOURCE_ADAPTERS,
+				RESOURCE_ADAPTER, templateName, 
+				CONNECTION_DEFINITIONS, ANY}, null, builder);
+
+
+        // add driver specific properties
+        PropertyDefinitionMetadata cp = new PropertyDefinitionMetadata();
+        cp.setName(CONNECTION_PROPERTIES);
+        cp.setDisplayName("Additional Driver Properties");
+        cp.setDescription("The connection-properties element allows you to pass in arbitrary connection properties to the Driver.connect(url, props) method. Supply comma separated name-value pairs"); //$NON-NLS-1$
+        cp.setRequired(false);
+        cp.setAdvanced(true);
+        props = builder.getPropertyDefinitions();
+        props.add(cp);
+		
+    	return props;
+	}
+	
+    @SuppressWarnings("unchecked")
+	public Collection<TeiidPropertyDefinition> getTemplatePropertyDefns(String templateName) throws Exception {
+
+        Collection<? extends PropertyDefinition> propDefs = getTemplatePropertyDefinitions(templateName);
+        
+        Collection<TeiidPropertyDefinition> teiidPropDefns = new ArrayList<TeiidPropertyDefinition>();
+        
+        for (PropertyDefinition propDefn : propDefs) {
+            TeiidPropertyDefinition teiidPropertyDefn = new TeiidPropertyDefinition();
+            
+            teiidPropertyDefn.setName(propDefn.getName());
+            teiidPropertyDefn.setDisplayName(propDefn.getDisplayName());
+            teiidPropertyDefn.setDescription(propDefn.getDescription());
+            teiidPropertyDefn.setPropertyTypeClassName(propDefn.getPropertyTypeClassName());
+            teiidPropertyDefn.setDefaultValue(propDefn.getDefaultValue());
+            teiidPropertyDefn.setAllowedValues(propDefn.getAllowedValues());
+            teiidPropertyDefn.setModifiable(propDefn.isModifiable());
+            teiidPropertyDefn.setConstrainedToAllowedValues(propDefn.isConstrainedToAllowedValues());
+            teiidPropertyDefn.setAdvanced(propDefn.isAdvanced());
+            teiidPropertyDefn.setRequired(propDefn.isRequired());
+            teiidPropertyDefn.setMasked(propDefn.isMasked());
+            
+            teiidPropDefns.add(teiidPropertyDefn);
+        }
+        
+        return teiidPropDefns;
+    }
+	
 }

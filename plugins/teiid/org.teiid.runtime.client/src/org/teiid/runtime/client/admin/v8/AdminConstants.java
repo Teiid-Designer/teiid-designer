@@ -31,6 +31,8 @@ public interface AdminConstants {
 	String ADD = "add"; //$NON-NLS-1$
 	String CONFIG_PROPERTIES = "config-properties"; //$NON-NLS-1$
 	String CONNECTION_DEFINITIONS = "connection-definitions"; //$NON-NLS-1$
+	String READ_RAR_DESCRIPTION = "read-rar-description"; //$NON-NLS-1$
+	String RAR_NAME = "rar-name"; //$NON-NLS-1$
 	String READ_RESOURCE_DESCRIPTION = "read-resource-description"; //$NON-NLS-1$
 	String ANY = "any"; //$NON-NLS-1$
 	String MODULE = "module"; //$NON-NLS-1$
