@@ -55,10 +55,22 @@ import org.teiid.designer.datasources.ui.panels.DataSourceItem;
 import org.teiid.designer.datasources.ui.wizard.CreateDataSourceDialog;
 import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.ui.viewsupport.DesignerProperties;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
+/**
+ * This panel provides the primary content for the Connections View
+ * 
+ * Includes a tree view containing both local connection profile nodes and a deployed server node showing available 
+ * deployed data sources and resource adapters.
+ * 
+ * Includes a small default server section which provides edit, start and stop quick buttons
+ * 
+ * Deployed content available only when server is running (connected)
+ * 
+ * @author blafond
+ *
+ */
 public class ConnectionProfilesPanel extends Composite implements UiConstants {
     private final int GROUP_HEIGHT_160 = 160;
     
@@ -77,7 +89,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     private IAction generateSourceModelAction;
     private IAction createDataSourceAction;
     private IAction createDataSourceFromProfileAction;
-    // Add a Context Menu
+
     private MenuManager treeMenuManager;
 	
     /**
@@ -193,6 +205,8 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
             public void run() {
             	if( isDataSourceSelected() ) {
             		handleCreateSource();
+            	} else {
+            		handleCreateSource();
             	}
             }
 		};
@@ -276,7 +290,6 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
         WidgetFactory.createLabel(panel, "");
         
         refreshButton = new Button(panel, SWT.PUSH);
-//        refreshButton.setText(Messages.dataSourcePanel_refreshButtonText);
         refreshButton.setImage(UiPlugin.getDefault().getImage(IMAGES.REFRESH));
         refreshButton.setToolTipText(Messages.dataSourcePanel_refreshButtonTooltip);
         refreshButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -309,11 +322,7 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     	} else {
     		newCPButton.setToolTipText(Messages.CreateConnectionProfile);
     	}
-//    	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
-//    	if( !obj.isEmpty() && 
-//    			( obj.getFirstElement() instanceof IConnectionProfile ) || obj.getFirstElement() instanceof DataSourceItem )  {
-//    		selection = true;
-//    	}
+
     	newCPButton.setEnabled(true);
     	deleteCPButton.setEnabled(selection);
     	dummyAction.setEnabled(selection);
@@ -332,11 +341,15 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
 			// can create a profile any time
 			treeMenuManager.add(createDataSourceAction);
 			treeMenuManager.add(generateSourceModelAction);
-//			if( manager.getImportManager().isValidImportServer() ) {
-//				treeMenuManager.add(createDataSourceAction);
-//			}
 		} else if( profileTreeSelected() ) {
-			treeMenuManager.add(createAction);
+	    	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
+	    	if( !obj.isEmpty() && (obj.getFirstElement() instanceof RootConnectionNode) ) {
+	    		if( ((RootConnectionNode)obj.getFirstElement()).getName().equalsIgnoreCase(Messages.Deployed)) {
+	    			treeMenuManager.add(createDataSourceAction);
+	    		}
+	    	} else {
+	    		treeMenuManager.add(createAction);
+	    	}
 		} else if( manager.serverAvailable() ){
 			// can't create a DS without a running server
 			treeMenuManager.add(createAction);
@@ -548,16 +561,6 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
     private void handleCreateDataSourceFromProfile() {
     	if( !this.manager.isServerAvailable() ) return;
     	
-    	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
-    	if( !obj.isEmpty() && obj.getFirstElement() instanceof IConnectionProfile ) {
-    		CreateDataSourceAction action = new CreateDataSourceAction((IConnectionProfile)obj.getFirstElement());
-    		action.setTeiidServer(ModelerCore.getTeiidServerManager().getDefaultServer());
-    		action.run();
-    		refresh();
-    	}
-    }
-    
-    private void handleCreateDataSource() {
     	IStructuredSelection obj = (IStructuredSelection)treeViewer.getSelection();
     	if( !obj.isEmpty() && obj.getFirstElement() instanceof IConnectionProfile ) {
     		CreateDataSourceAction action = new CreateDataSourceAction((IConnectionProfile)obj.getFirstElement());
