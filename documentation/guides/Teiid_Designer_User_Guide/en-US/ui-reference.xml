@@ -574,6 +574,49 @@
 			</figure>
 		</section>
 		
+		<!-- ####### CONNECTIONS VIEW ######################################### -->
+		
+	    <section id="connections-view">
+		    <title>Connections View</title>
+			<para>
+				The	<emphasis role="bold">Connections View</emphasis>
+				allows editing and management of your local connection profiles as well as deployed data source configurations in one view.
+			</para>
+			<para>The figure below shows 2 panels labeled <emphasis role="bold">Local and Deployed Connections</emphasis> and 
+				<emphasis role="bold">Default Server</emphasis>. The Connections panel contains a tree view containing locally defined
+			 	connection profile definitions and a list of data sources configurations that are deployed on your default server.
+			 </para>
+			<para>The toolbar on the left contains create, delete and edit actions as well as a refresh button.
+			</para>
+			
+			<figure id="connections-view-image">
+				<title>Connections View</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/connections-view.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<para>In addition to managing your connections, you can also create new source models (i.e. import) from selecting an
+				existing profile or deployed data source and launching the corresponding import wizard via a 
+				<emphasis role="bold">Generate Source Model</emphasis> action (see below).
+			</para>
+			<figure id="connections-actions-image">
+				<title>Available Actions</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/connections-view-deployed-context-menu.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			
+			<para>The <emphasis role="bold">Default Server</emphasis> section includes a useful toolbar that includes
+				start, and stop actions.  Note that the default Designer perspective includes the standard <emphasis role="bold">Servers</emphasis>
+				view as a tab behind the <emphasis role="bold">Connections View</emphasis>.
+			</para>
+			
+		</section>
 		<!-- ####### PROPERTIES VIEW ######################################### -->
 		
 	    <section id="properties-view">
@@ -1308,9 +1351,163 @@
 		-->
 		<section id="model-editors-section">
 			<title>Model Editor</title>
-			<para>The Model Editor is comprised of sub-editors which provide multiple views of your data. The Diagram Editor provides 
-				a graphical while the Table Editor provides spreadsheet-like editing capabilities.  This section describes these various
+			<para>The Model Editor is comprised of sub-editors which provide multiple views of your data. The Model Editor provides the primary means 
+				for editing model content, the Diagram Editor provides a graphical means and a graphical while the Table Editor 
+				provides spreadsheet-like editing capabilities.  This section describes these various
 				sub-editors.</para>
+			<section id="model-editor-section">
+				<title>Model Editor</title>
+				<para>The Model Editor includes a detailed summary of the contents of a model and provides a centralized panel
+				for editing the model contents and properties.
+				</para>
+				<para>The editor page provides for editing the model contents via:
+				<itemizedlist>
+					<listitem>
+    					<para>vertical toolbar containing the following operations</para>
+    					<itemizedlist>
+							<listitem>
+								<para><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/previewData.gif"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Preview Data (i.e. Test)</emphasis>
+								</para>
+							</listitem>
+							<listitem>
+								<para><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/new-relational-table.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">New Table</emphasis>
+								</para>
+							</listitem>
+							<listitem>
+								<para><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/new-view-table.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">New View</emphasis>
+								</para>
+							</listitem>
+							<listitem>
+								<para><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/new-relational-procedure.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">New Procedure or Function</emphasis>
+								</para>
+							</listitem>
+							<listitem>
+								<para><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/new-view-procedure.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">New View Procedure or Function</emphasis>
+								</para>
+							</listitem>
+							<listitem>
+								<para><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/new-relational-index.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">New Index</emphasis>
+								</para>
+							</listitem>
+							<listitem>
+								<para><inlinemediaobject>
+										<imageobject>
+											<imagedata fileref="images/icons/generate-data-service.png"/>
+										</imageobject>
+									</inlinemediaobject> <emphasis role="bold">Generate Data Service</emphasis> - Generate and export a 
+									deployable *-vdb.xml as a simple data service for the selected table or view. (Also available when 
+									view or table is selected via the <emphasis role="bold">Modeling.... > Generate Data Service</emphasis> action)
+								</para>
+							</listitem>
+						</itemizedlist>
+    				</listitem>
+    				<listitem>
+    					<para>Model <emphasis role="bold">Contents</emphasis> tree view (same information shown in <emphasis role="bold">Model Explorer</emphasis> tree)</para>
+    					<itemizedlist>
+							<listitem>
+								<para>
+									Simplified action context menus compared to <emphasis role="bold">Model Explorer</emphasis> and limited 
+									to applicable model object actions.
+								</para>
+							</listitem>
+						</itemizedlist>
+					</listitem>
+					<listitem>
+    					<para> <emphasis role="bold">Actions panel</emphasis></para>
+    					<itemizedlist>
+							<listitem>
+								<para>
+									Contains applicable operations you can perform for the reference model
+								</para>
+								<itemizedlist>
+									<listitem>
+										<para>
+											Also available in <emphasis role="bold">Model Explorer</emphasis> tree view via model selection and 
+											context menu <emphasis role="bold">Modeling...</emphasis> action category
+										</para>
+									</listitem>
+								</itemizedlist>
+							</listitem>
+						</itemizedlist>
+					</listitem>
+					<listitem>
+    					<para> <emphasis role="bold">Properties panel</emphasis></para>
+    					<itemizedlist>
+							<listitem>
+								<para>
+									Provides the same information that can still be edited in Eclipse's <emphasis role="bold">Properties View</emphasis>
+								</para>
+								<itemizedlist>
+									<listitem>
+										<para>
+											Properties are driven based on selection in tree view in this editor
+										</para>
+									</listitem>
+								</itemizedlist>
+							</listitem>
+						</itemizedlist>
+					</listitem>
+					<listitem>
+    					<para> <emphasis role="bold">Description panel</emphasis></para>
+    					<itemizedlist>
+							<listitem>
+								<para>
+									Provides the same description that can still be edited in Designer's <emphasis role="bold">Description View</emphasis>
+								</para>
+								<itemizedlist>
+									<listitem>
+										<para>
+											Description editing is driven by selection in tree view in this editor
+										</para>
+									</listitem>
+								</itemizedlist>
+							</listitem>
+						</itemizedlist>
+					</listitem>
+    			</itemizedlist>
+    			</para>
+		
+				<figure id="model-editor-actions-tab-image">
+					<title>Model Editor Tab</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/new-model-editor-page-actions.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<figure id="model-editor-properties-tab-image">
+					<title>Model Editor Tab</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/new-model-editor-properties-tab.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
 			<section id="diagram-editor-section">
 				<title>Diagram Editor</title>
 				<para>The Diagram Editor  provides a graphical view of the a set of model components and their relationships.</para>
@@ -2156,9 +2353,32 @@
 				through a single, uniform API. A <emphasis role="bold">VDB</emphasis> contains models, which define the structural 
 				characteristics of data sources, views, and Web services. The <emphasis role="bold">VDB Editor</emphasis>, provides 
 				the means to manage the contents of the <emphasis role="bold">VDB</emphasis> as well as its deployable (validation) state.</para>
-			<para>The VDB Editor, shown below, contains a upper and lower panels. The upper panel contains tabs for managing your 
-			VDB's Models, UDF (User Defined Functions) jars and Other Files you wish to include in your VDB. The 
-			lower panel contains tabs for managing Data Roles, VDB Properties, Description and Translator Overrides. </para>
+			<para>The VDB Editor, shown below, contains a number of tabs for setting and editing the various allowable properties
+			and contents of your VDB. These tabs enable management of Models, UDF (User Defined Functions) jars and Other Files you wish to include in your VDB,  
+			tabs for managing Data Roles, VDB Properties, Description and Translator Overrides. </para>
+			<para>In our 11.1 release, we've improved usability by adding a couple more options to the toolbar.
+			</para>
+			<itemizedlist>
+			    <listitem>
+                    <para>
+                        <emphasis role="bold">Deploy</emphasis>
+                        - Performs the same operation as <emphasis role="bold">Modeling.... > Deploy</emphasis> action.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis role="bold">Test</emphasis>
+                        - Performs the same operation as <emphasis role="bold">Modeling....  > Execute VDB</emphasis> action.
+                    </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis role="bold">Save as XML</emphasis>
+                        - Performs the same function as the previous <emphasis role="bold">Modeling...  > Generate Dynamic VDB</emphasis> action by
+                        generating an XML version of the *.vdb archive and saving it to a workspace location or to your local file system.
+                    </para>
+                </listitem>
+			</itemizedlist>
 			<figure>
 				<title>VDB Editor</title>
 				<mediaobject>
@@ -2167,8 +2387,9 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
+			<para>Note that Deploy and Test actions require you've defined and connected to a default server.</para>
 			<para>You can manage your VDB contents by using the <emphasis>Add</emphasis> or <emphasis>Remove</emphasis> models 
-				via the buttons at the right.</para>
+				via the buttons below the Models panel.</para>
 			<para>Set individual model visibility via the <emphasis>Visibility</emphasis> checkbox for each model. 
 				This provides low level data access security by removing specific models and their metadata contents from schema exposed
 				in GUI tools.</para>

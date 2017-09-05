@@ -239,7 +239,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
      */
     private void createOverviewSection(Composite parent) {
         Section section = getToolkit().createSection(parent, 
-        		ExpandableComposite.TWISTIE|ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
+        		ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
         String desc = Messages.modelName + SPACE + SPACE + 
         		modelResource.getItemName() + TAB +
         		Messages.location + SPACE + 
@@ -485,16 +485,16 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
         section.setClient(composite);
     }
     
-    private Label createLabelAndTextField(Composite parent, String labelText, String textText) {
-        Label theLabel = getToolkit().createLabel(parent, labelText);
-        blueForeground(theLabel);
-
-        Label textLabel = getToolkit().createLabel(parent, textText);
-        GridDataFactory.fillDefaults().grab(true, false).span(1, 1).applyTo(textLabel);
-        blueForeground(textLabel);
-        
-        return textLabel;
-    }
+//    private Label createLabelAndTextField(Composite parent, String labelText, String textText) {
+//        Label theLabel = getToolkit().createLabel(parent, labelText);
+//        blueForeground(theLabel);
+//
+//        Label textLabel = getToolkit().createLabel(parent, textText);
+//        GridDataFactory.fillDefaults().grab(true, false).span(1, 1).applyTo(textLabel);
+//        blueForeground(textLabel);
+//        
+//        return textLabel;
+//    }
     
 	private void createTabbedPanel(Composite parent) {
         TabFolder tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER);
@@ -560,16 +560,16 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     	return composite;
     }
     
-    private void createAdvancedSection(Composite parent) {
-        Section section = getToolkit().createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
-        section.setText(Messages.advanced);
-        section.setDescription(Messages.additionalModelInformation);
-        GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(section);
-        
-        Composite composite = getToolkit().createComposite(section);
-        GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).spacing(5, 5).applyTo(composite);
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
-    }
+//    private void createAdvancedSection(Composite parent) {
+//        Section section = getToolkit().createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
+//        section.setText(Messages.advanced);
+//        section.setDescription(Messages.additionalModelInformation);
+//        GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(section);
+//        
+//        Composite composite = getToolkit().createComposite(section);
+//        GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).spacing(5, 5).applyTo(composite);
+//        GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
+//    }
     
     private Composite createDescriptionPanel(Composite parent) {
         Composite composite = getToolkit().createComposite(parent);
@@ -685,7 +685,6 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     	Shell shell = UiPlugin.getDefault().getCurrentWorkbenchWindow().getShell();
     	// Get Selection and lauch dialog
     	
-    	ISelection selection = modelTreeViewer.getSelection();
     	if( getSelectedObject() instanceof EObject ) {
     		EObject eObj = (EObject)getSelectedObject();
     		String name = ModelObjectUtilities.getName(eObj);
@@ -945,51 +944,41 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     class EmptySelectionProvider implements ISelectionProvider {
 		@Override
 		public void addSelectionChangedListener(ISelectionChangedListener listener) {
-			// TODO Auto-generated method stub
-			
+
 		}
 	
 		@Override
 		public ISelection getSelection() {
-			// TODO Auto-generated method stub
 			return new StructuredSelection(modelResource);
 		}
 	
 		@Override
 		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-			// TODO Auto-generated method stub
-			
 		}
 	
 		@Override
 		public void setSelection(ISelection selection) {
-			// TODO Auto-generated method stub
-			
+
 		}
     }
 
 	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public ISelection getSelection() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setSelection(ISelection selection) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
