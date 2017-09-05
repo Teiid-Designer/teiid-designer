@@ -125,7 +125,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
     /**
      * Generate the dynamic xml from the xmi vdb
      */
-    public void generate() {
+    public void generate(final boolean ignoreWarning) {
         if (!isGenerateRequired())
             return;
 
@@ -171,7 +171,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 		        				
 		        				String title = DqpUiConstants.UTIL.getString("GenerateDynamicVdbManager.generateDynamicVdbStatus");
 		        				
-				            	if( vdbStatus.getSeverity() == IStatus.WARNING ) {
+				            	if( vdbStatus.getSeverity() == IStatus.WARNING && !ignoreWarning ) {
 				            		ListMessageDialog.openWarning(
 				            				UiUtil.getWorkbenchShellOnlyIfUiThread(), 
 				            				title,

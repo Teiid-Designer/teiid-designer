@@ -226,7 +226,7 @@ public class GenerateDynamicVdbDialog extends ScrollableTitleAreaDialog implemen
 			@Override
 			public void modifyText(final ModifyEvent event) {
 				vdbManager.setOutputVdbName(dynamicVdbName.getText());
-				resetDynamicVdb();
+				resetDynamicVdb(true);
 				validatePage();
 			}
 		});
@@ -244,7 +244,7 @@ public class GenerateDynamicVdbDialog extends ScrollableTitleAreaDialog implemen
 			@Override
 			public void modifyText(ModifyEvent e) {
 				vdbManager.setVersion(vdbVersionText.getText());
-				resetDynamicVdb();
+				resetDynamicVdb(true);
 				validatePage();
 			}
 		});
@@ -260,7 +260,7 @@ public class GenerateDynamicVdbDialog extends ScrollableTitleAreaDialog implemen
 			@Override
 			public void modifyText(final ModifyEvent event) {
 				vdbManager.setOutputVdbFileName(dynamicVdbFileName.getText());
-				resetDynamicVdb();
+				resetDynamicVdb(true);
 				validatePage();
 			}
 		});
@@ -281,7 +281,7 @@ public class GenerateDynamicVdbDialog extends ScrollableTitleAreaDialog implemen
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				vdbManager.setExcludeSourceMetadata(excludeSourceDdlButton.getSelection());
-				resetDynamicVdb();
+				resetDynamicVdb(true);
 				validatePage();
 			}
 		});
@@ -303,16 +303,16 @@ public class GenerateDynamicVdbDialog extends ScrollableTitleAreaDialog implemen
                 //
                 // Reset the dynamic vdb
                 //
-                resetDynamicVdb();
+                resetDynamicVdb(true);
             }
         });
 
 		return thePanel;
 	}
     
-    private void resetDynamicVdb() {
+    private void resetDynamicVdb(boolean ignoreWarning) {
         vdbManager.setDynamicVdb(null);
-        vdbManager.generate();
+        vdbManager.generate(ignoreWarning);
 		try {
 			refreshXml();
 		} catch (Exception ex) {
@@ -468,7 +468,7 @@ public class GenerateDynamicVdbDialog extends ScrollableTitleAreaDialog implemen
 		}
 		resetButton.setEnabled(canEdit);
 		if( !canEdit ) {
-			vdbManager.generate();
+			vdbManager.generate(false);
             //IStatus status = vdbManager.getStatus();
             setXmlContents(getVdbXml());
 		}
@@ -669,7 +669,7 @@ public class GenerateDynamicVdbDialog extends ScrollableTitleAreaDialog implemen
 		// TODO Auto-generated method stub
 		Control control = super.createContents(parent);
 		
-		resetDynamicVdb();
+		resetDynamicVdb(false);
 		
 		return control;
 	}

@@ -1797,7 +1797,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         { // execute VDB button
         	exportDynamicVdbButton = WidgetFactory.createButton(extraButtonPanel, i18n("saveAsXml"), //$NON-NLS-1$
                     GridData.HORIZONTAL_ALIGN_BEGINNING);
-        	exportDynamicVdbButton.setToolTipText(i18n("saveAsXmlTooltip"));
+        	exportDynamicVdbButton.setToolTipText(i18n("saveAsXmlTooltip")); //$NON-NLS-1$
         	exportDynamicVdbButton.addSelectionListener(new SelectionAdapter() {
                 /**
                  * {@inheritDoc}

@@ -209,7 +209,7 @@ public class GenerateDynamicVdbPageTwo extends AbstractWizardPage implements Dqp
             generateXmlButton.addSelectionListener(new SelectionAdapter() {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    vdbManager.generate();
+                    vdbManager.generate(false);
                     refreshXml();
                     validatePage();
                 }
