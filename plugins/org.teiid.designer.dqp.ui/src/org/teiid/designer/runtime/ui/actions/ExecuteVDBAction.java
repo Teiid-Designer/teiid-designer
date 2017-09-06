@@ -25,6 +25,7 @@ import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbDialog;
 import org.teiid.designer.runtime.ui.vdb.ExecuteVdbWorker;
 import org.teiid.designer.runtime.ui.vdb.VdbConstants;
+import org.teiid.designer.runtime.ui.vdb.VdbErrorChecker;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.actions.ModelActionConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -103,14 +104,6 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
         IFile vdb = selectedVDB;
 
         try {
-            if (!isVdbSyncd(vdb)) {
-                Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
-                String title = UTIL.getString("VdbNotSyncdDialog.title"); //$NON-NLS-1$
-                String msg = UTIL.getString("VdbNotSyncdDialog.msg"); //$NON-NLS-1$
-                if (!MessageDialog.openQuestion(shell, title, msg))
-                    return;
-            }
-
             if (vdb == null) {
                 ExecuteVdbDialog dialog = new ExecuteVdbDialog(worker.getShell(), null);
 
@@ -119,6 +112,18 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
                 if (dialog.getReturnCode() == Window.OK) {
                     vdb = dialog.getSelectedVdb();
                 }
+            }            
+            
+            if (!isVdbSyncd(vdb)) {
+                Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
+                String title = UTIL.getString("VdbNotSyncdDialog.title"); //$NON-NLS-1$
+                String msg = UTIL.getString("VdbNotSyncdDialog.msg"); //$NON-NLS-1$
+                if (!MessageDialog.openQuestion(shell, title, msg))
+                    return;
+            }
+            
+            if( VdbErrorChecker.hasErrors(vdb, false)) {
+            	return;
             }
 
             if (vdb != null) {

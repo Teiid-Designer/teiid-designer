@@ -41,6 +41,7 @@ import org.teiid.designer.runtime.ui.connection.CreateVdbDataSourceAction;
 import org.teiid.designer.runtime.ui.vdb.DeployVdbDialog;
 import org.teiid.designer.runtime.ui.vdb.VdbAgeChecker;
 import org.teiid.designer.runtime.ui.vdb.VdbDeployer;
+import org.teiid.designer.runtime.ui.vdb.VdbErrorChecker;
 import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
 import org.teiid.designer.ui.actions.ISelectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
@@ -145,6 +146,10 @@ public class DeployVdbAction extends SortableSelectionAction implements ISelecti
         
         for (IFile nextVDB : this.selectedVDBs) {
             boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(nextVDB);
+            
+            if( doDeploy) {
+            	doDeploy = !VdbErrorChecker.hasErrors(nextVDB, true);
+            }
 
             if( doDeploy ) {
             	doDeploy = VdbAgeChecker.doDeploy(nextVDB, teiidServer.getServerVersion());

@@ -76,14 +76,16 @@ public class ExecuteVdbAction extends Action {
             return;
 
         try {
-            if (!isVdbSyncd(vdb)) {
+            if (!isVdbSyncd(vdb) ) {
                 Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
                 String title = UTIL.getString("VdbNotSyncdDialog.title"); //$NON-NLS-1$
                 String msg = UTIL.getString("VdbNotSyncdDialog.msg"); //$NON-NLS-1$
                 if (!MessageDialog.openQuestion(shell, title, msg))
                     return;
             }
-
+            if( !VdbErrorChecker.hasErrors(vdb, false)) {
+            	return;
+            }
             worker.run(vdb);
         } catch (Exception ex) {
             ErrorHandler.toExceptionDialog(ex);
