@@ -185,12 +185,12 @@ public class ExecutionAdmin implements IExecutionAdmin {
         ArgCheck.isNotNull(deploymentName, "deploymentName"); //$NON-NLS-1$
         ArgCheck.isNotNull(inStream, "inStream"); //$NON-NLS-1$
 
-        this.vdbManager.deploy(deploymentName, inStream);
+        this.vdbManager.deployDynamicVdb(deploymentName, inStream);
     }
     
     @Override
     public String getSchema(String vdbName, String vdbVersion, String modelName) throws Exception {
-        return admin.getSchema(vdbName, vdbVersion, modelName, null, null);
+        return vdbManager.getSchema(vdbName, vdbVersion, modelName, null, null);
     }
         
     @Override
