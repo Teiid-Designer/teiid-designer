@@ -83,7 +83,7 @@ public class ExecuteVdbAction extends Action {
                 if (!MessageDialog.openQuestion(shell, title, msg))
                     return;
             }
-            if( !VdbErrorChecker.hasErrors(vdb, false)) {
+            if( VdbErrorChecker.hasErrors(vdb, false)) {
             	return;
             }
             worker.run(vdb);
