@@ -1812,7 +1812,14 @@ public class DiagramEditor extends GraphicalEditor
         boolean useExistingController = false;
 
         // get the new diagram's controller class (if exists)
-        final Class controllerClass = DiagramUiPlugin.getDiagramTypeManager().getDiagram((getDiagram()).getType()).getDiagramControllerClass();
+        Diagram theDiagram = getDiagram();
+        Class controllerClass = null;
+        if( theDiagram != null ) {
+        	IDiagramType theNextDiagramType = DiagramUiPlugin.getDiagramTypeManager().getDiagram(theDiagram.getType());
+        	if( theNextDiagramType != null ) {
+        		controllerClass = theNextDiagramType.getDiagramControllerClass();
+        	}
+        }
 
         // Clean up and remove current controller if exists.
         // Check for non-null controller and if non-null, then is it the same class as the new diagram type.
