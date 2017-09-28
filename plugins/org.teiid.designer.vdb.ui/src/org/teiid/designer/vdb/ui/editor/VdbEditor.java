@@ -203,6 +203,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String ALL = "ALL"; //$NON-NLS-1$
     static final String SOURCE = "SOURCE"; //$NON-NLS-1$
     static final String VIEW = "VIEW"; //$NON-NLS-1$
+    static final String XMLDOC = "XMLDOC"; //$NON-NLS-1$
+    static final String WEB = "WEB"; //$NON-NLS-1$
     static final String FILTER = "Filter"; //$NON-NLS-1$
     
 //    static final String WEB_SERVICES_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
@@ -2442,7 +2444,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     	// Model Type Combo
     	// Model Types = ALL, VIEW and SOURCE
     	modelTypeCombo = new Combo(filterGroup,  SWT.NONE);
-    	modelTypeCombo.setItems(new String[] {ALL, SOURCE, VIEW} );
+    	modelTypeCombo.setItems(new String[] {ALL, SOURCE, VIEW, WEB, XMLDOC} );
     	modelTypeCombo.select(0);
     	GridDataFactory.fillDefaults().grab(false, false).hint(90, 10).applyTo(modelTypeCombo);
     	
@@ -2789,6 +2791,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         				 return ModelIdentifier.isRelationalSourceModel(((VdbModelEntry) element).findFileInWorkspace());
         			 } else if( modelType.equalsIgnoreCase(VIEW)) {
         				 return ModelIdentifier.isRelationalViewModel(((VdbModelEntry) element).findFileInWorkspace());
+        			 } else if( modelType.equalsIgnoreCase(XMLDOC) ) {
+        				 return ModelIdentifier.isXmlViewModel(((VdbModelEntry) element).findFileInWorkspace());
+        			 } else if( modelType.equalsIgnoreCase(WEB) ) {
+        				 return ModelIdentifier.isWebServicesViewModel(((VdbModelEntry) element).findFileInWorkspace());
         			 }
         			 return false;
             	 }

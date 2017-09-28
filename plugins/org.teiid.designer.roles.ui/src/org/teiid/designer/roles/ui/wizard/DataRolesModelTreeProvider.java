@@ -48,7 +48,9 @@ import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.View;
 import org.teiid.designer.metamodels.webservice.Interface;
 import org.teiid.designer.metamodels.webservice.Operation;
+import org.teiid.designer.metamodels.webservice.WebServicePackage;
 import org.teiid.designer.metamodels.xml.XmlDocument;
+import org.teiid.designer.metamodels.xml.XmlDocumentPackage;
 import org.teiid.designer.roles.Crud;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.roles.ui.Messages;
@@ -85,7 +87,8 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
     static final String ALL = "ALL"; //$NON-NLS-1$
     static final String SOURCE = "SOURCE"; //$NON-NLS-1$
     static final String VIEW = "VIEW"; //$NON-NLS-1$
-    
+    static final String XMLDOC = "XMLDOC"; //$NON-NLS-1$
+    static final String WEB = "WEB"; //$NON-NLS-1$
 
     // private Map<Object, Permission> permissionsMap;
     private PermissionHandler handler;
@@ -666,6 +669,10 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 						if (!SOURCE.equalsIgnoreCase(type) ) return false;
 					} else if( modelType.equalsIgnoreCase(VIEW)) {
 						if( !VIEW.equalsIgnoreCase(type)) return false;
+					} else if( modelType.equalsIgnoreCase(WEB)) {
+						if( !WEB.equalsIgnoreCase(type)) return false;
+					} else if( modelType.equalsIgnoreCase(XMLDOC)) {
+						if( !XMLDOC.equalsIgnoreCase(type)) return false;
 					}
 	       		}
 				
@@ -683,7 +690,14 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
         if (ModelType.PHYSICAL_LITERAL == mType) {
         	return SOURCE;
         }
-
+        
+        String mmURI = ma.getPrimaryMetamodelUri();
+        if( mmURI.equalsIgnoreCase(WebServicePackage.eNS_URI)) {
+        	return WEB;
+        }
+        if( mmURI.equalsIgnoreCase(XmlDocumentPackage.eNS_URI)) {
+        	return XMLDOC;
+        }
         return VIEW;
 	}
 	

@@ -52,6 +52,8 @@ public class CrudPanel extends DataRolePanel {
     static final String ALL = "ALL"; //$NON-NLS-1$
     static final String SOURCE = "SOURCE"; //$NON-NLS-1$
     static final String VIEW = "VIEW"; //$NON-NLS-1$
+    static final String XMLDOC = "XMLDOC"; //$NON-NLS-1$
+    static final String WEB = "WEB"; //$NON-NLS-1$
     static final String FILTER = "Filter"; //$NON-NLS-1$
     
     // Model Filter Variables
@@ -286,7 +288,7 @@ public class CrudPanel extends DataRolePanel {
     	// Model Type Combo
     	// Model Types = ALL, VIEW and SOURCE
     	modelTypeCombo = new Combo(filterGroup,  SWT.NONE);
-    	modelTypeCombo.setItems(new String[] {ALL, SOURCE, VIEW} );
+    	modelTypeCombo.setItems(new String[] {ALL, SOURCE, VIEW, WEB, XMLDOC} );
     	modelTypeCombo.select(0);
     	GridDataFactory.fillDefaults().grab(false, false).hint(90, 10).applyTo(modelTypeCombo);
     	
