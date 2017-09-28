@@ -11,33 +11,56 @@ import static org.teiid.designer.ui.PluginConstants.Prefs.General.AUTO_WILL_TOGG
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.roles.Crud;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.roles.ui.Messages;
+import org.teiid.designer.roles.ui.RolesUiConstants;
+import org.teiid.designer.roles.ui.RolesUiPlugin;
 import org.teiid.designer.roles.ui.wizard.DataRoleWizard;
 import org.teiid.designer.roles.ui.wizard.dialogs.ColumnMaskingDialog;
 import org.teiid.designer.roles.ui.wizard.dialogs.RowBasedSecurityDialog;
 import org.teiid.designer.ui.UiPlugin;
-
+import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.Label;
 /**
  *
  */
 public class CrudPanel extends DataRolePanel {
+    static final String ALL = "ALL"; //$NON-NLS-1$
+    static final String SOURCE = "SOURCE"; //$NON-NLS-1$
+    static final String VIEW = "VIEW"; //$NON-NLS-1$
+    static final String FILTER = "Filter"; //$NON-NLS-1$
+    
+    // Model Filter Variables
+
+    Combo modelTypeCombo;
+    Button clearFilterButton;
     
 	private TreeViewer treeViewer;
+	
 	/**
      * @param parent
      * @param wizard
@@ -51,6 +74,8 @@ public class CrudPanel extends DataRolePanel {
 	 */
 	@Override
 	void createControl() {
+		createModelFilterGroup(getPrimaryPanel());
+		
         treeViewer = new TreeViewer(getPrimaryPanel(), SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
         Tree tree = treeViewer.getTree();
 
@@ -95,6 +120,10 @@ public class CrudPanel extends DataRolePanel {
 
         TreeColumn treeColumn = new TreeColumn(tree, SWT.LEFT);
         treeColumn.setText(Messages.model);
+        
+        treeViewer.getTree().setSortColumn(treeColumn);
+        treeViewer.getTree().setSortDirection(SWT.UP);
+        treeViewer.setComparator(getTreeProvider().getComparator(treeViewer, treeColumn));
 
         TreeViewerColumn treeViewerColumn = new TreeViewerColumn(treeViewer, SWT.LEFT);
         treeViewerColumn.getColumn().setText(Messages.security);
@@ -226,6 +255,71 @@ public class CrudPanel extends DataRolePanel {
     @Override
     public void refresh() {
     	treeViewer.refresh();
+    }
+    
+    private void createModelFilterGroup(Composite parent) {
+    	Composite filterGroup = WidgetFactory.createGroup(parent, SWT.BORDER);
+    	GridDataFactory.fillDefaults().grab(true, false).applyTo(filterGroup);
+    	GridLayoutFactory.fillDefaults().numColumns(4).margins(3, 3).spacing(3, 3).applyTo(filterGroup);
+    	
+    	// Filter Label
+    	Label tempLabel = new Label(filterGroup, SWT.NONE);
+    	tempLabel.setText(FILTER);
+    	
+    	// Filter Text Field
+    	final Text text = new Text(filterGroup, SWT.BORDER | SWT.FILL);
+    	GridDataFactory.fillDefaults().grab(true, false).applyTo(text);
+
+    	getTreeProvider().setModelFilter(StringConstants.EMPTY_STRING, ALL);
+    	
+    	text.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				getTreeProvider().setModelFilter(text.getText(), modelTypeCombo.getText());
+				treeViewer.refresh();
+			}
+		});
+    	
+    	
+    	
+    	// Model Type Combo
+    	// Model Types = ALL, VIEW and SOURCE
+    	modelTypeCombo = new Combo(filterGroup,  SWT.NONE);
+    	modelTypeCombo.setItems(new String[] {ALL, SOURCE, VIEW} );
+    	modelTypeCombo.select(0);
+    	GridDataFactory.fillDefaults().grab(false, false).hint(90, 10).applyTo(modelTypeCombo);
+    	
+    	modelTypeCombo.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				getTreeProvider().setModelFilter(text.getText(), modelTypeCombo.getText());
+				treeViewer.refresh();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+    	
+    	// Clear Filter Button
+    	// Set filter text to "", type to ALL
+    	clearFilterButton = WidgetFactory.createButton(filterGroup, SWT.PUSH);
+    	clearFilterButton.setImage(RolesUiPlugin.getInstance().getImage(RolesUiConstants.Images.CLEAR));
+    	clearFilterButton.setToolTipText("Clear Filter");  //$NON-NLS-1$
+    	clearFilterButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				modelTypeCombo.select(0);
+				text.setText(StringConstants.EMPTY_STRING);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
     }
 
 }

@@ -39,7 +39,7 @@ public abstract class DataRolePanel {
     
 	private void createPanel(Composite parent) {
     	primaryPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1, 2);
-    	primaryPanel.setLayout(new GridLayout(2, false));
+    	primaryPanel.setLayout(new GridLayout(1, false));
 	}
 	
 	public Composite getPrimaryPanel() {

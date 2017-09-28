@@ -41,7 +41,7 @@ public interface RolesUiConstants {
         public static final String BLUE_BALL_ICON = PC.CVIEW16 + "blue-ball-16x16.png"; //$NON-NLS-1$
         public static final String GREEN_BALL_ICON = PC.CVIEW16 + "green-ball-16x16.png"; //$NON-NLS-1$
         public static final String GRAY_BALL_ICON = PC.CVIEW16 + "grey-ball-16x16.png"; //$NON-NLS-1$
-        
+        public static final String CLEAR = PC.CVIEW16 + "clear.gif"; //$NON-NLS-1$
         
     }
 }

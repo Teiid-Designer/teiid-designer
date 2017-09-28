@@ -10,6 +10,7 @@ package org.teiid.designer.roles.ui.wizard;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
@@ -18,9 +19,17 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.ui.dialogs.FilteredList.FilterMatcher;
+import org.eclipse.ui.internal.ide.StringMatcher;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringConstants;
@@ -52,6 +61,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * @since 8.0
  */
+@SuppressWarnings("restriction")
 public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableLabelProvider {
     private static final Object[] NO_CHILDREN = new Object[0];
     private ITreeContentProvider modelProvider = ModelUtilities.getModelContentProvider();
@@ -72,11 +82,17 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
     private static final int GRAY_CHECKED = 2;
     private static final int GRAY_UNCHECKED = 3;
     
+    static final String ALL = "ALL"; //$NON-NLS-1$
+    static final String SOURCE = "SOURCE"; //$NON-NLS-1$
+    static final String VIEW = "VIEW"; //$NON-NLS-1$
+    
 
     // private Map<Object, Permission> permissionsMap;
     private PermissionHandler handler;
 
     private Resource[] resources;
+    
+    ModelFilterMatcher modelFilterMatcher = new ModelFilterMatcher();
 
     public DataRolesModelTreeProvider( ) {
         super();
@@ -210,14 +226,25 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
         	List<Resource> filteredResources = new ArrayList<Resource>();
         	for( Resource res : allVdbResources ) {
         		if( ! res.getURI().toFileString().toUpperCase().endsWith(".XSD") ) { //$NON-NLS-1$
-        			filteredResources.add(res);
+        				filteredResources.add(res);
         		}
         	}
             resources = filteredResources.toArray( new Resource[0]); 
         }
+        
+        
+        // now filter elements for the user
+    	List<Resource> finalResources = new ArrayList<Resource>();
+    	for( Resource res : resources ) {
+			if( modelFilterMatcher.match(res) ) {
+				finalResources.add(res);
+			}
+    	}
+
 
         reInitializePermissions();
-        return resources;
+        
+        return finalResources.toArray( new Resource[0]); 
     }
 
     /*
@@ -577,6 +604,156 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 	
 	public void handlePermissionChanged(Permission permission) {
 		this.handler.handlePermissionChanged(permission);
+	}
+	
+	public void setModelFilter(String filterString, String type) {
+		modelFilterMatcher.setFilter(filterString, type);
+	}
+	
+	public ModelNameComparator getComparator(TreeViewer viewer, TreeColumn column) {
+		ModelNameComparator mSorter = new ModelNameComparator(viewer, column);
+		
+		mSorter.setSorter(mSorter, ModelNameComparator.ASC);
+		
+		return mSorter;
+	}
+	
+	private class ModelFilterMatcher implements FilterMatcher {
+		StringMatcher fMatcher;
+		
+		String modelType = ALL;
+
+		public ModelFilterMatcher() {
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void setFilter(String pattern, boolean ignoreCase,
+				boolean ignoreWildCards) {
+			fMatcher = new StringMatcher(pattern + '*', ignoreCase,ignoreWildCards);
+		}
+		
+		public void setFilter(String pattern, String type) {
+			this.setFilter(pattern, false, false);
+			this.modelType = type;
+		}
+
+		@Override
+		public boolean match(Object element) {
+			String name = null;
+
+			if(  element instanceof Resource ) {
+				Resource res = (Resource)element;
+				
+				String lastSegment = ((Resource)element).getURI().lastSegment();
+				if( lastSegment.toUpperCase().endsWith(".XMI")) {
+					name = lastSegment.substring(0, lastSegment.length()-4);
+				}
+
+				if( name == null ) {
+					return false;
+				}
+				
+	       		if( !modelType.equalsIgnoreCase(ALL) ) {
+		       		String type = null;
+		       		try {
+						type = getModelType(res);
+					} catch (ModelerCoreException e) {
+						e.printStackTrace();
+					}
+		       		
+					if( modelType.equalsIgnoreCase(SOURCE) ) {
+						if (!SOURCE.equalsIgnoreCase(type) ) return false;
+					} else if( modelType.equalsIgnoreCase(VIEW)) {
+						if( !VIEW.equalsIgnoreCase(type)) return false;
+					}
+	       		}
+				
+    		}
+			if( name == null ) return false;
+			
+			return fMatcher.match(name);
+		}
+	}
+	
+	private String getModelType(Resource res) throws ModelerCoreException {
+		EObject firstEObj = res.getContents().get(0);
+        ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
+        ModelType mType = ma.getModelType();
+        if (ModelType.PHYSICAL_LITERAL == mType) {
+        	return SOURCE;
+        }
+
+        return VIEW;
+	}
+	
+	private class ModelNameComparator extends ViewerComparator {
+
+		public static final int ASC = 1;
+		public static final int DESC = -1;
+
+		private int direction = 0;
+		private TreeColumn column;
+		private TreeViewer viewer;
+		
+        public ModelNameComparator(TreeViewer viewer, TreeColumn column) {
+    		this.column = column;
+    		this.viewer = viewer;
+    		SelectionAdapter selectionAdapter = createSelectionAdapter();
+    		this.column.addSelectionListener(selectionAdapter);
+		}
+        
+    	private SelectionAdapter createSelectionAdapter() {
+    		return new SelectionAdapter() {
+
+    			@Override
+    			public void widgetSelected(SelectionEvent e) {
+					int tdirection = ModelNameComparator.this.direction;
+					if (tdirection == ASC) {
+						setSorter(ModelNameComparator.this, DESC);
+					} else if (tdirection == DESC) {
+						setSorter(ModelNameComparator.this, ASC);
+					}
+    			}
+    		};
+    	}
+    	
+    	
+
+    	public void setSorter(ModelNameComparator sorter, int direction) {
+			sorter.direction = direction;
+			viewer.getTree().setSortDirection(direction == ASC ? SWT.DOWN : SWT.UP);
+			viewer.refresh();
+    	}
+
+		@Override
+        public int compare( Viewer viewer,
+                            Object t1,
+                            Object t2 ) {
+			if( t1 instanceof Resource ) {
+	            Resource entry1 = (Resource)t1;
+	            Resource entry2 = (Resource)t2;
+		        
+		        int value = super.compare(viewer, entry1.getURI().lastSegment(), entry2.getURI().lastSegment());
+		        if( direction < 0 ) {
+		        	return value*(-1);
+		        }
+		        
+		        return value;
+			} else if( t1 instanceof EObject ) {
+	            ILabelProvider p = ModelUtilities.getEMFLabelProvider();
+	            EObject entry1 = (EObject)t1;
+	            EObject entry2 = (EObject)t2;
+		        
+		        int value = super.compare(viewer, p.getText(entry1), p.getText(entry2));
+		        if( direction < 0 ) {
+		        	return value*(-1);
+		        }
+		        
+		        return value;
+			}
+			return 0;
+        }
 	}
 
 }

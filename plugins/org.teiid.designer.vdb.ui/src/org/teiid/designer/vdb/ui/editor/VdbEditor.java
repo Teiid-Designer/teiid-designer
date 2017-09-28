@@ -58,6 +58,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -67,12 +68,14 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -84,13 +87,16 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.FilteredList.FilterMatcher;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.internal.misc.StringMatcher;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.EditorPart;
 import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -194,6 +200,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final int MODELS_PANEL_IMAGE_COL_WIDTH = 50;  // Image Cols Width
     static final int MODELS_PANEL_MODELNAME_COL_WIDTH_MIN = 200;  // Min ModelName Width
     
+    static final String ALL = "ALL"; //$NON-NLS-1$
+    static final String SOURCE = "SOURCE"; //$NON-NLS-1$
+    static final String VIEW = "VIEW"; //$NON-NLS-1$
+    static final String FILTER = "Filter"; //$NON-NLS-1$
+    
 //    static final String WEB_SERVICES_VIEW_MODEL_URI = "http://www.metamatrix.com/metamodels/WebService"; //$NON-NLS-1$
 
     static String i18n( final String id ) {
@@ -227,6 +238,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     private UserDefinedPropertiesPanel userDefinedPropertiesPanel;
 
     DescriptionPanel descriptionPanel;
+    
+    // Model Filter Variables
+    FilterMatcher fFilterMatcher = new DefaultFilterMatcher();
+    Combo modelTypeCombo;
+    Button clearFilterButton;
     
     boolean disposed = false;
 
@@ -1962,6 +1978,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createModelsSection( Composite parent ) {
+    	createModelFilterGroup(parent);
+    	
         modelsGroup = new TableAndToolBar(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, 1,
                                           new DefaultTableProvider<VdbModelEntry>() {
                                               /**
@@ -2389,7 +2407,75 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         });
 
         modelsGroup.setInput(vdb);
+        modelsGroup.getTable().getViewer().setFilters(new ModelViewerFilter());
+        // add Sorter
+        modelsGroup.getTable().getViewer().setComparator(new ModelNameComparator(modelsGroup.getTable().getViewer()));
         packModelsGroup();
+    }
+    
+    private void createModelFilterGroup(Composite parent) {
+    	Composite filterGroup = WidgetFactory.createGroup(parent, SWT.BORDER);
+    	GridDataFactory.fillDefaults().grab(true, false).applyTo(filterGroup);
+    	GridLayoutFactory.fillDefaults().numColumns(4).margins(3, 3).spacing(3, 3).applyTo(filterGroup);
+    	
+    	// Filter Label
+    	Label tempLabel = new Label(filterGroup, SWT.NONE);
+    	tempLabel.setText(FILTER);
+    	
+    	// Filter Text Field
+    	final Text text = new Text(filterGroup, SWT.BORDER | SWT.FILL);
+    	GridDataFactory.fillDefaults().grab(true, false).applyTo(text);
+
+    	fFilterMatcher.setFilter(StringConstants.EMPTY_STRING, false, false);
+    	
+    	text.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				fFilterMatcher.setFilter(text.getText(), false, false);
+				modelsGroup.getTable().getViewer().refresh();
+			}
+		});
+    	
+    	
+    	
+    	// Model Type Combo
+    	// Model Types = ALL, VIEW and SOURCE
+    	modelTypeCombo = new Combo(filterGroup,  SWT.NONE);
+    	modelTypeCombo.setItems(new String[] {ALL, SOURCE, VIEW} );
+    	modelTypeCombo.select(0);
+    	GridDataFactory.fillDefaults().grab(false, false).hint(90, 10).applyTo(modelTypeCombo);
+    	
+    	modelTypeCombo.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				modelsGroup.getTable().getViewer().refresh();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+    	
+    	// Clear Filter Button
+    	// Set filter text to "", type to ALL
+    	clearFilterButton = WidgetFactory.createButton(filterGroup, SWT.PUSH);
+    	clearFilterButton.setImage(VdbUiPlugin.singleton.getImage(VdbUiConstants.Images.CLEAR));
+    	clearFilterButton.setToolTipText("Clear Filter");  //$NON-NLS-1$
+    	clearFilterButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				modelTypeCombo.select(0);
+				text.setText(StringConstants.EMPTY_STRING);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
     }
 
     /**
@@ -2684,4 +2770,112 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             }
         }
     }
+    
+    class ModelViewerFilter extends ViewerFilter {
+    	
+		@Override
+		public boolean select(Viewer viewer, Object parentElement, Object element) {
+			 if (element instanceof Vdb) {
+				 return true;
+             } else if( element instanceof VdbModelEntry) {
+            	 boolean isModelFile = fFilterMatcher.match(element);
+            	 if( isModelFile ) {
+            		 String modelType = modelTypeCombo.getText();
+            		 if( modelType.equalsIgnoreCase(ALL) ) {
+            			 return true;
+            		 }
+            		 
+        			 if( modelType.equalsIgnoreCase(SOURCE) ) {
+        				 return ModelIdentifier.isRelationalSourceModel(((VdbModelEntry) element).findFileInWorkspace());
+        			 } else if( modelType.equalsIgnoreCase(VIEW)) {
+        				 return ModelIdentifier.isRelationalViewModel(((VdbModelEntry) element).findFileInWorkspace());
+        			 }
+        			 return false;
+            	 }
+             }
+			return false;
+		}
+    	
+    }
+    
+	private class DefaultFilterMatcher implements FilterMatcher {
+		private StringMatcher fMatcher;
+
+		public DefaultFilterMatcher() {
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void setFilter(String pattern, boolean ignoreCase,
+				boolean ignoreWildCards) {
+			fMatcher = new StringMatcher(pattern + '*', ignoreCase,
+					ignoreWildCards);
+		}
+
+		@Override
+		public boolean match(Object element) {
+			String name = null;
+			if(  element instanceof VdbModelEntry ) {
+    			name = ((VdbModelEntry)element).getName();
+    		} else return false;
+			
+			return fMatcher.match(name);
+		}
+	}
+	
+	private class ModelNameComparator extends ViewerComparator {
+
+		public static final int ASC = 1;
+		public static final int DESC = -1;
+
+		int direction = 1;
+		TableViewer viewer;
+		
+        public ModelNameComparator(TableViewer viewer) {
+    		this.viewer = viewer;
+    		SelectionAdapter selectionAdapter = createSelectionAdapter();
+    		viewer.getTable().getColumn(0).addSelectionListener(selectionAdapter);
+    		viewer.getTable().setSortColumn(viewer.getTable().getColumn(0));
+    		viewer.getTable().setSortDirection(SWT.UP);
+		}
+        
+    	private SelectionAdapter createSelectionAdapter() {
+    		return new SelectionAdapter() {
+
+    			@Override
+    			public void widgetSelected(SelectionEvent e) {
+					int tdirection = ModelNameComparator.this.direction;
+					if (tdirection == DESC) {
+						setSorter(ModelNameComparator.this, ASC);
+					} else if (tdirection == ASC) {
+						setSorter(ModelNameComparator.this, DESC);
+					}
+    			}
+    		};
+    	}
+    	
+    	
+
+    	public void setSorter(ModelNameComparator sorter, int direction) {
+			sorter.direction = direction;
+			viewer.getTable().setSortDirection(direction == ASC ? SWT.UP : SWT.DOWN);
+			viewer.refresh();
+    	}
+
+		@Override
+        public int compare( Viewer viewer,
+                            Object t1,
+                            Object t2 ) {
+			VdbModelEntry entry1 = (VdbModelEntry)t1;
+			VdbModelEntry entry2 = (VdbModelEntry)t2;
+	        
+	        int value = super.compare(viewer, entry1.getName(), entry2.getName());
+	        if( direction < 0 ) {
+	        	return value*(-1);
+	        }
+	        
+	        return value;
+
+        }
+	}
 }

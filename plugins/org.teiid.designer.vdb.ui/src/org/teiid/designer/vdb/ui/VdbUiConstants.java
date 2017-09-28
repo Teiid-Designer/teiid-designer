@@ -85,6 +85,7 @@ public interface VdbUiConstants {
         String REMOVE = CTOOL16 + "remove.png"; //$NON-NLS-1$
         String EDIT = CTOOL16 + "edit.png"; //$NON-NLS-1$
         String RESTORE_DEFAULT_VALUE = CTOOL16 + "restore-default-value.png"; //$NON-NLS-1$
+        String CLEAR = CTOOL16 + "clear.gif"; //$NON-NLS-1$
         
         String VDB_ICON = OBJ16 + "VDB.gif"; //$NON-NLS-1$
         String DYNAMIC_VDB_ICON = OBJ16 + "dynamic-vdb.png"; //$NON-NLS-1$

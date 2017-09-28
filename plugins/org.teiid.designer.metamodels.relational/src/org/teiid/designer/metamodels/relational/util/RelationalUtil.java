@@ -545,7 +545,7 @@ public class RelationalUtil {
     	for( IFile res : allProjectFiles ) {
     		if ( ModelUtil.isModelFile(res) ) {
     			ModelResource theMR = ModelUtil.getModel(res);
-    			if( theMR != null && theMR.getPrimaryMetamodelUri().equals(RelationalPackage.eNS_URI)) {
+    			if( theMR != null && RelationalPackage.eNS_URI.equals(theMR.getPrimaryMetamodelUri()) ) {
     				projectRelationalModels.add((MtkXmiResourceImpl)theMR.getEmfResource());
     			}
     		}
