@@ -512,6 +512,17 @@ public class MaterializedModelManager implements ReverseEngConstants {
 			if( StringUtilities.isEmpty(sourceModelName) ) {
 				return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 
 						TransformationPlugin.Util.getString("MaterializedModelManager_sourceModelNameIsUndefined")); //$NON-NLS-1$
+			} else {
+				// check for model name characters
+				// if JDG 7.1, then can't user anything but alpha/numeric/underscore
+				if(getJdgVersion() == JDG_VERSION.JDG_7_DOT_1 ) {
+					StringNameValidator validator = new StringNameValidator(new char[] {'_'});
+					String msg = validator.checkValidName(sourceModelName);
+					if( msg != null ) {
+						return new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 
+								TransformationPlugin.Util.getString("MaterializedModelManager_sourceModelNameInvalid", msg)); //$NON-NLS-1$
+					}
+				}
 			}
 	        
 	        if( jdgVersion == JDG_VERSION.JDG_7_DOT_1 ) {
