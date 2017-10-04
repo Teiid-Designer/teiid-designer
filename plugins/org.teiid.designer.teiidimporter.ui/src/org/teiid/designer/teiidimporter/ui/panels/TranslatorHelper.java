@@ -33,6 +33,7 @@ public class TranslatorHelper implements UiConstants {
     public static final String TEIID_FILE_DRIVER_84UP = "file"; //$NON-NLS-1$
     public static final String TEIID_GOOGLE_DRIVER_84UP = "google"; //$NON-NLS-1$
     public static final String TEIID_INFINISPAN_DRIVER_84UP = "infinispan"; //$NON-NLS-1$
+    public static final String TEIID_INFINISPAN_HOTROD_DRIVER_84UP = "infinispan.hotrod"; //$NON-NLS-1$
     public static final String TEIID_LDAP_DRIVER_84UP = "ldap"; //$NON-NLS-1$
     public static final String TEIID_SALESORCE_DRIVER_84UP = "salesforce"; //$NON-NLS-1$
     public static final String TEIID_SALESORCE__34_DRIVER_84UP = "salesforce-34"; //$NON-NLS-1$
@@ -57,6 +58,7 @@ public class TranslatorHelper implements UiConstants {
     public static final String HSQL = "hsql"; //$NON-NLS-1$
     public static final String HANA = "hana"; //$NON-NLS-1$
     public static final String INFINISPAN = "infinispan-cache"; //$NON-NLS-1$
+    public static final String INFINISPAN_HOTROD = "infinispan-hotrod"; //$NON-NLS-1$
 	public static final String INFORMIX = "informix"; //$NON-NLS-1$
     public static final String INGRES = "ingres"; //$NON-NLS-1$
     public static final String INGRES93 = "ingres93"; //$NON-NLS-1$
@@ -143,6 +145,10 @@ public class TranslatorHelper implements UiConstants {
 
         	if( (driverName.equals(TEIID_GOOGLE_DRIVER_84UP)|| driverName.contains(TEIID_GOOGLE_DRIVER_84UP)) && translatorNames.contains(GOOGLE_SPREADSHEET)) {
         		return GOOGLE_SPREADSHEET;
+        	}
+        	
+        	if( (driverName.equals(TEIID_INFINISPAN_HOTROD_DRIVER_84UP)|| driverName.contains(TEIID_INFINISPAN_HOTROD_DRIVER_84UP)) && translatorNames.contains(INFINISPAN_HOTROD)) {
+        		return INFINISPAN;
         	}
 
         	if( (driverName.equals(TEIID_INFINISPAN_DRIVER_84UP)|| driverName.contains(TEIID_INFINISPAN_DRIVER_84UP)) && translatorNames.contains(INFINISPAN)) {
