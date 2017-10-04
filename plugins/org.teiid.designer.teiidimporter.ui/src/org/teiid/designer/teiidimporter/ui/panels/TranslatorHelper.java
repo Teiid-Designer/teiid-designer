@@ -35,6 +35,7 @@ public class TranslatorHelper implements UiConstants {
     public static final String TEIID_INFINISPAN_DRIVER_84UP = "infinispan"; //$NON-NLS-1$
     public static final String TEIID_LDAP_DRIVER_84UP = "ldap"; //$NON-NLS-1$
     public static final String TEIID_SALESORCE_DRIVER_84UP = "salesforce"; //$NON-NLS-1$
+    public static final String TEIID_SALESORCE__34_DRIVER_84UP = "salesforce-34"; //$NON-NLS-1$
     public static final String TEIID_WEBSERVICE_DRIVER_84UP = "webservice"; //$NON-NLS-1$
     public static final String TEIID_MONGODB_DRIVER_84UP = "mongodb"; //$NON-NLS-1$
     public static final String TEIID_FILE_DRIVER_DISPLAYNAME = "FlatFile"; //$NON-NLS-1$
@@ -78,6 +79,7 @@ public class TranslatorHelper implements UiConstants {
 	public static final String POSTGRES = "postgres"; //$NON-NLS-1$
 	public static final String POSTGRESQL = "postgresql"; //$NON-NLS-1$
     public static final String SALESFORCE = "salesforce"; //$NON-NLS-1$
+    public static final String SALESFORCE_34 = "salesforce-34"; //$NON-NLS-1$
 	public static final String SQLSERVER = "sqlserver"; //$NON-NLS-1$
     public static final String SYBASE = "sybase"; //$NON-NLS-1$
     public static final String TEIID = "teiid"; //$NON-NLS-1$
@@ -135,23 +137,27 @@ public class TranslatorHelper implements UiConstants {
         		return WS;
         	}
         } else {
-        	if(driverName.equals(TEIID_FILE_DRIVER_84UP) && translatorNames.contains(FILE)) {
+        	if( (driverName.equals(TEIID_FILE_DRIVER_84UP) || driverName.contains(TEIID_FILE_DRIVER_84UP)) && translatorNames.contains(FILE)) {
         		return FILE;
         	}
 
-        	if(driverName.equals(TEIID_GOOGLE_DRIVER_84UP) && translatorNames.contains(GOOGLE_SPREADSHEET)) {
+        	if( (driverName.equals(TEIID_GOOGLE_DRIVER_84UP)|| driverName.contains(TEIID_GOOGLE_DRIVER_84UP)) && translatorNames.contains(GOOGLE_SPREADSHEET)) {
         		return GOOGLE_SPREADSHEET;
         	}
 
-        	if(driverName.equals(TEIID_INFINISPAN_DRIVER_84UP) && translatorNames.contains(INFINISPAN)) {
+        	if( (driverName.equals(TEIID_INFINISPAN_DRIVER_84UP)|| driverName.contains(TEIID_INFINISPAN_DRIVER_84UP)) && translatorNames.contains(INFINISPAN)) {
         		return INFINISPAN;
         	}
 
-        	if(driverName.equals(TEIID_LDAP_DRIVER_84UP) && translatorNames.contains(LDAP)) {
+        	if( (driverName.equals(TEIID_LDAP_DRIVER_84UP)|| driverName.contains(TEIID_LDAP_DRIVER_84UP)) && translatorNames.contains(LDAP)) {
         		return LDAP;
         	}
+        	
+        	if( (driverName.equals(TEIID_SALESORCE__34_DRIVER_84UP)|| driverName.contains(TEIID_SALESORCE__34_DRIVER_84UP)) && translatorNames.contains(SALESFORCE_34)) {
+        		return SALESFORCE;
+        	}
 
-        	if(driverName.equals(TEIID_SALESORCE_DRIVER_84UP) && translatorNames.contains(SALESFORCE)) {
+        	if( (driverName.equals(TEIID_SALESORCE_DRIVER_84UP)|| driverName.contains(TEIID_SALESORCE_DRIVER_84UP)) && translatorNames.contains(SALESFORCE)) {
         		return SALESFORCE;
         	}
 
@@ -159,7 +165,7 @@ public class TranslatorHelper implements UiConstants {
         		return WS;
         	}
         	
-        	if(driverName.equals(TEIID_MONGODB_DRIVER_84UP) && translatorNames.contains(MONGODB)) {
+        	if( (driverName.equals(TEIID_MONGODB_DRIVER_84UP)|| driverName.contains(TEIID_MONGODB_DRIVER_84UP)) && translatorNames.contains(MONGODB)) {
         		return MONGODB;
         	}
         }
