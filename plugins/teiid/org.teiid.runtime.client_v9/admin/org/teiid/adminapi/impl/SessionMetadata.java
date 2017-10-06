@@ -138,9 +138,9 @@ public class SessionMetadata extends AdminObjectImpl implements Session {
 		return this.vdbVersion;
 	}
 
-	public void setVDBVersion(String vdbVersion) {
-		this.vdbVersion = vdbVersion;
-	}
+	public void setVDBVersion(Object vdbVersion) {
+		this.vdbVersion = vdbVersion!=null?vdbVersion.toString():null;
+}
 
 	@Override
 	public String getSecurityDomain() {

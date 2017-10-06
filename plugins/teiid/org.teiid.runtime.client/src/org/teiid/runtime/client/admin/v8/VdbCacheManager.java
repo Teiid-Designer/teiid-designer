@@ -393,6 +393,11 @@ public class VdbCacheManager implements AdminConstants {
 
         // TODO should get version from vdbFile
         VDB vdb = getRawVDB(vdbName, vdbVersion);
+        
+        // If the VDB is still loading, refresh again and potentially start refresh job
+        if( vdb == null ) {
+        	throw new Exception(Messages.getString(Messages.ExecutionAdmin.invalidVdb, vdbName));
+        }
 
         // If the VDB is still loading, refresh again and potentially start refresh job
         if(vdb.getStatus().equals(adminSpec.getLoadingVDBStatus()) && vdb.getValidityErrors().isEmpty()) {

@@ -393,6 +393,10 @@ public class VdbCacheManager implements AdminConstants {
         VDB vdb = getRawVDB(vdbName, vdbVersion);
 
         // If the VDB is still loading, refresh again and potentially start refresh job
+        if( vdb == null ) {
+        	throw new Exception(Messages.getString(Messages.ExecutionAdmin.invalidVdb, vdbName));
+        }
+        
         if(vdb.getStatus().equals(adminSpec.getLoadingVDBStatus()) && vdb.getValidityErrors().isEmpty()) {
             // Give a 0.5 sec pause for the VDB to finish loading metadata.
             try {

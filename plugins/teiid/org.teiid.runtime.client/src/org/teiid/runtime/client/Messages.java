@@ -81,7 +81,8 @@ public class Messages {
         mapped_role_names_describe,
         cannotUndeployVdbNoDeploymentName,
         invalidVdbName,
-        requiredJndiNameMissing;
+        requiredJndiNameMissing,
+        invalidVdb;
 
         @Override
         public String toString() {
