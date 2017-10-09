@@ -84,6 +84,11 @@ public class Messages extends NLS {
 	public static String DDL_IMPORT_TOOLTIP;
 	public static String TEIID_DDL_IMPORT_TOOLTIP;
 	
+	public static String NEW_TABLE_TOOLTIP;
+	public static String NEW_VIEW_TOOLTIP;
+	public static String NEW_PROCEDURE_TOOLTIP;
+	public static String NEW_INDEX_TOOLTIP;
+	
     static {
         NLS.initializeMessages("org.teiid.designer.ui.common.actions.messages", Messages.class);
     }

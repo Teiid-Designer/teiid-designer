@@ -333,6 +333,11 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
+	        	if( isVirtual ) {
+	        		addTableButton.setToolTipText(org.teiid.designer.ui.common.actions.Messages.NEW_VIEW_TOOLTIP);
+	        	} else {
+	        		addTableButton.setToolTipText(org.teiid.designer.ui.common.actions.Messages.NEW_TABLE_TOOLTIP);
+	        	}
 	
 	        	Button addProcedureButton = getToolkit().createButton(vertToolbar, BLANK, SWT.PUSH);
 	        	if( isVirtual ) {
@@ -359,7 +364,9 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
-	        	
+
+	        	addProcedureButton.setToolTipText(org.teiid.designer.ui.common.actions.Messages.NEW_PROCEDURE_TOOLTIP);
+
 	        	Button addIndexButton = getToolkit().createButton(vertToolbar, BLANK, SWT.PUSH);
 	        	addIndexButton.setImage(UiPlugin.getDefault().getImage(UiConstants.Images.NEW_INDEX_ICON));
 	        	GridDataFactory.fillDefaults().grab(true, false).applyTo(addIndexButton);
@@ -381,6 +388,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 					public void widgetDefaultSelected(SelectionEvent e) {
 					}
 				});
+	        	addIndexButton.setToolTipText(org.teiid.designer.ui.common.actions.Messages.NEW_INDEX_TOOLTIP);
         	}
         	
     		Composite bottomSep = getToolkit().createCompositeSeparator(vertToolbar);
