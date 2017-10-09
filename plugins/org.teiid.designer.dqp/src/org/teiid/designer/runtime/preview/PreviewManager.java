@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
@@ -68,6 +67,8 @@ import net.jcip.annotations.ThreadSafe;
 public final class PreviewManager {
     private static final String DYNAMIC_VDB_SUFFIX = "-vdb.xml";  //$NON-NLS-1$
     public static final String IMPORT_SRC_MODEL = "SrcModel";  //$NON-NLS-1$
+    
+	private static final String TEIID_INFINISPAN_HOTROD_DRIVER = "infinispan-hotrod"; //$NON-NLS-1$
     
     IStatus vdbDeploymentStatus = null;
     
@@ -795,6 +796,11 @@ public final class PreviewManager {
 	            }
 	            
 	            sb.append("]]></metadata>");
+            }
+            
+            // check translator for hotrod-infinispan and add a metadata type = NATIVE
+            if( TEIID_INFINISPAN_HOTROD_DRIVER.equals(translatorName) ) {
+            	sb.append("\n\t\t<metadata type=\"NATIVE\">)");
             }
             sb.append("\n\t</model>"); //$NON-NLS-1$
             return sb.toString();

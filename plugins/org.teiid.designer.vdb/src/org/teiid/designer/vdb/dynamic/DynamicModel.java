@@ -7,7 +7,9 @@
  */
 package org.teiid.designer.vdb.dynamic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbUnit;
@@ -43,7 +45,7 @@ public class DynamicModel extends VdbUnit {
 	/**
 	 * The metadata object. Can be null
 	 */
-	private Metadata metadata;
+	private List<Metadata> metadata;
 
     /**
      * The type of a model.
@@ -93,6 +95,7 @@ public class DynamicModel extends VdbUnit {
      */
     public DynamicModel() {
 		super();
+    	metadata = new ArrayList<Metadata>();
     }
     
     /**
@@ -186,9 +189,9 @@ public class DynamicModel extends VdbUnit {
 
 
 	/**
-	 * @return the metadata
+	 * @return the list of metadata
 	 */
-	public Metadata getMetadata() {
+	public List<Metadata> getMetadata() {
 		return metadata;
 	}
 
@@ -197,8 +200,17 @@ public class DynamicModel extends VdbUnit {
 	/**
 	 * @param metadata
 	 */
-	public void setMetadata(Metadata metadata) {
+	public void setMetadata(List<Metadata> metadata) {
 		this.metadata = metadata;
+	}
+	
+	/**
+	 * @param metadata
+	 */
+	public void setMetadata(Metadata metadata) {
+		if( metadata != null ) {
+			this.metadata.add(metadata);
+		}
 	}
 	
 	
@@ -251,6 +263,9 @@ public class DynamicModel extends VdbUnit {
 		this.columnAlias = columnAlias;
 	}
 
+	/** (non-Javadoc)
+	 * @see org.teiid.designer.vdb.AbstractVdbObject#clone()
+	 */
 	@Override
 	public DynamicModel clone() {
 	    DynamicModel clone = new DynamicModel();
@@ -261,9 +276,11 @@ public class DynamicModel extends VdbUnit {
 	    clone.setAddColumn(doAddColumn());
 	    clone.setColumnAlias(getColumnAlias());
 
-	    if (getMetadata() != null)
-	        clone.setMetadata(getMetadata().clone());
-
+	    if (getMetadata() != null) {
+	    	for( Metadata metadata : getMetadata() ) {
+	    		clone.setMetadata(metadata.clone());
+	    	}
+	    }
 	    for (VdbSource source : modelSources.values()) {
 	        clone.addSource(source.clone());
 	    }

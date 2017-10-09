@@ -87,6 +87,8 @@ import org.w3c.dom.Document;
  * @author blafond
  *
  */
+
+@SuppressWarnings("javadoc")
 public class DynamicVdb extends BasicVdb {
 
     private Map<String, DynamicModel> models;
@@ -431,7 +433,7 @@ public class DynamicVdb extends BasicVdb {
         // Not sure how to synchronize atm
     }
 
-    @Override
+	@Override
     public void save() throws Exception {
         write(null);
     }
@@ -625,7 +627,7 @@ public class DynamicVdb extends BasicVdb {
                 //
                 // If we have a some DDL then importer it into the model resource
                 //
-                Metadata metadata = dynModel.getMetadata();
+                List<Metadata> metadata = dynModel.getMetadata();
                 if (metadata != null) {
                     IProject project = parent.getProject();
 
@@ -657,7 +659,7 @@ public class DynamicVdb extends BasicVdb {
                     //
                     // Import the ddl
                     //
-                    importer.importDdl(metadata.getSchemaText(), monitor, 1, new Properties());
+                    importer.importDdl(metadata.get(0).getSchemaText(), monitor, 1, new Properties());
 
                     if (importer.hasParseError()) {
                         StringBuffer buffer = new StringBuffer();

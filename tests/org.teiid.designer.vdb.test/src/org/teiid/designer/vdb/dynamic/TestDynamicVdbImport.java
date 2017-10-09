@@ -391,7 +391,7 @@ public class TestDynamicVdbImport implements VdbConstants, Commentable {
         assertNotNull(propertyComments);
         checkComment(Comments.IMPORT_EXCEL_FILE_NAME_PROPERTY, propertyComments, EMPTY_STRING, 0);
 
-        Metadata metadata = model.getMetadata();
+        Metadata metadata = model.getMetadata().get(0);
         assertNotNull(metadata);
         checkComment(Comments.METADATA_ELEMENT, metadata.getComments(), EMPTY_STRING, 0);
 

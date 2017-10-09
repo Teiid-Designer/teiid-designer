@@ -201,7 +201,7 @@ public class TestDynamicVdbExport implements VdbConstants {
             //
 
             if (dynModel.getName().equals(VdbTestUtils.BOOKS_MODEL)) {
-                Metadata metadata = dynModel.getMetadata();
+                Metadata metadata = dynModel.getMetadata().get(0);
                 assertEquals(Metadata.Type.DDL, metadata.getType());
                 assertEquals(VdbTestUtils.BOOKS_MODEL_DDL, metadata.getSchemaText());
             }
@@ -361,7 +361,7 @@ public class TestDynamicVdbExport implements VdbConstants {
             //
 
             if (dynModel.getName().equals(VdbTestUtils.CUSTOMER_ACCOUNTS_MODEL)) {
-                Metadata metadata = dynModel.getMetadata();
+                Metadata metadata = dynModel.getMetadata().get(0);
                 assertEquals(Metadata.Type.DDL, metadata.getType());
             }
         }

@@ -10,12 +10,14 @@ package org.teiid.designer.vdb.manifest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.comments.CommentSets;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbIndexedEntry.Problem;
@@ -32,7 +34,9 @@ import org.teiid.designer.vdb.manifest.adapters.XmlVdbAdapters;
 @XmlAccessorType( XmlAccessType.NONE )
 @XmlType( name = "" )
 public class ModelElement extends EntryElement {
-
+	private static final String TEIID_INFINISPAN_HOTROD_DRIVER = "infinispan-hotrod"; //$NON-NLS-1$
+	private static final String NATIVE = "NATIVE"; //$NON-NLS-1$
+	
 	/**
 	 * model class property key
      */
@@ -117,9 +121,14 @@ public class ModelElement extends EntryElement {
         type = entry.getType();
         visible = entry.isVisible();
         description = entry.getDescription();
-
+        
+        String singleTranslatorName = null;
+        int nSources = entry.getSourceInfo().getSources().size();
         for( VdbSource source : entry.getSourceInfo().getSources() ) {
         	getSources().add(new SourceElement(source));
+        	if( nSources == 1 ) {
+        		singleTranslatorName = source.getTranslatorName();
+        	}
         }
         for (final Problem problem : entry.getProblems())
             getProblems().add(new ProblemElement(problem));
@@ -155,6 +164,11 @@ public class ModelElement extends EntryElement {
         if( entry.getSchemaText() != null ) {
         	getMetadata().add(new MetadataElement(entry.getSchemaText(), entry.getType()));
         }
+        
+    	if( TEIID_INFINISPAN_HOTROD_DRIVER.equalsIgnoreCase(singleTranslatorName)) {
+    		getMetadata().add(new MetadataElement(StringConstants.EMPTY_STRING, NATIVE));
+    	}
+
     }
 
     /**
@@ -200,12 +214,14 @@ public class ModelElement extends EntryElement {
             propElement.getComments().add(propertyComments);
         }
 
-        Metadata metadata = model.getMetadata();
-        if( metadata != null && metadata.getSchemaText() != null ) {
-            MetadataElement metadataElement = new MetadataElement(
-                    metadata.getSchemaText(), metadata.getType().name());
-            metadataElement.getComments().add(metadata.getComments());
-            getMetadata().add(metadataElement);
+        List<Metadata> metadata = model.getMetadata();
+        for( Metadata mData : metadata ) {
+	        if( mData != null ) {
+	            MetadataElement metadataElement = new MetadataElement(
+	            		mData.getSchemaText(), mData.getType().name());
+	            metadataElement.getComments().add(mData.getComments());
+	            getMetadata().add(metadataElement);
+	        }
         }
     }
 

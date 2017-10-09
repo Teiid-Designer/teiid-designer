@@ -26,8 +26,10 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
@@ -48,7 +50,6 @@ import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.VdbModelBuilder;
-import org.teiid.designer.core.container.DuplicateResourceException;
 import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -68,6 +69,7 @@ import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
+
 import net.jcip.annotations.ThreadSafe;
 
 /**
@@ -972,6 +974,12 @@ public final class XmiVdb extends BasicVdb {
             //
             for (VdbModelEntry entry : getModelEntries()) {
                 VdbSourceInfo sourceInfo = entry.getSourceInfo();
+                
+            	boolean isMultiSource = sourceInfo.isMultiSource();
+            	String singleTranslatorName = null;
+            	if( !isMultiSource ) {
+            		singleTranslatorName = sourceInfo.getSource(0).getTranslatorName();
+            	}
 
                 DynamicModel model = new DynamicModel();
                 model.setName(entry.getName());
@@ -1060,6 +1068,11 @@ public final class XmiVdb extends BasicVdb {
 		                Metadata metadata = new Metadata(ddl, Metadata.Type.DDL);
 		                model.setMetadata(metadata);
                 	}
+	                // Check the translator. If infinispan-hotrod then add second metadata tag of type NATIVE
+	                if( singleTranslatorName != null ) {
+	                	Metadata metadata = new Metadata(null, Metadata.Type.NATIVE);
+	                	model.setMetadata(metadata);
+	                }
 	            }
 
 				if( ! isNonRelationalModel ) {

@@ -8,6 +8,8 @@
 package org.teiid.designer.vdb.dynamic;
 
 import java.util.Comparator;
+import java.util.List;
+
 import org.teiid.designer.vdb.dynamic.DynamicModel.Type;
 
 /**
@@ -17,6 +19,9 @@ import org.teiid.designer.vdb.dynamic.DynamicModel.Type;
  */
 public class DynamicModelComparator implements Comparator<DynamicModel> {
 
+    /** (non-Javadoc)
+     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+     */
     @Override
     public int compare(DynamicModel dynModel1, DynamicModel dynModel2) {
         Type model1Type = dynModel1.getModelType();
@@ -31,31 +36,39 @@ public class DynamicModelComparator implements Comparator<DynamicModel> {
         String model1Name = dynModel1.getName();
         String model2Name = dynModel2.getName();
 
-        Metadata mdata1 = dynModel1.getMetadata();
-        Metadata mdata2 = dynModel2.getMetadata();
+        List<Metadata> mdata1 = dynModel1.getMetadata();
+        List<Metadata> mdata2 = dynModel2.getMetadata();
         if (mdata1 == null && mdata2 != null)
             return -1;
         else if (mdata1 == null && mdata2 == null)
             return 0;
         else if (mdata1 != null && mdata2 == null)
             return 1;
-
-        String schema1Text = mdata1.getSchemaText();
-        String schema2Text = mdata2.getSchemaText();
-        if (schema1Text == null && schema2Text != null)
-            return -1;
-
-        if (schema1Text == null && schema2Text == null)
-            return 0;
-
-        if (schema1Text != null && schema2Text == null)
-            return 1;
-
-        if (schema1Text.contains(model2Name))
-            return 1;
-
-        if (schema2Text.contains(model1Name))
-            return -1;
+        
+        if( mdata1.size() == 1 && mdata2.size() == 1) {
+        	Metadata mDataA = mdata1.get(0);
+        	Metadata mDataB = mdata1.get(0);
+        	
+	        String schema1Text = mDataA.getSchemaText();
+	        String schema2Text = mDataB.getSchemaText();
+	        if (schema1Text == null && schema2Text != null)
+	            return -1;
+	
+	        if (schema1Text == null && schema2Text == null)
+	            return 0;
+	
+	        if (schema1Text != null && schema2Text == null)
+	            return 1;
+	
+	        if (schema1Text.contains(model2Name))
+	            return 1;
+	
+	        if (schema2Text.contains(model1Name))
+	            return -1;
+        } else {
+        	if( mdata1.size() > mdata2.size() ) return 1;
+        	else return -1;
+        }
 
         return 0;
     }
