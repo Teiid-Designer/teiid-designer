@@ -496,7 +496,9 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
                      * This maybe has relations with the implementation of database driver.
                      */ 
                     moreResult = cstmt.getMoreResults();
-                    theResultSet.close();
+                    if( theResultSet != null ) {
+                    	theResultSet.close();
+                    }
                     theResultSet = null;
                     continue;
                 }
