@@ -977,7 +977,7 @@ public final class XmiVdb extends BasicVdb {
                 
             	boolean isMultiSource = sourceInfo.isMultiSource();
             	String singleTranslatorName = null;
-            	if( !isMultiSource ) {
+            	if( !isMultiSource && sourceInfo.getSources().size() != 0) {
             		singleTranslatorName = sourceInfo.getSource(0).getTranslatorName();
             	}
 
