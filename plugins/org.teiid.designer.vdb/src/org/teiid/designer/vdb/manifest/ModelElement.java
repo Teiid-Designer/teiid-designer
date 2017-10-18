@@ -34,8 +34,18 @@ import org.teiid.designer.vdb.manifest.adapters.XmlVdbAdapters;
 @XmlAccessorType( XmlAccessType.NONE )
 @XmlType( name = "" )
 public class ModelElement extends EntryElement {
-	private static final String TEIID_INFINISPAN_HOTROD_DRIVER = "infinispan-hotrod"; //$NON-NLS-1$
-	private static final String NATIVE = "NATIVE"; //$NON-NLS-1$
+	/**
+	 * infinispan-hotrod translator name
+	 */
+	public static final String TEIID_INFINISPAN_HOTROD_DRIVER = "infinispan-hotrod"; //$NON-NLS-1$
+	/**
+	 * INDEX metadata type
+	 */
+	public static final String INDEX = "INDEX"; //$NON-NLS-1$
+	/**
+	 * NATIVE metadata type
+	 */
+	public static final String NATIVE = "NATIVE"; //$NON-NLS-1$
 	
 	/**
 	 * model class property key
@@ -162,10 +172,11 @@ public class ModelElement extends EntryElement {
             props.add(new PropertyElement(IMPORT_VDB_REFERENCE, importedVdbName));
         
         if( entry.getSchemaText() != null ) {
-        	getMetadata().add(new MetadataElement(entry.getSchemaText(), entry.getType()));
+        	getMetadata().add(new MetadataElement(entry.getSchemaText(), entry.getMetadataType()));
         }
         
     	if( TEIID_INFINISPAN_HOTROD_DRIVER.equalsIgnoreCase(singleTranslatorName)) {
+    		getMetadata().add(new MetadataElement(StringConstants.EMPTY_STRING, INDEX));
     		getMetadata().add(new MetadataElement(StringConstants.EMPTY_STRING, NATIVE));
     	}
 
