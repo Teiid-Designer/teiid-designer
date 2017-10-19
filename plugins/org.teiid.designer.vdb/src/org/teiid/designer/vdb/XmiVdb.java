@@ -65,6 +65,7 @@ import org.teiid.designer.vdb.dynamic.Metadata;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.ImportVdbElement;
+import org.teiid.designer.vdb.manifest.MetadataElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;
@@ -1069,7 +1070,7 @@ public final class XmiVdb extends BasicVdb {
 		                model.setMetadata(metadata);
                 	}
 	                // Check the translator. If infinispan-hotrod then add second metadata tag of type NATIVE
-	                if( singleTranslatorName != null ) {
+	                if( singleTranslatorName != null && ModelElement.TEIID_INFINISPAN_HOTROD_DRIVER.equalsIgnoreCase(singleTranslatorName)) {
 	                	Metadata metadata = new Metadata(null, Metadata.Type.NATIVE);
 	                	model.setMetadata(metadata);
 	                }
