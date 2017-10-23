@@ -43,6 +43,7 @@ import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.ISQLStringVisitor;
 import org.teiid.designer.query.sql.IToken;
 import org.teiid.designer.query.sql.lang.IComment;
+import org.teiid.designer.query.sql.lang.ISetQuery.Operation;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol.Type;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -2101,16 +2102,17 @@ public class SQLStringVisitor extends LanguageVisitor
     }
 
     protected void appendSetQuery(SetQuery parent, QueryCommand obj, boolean right) {
-        if (obj.getLimit() != null
-            || obj.getOrderBy() != null
-            || (right && ((obj instanceof SetQuery && ((parent.isAll() && !((SetQuery)obj).isAll()) || parent.getOperation() != ((SetQuery)obj).getOperation()))))) {
+        if (obj.getLimit() != null || obj.getOrderBy() != null || (obj instanceof SetQuery
+                && ((right && parent.isAll() && !((SetQuery)obj).isAll()) 
+                        || ((parent.getOperation() == Operation.INTERSECT || right) 
+                                && parent.getOperation() != ((SetQuery)obj).getOperation())))) {
             append(Tokens.LPAREN);
             visitNode(obj);
             append(Tokens.RPAREN);
         } else {
             visitNode(obj);
         }
-
+        
         enableComments(obj);
         addComments(obj);
     }
