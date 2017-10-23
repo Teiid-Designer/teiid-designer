@@ -535,8 +535,10 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 			column.setNullable(getRelRefNullable(prop.toString()));
 
 		prop = node.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
-		if (prop != null)
-			column.setDefaultValue(prop.toString());
+		if (prop != null) {
+			String newValue = prop.toString().replaceAll("''", "'");
+			column.setDefaultValue(newValue);
+		}
 	}
 
 	@Override

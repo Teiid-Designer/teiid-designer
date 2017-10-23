@@ -680,10 +680,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         //
         String defaultValue = col.getDefaultValue();
         if (!StringUtilities.isEmpty(defaultValue)) {
-//        	defaultValue = convertDefaultValue(defaultValue);
-        	if( !StringUtilities.isSingleQuoted(defaultValue ) ) {
-        		defaultValue = StringUtilities.getQuotedValue(defaultValue, QUOTE_MARK);
-        	}
+        	defaultValue = convertDefaultValue(defaultValue);
+        	defaultValue = ensureSingleQuotedString(defaultValue);
             sb.append(TeiidSQLConstants.Reserved.DEFAULT).append(SPACE).append(defaultValue).append(SPACE);
         }
 
@@ -731,6 +729,18 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         return sb.toString().trim();
     }
     
+    public String ensureSingleQuotedString(String input) {
+    	if( StringUtilities.isSingleQuoted(input) ) {
+    		return input;
+    	} else {
+    		String copyOfInput = input;
+    		copyOfInput.replace("\'", "\\\\'");
+    		StringBuilder result = new StringBuilder();
+    		result.append(SQUOTE + copyOfInput + SQUOTE);
+    		return result.toString();
+    	}
+    }
+    
     private static String convertDefaultValue(String originalValue) {
     	String removedSQuotes = null;
     	if( !StringUtilities.isSingleQuoted(originalValue )) {
@@ -742,8 +752,10 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		if( removedSQuotes.contains("\'")) {
 			StringBuilder sb = new StringBuilder();
 			for( char ch : removedSQuotes.toCharArray() ) {
+				boolean addedQuote = false;
 				if( ch == '\'') {
-					sb.append('\\');
+					sb.append('\'');
+					addedQuote = true;
 				}
 				sb.append(ch);
 			}

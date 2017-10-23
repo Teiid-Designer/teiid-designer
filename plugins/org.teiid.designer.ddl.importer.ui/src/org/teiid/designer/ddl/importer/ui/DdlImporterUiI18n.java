@@ -50,6 +50,8 @@ class DdlImporterUiI18n {
     static final String IMPORT_COMPLETED_WITH_WARNINGS_MESSAGE = i18n("importCompletedWithWarningsMessage"); //$NON-NLS-1$
     static final String MODEL_GROUP_LABEL = i18n("modelGroupLabel"); //$NON-NLS-1$
     static final String OPTIONS_GROUP_LABEL = i18n("optionsGroupLabel"); //$NON-NLS-1$
+    static final String NOTES_GROUP_LABEL= i18n("invalidDdlNotesLabel"); //$NON-NLS-1$
+    static final String NOTES_GROUP_TEXT= i18n("invalidDdlNotesMessage"); //$NON-NLS-1$
 
     static final String DIFFERENCE_PAGE_TITLE = i18n("differencePage.title"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_DESCRIPTION = i18n("differencePage.description"); //$NON-NLS-1$

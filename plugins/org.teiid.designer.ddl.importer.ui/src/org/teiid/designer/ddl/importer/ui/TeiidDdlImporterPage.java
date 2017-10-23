@@ -50,7 +50,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
@@ -344,6 +346,20 @@ public class TeiidDdlImporterPage  extends WizardPage implements IPersistentWiza
 		createModelDefinitionTab(tabFolder);
 		createNameOptionsTab(tabFolder);
 		createDdlTab(tabFolder);
+		
+        Group helpGroup = WidgetFactory.createGroup(hostPanel, DdlImporterUiI18n.NOTES_GROUP_LABEL, SWT.NONE | SWT.BORDER_DASH,1); //$NON-NLS-1$
+        helpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    	
+        {        	
+        	Text helpText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);
+        	helpText.setText(DdlImporterUiI18n.NOTES_GROUP_TEXT);
+        	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        	gd.heightHint = 50;
+        	gd.horizontalSpan=3;
+        	helpText.setLayoutData(gd);
+        }
 		
         scrolledComposite.sizeScrolledPanel();
         
