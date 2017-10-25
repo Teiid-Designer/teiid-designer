@@ -74,6 +74,7 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
     private Text targetModelFileText;
     private Text targetModelInfoText;
     private Text timeoutText;
+    private Button setUpdatableCB;
     private Button filterRedundantUCsCB;
     private Button createConnProfileCB;
     private StyledTextEditor vdbTextEditor;
@@ -259,6 +260,18 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         gd.heightHint = 35;
         gd.horizontalSpan=3;
         targetModelInfoText.setLayoutData(gd);
+        
+        setUpdatableCB = WidgetFactory.createCheckBox(modelDefnPanel, Messages.SelectTargetPage_UpdateExistingModel , 0, 3);
+		this.setUpdatableCB.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(final SelectionEvent event) {
+				//((JdbcImportWizard)getWizard()).setUpdatable(setUpdatableCB.getSelection());;
+				validatePage();
+			}
+		});
+		setUpdatableCB.setToolTipText(Messages.SelectTargetPage_UpdateExistingModel);
+		setUpdatableCB.setSelection(true);
         
         // CheckBox for FilterRedundantUniqueConstraints DDL Import property
         filterRedundantUCsCB = WidgetFactory.createCheckBox(modelDefnPanel, Messages.SelectTargetPage_FilterRedundantUCsCB_Label, SWT.NONE, 3);
@@ -470,7 +483,7 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         }
         
         // Valid target model - now compare it's connection profile vs the selected profile
-        if( importManager.targetModelExists() ) {
+        if( importManager.targetModelExists() && !this.setUpdatableCB.getSelection() ) {
             setThisPageComplete(NLS.bind(Messages.SelectTargetPage_ModelExistsWithThisNameMsg, fileText), ERROR);
             return false;
         }
@@ -572,7 +585,9 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         String targetModelName = this.targetModelFileText.getText();
         if(targetModelName==null || targetModelName.trim().length()==0) {
             this.targetModelInfoText.setText(Messages.SelectTargetPage_SrcModelUndefined);
-        } else {
+        } else if( importManager.targetModelExists() && this.setUpdatableCB.getSelection() ) {
+        	this.targetModelInfoText.setText(NLS.bind(Messages.SelectTargetPage_SrcModelExistsAndWillBeUpdated, targetModelName)); //$NON-NLS-1$
+    	} else {
             this.targetModelInfoText.setText(Messages.SelectTargetPage_SrcModelSelected+": "+targetModelName); //$NON-NLS-1$
         }
     }

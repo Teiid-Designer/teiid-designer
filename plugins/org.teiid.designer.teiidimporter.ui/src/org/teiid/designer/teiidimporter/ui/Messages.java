@@ -110,6 +110,8 @@ public class Messages extends NLS {
     public static String SelectTargetPage_EnterModelNameMsg;
     public static String SelectTargetPage_SrcModelUndefined;
     public static String SelectTargetPage_SrcModelSelected;
+    public static String SelectTargetPage_SrcModelExistsAndWillBeUpdated;
+    public static String SelectTargetPage_UpdateExistingModel;
     public static String SelectTargetPage_NoOpenProjMsg;
     public static String SelectTargetPage_SrcLocationNotSpecified;
     public static String SelectTargetPage_ModelExistsWithThisNameMsg;
