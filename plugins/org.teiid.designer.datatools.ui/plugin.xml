@@ -291,15 +291,44 @@
       </page>
    </extension>
    
-      <extension
+   <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">
-   <newWizard
+     <newWizard
          class="org.teiid.designer.datatools.profiles.jdg.JDGConnectionProfileWizard"
-         description="Create a JDG connection profile."
+         description="Create a JDG 6.x connection profile."
          icon="icons/full/obj16/connectionFolder.gif"
          id="org.teiid.designer.datatools.profiles.jdg.JDGConnectionProfileWizard"
-         name="JDG"
+         name="JDG 6.x"
          profile="org.teiid.designer.datatools.profiles.jdg"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.teiid.designer.datatools.profiles.jdg7.JDG7ProfilePropertyPage"
+            icon="icons/full/obj16/connectionFolder.gif"
+            id="org.teiid.designer.datatools.profiles.jdg7.profileProperties"
+            name="%connectionProperties.name">
+         <filter
+               name="org.eclipse.datatools.profile.property.id"
+               value="org.teiid.designer.datatools.profiles.jdg7"/>
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.datatools.connectivity.IConnectionProfile">
+            </instanceof>
+         </enabledWhen>
+      </page>
+   </extension>
+   
+  <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+     <newWizard
+         class="org.teiid.designer.datatools.profiles.jdg7.JDG7ConnectionProfileWizard"
+         description="Create a JDG 7.x connection profile."
+         icon="icons/full/obj16/connectionFolder.gif"
+         id="org.teiid.designer.datatools.profiles.jdg7.JDG7ConnectionProfileWizard"
+         name="JDG 7.x"
+         profile="org.teiid.designer.datatools.profiles.jdg7"/>
    </extension>
 
    <extension point="org.eclipse.datatools.connectivity.ui.driverUIContributor">

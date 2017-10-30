@@ -79,7 +79,8 @@ public class GlobalConnectionManager implements UiConstants {
 			Collection<TeiidConnectionFolder> nodes = new ArrayList<TeiidConnectionFolder>(10);
 			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_FLAT_FILE_URL_LABEL, TeiidProfileIDs.FLAT_FILE_URL, profileCategory));
 			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_JBOSS_JNDI_LABEL, TeiidProfileIDs.JBOSS_JNDI, profileCategory));
-			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_JDG_LABEL, TeiidProfileIDs.JDG, profileCategory));
+			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_JDG6_LABEL, TeiidProfileIDs.JDG6, profileCategory));
+			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_JDG7_LABEL, TeiidProfileIDs.JDG7, profileCategory));
 			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_LDAP_LABEL, TeiidProfileIDs.LDAP, profileCategory));
 			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_SALESFORCE_LABEL, TeiidProfileIDs.SALESFORCE, profileCategory));
 			nodes.add(new TeiidConnectionFolder(TEIID_PROFILE_WS_ODATA_LABEL, TeiidProfileIDs.WS_ODATA, profileCategory));

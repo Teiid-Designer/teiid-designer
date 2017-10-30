@@ -44,12 +44,12 @@ public class JDGConnectionInfoProvider  extends ConnectionInfoHelper implements 
 //            connectionProps.setProperty(IJBossDsProfileConstants.JNDI_PROP_ID, result);
 //        }
         
-        String result = props.getProperty(IJBossDsProfileConstants.TRANSLATOR_PROP_ID);
-		if (null != result) {
-			connectionProps.setProperty(TRANSLATOR_NAME_KEY, result);
-		}
+//        String result = props.getProperty(IJBossDsProfileConstants.TRANSLATOR_PROP_ID);
+//		if (null != result) {
+//			connectionProps.setProperty(TRANSLATOR_NAME_KEY, result);
+//		}
 		
-		result = props.getProperty(CACHE_TYPE_MAP);
+		String result = props.getProperty(CACHE_TYPE_MAP);
 		if (null != result) {
 			connectionProps.setProperty(CACHE_TYPE_MAP, result);
 		}
@@ -110,11 +110,6 @@ public class JDGConnectionInfoProvider  extends ConnectionInfoHelper implements 
 		Properties connectionProps = getCommonProfileProperties(connectionProfile);
 
 		Properties props = connectionProfile.getBaseProperties();
-
-//		String result = props.getProperty(IJBossDsProfileConstants.JNDI_PROP_ID);
-//		if (null != result) {
-//			connectionProps.setProperty(CONNECTION_NAMESPACE + IJBossDsProfileConstants.JNDI_PROP_ID, result);
-//		}
 
 		String result = props.getProperty(IJBossDsProfileConstants.TRANSLATOR_PROP_ID);
 		if (null != result) {

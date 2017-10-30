@@ -83,7 +83,8 @@ public interface UiConstants {
     
     String TEIID_PROFILE_FLAT_FILE_URL_LABEL = "Flat File URL"; //$NON-NLS-1$
     String TEIID_PROFILE_JBOSS_JNDI_LABEL = "JBoss (JNDI) "; //$NON-NLS-1$
-    String TEIID_PROFILE_JDG_LABEL = "JDG"; //$NON-NLS-1$
+    String TEIID_PROFILE_JDG6_LABEL = "JDG 6.x"; //$NON-NLS-1$
+    String TEIID_PROFILE_JDG7_LABEL = "JDG 7.x"; //$NON-NLS-1$
     String TEIID_PROFILE_LDAP_LABEL = "LDAP"; //$NON-NLS-1$
     String TEIID_PROFILE_SALESFORCE_LABEL = "Salesforce"; //$NON-NLS-1$
     String TEIID_PROFILE_WS_ODATA_LABEL = "WS - OData"; //$NON-NLS-1$
@@ -153,7 +154,8 @@ public interface UiConstants {
     interface TeiidProfileIDs {
     	String FLAT_FILE_URL = "XX";
     	String JBOSS_JNDI = "org.teiid.designer.datatools.profiles.jbossds.JBossDsConnectionProfile";
-    	String JDG = "org.teiid.designer.datatools.profiles.jdg";
+    	String JDG6 = "org.teiid.designer.datatools.profiles.jdg";
+    	String JDG7 = "org.teiid.designer.datatools.profiles.jdg7";
     	String LDAP = "org.teiid.designer.datatools.profiles.ldap.LDAPConnectionProfile";
     	String SALESFORCE = "org.teiid.designer.datatools.salesforce.connectionProfile";
     	String WS_ODATA = "org.teiid.designer.datatools.profiles.ws.ODataConnectionProfile";

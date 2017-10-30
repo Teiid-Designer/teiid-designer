@@ -12,11 +12,15 @@ public interface IJDGProfileConstants {
     String TEIID_CATEGORY = "org.teiid.designer.import.category"; //$NON-NLS-1$
     String JDG_TRANSLATOR_NAME = "infinispan-cache-dsl"; //$NON-NLS-1$
     String JDG_TRANSLATOR_TYPE = "infinispan-cache-dsl"; //$NON-NLS-1$
+    String JDG7_TRANSLATOR_NAME = "infinispan-hotrod"; //$NON-NLS-1$
+    String JDG7_TRANSLATOR_TYPE = "infinispan-hotrod"; //$NON-NLS-1$
     String JDG_RA_TYPE = "infinispan-dsl"; //$NON-NLS-1$
+    String JDG7_RA_TYPE = "infinispan-hotrod"; //$NON-NLS-1$
     String JNDI_PROP_ID = "JDGJndi"; //$NON-NLS-1$
     String TRANSLATOR_PROP_ID = "JDGDsTranslator"; //$NON-NLS-1$
     
-    String REQUIRED_CLASS_NAME = "org.teiid.resource.adapter.infinispan.dsl.InfinispanManagedConnectionFactory";
+    String REQUIRED_CLASS_NAME = "org.teiid.resource.adapter.infinispan.dsl.InfinispanManagedConnectionFactory"; //$NON-NLS-1$
+    String REQUIRED_JDG7_CLASS_NAME = "org.teiid.resource.adapter.infinispan.hotrod.InfinispanManagedConnectionFactory"; //$NON-NLS-1$
     
     
     /**
@@ -82,9 +86,90 @@ public interface IJDGProfileConstants {
 	    String MODULE = "module"; //$NON-NLS-1$  (OPTIONAL
 	    // ------------------------------------------------------------------------
 	    
-	    String CLASS_NAME = "class-name";
+	    String CLASS_NAME = "class-name"; //$NON-NLS-1$
 	    
-    	String SUPPORTS_DIRECT_QUERY_PROCEDURE = "SupportsDirectQueryProcedure";
-    	String SUPPORTS_NATIVE_QUERIES = "SupportsNativeQueries";
+    	String SUPPORTS_DIRECT_QUERY_PROCEDURE = "SupportsDirectQueryProcedure"; //$NON-NLS-1$
+    	String SUPPORTS_NATIVE_QUERIES = "SupportsNativeQueries"; //$NON-NLS-1$
+    	/*
+    	   <config-property>
+                <description>{$display:"TrustStore File Name",$description:"File name of the truststore",$required:"false"}</description>
+               <config-property-name>TrustStoreFileName</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property> 
+    	 */
+    	String TRUST_FILE_STORE_NAME = "TrustStoreFileName"; //$NON-NLS-1$
+    	
+    	/*
+            <config-property>
+                <description>{$display:"TrustStore Password",$description:"TrustStore Password",$required:"false",$masked:"true"}</description>
+               <config-property-name>TrustStorePassword</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property> 
+    	 */
+    	String TRUST_STORE_PASSWORD = "TrustStorePassword"; //$NON-NLS-1$
+    	
+    	/*
+            <config-property>
+                <description>{$display:"KeyStore File Name",$description:"File name of the keystore",$required:"false"}</description>
+               <config-property-name>KeyStoreFileName</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property>  
+    	 */
+    	String KEY_STORE_FILE_NAME = "KeyStoreFileName"; //$NON-NLS-1$
+    	
+    	/*
+            <config-property>
+                <description>{$display:"KeyStore Password",$description:"KeyStore Password",$required:"false",$masked:"true"}</description>
+               <config-property-name>KeyStorePassword</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property>   
+    	 */
+    	
+    	String KEY_STORE_PASSWORD = "KeyStorePassword"; //$NON-NLS-1$
+    	
+    	/*
+            <config-property>
+                <description>{$display:"Authentication Server Name",$description:"Authentication Server Name",$required:"false"}</description>
+               <config-property-name>AuthenticationServerName</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property>  
+    	 */
+    	String AUTHENTICATION_SERVER_NAME = "AuthenticationServerName"; //$NON-NLS-1$
+    	
+    	/*
+            <config-property>
+                <description>{$display:"Authentication Application Realm",$description:"Authentication Application Realm",$required:"false"}</description>
+               <config-property-name>AuthenticationRealm</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property>
+    	 */
+    	String AUTHENTICATION_REALM = "AuthenticationRealm"; //$NON-NLS-1$
+    	
+    	/*
+            <config-property>
+                <description>{$display:"Authentication SASL Mechanism",$description:"Authentication SASL Mechanism",$required:"false"}</description>
+               <config-property-name>SaslMechanism</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property>  
+    	 */
+    	String SASL_MECHANISM = "SaslMechanism"; //$NON-NLS-1$
+    	
+    	/*
+            <config-property>
+                <description>{$display:"Authentication User Name",$description:"Authentication User Name",$required:"false"}</description>
+               <config-property-name>UserName</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property>   
+    	 */
+    	String AUTHENTICATION_USER_NAME = "UserName"; //$NON-NLS-1$
+    	
+    	/*
+            <config-property>
+                <description>{$display:"Authentication User Password",$description:"Authentication User Password",$required:"false",$masked:"true"}</description>
+               <config-property-name>Password</config-property-name>
+               <config-property-type>java.lang.String</config-property-type>
+            </config-property>   
+		 */
+		String AUTHENTICATION_PASSWORD = "Password"; //$NON-NLS-1$
     }
 }

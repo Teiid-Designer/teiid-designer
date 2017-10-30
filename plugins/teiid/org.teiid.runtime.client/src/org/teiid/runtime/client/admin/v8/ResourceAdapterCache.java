@@ -195,10 +195,14 @@ public class ResourceAdapterCache implements AdminConstants {
 	}
 	
 	public void delete(CommonDataSource cds) throws AdminException {
-
-		this.manager.cliCall(REMOVE, new String[] { SUBSYSTEM, RESOURCE_ADAPTERS, RESOURCE_ADAPTER, cds.getResourceAdapterID(),
+		String raID = cds.getResourceAdapterID();
+		this.manager.cliCall(REMOVE, new String[] { SUBSYSTEM, RESOURCE_ADAPTERS, RESOURCE_ADAPTER, raID,
 				CONNECTION_DEFINITIONS, cds.getDisplayName() }, null,
 				new ResultCallback());
+		
+		// Remove the resource adapter via ID
+		this.manager.cliCall(REMOVE, new String[] { SUBSYSTEM, RESOURCE_ADAPTERS, RESOURCE_ADAPTER, raID}, null,
+				new ResultCallback());	 
 	}
 	
 	public CommonDataSource create(String displayName, String jndiName,	String templateName, Properties properties)	throws AdminException {

@@ -612,10 +612,10 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
 
     private String getDefaultDataSourceName() {
         int i = 1;
-        String tempName = DEFAULT_NAME + i;
+        String tempName = JndiUtil.JAVA_PREFIX + DEFAULT_NAME + i;
         if (nameExists(tempName)) {
             i++;
-            tempName = DEFAULT_NAME + i;
+            tempName = JndiUtil.JAVA_PREFIX + DEFAULT_NAME + i;
         }
 
         return tempName;
@@ -639,7 +639,7 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
     public void profileChanged( IConnectionProfile profile ) {
         resetCPComboItems();
 
-        selectConnectionProfile(profile.getName());
+        selectConnectionProfile(profile);
 
         setConnectionProperties();
     }
@@ -655,10 +655,12 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
         }
     }
 
-    void selectConnectionProfile( String name ) {
-        if (name == null) {
+    void selectConnectionProfile( IConnectionProfile profile ) {
+        if (profile == null) {
             return;
         }
+        
+        String name = profile.getName();
 
         int cpIndex = -1;
         int i = 0;
@@ -672,6 +674,7 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
             i++;
         }
         if (cpIndex > -1) {
+        	profileWorker.setSelection(profile);
             connectionProfilesCombo.select(cpIndex);
         }
     }

@@ -37,8 +37,15 @@ public class JndiNameHelper  extends StringNameValidator {
     
 	private ConnectionInfoHelper connectionInfoHelper;
 	
+	private boolean addPrefix = true;
+	
 	public JndiNameHelper() {
 		this(StringNameValidator.DEFAULT_MINIMUM_LENGTH, StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
+	}
+	
+	public JndiNameHelper(boolean addPrefix) {
+		this(StringNameValidator.DEFAULT_MINIMUM_LENGTH, StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
+		this.addPrefix = addPrefix;
 	}
 	
     public JndiNameHelper( int minLength,
@@ -54,7 +61,7 @@ public class JndiNameHelper  extends StringNameValidator {
     }
     @Override
     public String checkValidName( final String name ) {
-    	return checkValidName(name, true);
+    	return checkValidName(name, addPrefix);
     }
     
     protected String checkValidName(final String name, boolean addPrefix) {

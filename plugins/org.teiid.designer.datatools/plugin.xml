@@ -132,7 +132,18 @@
       <connectionProfile
             category="org.teiid.designer.import.category"
             id="org.teiid.designer.datatools.profiles.jdg"
-            name="JDG Source"/>
+            name="JDG 6.x Source"/>
+   </extension>
+   
+    <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+      <category
+            id="org.teiid.designer.import.category"
+            name="%teiidImporterConnectionsCategory"/>
+      <connectionProfile
+            category="org.teiid.designer.import.category"
+            id="org.teiid.designer.datatools.profiles.jdg7"
+            name="JDG 7.x Source"/>
    </extension>
 
 	<extension point="org.eclipse.datatools.connectivity.driverExtension">
@@ -266,6 +277,14 @@
        <ConnectionInfoProvider
             profile="org.teiid.designer.datatools.profiles.jdg"
             class="org.teiid.designer.datatools.profiles.jdg.JDGConnectionInfoProvider"/>
+   </extension>
+   <extension
+       id="org.teiid.designer.datatools.profiles.jdg.JDG7ConnectionInfoProvider"
+       name="%jdg7ConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoProvider
+            profile="org.teiid.designer.datatools.profiles.jdg7"
+            class="org.teiid.designer.datatools.profiles.jdg.JDG7ConnectionInfoProvider"/>
    </extension>
    
    <extension
