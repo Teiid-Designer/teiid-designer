@@ -161,13 +161,14 @@ public class TeiidRSProviderPost {
 		    	serialize.setDeclaration(true);
 		    	serialize.setEncoding(charSet);
 		    	serialize.setDocument(true);
+		    	InputStream iStreamResult = null;
 		    	try {
-					return ((BlobType)XMLSystemFunctions.serialize(serialize, new XMLType((SQLXML)result))).getBinaryStream();
+		    		iStreamResult = ((BlobType)XMLSystemFunctions.serialize(serialize, new XMLType((SQLXML)result))).getBinaryStream();
 				} catch (Exception e) {
 					throw new SQLException(e);
 				}
 			}
-			return ((SQLXML)result).getBinaryStream();
+			return iStreamResult;
 		}
 		else if (result instanceof Blob) {
 			return ((Blob)result).getBinaryStream();
