@@ -155,13 +155,14 @@ public class TeiidRSProviderPost {
         TeiidParser parser = queryParser.getTeiidParser();
         
 		if (result instanceof SQLXML) {
+	    	InputStream iStreamResult = null;
 			if (charSet != null) {
 				XMLSerialize serialize = (XMLSerialize)TeiidNodeFactory.getInstance().create(version, ASTNodes.XML_SERIALIZE);
 		    	serialize.setTypeString("blob"); //$NON-NLS-1$
 		    	serialize.setDeclaration(true);
 		    	serialize.setEncoding(charSet);
 		    	serialize.setDocument(true);
-		    	InputStream iStreamResult = null;
+
 		    	try {
 		    		iStreamResult = ((BlobType)XMLSystemFunctions.serialize(serialize, new XMLType((SQLXML)result))).getBinaryStream();
 				} catch (Exception e) {
