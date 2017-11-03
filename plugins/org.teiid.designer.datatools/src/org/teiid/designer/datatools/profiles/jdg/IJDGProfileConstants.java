@@ -15,7 +15,7 @@ public interface IJDGProfileConstants {
     String JDG7_TRANSLATOR_NAME = "infinispan-hotrod"; //$NON-NLS-1$
     String JDG7_TRANSLATOR_TYPE = "infinispan-hotrod"; //$NON-NLS-1$
     String JDG_RA_TYPE = "infinispan-dsl"; //$NON-NLS-1$
-    String JDG7_RA_TYPE = "infinispan-hotrod"; //$NON-NLS-1$
+    String JDG7_RA_TYPE = "infinispan-hotrod-ra"; //$NON-NLS-1$
     String JNDI_PROP_ID = "JDGJndi"; //$NON-NLS-1$
     String TRANSLATOR_PROP_ID = "JDGDsTranslator"; //$NON-NLS-1$
     

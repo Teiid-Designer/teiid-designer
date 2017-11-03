@@ -116,7 +116,7 @@ public class ResourceAdapterCache implements AdminConstants {
 			// figure out driver-name
 			String driverName = dsProperties.getProperty(DRIVER_NAME);
             if (driverName == null) {
-            	driverName = getModuleDriverName(resAdapterID);
+            	driverName = resAdapterID;
             }
 
 
