@@ -968,11 +968,12 @@ public class ReplacementFolderSelectionPageHelper
                         IMessageProvider.ERROR );
                 status = -1;
             }
-            else if ( getFolderLocationString().trim().indexOf(' ')>=0  )
-            {
-                setMessage( org.teiid.designer.datatools.ui.flatfile.Messages.getString( "ReplacementFolderSelectionPageHelper.invalidFolderPathNoSpacesAllowed" ), IMessageProvider.ERROR ); //$NON-NLS-1$?
-                status = -1;
-            }
+            // Removed this check for TEIIDDES-2493 due to validation check and WARNING via TEIIDDES-2795
+//            else if ( getFolderLocationString().trim().indexOf(' ')>=0  )
+//            {
+//                setMessage( org.teiid.designer.datatools.ui.flatfile.Messages.getString( "ReplacementFolderSelectionPageHelper.invalidFolderPathNoSpacesAllowed" ), IMessageProvider.ERROR ); //$NON-NLS-1$?
+//                status = -1;
+//            }
             else if ( verifyFileLocation( ) == ERROR_INVALID_PATH )
             {
                 setMessage( Messages.getString( "error.invalidFlatFilePath" ), IMessageProvider.ERROR ); //$NON-NLS-1$?
