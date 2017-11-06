@@ -69,7 +69,6 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ddl.importer.DdlImporter;
 import org.teiid.designer.ddl.importer.TeiidDDLConstants;
-import org.teiid.designer.ddl.importer.node.teiid.TeiidDdlImporter;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -79,6 +78,10 @@ import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.util.ErrorHandler;
 
+/**
+ * First page of the Teiid DDL import wizard
+ *
+ */
 public class TeiidDdlImporterPage  extends WizardPage implements IPersistentWizardPage {
 
 	private static final String TEIID_DIALECT = "TEIID"; //$NON-NLS-1$
@@ -347,16 +350,16 @@ public class TeiidDdlImporterPage  extends WizardPage implements IPersistentWiza
 		createNameOptionsTab(tabFolder);
 		createDdlTab(tabFolder);
 		
-        Group helpGroup = WidgetFactory.createGroup(hostPanel, DdlImporterUiI18n.NOTES_GROUP_LABEL, SWT.NONE | SWT.BORDER_DASH,1); //$NON-NLS-1$
+        Group helpGroup = WidgetFactory.createGroup(hostPanel, DdlImporterUiI18n.NOTES_GROUP_LABEL, SWT.NONE | SWT.BORDER_DASH,1);
         helpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    	
+        GridLayoutFactory.fillDefaults().margins(2, 2).applyTo(helpGroup);
         {        	
         	Text helpText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);
         	helpText.setText(DdlImporterUiI18n.NOTES_GROUP_TEXT);
         	helpText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         	helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         	GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-        	gd.heightHint = 50;
+        	gd.heightHint = 60;
         	gd.horizontalSpan=3;
         	helpText.setLayoutData(gd);
         }
