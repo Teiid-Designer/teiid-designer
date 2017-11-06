@@ -1352,9 +1352,9 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         column.setScale(numDecDigits);
         
         if( teiidTypeName != null && columnSize > 0 ) {
-        	if(IDataTypeManagerService.DataTypeName.BIGDECIMAL.toString().equalsIgnoreCase(typeName) ||
-        		IDataTypeManagerService.DataTypeName.FLOAT.toString().equalsIgnoreCase(typeName) ||
-        		IDataTypeManagerService.DataTypeName.DECIMAL.toString().equalsIgnoreCase(typeName)) {
+        	if(IDataTypeManagerService.DataTypeName.BIGDECIMAL.toString().equalsIgnoreCase(teiidTypeName) ||
+        		IDataTypeManagerService.DataTypeName.FLOAT.toString().equalsIgnoreCase(teiidTypeName) ||
+        		IDataTypeManagerService.DataTypeName.DECIMAL.toString().equalsIgnoreCase(teiidTypeName)) {
         		column.setPrecision(columnSize);
         	}
         }
