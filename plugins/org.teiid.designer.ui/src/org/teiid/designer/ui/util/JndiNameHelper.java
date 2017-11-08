@@ -93,6 +93,7 @@ public class JndiNameHelper  extends StringNameValidator {
 	}
 
 	public void setJNDINameInTxn(ModelResource modelResource, String newJNDIName) {
+		
 		String jndiName = newJNDIName;
 		
 		boolean requiredStart = ModelerCore.startTxn(true, true, "Set Data Source JNDI Name", this); //$NON-NLS-1$
@@ -103,7 +104,9 @@ public class JndiNameHelper  extends StringNameValidator {
 			if (editor != null) {
 				boolean isDirty = editor.isDirty();
 
-				jndiName = JndiUtil.addJavaPrefix(jndiName);
+				if( jndiName != null ) {
+					jndiName = JndiUtil.addJavaPrefix(jndiName);
+				}
 				
 				connectionInfoHelper.setJNDIName(modelResource, jndiName);
 
