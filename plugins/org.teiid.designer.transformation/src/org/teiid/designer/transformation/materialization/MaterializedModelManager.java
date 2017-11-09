@@ -70,6 +70,8 @@ public class MaterializedModelManager implements ReverseEngConstants {
     public static final String TRANSLATOR_KEY = "translator:name"; //$NON-NLS-1$
     public static final String JDG6_TRANSLATOR_NAME = "infinispan-cache-dsl"; //$NON-NLS-1$
     public static final String JDG7_TRANSLATOR_NAME = "infinispan-hotrod"; //$NON-NLS-1$
+    public static final String SUPPORTS_DIRECT_QUERY_PROCEDURE = "translator:SupportsDirectQueryProcedure"; //$NON-NLS-1$
+    public static final String SUPPORTS_NATIVE_QUERIES = "translator:SupportsNativeQueries"; //$NON-NLS-1$
     
     private static IStatus OK_STATUS = new Status(IStatus.OK, TransformationPlugin.PLUGIN_ID,
     		TransformationPlugin.Util.getString("MaterializedModelManager.allInputsOkStatusMessage"));  //$NON-NLS-1$
@@ -212,6 +214,8 @@ public class MaterializedModelManager implements ReverseEngConstants {
             } else {
             	props.put(TRANSLATOR_KEY, JDG6_TRANSLATOR_NAME);
             }
+    		props.setProperty(SUPPORTS_DIRECT_QUERY_PROCEDURE, Boolean.toString(true));
+    		props.setProperty(SUPPORTS_NATIVE_QUERIES, Boolean.toString(true));
             helper.setProperties(newSourceModel, props);
             
             ModelBuildUtil.rebuildImports(targetModelResource.getEmfResource(), true);
