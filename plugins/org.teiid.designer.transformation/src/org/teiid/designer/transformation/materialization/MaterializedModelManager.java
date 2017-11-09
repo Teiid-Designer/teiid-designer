@@ -10,6 +10,7 @@ package org.teiid.designer.transformation.materialization;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -32,6 +33,7 @@ import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ResourceAnnotationHelper;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
@@ -63,6 +65,11 @@ import org.teiid.designer.transformation.reverseeng.ReverseEngConstants;
 public class MaterializedModelManager implements ReverseEngConstants {
     private static String RESULT_MSG = TransformationPlugin.Util.getString("MaterializedModelManager.resultStr"); //$NON-NLS-1$
     private static String OK_MSG = TransformationPlugin.Util.getString("MaterializedModelManager.success"); //$NON-NLS-1$
+    public static final String CONNECTION_NAMESPACE = "connection:"; //$NON-NLS-1$
+    public static final String MATVIEW_JDG_SOURCE = "matview-jdg-source"; //$NON-NLS-1$
+    public static final String TRANSLATOR_KEY = "translator:name"; //$NON-NLS-1$
+    public static final String JDG6_TRANSLATOR_NAME = "infinispan-cache-dsl"; //$NON-NLS-1$
+    public static final String JDG7_TRANSLATOR_NAME = "infinispan-hotrod"; //$NON-NLS-1$
     
     private static IStatus OK_STATUS = new Status(IStatus.OK, TransformationPlugin.PLUGIN_ID,
     		TransformationPlugin.Util.getString("MaterializedModelManager.allInputsOkStatusMessage"));  //$NON-NLS-1$
@@ -196,6 +203,16 @@ public class MaterializedModelManager implements ReverseEngConstants {
             assistant.setPropertyValue(selectedViewOrTable, RelationalModelExtensionConstants.PropertyIds.MATVIEW_AFTER_LOAD_SCRIPT, afterLoadScriptStr);
             assistant.setPropertyValue(selectedViewOrTable, RelationalModelExtensionConstants.PropertyIds.MATVIEW_BEFORE_LOAD_SCRIPT, beforeLoadScriptStr);
             assistant.setPropertyValue(selectedViewOrTable, RelationalModelExtensionConstants.PropertyIds.MATERIALIZED_STAGE_TABLE, stageTableStr);
+            
+            ResourceAnnotationHelper helper = new ResourceAnnotationHelper();
+            Properties props = new Properties();
+            props.put(CONNECTION_NAMESPACE + MATVIEW_JDG_SOURCE, Boolean.TRUE.toString());
+            if( isJDG7DOT1 ) {
+            	props.put(TRANSLATOR_KEY, JDG7_TRANSLATOR_NAME);
+            } else {
+            	props.put(TRANSLATOR_KEY, JDG6_TRANSLATOR_NAME);
+            }
+            helper.setProperties(newSourceModel, props);
             
             ModelBuildUtil.rebuildImports(targetModelResource.getEmfResource(), true);
             

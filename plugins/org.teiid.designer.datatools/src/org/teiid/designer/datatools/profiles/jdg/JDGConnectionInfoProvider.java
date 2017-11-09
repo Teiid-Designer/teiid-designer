@@ -17,6 +17,7 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
 
 public class JDGConnectionInfoProvider  extends ConnectionInfoHelper implements IConnectionInfoProvider, IJDGProfileConstants.PropertyKeys {
+	public static final String MATVIEW_JDG_SOURCE = "matview-jdg-source"; //$NON-NLS-1$
 	
     @Override
 	public String getDataSourcePasswordPropertyKey() {
@@ -110,6 +111,8 @@ public class JDGConnectionInfoProvider  extends ConnectionInfoHelper implements 
 		Properties connectionProps = getCommonProfileProperties(connectionProfile);
 
 		Properties props = connectionProfile.getBaseProperties();
+		
+		boolean isMatViewModel = getHelper().getPropertyValue(modelResource, CONNECTION_NAMESPACE + MATVIEW_JDG_SOURCE) != null;
 
 		String result = props.getProperty(IJBossDsProfileConstants.TRANSLATOR_PROP_ID);
 		if (null != result) {
@@ -177,6 +180,10 @@ public class JDGConnectionInfoProvider  extends ConnectionInfoHelper implements 
 		getHelper().removeProperties(modelResource, CONNECTION_NAMESPACE);
 		connectionProps.setProperty(CLASS_NAME, IJDGProfileConstants.REQUIRED_CLASS_NAME);
 
+		if( isMatViewModel ) {
+			// replace the property
+			connectionProps.setProperty(CONNECTION_NAMESPACE + MATVIEW_JDG_SOURCE, Boolean.TRUE.toString());
+		}
 
 		getHelper().setProperties(modelResource, connectionProps);
 		
@@ -185,7 +192,9 @@ public class JDGConnectionInfoProvider  extends ConnectionInfoHelper implements 
 			setJNDIName(modelResource, result);
 		}
 
-		addMaterializationTranslatorOverrideProperties(modelResource);
+		if( isMatViewModel ) {
+			addMaterializationTranslatorOverrideProperties(modelResource);
+		}
 	}
 
 	@Override
