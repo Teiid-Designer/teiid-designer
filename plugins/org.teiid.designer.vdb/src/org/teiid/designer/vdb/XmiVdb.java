@@ -961,11 +961,24 @@ public final class XmiVdb extends BasicVdb {
             // Is possible to deploy udf jar archives separately and drop in
             // a property that references the udf.
             //
+            // Note that there can be multiple UDF jars and they could be 
+            String libString = StringConstants.EMPTY_STRING;
+            int nEntries = getUdfJarEntries().size();
+            int count = 0;
             for (VdbFileEntry entry : getUdfJarEntries()) {
-                dynVdb.getProperties().setProperty(VdbFolders.UDF.getWriteFolder(), entry.getName());
-                generateStatus.add(new Status(IStatus.WARNING, PLUGIN_ID,
-                                              VdbPlugin.UTIL.getString("XmiVdb.udfPropertyAdded",  entry.getName())) ); //$NON-NLS-1$
+            	libString = libString + "deployement." + entry.getName() + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$
+                count++;
+                if( count < nEntries ) {
+                	libString = libString + StringConstants.COMMA + StringConstants.SPACE;
+                }
+
             }
+            
+            if( libString != null ) {
+                generateStatus.add(new Status(IStatus.WARNING, PLUGIN_ID,
+                        VdbPlugin.UTIL.getString("XmiVdb.udfPropertyAdded")) ); //$NON-NLS-1$
+            	dynVdb.getProperties().setProperty(VdbFolders.UDF.getWriteFolder(), libString);
+        	}
 
             Collection<ModelResource> modelResources = new ArrayList<ModelResource>();
             ModelUtil.collectModelResources(getSourceFile().getProject(),  modelResources);
