@@ -1565,13 +1565,6 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             return; // don't create anything
         }
 
-        // Skip if no primary keys are to be imported ...
-        final boolean includeUniqueIndexes = context.getJdbcImportSettings().isIncludeUniqueIndexes();
-        final boolean includeForeignKeys = context.getJdbcImportSettings().isIncludeForeignKeys();
-        if (!includeUniqueIndexes && !includeForeignKeys) {
-            return; // skip if no unique indexes AND no foreign keys are included
-        }
-
         try {
             // Get the column information ...
             final Request request = tableNode.getRequest(GetPrimaryKeyRequest.NAME, false);
