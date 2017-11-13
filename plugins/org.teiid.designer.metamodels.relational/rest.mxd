@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="REST" namespaceUri="http://teiid.org/rest" version="2" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
+<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="REST" namespaceUri="http://teiid.org/rest" version="3" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
     <p:description>REST extended virtual procedure properties</p:description>
     <p:modelType>VIRTUAL</p:modelType>
     <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureImpl">
@@ -31,6 +31,15 @@
         <p:property advanced="false" index="true" masked="false" name="DESCRIPTION" required="false" type="string">
             <p:description locale="en_US">The description of this procedure.</p:description>
             <p:display locale="en_US">Description</p:display>
+        </p:property>
+        <p:property advanced="false" defaultValue=" " index="true" masked="false" name="PRODUCES" required="false" type="string">
+            <p:description locale="en_US">Type of content produced by the service: xml | json | plain | any text.</p:description>
+            <p:display locale="en_US">Content Type</p:display>
+            <p:allowedValue>xml</p:allowedValue>
+            <p:allowedValue> </p:allowedValue>
+            <p:allowedValue>json</p:allowedValue>
+            <p:allowedValue>plain</p:allowedValue>
+            <p:allowedValue>any text</p:allowedValue>
         </p:property>
     </p:extendedMetaclass>
 </modelExtension>

@@ -74,6 +74,7 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
                 		PropertyIds.URI.equals(propId) || 
                 		PropertyIds.CHARSET.equals(propId) || 
                 		PropertyIds.HEADERS.equals(propId) || 
+                		PropertyIds.PRODUCES.equals(propId) || 
                 		PropertyIds.DESCRIPTION.equals(propId))) {
                     return propDefn;
                 }
@@ -108,6 +109,7 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
 				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD, restMethod);
 				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.CHARSET, restCharSet);
 				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.HEADERS, restHeaders);
+				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.PRODUCES, restHeaders);
 				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.DESCRIPTION, restDescription);
 			} catch (Exception e) {
 				RelationalPlugin.Util.log(e);
@@ -130,6 +132,8 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
 					assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.CHARSET, value);
 				} else if( RestModelExtensionConstants.PropertyIds.HEADERS.equals(id)) {
 					assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.HEADERS, value);
+				}  else if( RestModelExtensionConstants.PropertyIds.PRODUCES.equals(id)) {
+					assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.PRODUCES, value);
 				} else if( RestModelExtensionConstants.PropertyIds.DESCRIPTION.equals(id)) {
 					assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.DESCRIPTION, value);
 				}

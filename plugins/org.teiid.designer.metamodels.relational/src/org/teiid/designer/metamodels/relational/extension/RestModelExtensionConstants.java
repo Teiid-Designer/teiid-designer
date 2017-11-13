@@ -45,6 +45,21 @@ public interface RestModelExtensionConstants {
     * 
     */
    String[] CHARSETS_ARRAY = {CHARSETS.UDF8, CHARSETS.USASCII};
+   
+   /**
+   *
+   */
+  interface PRODUCES {
+  	String XML = "xml"; //$NON-NLS-1$
+  	String JSON = "json"; //$NON-NLS-1$
+  	String PLAIN = "plain"; //$NON-NLS-1$
+  	String ANY_TEXT = "any text"; //$NON-NLS-1$
+  }
+  
+  /**
+   * 
+   */
+  String[] PRODUCES_ARRAY = {PRODUCES.XML, PRODUCES.JSON, PRODUCES.PLAIN, PRODUCES.ANY_TEXT };
 
     /**
      * 
@@ -92,6 +107,12 @@ public interface RestModelExtensionConstants {
          * @since 8.1
          */
         String CHARSET = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "charset"); //$NON-NLS-1$
+        
+        /**
+         * The property definition identifier for the PRODUCER.
+         * @since 8.1
+         */
+        String PRODUCES = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "PRODUCES"); //$NON-NLS-1$
         
         /**
          * The property definition identifier for the Headers.
