@@ -138,6 +138,14 @@ public interface PluginConstants {
         String NEW_VDB_ICON = OBJ16 + "newvdb_wiz.gif"; //$NON-NLS-1$
         
         String RESTORE_DEFAULT_VALUE = CTOOL16 + "restore-default-value.png"; //$NON-NLS-1$
+        
+        String TABLE_IMAGE = OBJ16 + "relational-table.png"; //$NON-NLS-1$
+        String PROCEDURE_IMAGE = OBJ16 + "relational-procedure.png"; //$NON-NLS-1$
+        String COLUMN_IMAGE = OBJ16 + "column.png"; //$NON-NLS-1$
+        String PARAMETER_IMAGE = OBJ16 + "parameter.png"; //$NON-NLS-1$
+        String FOREIGN_KEY_IMAGE = OBJ16 + "foreign-key.png"; //$NON-NLS-1$
+        String PRIMARY_KEY_IMAGE = OBJ16 + "primary-key.png"; //$NON-NLS-1$
+        String UNIQUE_CONSTRAINT_IMAGE = OBJ16 + "unique-constraint.png"; //$NON-NLS-1$
     }
 
     // ======================================================================================================

@@ -37,12 +37,8 @@ public class SystemModelView extends ModelerView {
     public void createPartControl(final Composite parent) {
 
         super.createPartControl(parent);
-
-        treeViewer = new SystemModelTreeViewer(parent);
-
         
-        // hook up our status bar manager for EObject selection inside this view
-        treeViewer.addSelectionChangedListener(getStatusBarListener());
+        treeViewer = new SystemModelTreeViewer(parent);
 
         // hook up this view's selection provider to this site
         getViewSite().setSelectionProvider(treeViewer);
