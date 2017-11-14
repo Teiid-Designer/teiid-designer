@@ -180,6 +180,17 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	proc.setName("invokeHttp"); //$NON-NLS-1$
     	
     	ProcedureParameter param = factory.createProcedureParameter();
+    	
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("result"); //$NON-NLS-1$
+    	param.setProcedure(proc);
+    	param.setDirection(DirectionKind.RETURN_LITERAL);
+    	if( blobType != null) {
+    		param.setType(blobType);
+    	}
+    	
+    	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("action"); //$NON-NLS-1$
     	param.setNullable(NullableType.NULLABLE_LITERAL);
@@ -210,15 +221,6 @@ public class WebServiceRelationalModelContributor implements INewModelWizardCont
     	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( booleanType != null) {
     		param.setType(booleanType);
-    	}
-    	
-    	param = factory.createProcedureParameter();
-    	param.setProcedure(proc);
-    	param.setName("result"); //$NON-NLS-1$
-    	param.setProcedure(proc);
-    	param.setDirection(DirectionKind.RETURN_LITERAL);
-    	if( blobType != null) {
-    		param.setType(blobType);
     	}
     	
     	param = factory.createProcedureParameter();

@@ -297,6 +297,15 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	proc.setName("invokeHttp"); //$NON-NLS-1$
     	
     	ProcedureParameter param = factory.createProcedureParameter();
+    	
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("result"); //$NON-NLS-1$
+    	param.setProcedure(proc);
+    	param.setDirection(DirectionKind.RETURN_LITERAL);
+    	param.setType(blobType);
+    	
+    	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("action"); //$NON-NLS-1$
     	param.setNullable(NullableType.NULLABLE_LITERAL);
@@ -333,13 +342,6 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	
     	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
-    	param.setName("result"); //$NON-NLS-1$
-    	param.setProcedure(proc);
-    	param.setDirection(DirectionKind.RETURN_LITERAL);
-    	param.setType(blobType);
-    	
-    	param = factory.createProcedureParameter();
-    	param.setProcedure(proc);
     	param.setName("contentType"); //$NON-NLS-1$
     	param.setDirection(DirectionKind.OUT_LITERAL);
     	param.setNullable(NullableType.NULLABLE_LITERAL);
@@ -347,6 +349,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     		param.setType(stringType);
     		param.setLength(DEFAULT_STRING_LENGTH);
     	}
+    	
     	param = factory.createProcedureParameter();
     	param.setProcedure(proc);
     	param.setName("headers"); //$NON-NLS-1$
