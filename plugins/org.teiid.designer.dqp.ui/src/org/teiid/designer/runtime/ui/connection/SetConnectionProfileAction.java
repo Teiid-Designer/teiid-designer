@@ -132,8 +132,8 @@ public class SetConnectionProfileAction extends SortableSelectionAction  impleme
     	String msg = e.getMessage();
     	if( msg !=  null && msg.equalsIgnoreCase(NO_PROFILE_PROVIDER_FOUND_KEY) ) {
     		MessageDialog.openWarning(getShell(),
-                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.noProvileProviderTitle"), //$NON-NLS-1$
-                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.noProvileProviderMessage")); //$NON-NLS-1$
+                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.noProfileProviderTitle"), //$NON-NLS-1$
+                                    DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.noProfileProviderMessage")); //$NON-NLS-1$
     	} else {
             MessageDialog.openError(getShell(),
                                     DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.exceptionMessage"), e.getMessage()); //$NON-NLS-1$
