@@ -7,7 +7,6 @@
  */
 package org.teiid.rest.services;
 
-import java.io.IOException;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -19,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLXML;
+import java.sql.Statement;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -35,9 +35,7 @@ import org.teiid.core.types.XMLType;
 import org.teiid.core.util.ReaderInputStream;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
-import org.teiid.query.parser.QueryParser;
 import org.teiid.query.parser.TeiidNodeFactory;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.symbol.XMLSerialize;
 import org.teiid.query.function.source.XMLSystemFunctions;
@@ -71,8 +69,6 @@ public class TeiidRSProviderPost {
     	Object result = null;
     	InputStream resultStream = null;
      
-        String responseString = null;
-        
         try {
 
             DataSource ds = getDataSource(properties.getProperty("jndiName"));
@@ -81,6 +77,12 @@ public class TeiidRSProviderPost {
             if (parameterMap.isEmpty()) {
                 noParm = true;
             }
+            
+            final String lobSetting = "SELECT teiid_session_set('clean_lobs_onclose', false)";
+            
+            Statement lobSettingStatement = conn.createStatement();
+            
+            lobSettingStatement.execute(lobSetting);
 
             final String executeStatement = "call " + procedureName + (noParm ? "()" : createParmString(parameterMap)) + ";"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
 
@@ -141,7 +143,7 @@ public class TeiidRSProviderPost {
             }
         }
         
-        return resultStream;
+        return resultStream; 
     }
     
     private InputStream handleResult(String charSet, Object result, Properties properties) throws SQLException, UnsupportedEncodingException {
@@ -151,33 +153,38 @@ public class TeiidRSProviderPost {
         
         String teiidVersion = properties.getProperty("teiidVersion");
         ITeiidServerVersion version = new TeiidServerVersion(teiidVersion);
-        QueryParser queryParser = new QueryParser(version);
-        TeiidParser parser = queryParser.getTeiidParser();
+        InputStream iStreamResult = null;
         
 		if (result instanceof SQLXML) {
-	    	InputStream iStreamResult = null;
+			
 			if (charSet != null) {
-				XMLSerialize serialize = (XMLSerialize)TeiidNodeFactory.getInstance().create(version, ASTNodes.XML_SERIALIZE);
+                XMLSerialize serialize = (XMLSerialize)TeiidNodeFactory.getInstance().create(version, ASTNodes.XML_SERIALIZE);
 		    	serialize.setTypeString("blob"); //$NON-NLS-1$
 		    	serialize.setDeclaration(true);
 		    	serialize.setEncoding(charSet);
 		    	serialize.setDocument(true);
 
+		    	XMLType type = new XMLType((SQLXML)result);
+		    	
+		    	type.setEncoding(charSet);
+
 		    	try {
-		    		iStreamResult = ((BlobType)XMLSystemFunctions.serialize(serialize, new XMLType((SQLXML)result))).getBinaryStream();
+		    		iStreamResult = ((BlobType)XMLSystemFunctions.serialize(serialize, type)).getBinaryStream();
 				} catch (Exception e) {
 					throw new SQLException(e);
 				}
 			}
-			return iStreamResult;
+			iStreamResult = ((SQLXML)result).getBinaryStream();
 		}
 		else if (result instanceof Blob) {
-			return ((Blob)result).getBinaryStream();
+			iStreamResult =  ((Blob)result).getBinaryStream();
 		}
 		else if (result instanceof Clob) {
-			return new ReaderInputStream(((Clob)result).getCharacterStream(), Charset.forName(charSet));
+			iStreamResult =  new ReaderInputStream(((Clob)result).getCharacterStream(), Charset.forName(charSet));
+		}else{
+			iStreamResult =  new ByteArrayInputStream(result.toString().getBytes(charSet));
 		}
-		return new ByteArrayInputStream(result.toString().getBytes(charSet));
+		return iStreamResult;
 	}
 
     protected String createParmString( Map<String, String> parameterMap ) {
