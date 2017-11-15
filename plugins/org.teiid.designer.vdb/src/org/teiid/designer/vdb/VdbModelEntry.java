@@ -518,7 +518,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
         	for( TranslatorOverride to : overrides) {
         		for( VdbSource source : this.sourceInfo.getSources() ) {
         			String translatorName = source.getTranslatorName();
-	        		if( translatorName != null && !translatorName.toString().equalsIgnoreCase(to.getType()) ) {
+	        		if( translatorName != null && translatorName.toString().equalsIgnoreCase(to.getName()) ) {
 	        			return to;
 	        		}
         		}

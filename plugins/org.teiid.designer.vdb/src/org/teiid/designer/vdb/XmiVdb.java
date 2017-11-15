@@ -1082,8 +1082,16 @@ public final class XmiVdb extends BasicVdb {
 		                Metadata metadata = new Metadata(ddl, Metadata.Type.DDL);
 		                model.setMetadata(metadata);
                 	}
+                	
+                	String overridedTranslator = null;
+                	if(entry.getTranslatorOverride() != null) {
+                	    overridedTranslator = entry.getTranslatorOverride().getType();
+                	}
+                	
 	                // Check the translator. If infinispan-hotrod then add second metadata tag of type NATIVE
-	                if( singleTranslatorName != null && ModelElement.TEIID_INFINISPAN_HOTROD_DRIVER.equalsIgnoreCase(singleTranslatorName)) {
+	                if( singleTranslatorName != null && 
+	                    (ModelElement.TEIID_INFINISPAN_HOTROD_DRIVER.equalsIgnoreCase(singleTranslatorName) 
+	                    || ModelElement.TEIID_INFINISPAN_HOTROD_DRIVER.equalsIgnoreCase(overridedTranslator))) {
 	                	Metadata metadata = new Metadata(null, Metadata.Type.NATIVE);
 	                	model.setMetadata(metadata);
 	                }
