@@ -974,7 +974,7 @@ public final class XmiVdb extends BasicVdb {
 
             }
             
-            if( libString != null ) {
+            if( !libString.equals(StringConstants.EMPTY_STRING) ) {
                 generateStatus.add(new Status(IStatus.WARNING, PLUGIN_ID,
                         VdbPlugin.UTIL.getString("XmiVdb.udfPropertyAdded")) ); //$NON-NLS-1$
             	dynVdb.getProperties().setProperty(VdbFolders.UDF.getWriteFolder(), libString);
