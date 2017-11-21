@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="excel" namespaceUri="http://www.teiid.org/translator/excel/2014" version="1" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
+    <p:modelType>PHYSICAL</p:modelType>
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ColumnImpl">
+        <p:property advanced="false" index="true" masked="false" name="CELL_NUMBER" required="true" type="integer">
+        	<p:description locale="en_US">The column cell number</p:description>
+			<p:display locale="en_US">Cell Number</p:display>
+		</p:property>
+    </p:extendedMetaclass>
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.BaseTableImpl">
+        <p:property advanced="false" index="true" masked="false" name="FILE" required="true" type="string">
+        	<p:description locale="en_US">The Excel full file name and path</p:description>
+			<p:display locale="en_US">File</p:display>
+		</p:property>
+        <p:property advanced="false" index="true" masked="false" name="FIRST_DATA_ROW_NUMBER" required="false" type="integer">
+        	<p:description locale="en_US">First data row number</p:description>
+			<p:display locale="en_US">First Data Row</p:display>
+		</p:property>
+    </p:extendedMetaclass>
+</modelExtension>

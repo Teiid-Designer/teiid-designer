@@ -249,4 +249,11 @@
             path="rest.mxd">
       </extensionDefinition>
    </extension>
+   <extension
+         point="org.teiid.designer.extension.modelExtensionProvider">
+      <extensionDefinition
+            className="org.teiid.designer.metamodels.relational.extension.ExcelModelExtensionAssistant"
+            path="excel.mxd">
+      </extensionDefinition>
+   </extension>
 </plugin>
