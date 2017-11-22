@@ -13,6 +13,7 @@ import javax.xml.ws.ServiceMode;
 import javax.xml.ws.WebServiceProvider;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,6 +38,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -113,7 +115,7 @@ public class ${className}{
         return (Element)node;
     }
 
-    protected Map<String, String> getJSONInputs( InputStream is, String charset ) {
+    protected Map<String, String> getJSONInputs( StreamingOutput is, String charset ) {
     	Map<String, String> parameters = getParameterMap();
     	 
     	try {
@@ -128,33 +130,24 @@ public class ${className}{
         return parameters;
     }
 
-    public String convertStreamToString( InputStream is, String charset) {
+    public String convertStreamToString( StreamingOutput is, String charset) {
         /*
          * To convert the InputStream to String we use the
          * Reader.read(char[] buffer) method. 
          */
         if (is != null) {
-            Writer writer = new StringWriter();
 
-            char[] buffer = new char[1024];
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
             try {
-                Reader reader = new BufferedReader(new InputStreamReader(is, charset)); //$NON-NLS-1$
-                int n;
-                while ((n = reader.read(buffer)) != -1) {
-                    writer.write(buffer, 0, n);
-                }
+            	
+            	is.write(output);
+            	String string = new String(output.toByteArray(), charset);
+                
             }catch(Exception ioe){
             	throw new WebApplicationException(ioe, Response.Status.INTERNAL_SERVER_ERROR);	
             }
             
-            finally {
-            	try {
-            		is.close();
-            	}catch(Exception e){
-            		//Nothing to do here
-            	}
-            }
-            return writer.toString();
+            return output.toString();
         }
 
         return ""; //$NON-NLS-1$
