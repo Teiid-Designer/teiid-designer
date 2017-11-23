@@ -720,8 +720,8 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
         
         // Gen method signature
         if (isXml){
-        	sb.append("@ApiOperation(value=\"(XML) " + restProcedure.getProcedureName() + ": " + restProcedure.getDescription() + "\",response=InputStream.class)" + NEWLINE + "\t"); //$NON-NLS-1$
-        	sb.append("public InputStream " + restProcedure.getProcedureName() + methodAppendString + "( "); //$NON-NLS-1$ //$NON-NLS-2$
+        	sb.append("@ApiOperation(value=\"(XML) " + restProcedure.getProcedureName() + ": " + restProcedure.getDescription() + "\",response=StreamingOutput.class)" + NEWLINE + "\t"); //$NON-NLS-1$
+        	sb.append("public StreamingOutput " + restProcedure.getProcedureName() + methodAppendString + "( "); //$NON-NLS-1$ //$NON-NLS-2$
         }else{
         	sb.append("@ApiOperation(value=\"(JSON) " + restProcedure.getProcedureName() + ": " + restProcedure.getDescription() + "\",response=String.class)" + NEWLINE + "\t");
         	sb.append("public String " + restProcedure.getProcedureName() + methodAppendString + "( "); //$NON-NLS-1$ //$NON-NLS-2$

@@ -8,7 +8,9 @@
 package org.teiid.rest.services;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.nio.charset.Charset;
@@ -19,6 +21,7 @@ import java.sql.SQLException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLXML;
 import java.sql.Statement;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -28,11 +31,13 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.xml.ws.WebServiceContext;
 
 import org.teiid.core.types.BlobType;
 import org.teiid.core.types.XMLType;
 import org.teiid.core.util.ReaderInputStream;
+import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.query.parser.TeiidNodeFactory;
@@ -61,18 +66,16 @@ public class TeiidRSProviderPost {
         return ds;
     }
 
-    public InputStream execute( String procedureName,
+    public StreamingOutput execute( String procedureName,
                            Map<String, String> parameterMap, String charSet, Properties properties) throws WebApplicationException {
 
-    	Connection conn = null;
     	PreparedStatement statement = null;
-    	Object result = null;
-    	InputStream resultStream = null;
+        Object result = null;
      
         try {
 
             DataSource ds = getDataSource(properties.getProperty("jndiName"));
-            conn = ds.getConnection();
+            final Connection conn= ds.getConnection();
             boolean noParm = false;
             if (parameterMap.isEmpty()) {
                 noParm = true;
@@ -100,6 +103,27 @@ public class TeiidRSProviderPost {
                 ResultSet rs = statement.getResultSet();
                 if (rs.next()) {
                     result = rs.getObject(1);
+                    final Object input = result;
+                    
+                    return new StreamingOutput() {
+            			
+            			@Override
+            			public void write(OutputStream output) throws IOException,
+            					WebApplicationException {
+            				try {
+            			        ObjectConverterUtil.write(output, handleResult(charSet, input, properties), -1);
+            				} catch (SQLException e) {
+            					throw new WebApplicationException(e);
+            				} finally {
+            		            if (conn != null) {
+            		                try {
+            		                    conn.close();
+            		                } catch (SQLException e) {
+            		                }
+            		            }
+            		        }
+            			}
+            		};
                 } else {
                     logger.log(Level.WARNING, RestPlugin.Util.getString("TeiidRSProvider.8") //$NON-NLS-1$
                                               + procedureName);
@@ -107,12 +131,8 @@ public class TeiidRSProviderPost {
                                                   RestPlugin.Util.getString("TeiidRSProvider.2")); //$NON-NLS-1$
                 }
 
-                rs.close();
             }
-
-            statement.close(); 
-            resultStream = handleResult(charSet, result, properties);
-
+            
         } catch (SQLException e) {
             String msg = RestPlugin.Util.getString("TeiidRSProvider.1"); //$NON-NLS-1$
             logger.logrb(Level.SEVERE, "TeiidRSProvider", "execute", RestPlugin.PLUGIN_ID, msg, new Throwable(e)); //$NON-NLS-1$ //$NON-NLS-2$
@@ -122,28 +142,10 @@ public class TeiidRSProviderPost {
             String msg = RestPlugin.Util.getString("TeiidRSProvider.1"); //$NON-NLS-1$
             logger.logrb(Level.SEVERE, "TeiidRSProvider", "execute", RestPlugin.PLUGIN_ID, msg, new Throwable(e)); //$NON-NLS-1$ //$NON-NLS-2$
             createWebApplicationException(e, e.getMessage());
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    /*
-                     * In this case, we do not return an exception to the
-                     * customer. We simply log this problem. If we do
-                     * a return from the finally block, we will override the
-                     * return in the try/catch that will either return the
-                     * 'true' error or return a valid result document. Either
-                     * way we do not want to return an exception just because
-                     * closing the connection failed.
-                     */
-                    String msg = RestPlugin.Util.getString("TeiidRSProvider.1"); //$NON-NLS-1$
-                    logger.logrb(Level.SEVERE, "TeiidRSProvider", "execute", RestPlugin.PLUGIN_ID, msg, new Throwable(e)); //$NON-NLS-1$ //$NON-NLS-2$
-
-                }
-            }
         }
         
-        return resultStream; 
+        return null;
+        
     }
     
     private InputStream handleResult(String charSet, Object result, Properties properties) throws SQLException, UnsupportedEncodingException {
@@ -173,8 +175,10 @@ public class TeiidRSProviderPost {
 				} catch (Exception e) {
 					throw new SQLException(e);
 				}
+			}else{
+				iStreamResult = ((SQLXML)result).getBinaryStream();
 			}
-			iStreamResult = ((SQLXML)result).getBinaryStream();
+			
 		}
 		else if (result instanceof Blob) {
 			iStreamResult =  ((Blob)result).getBinaryStream();
