@@ -126,10 +126,10 @@ public class MaterializationWizardPage_2 extends AbstractWizardPage implements U
 	        }
 
 		}
-		
-		if( this.manager.getJdgVersion() == JDG_VERSION.JDG_7_DOT_1 ) {
-			this.createPojoCB.setEnabled(false);
-		}
+
+    	if( this.createPojoCB != null ) {
+    		this.createPojoCB.setEnabled(this.manager.getJdgVersion() == JDG_VERSION.JDG_6_DOT_6);
+    	}
 
 		
 		{ // ==========  POJO Package and Class name info ========================
@@ -515,7 +515,9 @@ public class MaterializationWizardPage_2 extends AbstractWizardPage implements U
     		this.moduleZipFileNameField.setEnabled(doGenerateModule);
     		this.workspaceLocationBrowseButton.setEnabled(doCreatePojo);
     	}
-		this.createPojoCB.setEnabled(this.manager.getJdgVersion() == JDG_VERSION.JDG_6_DOT_6);
+    	if( this.createPojoCB != null ) {
+    		this.createPojoCB.setEnabled(this.manager.getJdgVersion() == JDG_VERSION.JDG_6_DOT_6);
+    	}
     	
     	// Set image for location
     	IContainer location = this.manager.getPojoWorkspaceFolder();

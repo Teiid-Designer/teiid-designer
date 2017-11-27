@@ -108,6 +108,9 @@ public class MaterializedModelManager implements ReverseEngConstants {
     
     public MaterializedModelManager(EObject selectedTableOrView, Mode mode) {
     	this.mode = mode;
+    	if( mode == Mode.POJO ) {
+    		jdgVersion = JDG_VERSION.JDG_6_DOT_6;
+    	}
     	
     	//
     	// NOTE that for Materialization a virtual table must be selected
