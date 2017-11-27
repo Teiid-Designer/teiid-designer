@@ -172,6 +172,12 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 		        				String title = DqpUiConstants.UTIL.getString("GenerateDynamicVdbManager.generateDynamicVdbStatus");
 		        				
 				            	if( vdbStatus.getSeverity() == IStatus.WARNING && !ignoreWarning ) {
+				            		if( messages.size() == 1 ) {
+				            			MessageDialog.openWarning(UiUtil.getWorkbenchShellOnlyIfUiThread(), 
+				            				title,
+//				            				DqpUiConstants.UTIL.getString("GenerateDynamicVdbManager.warningsOnExport"),
+				            				messages.get(0));
+				            		} else {
 				            		ListMessageDialog.openWarning(
 				            				UiUtil.getWorkbenchShellOnlyIfUiThread(), 
 				            				title,
@@ -179,6 +185,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 				            				DqpUiConstants.UTIL.getString("GenerateDynamicVdbManager.warningsOnExport"),
 				            				messages,
 				            				null);
+				            		}
 				            	} else if( vdbStatus.getSeverity() == IStatus.ERROR ) {
 				            		ListMessageDialog.openError(Display.getCurrent().getActiveShell(), title, vdbStatus.getMessage());
 				            	}
