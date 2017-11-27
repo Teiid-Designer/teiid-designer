@@ -323,7 +323,13 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
 		} catch (Exception ex) {
             UTIL.log(ex);
 		}
-        return TranslatorHelper.getTranslator(driverName, translatorNames, teiidVersion);
+        
+        // Now we need to set the proper translator name if possible
+        // NOte that driverName is good for JDBC jar-related data sources
+        // For Resource Adapters, the "class-name" data source property should be used
+        // String classNameValue = getPropertyValue("class-name", propertyItems);  //$NON-NLS-1$
+        
+        return TranslatorHelper.getTranslator(driverName, importManager.getDataSourceClassName(), translatorNames, teiidVersion);
     }
     
     /*

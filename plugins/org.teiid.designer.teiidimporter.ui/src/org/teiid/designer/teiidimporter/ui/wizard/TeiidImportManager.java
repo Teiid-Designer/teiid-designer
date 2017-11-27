@@ -74,6 +74,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 public class TeiidImportManager implements ITeiidImportServer, UiConstants {
 
     private static final String PREVIEW_DATASOURCE_PREFIX = "PREVIEW_";  //$NON-NLS-1$
+    private static final String DATA_SOURCE_CLASS_NAME_KEY = "class-name";  //$NON-NLS-1$
     
     private IPath targetModelLocation = null;
     private String targetModelName = null;
@@ -169,6 +170,10 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
      */
     public Properties getDataSourceProperties() {
         return this.dataSourceProps;
+    }
+    
+    public String getDataSourceClassName() {
+    	return this.dataSourceProps.getProperty(DATA_SOURCE_CLASS_NAME_KEY);
     }
     
     /**

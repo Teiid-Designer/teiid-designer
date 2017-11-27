@@ -47,8 +47,20 @@ public class TranslatorHelper implements UiConstants {
     public static final String TEIID_WEBSERVICE_DRIVER_DISPLAYNAME = "WebService"; //$NON-NLS-1$
 
     public static final String TEIID_GOOGLE_CLASS = "org.teiid.resource.adapter.google.SpreadsheetManagedConnectionFactory"; //$NON-NLS-1$
+    public static final String TEIID_FILE_CLASS = "org.teiid.resource.adapter.file.FileManagedConnectionFactory"; //$NON-NLS-1$
+    public static final String TEIID_INFINISPAN_CLASS = "org.teiid.resource.adapter.infinispan.InfinispanManagedConnectionFactory"; //$NON-NLS-1$
+    public static final String TEIID_LDAP_CLASS = "org.teiid.resource.adapter.ldap.LDAPManagedConnectionFactory"; //$NON-NLS-1$
+    public static final String TEIID_SF_CLASS = "org.teiid.resource.adapter.salesforce.SalesForceManagedConnectionFactory"; //$NON-NLS-1$
+    public static final String TEIID_WS_CLASS = "org.teiid.resource.adapter.ws.WSManagedConnectionFactory"; //$NON-NLS-1$
+    public static final String TEIID_INFINISPAN_HOTROD_CLASS = "org.teiid.resource.adapter.infinispan.hotrod.InfinispanManagedConnectionFactory"; //$NON-NLS-1$
+    public static final String TEIID_ACCUMULO_CLASS = "org.teiid.resource.adapter.accumulo.AccumuloManagedConnectionFactory"; //$NON-NLS-1$
+    public static final String TEIID_MONGODB_CLASS = "org.teiid.resource.adapter.mongodb.MongoDBManagedConnectionFactory"; //$NON-NLS-1$
+    public static final String TEIID_COUCHBASE_CLASS = "org.teiid.resource.adapter.couchbase.CouchbaseManagedConnectionFactory"; //$NON-NLS-1$
+    
     
     public static final String ACCESS = "access"; //$NON-NLS-1$
+    public static final String ACCUMULO = "accumulo"; //$NON-NLS-1$
+    public static final String COUCHBASE = "couchbase"; //$NON-NLS-1$
     public static final String DB2 = "db2"; //$NON-NLS-1$
     public static final String DERBY = "derby"; //$NON-NLS-1$
     public static final String FILE = "file"; //$NON-NLS-1$
@@ -108,11 +120,50 @@ public class TranslatorHelper implements UiConstants {
      * @param teiidVersion the Teiid Version
      * @return the best fit translator for the provided driver
      */
-	public static String getTranslator(String driverName, Collection<String> translatorNames, ITeiidServerVersion teiidVersion) {
+	public static String getTranslator(String driverName, String className, Collection<String> translatorNames, ITeiidServerVersion teiidVersion) {
 	    CoreArgCheck.isNotEmpty(driverName,"driverName is Empty"); //$NON-NLS-1$
         CoreArgCheck.isNotEmpty(translatorNames,"translatorNames is Empty"); //$NON-NLS-1$
 	    
         boolean isTeiid84OrHigher = isTeiid84OrHigher(teiidVersion);
+        
+        // Check className first
+        if( className != null ) {
+        	if(className.equals(TEIID_FILE_CLASS) && translatorNames.contains(FILE)) {
+        		return FILE;
+        	}
+
+        	if(className.equals(TEIID_GOOGLE_CLASS) && translatorNames.contains(GOOGLE_SPREADSHEET)) {
+        		return GOOGLE_SPREADSHEET;
+        	}
+
+        	if(className.equals(TEIID_INFINISPAN_CLASS) && translatorNames.contains(INFINISPAN)) {
+        		return INFINISPAN;
+        	}
+        	
+        	if(className.equals(TEIID_INFINISPAN_HOTROD_CLASS) && translatorNames.contains(INFINISPAN_HOTROD)) {
+        		return INFINISPAN_HOTROD;
+        	}
+
+        	if(className.equals(TEIID_LDAP_CLASS) && translatorNames.contains(LDAP)) {
+        		return LDAP;
+        	}
+
+        	if(className.equals(TEIID_SF_CLASS) && translatorNames.contains(SALESFORCE)) {
+        		return SALESFORCE;
+        	}
+
+        	if(className.equals(TEIID_WS_CLASS) && translatorNames.contains(WS)) {
+        		return WS;
+        	}
+        	
+        	if(className.equals(TEIID_ACCUMULO_CLASS) && translatorNames.contains(ACCUMULO)) {
+        		return WS;
+        	}
+        	
+        	if(className.equals(TEIID_MONGODB_CLASS) && translatorNames.contains(MONGODB)) {
+        		return WS;
+        	}
+        }
         
         if(!isTeiid84OrHigher) {
         	if(driverName.equals(TEIID_FILE_DRIVER) && translatorNames.contains(FILE)) {
