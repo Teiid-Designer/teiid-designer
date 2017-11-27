@@ -54,6 +54,7 @@ import org.teiid.designer.datasources.ui.UiPlugin;
 import org.teiid.designer.datasources.ui.panels.DataSourceItem;
 import org.teiid.designer.datasources.ui.wizard.CreateDataSourceDialog;
 import org.teiid.designer.ui.common.actions.ModelActionConstants;
+import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
@@ -72,7 +73,6 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
  *
  */
 public class ConnectionProfilesPanel extends Composite implements UiConstants {
-    private final int GROUP_HEIGHT_160 = 160;
     
     GlobalConnectionManager manager;
 	TreeViewer treeViewer;
@@ -221,9 +221,10 @@ public class ConnectionProfilesPanel extends Composite implements UiConstants {
      */
     private void createButtonsPanel(Composite parent) {
         Composite panel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
+        GridLayoutFactory.swtDefaults().applyTo(panel);
+        
         panel.setLayout(new GridLayout(1, false));
         GridData groupGD = new GridData();
-        groupGD.heightHint=GROUP_HEIGHT_160;
         groupGD.verticalAlignment=GridData.BEGINNING;
         panel.setLayoutData(groupGD);
         panel.setBackground(parent.getBackground());
