@@ -45,7 +45,7 @@ public class TeiidExecutionService extends ExecutionService {
 
         return new TeiidAdHocScriptRunnable(con,
                                             Messages.getString("TeiidExecutionService.panelDescription"), sql, closeCon, tracker, //$NON-NLS-1$
- parentMonitor, databaseIdentifier, configuration);
+ parentMonitor, databaseIdentifier, configuration, true);
 	}
 	
 }

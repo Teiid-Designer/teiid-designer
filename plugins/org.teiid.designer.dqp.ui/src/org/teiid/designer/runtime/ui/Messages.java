@@ -104,6 +104,8 @@ public class Messages extends NLS {
     public static String PreviewDataInputDialog_title;
     public static String PreviewDataInputDialog_initialMessage;
     public static String PreviewDataInputDialog_previewXMLLabel;
+    public static String PreviewDataInputDialog_generateExecutionPlan;
+    public static String PreviewDataInputDialog_options;
     
     public static String PreviewDataWorker_dataSourceMissingTitle;
     public static String PreviewDataWorker_dataSourceCreationErrorTitle;

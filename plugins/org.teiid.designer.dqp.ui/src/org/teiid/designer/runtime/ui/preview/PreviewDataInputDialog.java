@@ -15,8 +15,11 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -51,6 +54,7 @@ public class PreviewDataInputDialog extends TitleAreaDialog implements DqpUiCons
     
     String sqlText;
     String dynVdbXml;
+    boolean generateExecutionPlan = false;
 
 	/**
 	 * @since 5.5.3
@@ -181,6 +185,26 @@ public class PreviewDataInputDialog extends TitleAreaDialog implements DqpUiCons
      * The SQL Display area portion of the SQL Tab
      */
     private void createSqlGroup( Composite parent ) {
+    	// Add Options group 
+    	Composite optionsGroup = WidgetFactory.createGroup(parent, Messages.PreviewDataInputDialog_options, SWT.NONE, 2, 1);
+    	GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(optionsGroup);
+    	
+    	Button executePlanCB = new Button(optionsGroup, SWT.CHECK);
+    	executePlanCB.setText(Messages.PreviewDataInputDialog_generateExecutionPlan);
+    	GridDataFactory.fillDefaults().grab(true, true).span(1, 1).applyTo(executePlanCB);
+    	executePlanCB.setSelection(generateExecutionPlan);
+    	executePlanCB.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				generateExecutionPlan = executePlanCB.getSelection();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+    	
         Group textTableOptionsGroup = WidgetFactory.createGroup(parent, Messages.PreviewDataInputDialog_sqlQueryLabel, SWT.NONE, 2, 1);
         GridDataFactory.fillDefaults().grab(true, true).span(2, 1).applyTo(textTableOptionsGroup);
 
@@ -207,6 +231,10 @@ public class PreviewDataInputDialog extends TitleAreaDialog implements DqpUiCons
     
     public String getSQL() {
     	return sqlText;
+    }
+    
+    public boolean generateExecutionPlan() {
+    	return generateExecutionPlan;
     }
     
     /*

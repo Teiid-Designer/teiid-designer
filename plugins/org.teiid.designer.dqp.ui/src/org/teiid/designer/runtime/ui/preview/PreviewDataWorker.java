@@ -228,6 +228,7 @@ public class PreviewDataWorker {
         final Shell shell = getShell();
         
         boolean isXML = false;
+        boolean generateExecutionPlan = false;
 
     	@SuppressWarnings("rawtypes")
 		List accessPatternsColumns = null;
@@ -352,6 +353,7 @@ public class PreviewDataWorker {
 		IStatus status = manager.deployDynamicVdb();
 		if( status.isOK() ) {
             sql = dialog.getSQL();
+            generateExecutionPlan = dialog.generateExecutionPlan();
 		} else {
 			MessageDialog.openError(getShell(), Messages.PreviewDataWorker_vdbDeploymentErrorTitle, status.getMessage());
 		}
@@ -407,7 +409,7 @@ public class PreviewDataWorker {
 
             // This runnable executes the SQL and displays the results
             // in the DTP 'SQL Results' view.
-            executeSQLResultRunnable(sqlConnection, labelStr, finalSQL, ID, config, profile, manager);
+            executeSQLResultRunnable(sqlConnection, labelStr, finalSQL, ID, config, profile, manager, generateExecutionPlan);
         } catch (Exception e) {
             DqpUiConstants.UTIL.log(IStatus.ERROR, e.getMessage());
         }
@@ -432,13 +434,14 @@ public class PreviewDataWorker {
                                                                       final DatabaseIdentifier ID, 
                                                                       final ILaunchConfigurationWorkingCopy config,
                                                                       final IConnectionProfile profile,
-                                                                      final PreviewManager previewManager) {
+                                                                      final PreviewManager previewManager,
+                                                                      final boolean generateExecutionPlan) {
         Job job = new Job(labelStr + " ...") { //$NON-NLS-1$
             @Override
             protected IStatus run(IProgressMonitor monitor) {
                 try {
                     SimpleSQLResultRunnable runnable = new CleanUpRunnable(sqlConnection, labelStr, sql, true, null,
-                                                                                    monitor, ID, config, previewManager);
+                                                                                    monitor, ID, config, previewManager, generateExecutionPlan);
                     runnable.run();
                 } finally {
                     try {
@@ -679,8 +682,8 @@ public class PreviewDataWorker {
 
 		public CleanUpRunnable(Connection con, String description, String sql, boolean closeCon,
 				IConnectionTracker tracker, IProgressMonitor parentMonitor, DatabaseIdentifier databaseIdentifier,
-				ILaunchConfiguration configuration, final PreviewManager previewManager) {
-			super(con, description, sql, closeCon, tracker, parentMonitor, databaseIdentifier, configuration);
+				ILaunchConfiguration configuration, final PreviewManager previewManager, final boolean generateExecutionPlan) {
+			super(con, description, sql, closeCon, tracker, parentMonitor, databaseIdentifier, configuration, generateExecutionPlan);
 			this.previewManager = previewManager;
 		}
 

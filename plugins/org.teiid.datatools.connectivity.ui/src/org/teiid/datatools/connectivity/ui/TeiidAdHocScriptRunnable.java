@@ -55,6 +55,7 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
 	private long _startTime = new Date().getTime(), _endTime = _startTime;
     private String sql;
     private String description;
+    private boolean generateExecutionPlan;
 	
 	public TeiidAdHocScriptRunnable( Connection con,
                                      String description,
@@ -62,10 +63,11 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
 			boolean closeCon, IConnectionTracker tracker,
 			IProgressMonitor parentMonitor,
 			DatabaseIdentifier databaseIdentifier,
-                                     ILaunchConfiguration configuration ) {
+                                     ILaunchConfiguration configuration, boolean generateExecutionPlan ) {
 		super(con, sql, closeCon, tracker, parentMonitor, databaseIdentifier, configuration);
         this.sql = sql;
         this.description = description;
+        this.generateExecutionPlan = generateExecutionPlan;
 	}
 	
     /*
@@ -329,7 +331,9 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
 
         @Override
 		public void run() {
-            handleShowExecutionPlan(this.statement);
+        	if( generateExecutionPlan ) {
+        		handleShowExecutionPlan(this.statement);
+        	}
             handleShowResultsView();
         }
     }
