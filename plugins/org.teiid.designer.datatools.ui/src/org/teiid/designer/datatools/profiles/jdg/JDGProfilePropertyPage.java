@@ -37,6 +37,7 @@ import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.util.JndiNameHelper;
 
 public class JDGProfilePropertyPage extends ProfileDetailsPropertyPage
 		implements Listener, IJDGProfileConstants.PropertyKeys, IContextProvider, DatatoolsUiConstants {
@@ -77,10 +78,13 @@ public class JDGProfilePropertyPage extends ProfileDetailsPropertyPage
    private Text messageDescriptorText;
    private Text moduleText;
    
+   private JndiNameHelper jndiNameHelper;
+   
    private boolean settingProperty = false;
    
 	public JDGProfilePropertyPage() {
 		super();
+		this.jndiNameHelper = new JndiNameHelper();
 		setPingButtonEnabled(false);
 	}
 
@@ -487,6 +491,13 @@ public class JDGProfilePropertyPage extends ProfileDetailsPropertyPage
             setPingButtonEnabled(false);
             setValid(false);
             return;
+        }
+        
+        String msg = jndiNameHelper.checkValidName(properties.get(IJBossDsProfileConstants.JNDI_PROP_ID).toString());
+        if( ! StringUtilities.isEmpty(msg)) {
+            setErrorMessage(msg); //$NON-NLS-1$
+            setPingButtonEnabled(false);
+            setValid(false);
         }
         
         if( remoteServerListRB.getSelection() && 

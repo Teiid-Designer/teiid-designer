@@ -34,6 +34,7 @@ import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.dialogs.ScrolledConnectionProfileDetailsPage;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.util.JndiNameHelper;
 
 public class JDGProfileDetailsWizardPage extends ScrolledConnectionProfileDetailsPage implements IJDGProfileConstants.PropertyKeys, Listener, DatatoolsUiConstants {
     private Composite scrolled;
@@ -54,6 +55,8 @@ public class JDGProfileDetailsWizardPage extends ScrolledConnectionProfileDetail
     private Text aliasCacheNameText;
     private org.teiid.designer.ui.common.widget.Label stagingCacheNameLabel;
     private org.teiid.designer.ui.common.widget.Label aliasCacheNameLabel;
+    
+    private JndiNameHelper jndiNameHelper;
     
     /*
      Define JDG Schema via Annotations or Protobuf Files
@@ -81,6 +84,7 @@ public class JDGProfileDetailsWizardPage extends ScrolledConnectionProfileDetail
               AbstractUIPlugin.imageDescriptorFromPlugin(DatatoolsUiConstants.PLUGIN_ID, "icons/ldap.gif")); //$NON-NLS-1$
         
         setShowPing(false);
+        this.jndiNameHelper = new JndiNameHelper();
     }
 
     /**
@@ -459,6 +463,15 @@ public class JDGProfileDetailsWizardPage extends ScrolledConnectionProfileDetail
         if (null == properties.get(IJBossDsProfileConstants.JNDI_PROP_ID)
             || properties.get(IJBossDsProfileConstants.JNDI_PROP_ID).toString().isEmpty()) {
             setErrorMessage(UTIL.getString("JBossDsPropertyPage.jndi.Error.Message")); //$NON-NLS-1$
+            setPingButtonEnabled(false);
+            setPageComplete(false);
+            return;
+        }
+        
+        // Check JNDI name property
+        String msg = jndiNameHelper.checkValidName(properties.get(IJBossDsProfileConstants.JNDI_PROP_ID).toString());
+        if( ! StringUtilities.isEmpty(msg)) {
+            setErrorMessage(msg); //$NON-NLS-1$
             setPingButtonEnabled(false);
             setPageComplete(false);
             return;

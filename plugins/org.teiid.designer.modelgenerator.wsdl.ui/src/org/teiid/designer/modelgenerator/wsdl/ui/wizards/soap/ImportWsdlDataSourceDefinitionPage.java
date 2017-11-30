@@ -21,9 +21,11 @@ import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiPlugin;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
+import org.teiid.designer.ui.util.JndiNameHelper;
 
 public class ImportWsdlDataSourceDefinitionPage extends AbstractWizardPage implements UiConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ImportWsdlDataSourceDefinitionPage.class);
@@ -44,10 +46,13 @@ public class ImportWsdlDataSourceDefinitionPage extends AbstractWizardPage imple
     private Button autoCreateDataSource;
     
     private boolean synchronizing;
+    
+    private JndiNameHelper jndiNameHelper;
 
 	public ImportWsdlDataSourceDefinitionPage(WSDLImportWizardManager theImportManager, ImportWsdlSoapWizard wizard) {
 		super(ImportWsdlDataSourceDefinitionPage.class.getSimpleName(), TITLE);
 		this.theImportManager = theImportManager;
+		this.jndiNameHelper = new JndiNameHelper();
 	}
 
 	@Override
@@ -104,15 +109,10 @@ public class ImportWsdlDataSourceDefinitionPage extends AbstractWizardPage imple
 			@Override
 			public void modifyText(ModifyEvent e) {
 				if( synchronizing ) return;
+
+				theImportManager.setJBossJndiNameName(jndiNameField.getText());
 				
-				if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
-					jndiName = jndiNameField.getText();
-					theImportManager.setJBossJndiNameName(jndiName);
-				} else {
-					jndiName = ""; //$NON-NLS-1$
-					theImportManager.setJBossJndiNameName(null);
-				}
-				
+				validatePage();
 			}
 		});
 	        
@@ -194,7 +194,8 @@ public class ImportWsdlDataSourceDefinitionPage extends AbstractWizardPage imple
         			int nameLength = modelName.length();
         			modelName = modelName.substring(0, nameLength-4);
         		}
-        		this.theImportManager.setJBossJndiNameName(modelName);
+        		
+        		this.theImportManager.setJBossJndiNameName("java:/" + modelName + "_DS");
                 this.jndiName = theImportManager.getJBossJndiName();
                 this.jndiNameField.setText(this.jndiName);
         	}
@@ -202,4 +203,16 @@ public class ImportWsdlDataSourceDefinitionPage extends AbstractWizardPage imple
                 
         synchronizing = false;
     }
+    
+    private void validatePage() {
+        String jndiResult = jndiNameHelper.checkValidName(jndiNameField.getText());
+        boolean ok = StringUtilities.isEmpty(jndiResult);
+        if( !ok ) {
+        	setErrorMessage(jndiResult);
+        } else {
+        	setErrorMessage(null);
+        	setMessage("Click Next");
+        }
+        setPageComplete(ok);
+	}
 }
