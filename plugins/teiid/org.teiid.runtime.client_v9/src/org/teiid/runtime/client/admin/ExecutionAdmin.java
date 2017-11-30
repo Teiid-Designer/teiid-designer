@@ -489,8 +489,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
             // Teiid 7.7.x does not support
             return null;
         }
-
-        return getDataSource(name).getProperties();
+        ITeiidDataSource ds = getDataSource(name);
+        if( ds != null ) {
+        	return ds.getProperties();
+        }
+        return new Properties();
     }
 
     @Override

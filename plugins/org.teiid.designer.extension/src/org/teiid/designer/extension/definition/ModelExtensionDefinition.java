@@ -329,6 +329,18 @@ public class ModelExtensionDefinition implements NamespaceProvider, PropertyChan
 
         return properties;
     }
+    
+    public boolean supportsPropertyKey(String propertyKey) {
+        for (Map.Entry<String, Collection<ModelExtensionPropertyDefinition>> entry : this.properties.entrySet()) { 
+            for( ModelExtensionPropertyDefinition def : entry.getValue()) {
+            	if(propertyKey.equals(def.getSimpleId()) ) {
+            		return true;
+            	}
+            }
+        }
+        
+        return false;
+    }
 
     /**
      * @param metaclassName the metaclass name whose extended property definitions are being requested (cannot be <code>null</code>

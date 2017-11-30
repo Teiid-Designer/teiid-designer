@@ -145,8 +145,11 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			}
 		}
 		if( ! namespaces.isEmpty() ) {
-			for( String namespace : namespaces ) {
-				ddlBuffer.insert(0, namespace + NEW_LINE);
+			for( String nsString : namespaces ) {
+				// needs to look like this
+				// SET NAMESPACE 'http://www.teiid.org/translator/excel/2014' AS teiid_excel;
+
+				ddlBuffer.insert(0, nsString + NEW_LINE);
 			}
 			ddlBuffer.insert(0, NEW_LINE);
 		}
@@ -1210,27 +1213,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         				String value = assistant.getOverriddenValue(modelObject, propId);
 
         				if( value != null ) {
+        					String nsString = SET + SPACE + NAMESPACE + SPACE + SQUOTE + SF_URI + SQUOTE + SPACE + AS + SPACE + TEIID_SF_PREFIX;
+        					namespaces.add(nsString);
         					propId = propId.replace(SALESFORCE_PREFIX, TEIID_SF_PREFIX);
-        					options.put(propId, value);
-        				}
-        			}
-    			} else if(ns.equals(MONGODB_PREFIX)) {
-        			for( ModelExtensionPropertyDefinition ext : defns) {
-        				String propId = ext.getId();
-        				String value = assistant.getOverriddenValue(modelObject, propId);
-
-        				if( value != null ) {
-        					propId = propId.replace(MONGODB_PREFIX, TEIID_MONGO_PREFIX);
-        					options.put(propId, value);
-        				}
-        			}
-    			} else if(ns.equals(EXCEL_PREFIX)) {
-        			for( ModelExtensionPropertyDefinition ext : defns) {
-        				String propId = ext.getId();
-        				String value = assistant.getOverriddenValue(modelObject, propId);
-
-        				if( value != null ) {
-        					propId = propId.replace(EXCEL_PREFIX, TEIID_EXCEL_PREFIX);
         					options.put(propId, value);
         				}
         			}
@@ -1240,18 +1225,50 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         				String value = assistant.getOverriddenValue(modelObject, propId);
 
         				if( value != null ) {
-        					if( value != null ) namespaces.add(OBJECT_TEIID_SET_NAMESPACE);
+        					String nsString = SET + SPACE + NAMESPACE + SPACE + SQUOTE + OBJECT_TEIID_SET_NAMESPACE + SQUOTE + SPACE + AS + SPACE + TEIID_INFINISPAN_PREFIX;
+        					namespaces.add(nsString);
         					propId = propId.replace(TEIID_INFINISPAN_PREFIX, OBJECT_NS_PREFIX);
         					options.put(propId, value);
         				}
         			}
-    			}  else if(ns.equals(INFINISPAN_HOTROD_PREFIX)) {
+    			} else if( medAggregator.isImportedNamespacePrefix(ns) ) {
+    				// Odata4, odata and sap-gateway share the same NS URI and shouldn't end up creating different
+    				// SET NAMESPACE statement since all props are keyed on "teiid_odata" (i.e. not "teiid_odata4" for instances)
+    				String prefix = ns;
+    				if( ODATA4_PREFIX.equalsIgnoreCase(ns) ) {
+    					prefix = ODATA_PREFIX;
+    				} else if( SAP_GATEWAY_PREFIX.equalsIgnoreCase(ns) ) {
+    					prefix = ODATA_PREFIX;
+    				}
+    				String teiidPrefix = TEIID_UNDERSCORE + prefix;
+    			
+    				for( ModelExtensionPropertyDefinition ext : defns) {
+        				String propId = ext.getId();
+        				String value = assistant.getOverriddenValue(modelObject, propId);
+
+        				if( value != null ) {
+        					// Add namespace
+        					String nsURI = this.medAggregator.getNamespaceUri(ns);
+        					if( nsURI != null ) {
+        						String nsString = SET + SPACE + NAMESPACE + SPACE + SQUOTE + nsURI + SQUOTE + SPACE + AS + SPACE + teiidPrefix;
+        						namespaces.add(nsString);
+        					}
+        					propId = propId.replace(ns, teiidPrefix);
+        					options.put(propId, value);
+        				}
+    				}
+    			} else if( !ns.equalsIgnoreCase(REST) ) {
         			for( ModelExtensionPropertyDefinition ext : defns) {
         				String propId = ext.getId();
         				String value = assistant.getOverriddenValue(modelObject, propId);
 
         				if( value != null ) {
-        					propId = propId.replace(INFINISPAN_HOTROD_PREFIX, TEIID_INFINISPAN_HOTROD_PREFIX);
+        					// Add namespace
+        					String nsURI = this.medAggregator.getNamespaceUri(ns);
+        					if( nsURI != null ) {
+        						String nsString = SET + SPACE + NAMESPACE + SPACE + SQUOTE + nsURI + SQUOTE + SPACE + AS + SPACE + ns;
+        						namespaces.add(nsString);
+        					}
         					options.put(propId, value);
         				}
         			}
@@ -1437,6 +1454,85 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		}
 		
 		return options.toString();
+    }
+    
+    public Set<String> getNamespaceStatements(EObject modelObject) throws Exception {
+
+    	Set<String> nsStatements = new HashSet<String>();
+    	
+    	Collection<String> extensionNamespaces = medAggregator.getSupportedNamespacePrefixes(modelObject);
+    	for( String ns : extensionNamespaces ) {
+    		ModelObjectExtensionAssistant assistant = medAggregator.getModelObjectExtensionAssistant(ns);
+    		Collection<ModelExtensionPropertyDefinition> defns = assistant.getPropertyDefinitions(modelObject);
+    		
+    		if( assistant != null ) {
+    			if(ns.equals(RELATIONAL_PREFIX)) {
+    				continue;
+    			} else if(ns.equals(SALESFORCE_PREFIX) )  {
+        			for( ModelExtensionPropertyDefinition ext : defns) {
+        				String propId = ext.getId();
+        				String value = assistant.getOverriddenValue(modelObject, propId);
+
+        				if( value != null ) {
+        					String nsString = SET + SPACE + NAMESPACE + SPACE + SQUOTE + SF_URI + SQUOTE + SPACE + AS + SPACE + TEIID_SF_PREFIX + NEW_LINE;
+        					nsStatements.add(nsString);
+        				}
+        			}
+    			} else if(ns.equals(TEIID_INFINISPAN_PREFIX)) {
+	    			for( ModelExtensionPropertyDefinition ext : defns) {
+	    				String propId = ext.getId();
+	    				String value = assistant.getOverriddenValue(modelObject, propId);
+	
+	    				if( value != null ) {
+	    					String nsString = SET + SPACE + NAMESPACE + SPACE + SQUOTE + OBJECT_TEIID_SET_NAMESPACE + SQUOTE + SPACE + AS + SPACE + TEIID_INFINISPAN_PREFIX + NEW_LINE;
+	    					nsStatements.add(nsString);
+	    				}
+	    			}
+    			} else if( medAggregator.isImportedNamespacePrefix(ns) ) {
+					// Odata4, odata and sap-gateway share the same NS URI and shouldn't end up creating different
+					// SET NAMESPACE statement since all props are keyed on "teiid_odata" (i.e. not "teiid_odata4" for instances)
+					String prefix = ns;
+					if( ODATA4_PREFIX.equalsIgnoreCase(ns) ) {
+						prefix = ODATA_PREFIX;
+					} else if( SAP_GATEWAY_PREFIX.equalsIgnoreCase(ns) ) {
+						prefix = ODATA_PREFIX;
+					}
+					String teiidPrefix = TEIID_UNDERSCORE + prefix;
+				
+					for( ModelExtensionPropertyDefinition ext : defns) {
+	    				String propId = ext.getId();
+	    				String value = assistant.getOverriddenValue(modelObject, propId);
+	
+	    				if( value != null ) {
+	    					// Add namespace
+	    					String nsURI = this.medAggregator.getNamespaceUri(ns);
+	    					if( nsURI != null ) {
+	    						String nsString = SET + SPACE + NAMESPACE + SPACE + SQUOTE + nsURI + SQUOTE + SPACE + AS + SPACE + teiidPrefix + NEW_LINE;
+	    						nsStatements.add(nsString);
+	    					}
+	    				}
+					}
+				} else if( !ns.equalsIgnoreCase(REST) ) {
+        			for( ModelExtensionPropertyDefinition ext : defns) {
+        				String propId = ext.getId();
+        				String value = assistant.getOverriddenValue(modelObject, propId);
+
+        				if( value != null ) {
+        					// Add namespace
+        					String nsURI = this.medAggregator.getNamespaceUri(ns);
+        					if( nsURI != null ) {
+        						String nsString = SET + SPACE + NAMESPACE + SPACE + SQUOTE + nsURI + SQUOTE + SPACE + AS + SPACE + ns + NEW_LINE;
+        						nsStatements.add(nsString);
+        					}
+        				}
+        			}
+    			}
+    		}
+    	}
+    	
+    	//8888
+    	
+    	return nsStatements;
     }
     
     private RelationalModelExtensionAssistant getRelationalModelExtensionAssistant() {

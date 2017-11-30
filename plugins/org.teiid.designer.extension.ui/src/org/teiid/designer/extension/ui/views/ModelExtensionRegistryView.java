@@ -8,16 +8,16 @@
 package org.teiid.designer.extension.ui.views;
 
 import static org.teiid.designer.extension.ExtensionConstants.MedOperations.SHOW_IN_REGISTRY;
-import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.UNREGISTER_MED;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -36,7 +36,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -70,7 +69,6 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.ViewPart;
-import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.extension.ExtensionConstants;
@@ -250,28 +248,31 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
 
     private void createColumns() {
         // NOTE: create in the order in ColumnIndexes
-        TableViewerColumn column = viewerBuilder.createColumn(SWT.CENTER, 5, 25, true);
-        configureColumn(column, ColumnIndexes.BUILT_IN, Messages.builtInColumnText, Messages.builtInColumnToolTip, false);
+        TableViewerColumn column = viewerBuilder.createColumn(SWT.LEFT, 7, 25, false);
+        configureColumn(column, ColumnIndexes.TYPE, "Type", "Registered Extension Type:  Built-in, Imported or Local", false);
+        
+//        TableViewerColumn column = viewerBuilder.createColumn(SWT.CENTER, 5, 25, false);
+//        configureColumn(column, ColumnIndexes.BUILT_IN, Messages.builtInColumnText, Messages.builtInColumnToolTip, false);
+//
+//        column = viewerBuilder.createColumn(SWT.CENTER, 5, 25, false);
+//        configureColumn(column, ColumnIndexes.IMPORTED, Messages.importedColumnText, Messages.importedColumnToolTip, false);
 
-        column = viewerBuilder.createColumn(SWT.CENTER, 5, 25, true);
-        configureColumn(column, ColumnIndexes.IMPORTED, Messages.importedColumnText, Messages.importedColumnToolTip, false);
-
-        column = viewerBuilder.createColumn(SWT.LEFT, 14, 30, true);
+        column = viewerBuilder.createColumn(SWT.LEFT, 10, 25, true);
         configureColumn(column, ColumnIndexes.NAMESPACE_PREFIX, Messages.namespacePrefixColumnText,
                         Messages.namespacePrefixColumnToolTip, true);
 
-        column = viewerBuilder.createColumn(SWT.LEFT, 14, 30, true);
+        column = viewerBuilder.createColumn(SWT.LEFT, 20, 30, true);
         configureColumn(column, ColumnIndexes.NAMESPACE_URI, Messages.namespaceUriColumnText, Messages.namespaceUriColumnToolTip,
                         true);
 
-        column = viewerBuilder.createColumn(SWT.LEFT, 14, 30, true);
+        column = viewerBuilder.createColumn(SWT.LEFT, 11, 20, true);
         configureColumn(column, ColumnIndexes.METAMODEL_URI, Messages.extendedMetamodelUriColumnText,
                         Messages.metamodelUriColumnToolTip, true);
 
-        column = viewerBuilder.createColumn(SWT.LEFT, 14, 30, true);
+        column = viewerBuilder.createColumn(SWT.LEFT, 12, 30, true);
         configureColumn(column, ColumnIndexes.MODEL_TYPES, Messages.modelTypeColumnText, Messages.modelTypesColumnToolTip, true);
 
-        column = viewerBuilder.createColumn(SWT.RIGHT, 5, 10, true);
+        column = viewerBuilder.createColumn(SWT.CENTER, 4, 10, true);
         configureColumn(column, ColumnIndexes.VERSION, Messages.versionColumnText, Messages.versionColumnToolTip, true);
 
         column = viewerBuilder.createColumn(SWT.LEFT, 22, 40, true);
@@ -895,43 +896,31 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
     }
 
     interface ColumnIndexes {
-        int BUILT_IN = 0;
-        int IMPORTED = 1;
-        int NAMESPACE_PREFIX = 2;
-        int NAMESPACE_URI = 3;
-        int METAMODEL_URI = 4;
-        int MODEL_TYPES = 5;
-        int VERSION = 6;
-        int DESCRIPTION = 7;
+        int TYPE = 0;
+        int NAMESPACE_PREFIX = 1;
+        int NAMESPACE_URI = 2;
+        int METAMODEL_URI = 3;
+        int MODEL_TYPES = 4;
+        int VERSION = 5;
+        int DESCRIPTION = 6;
     }
 
     class MedLabelProvider extends StyledCellLabelProvider {
 
         private Image getImage( int columnIndex, ModelExtensionDefinition element ) {
-            switch (columnIndex) {
-                case ColumnIndexes.BUILT_IN:
-                    if (element.isBuiltIn())
-                        return Activator.getDefault().getImage(CHECK_MARK);
-                    break;
-                case ColumnIndexes.IMPORTED:
-                    if (element.isImported())
-                        return Activator.getDefault().getImage(CHECK_MARK);
-                    break;
-            }
-
             return null;
         }
 
         private String getText( int columnIndex, ModelExtensionDefinition element ) {
             switch (columnIndex) {
-                case ColumnIndexes.BUILT_IN:
-                	if (element.isBuiltIn())
-                		return "X";
-                	return CoreStringUtil.Constants.EMPTY_STRING;
-                case ColumnIndexes.IMPORTED:
-                	if (element.isImported())
-                		return "X";
-                    return CoreStringUtil.Constants.EMPTY_STRING;
+                case ColumnIndexes.TYPE:
+                	if (element.isBuiltIn()) {
+                		return Messages.builtInText;
+                	} else if (element.isImported()) {
+                		return Messages.importedText;
+                	} else {
+                		return Messages.localText;
+                	}
 
                 case ColumnIndexes.NAMESPACE_PREFIX:
                     return element.getNamespacePrefix();

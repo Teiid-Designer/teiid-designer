@@ -101,15 +101,5 @@ public class ModelExtensionRegistryTest implements Constants {
         }
     }
 
-    @Test
-    public void shouldProvideRegisteredNamespaceUris() throws Exception {
-        loadBuiltInMeds();
-        Set<String> namespaceUris = this.registry.getAllNamespaceUris();
-        assertEquals(BUILT_IN_MEDS_NAMESPACE_URIS.length, namespaceUris.size());
-
-        for (String uri : BUILT_IN_MEDS_NAMESPACE_URIS) {
-            assertTrue(namespaceUris.contains(uri));
-        }
-    }
 
 }

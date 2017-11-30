@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
@@ -153,5 +154,23 @@ public class ModelExtensionAssistantAggregator {
         }
 
         return false;
+    }
+    
+    public boolean isImportedNamespacePrefix(String nsPrefix) {
+    	ModelExtensionDefinition def = this.registry.getDefinition(nsPrefix);
+    	if( def != null ) {
+    		return def.isImported();
+    	}
+    	
+    	return false;
+    }
+    
+    public String getNamespaceUri(String nsPrefix) {
+    	ModelExtensionDefinition def = this.registry.getDefinition(nsPrefix);
+    	if( def != null ) {
+    		return def.getNamespaceUri();
+    	}
+    	
+    	return null;
     }
 }

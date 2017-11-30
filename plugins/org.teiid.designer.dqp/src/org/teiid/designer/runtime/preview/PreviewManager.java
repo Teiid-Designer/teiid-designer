@@ -780,6 +780,19 @@ public final class PreviewManager {
             
             generator.setIsVirtual(isVirtual);
             
+            // Look for non-built-in or core MED's in each model and create a list of 
+            // namespace statements like:  SET NAMESPACE 'http://www/abc/xyz' AS AAAA;
+            Set<String> allModelNsStatements = new HashSet<String>();
+            
+            
+            try {
+				for( EObject eObj : eObjects ) {
+					allModelNsStatements.addAll(generator.getNamespaceStatements(eObj));
+				}
+			} catch (Exception e) {
+				throw new ModelWorkspaceException(e);
+			}
+            
             for( EObject eObj : eObjects ) {
             	String statement = generator.getStatement(eObj, new ArrayList<Index>());
             	if( !StringUtilities.isEmpty(statement) ) {
@@ -790,7 +803,12 @@ public final class PreviewManager {
             
             if( !statements.isEmpty() ) {
 	            sb.append("\n\t\t<metadata type=\"DDL\"><![CDATA["); //$NON-NLS-1$ 
-	            
+	    		if( ! allModelNsStatements.isEmpty() ) {
+	    			for( String nsString : allModelNsStatements ) {
+	    				sb.append("\n").append(nsString);
+	    			}
+	    		}
+	    		
 	            for( String statement : statements ) {
 	            	sb.append("\n").append(statement);
 	            }

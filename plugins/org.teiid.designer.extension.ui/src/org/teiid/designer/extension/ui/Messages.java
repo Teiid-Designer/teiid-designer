@@ -12,8 +12,9 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 
-    public static String builtInColumnText;
-    public static String importedColumnText;
+    public static String builtInText;
+    public static String importedText;
+    public static String localText;
     public static String descriptionColumnText;
     public static String extendedMetamodelUriColumnText;
     public static String modelTypeColumnText;
@@ -23,6 +24,8 @@ public class Messages extends NLS {
     public static String registeredColumnText;
     public static String medsDifferentColumnText;
     public static String allModelTypesAreSupported;
+    public static String medTypeColumnLabel;
+    public static String medTypeColumnTooltip;
 
     public static String registeredColumnToolTip;
     public static String medsDifferentColumnToolTip;

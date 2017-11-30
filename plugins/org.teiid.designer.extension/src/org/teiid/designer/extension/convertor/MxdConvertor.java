@@ -170,15 +170,7 @@ public class MxdConvertor {
             return false;
 
         String name = translator.getName();
-        // HACK - fixes erroneous excel extension until TEIID-2974 is fixed and available to Designer
-        if(name!=null && name.equals("excel")) {  //$NON-NLS-1$
-        	for(TeiidPropertyDefinition extDefn : extensions) {
-        		String extName = extDefn.getName();
-        		if(extName!=null && extName.endsWith("FIRST_DATA_ROW_NUMBER")) { //$NON-NLS-1$
-        			extDefn.setOwner("org.teiid.metadata.Table"); //$NON-NLS-1$
-        		}
-        	}
-        }
+
         String namespace = null;
         if( extensions.size() > 0 ) {
         	String propName = ((TeiidPropertyDefinition)extensions.toArray()[0]).getName();

@@ -21,6 +21,13 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringUtilities;
@@ -74,7 +81,6 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
     private static final String NS_TEIID_EXCEL = "teiid_excel"; //$NON-NLS-1$
     private static final String NS_TEIID_JPA = "teiid_jpa"; //$NON-NLS-1$
     private static final String NS_TEIID_ISPN = "teiid_ispn"; //$NON-NLS-1$
-	private static final String NS_DESIGNER_ODATA = "odata"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_WEBSERVICE= "ws"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_MONGO = "mongodb"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_SALESFORCE = "salesforce"; //$NON-NLS-1$
@@ -132,6 +138,11 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 	}
 
 	static int DEFAULT_NULL_VALUE_COUNT = -1;
+	
+	/**
+	 * variable needed to hold the value of the translator selection dialog on the UI thread
+	 */
+	protected String generalResultStr = null;
 	
 	private Map<AstNode, RelationalTable> deferredMatViewReferences = new HashMap<AstNode, RelationalTable>();
 
@@ -536,7 +547,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 
 		prop = node.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
 		if (prop != null) {
-			String newValue = prop.toString().replaceAll("''", "'");
+			String newValue = prop.toString().replaceAll("''", "'"); //$NON-NLS-1$ //$NON-NLS-2$
 			column.setDefaultValue(newValue);
 		}
 	}
@@ -1455,33 +1466,44 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 		// ===================================================================================================================
 		// Determine NS for propNames which are namespaced with URI, eg http://www.teiid.org/translator/excel/2014}CELL_NUMBER
 		// ===================================================================================================================
-		String designerNs = null;
+		Set<String> designerNsList = new HashSet<String>();
+		
 		if(isUriNamespaced(namespacedPropName)) {
 			// Get the Namespace URI
 			String propNsUri = getExtensionPropertyNsUri(namespacedPropName);
+			String propKey = getExtensionPropertyKey(namespacedPropName);
 
-			// Translate the uri to corresponding designer med prefix
-			designerNs = translateTeiidNsUriToDesignerNSPrefix(propNsUri);
+			// Translate the uri to corresponding designer med prefix. May  be more than one, so make a list
+			designerNsList.addAll(translateTeiidNsUriToDesignerNSPrefix(propNsUri, propKey));
 		// =========================================================================================
 		// Determine NS for propNames which are namespaced with a prefix, eg teiid_excel:CELL_NUMBER
 		// =========================================================================================
 		} else if(isPrefixNamespaced(namespacedPropName)) {
 			// Get the Namespace prefix
 			String propNsPrefix = getExtensionPropertyNsPrefix(namespacedPropName);
+			String propKey = getExtensionPropertyKeyFromPrefix(namespacedPropName);
 
-			designerNs = translateTeiidNSPrefixToDesignerNSPrefix(propNsPrefix);
+			designerNsList.addAll(translateTeiidNSPrefixToDesignerNSPrefix(propNsPrefix, propKey));
 		}
+		String propName = getExtensionPropertyName(namespacedPropName);
+		
+		if(!designerNsList.isEmpty()) {
+			if( designerNsList.size() == 1 ) {
+				String designerNs = designerNsList.iterator().next();
+				// Get name portion of incoming name
 
-		if(designerNs!=null) {
-			// Get name portion of incoming name
-			String propName = getExtensionPropertyName(namespacedPropName);
-
-			// Addresses teiid defect - TEIID-3629.  This will have no adverse affect after the teiid defect is fixed
-			if(designerNs.equals(NS_DESIGNER_SALESFORCE) && propName.equals(SF_PROPNAME_CALCULATED_BAD)) {
-				propName = SF_PROPNAME_CALCULATED_GOOD;
+				// Addresses teiid defect - TEIID-3629.  This will have no adverse affect after the teiid defect is fixed
+				if(designerNs.equals(NS_DESIGNER_SALESFORCE) && propName.equals(SF_PROPNAME_CALCULATED_BAD)) {
+					propName = SF_PROPNAME_CALCULATED_GOOD;
+				}
+	
+				// return reassembled namespaced name
+				return designerNs+':'+propName;
 			}
 
-			// return reassembled namespaced name
+			// Ask the user to select one of the possible translators
+			String designerNs = getTranslatorSelection(propName, designerNsList);
+
 			return designerNs+':'+propName;
 		}
 		return namespacedPropName;
@@ -1503,6 +1525,17 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 		}
 		return namespace;
 	}
+	
+	private String getExtensionPropertyKeyFromPrefix(String propName) {
+		String namespace = null;
+		if(!CoreStringUtil.isEmpty(propName) && isPrefixNamespaced(propName)) {
+			int index = propName.indexOf(':');
+			if(index!=-1) {
+				namespace = propName.substring(index + 1);
+			}
+		}
+		return namespace;
+	}
 
     /**
 	 * Get the Name from the extension property name.  If its not namespaced, just return the name.  Otherwise strip off the namespace
@@ -1517,6 +1550,18 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 				int index1 = propName.indexOf('{');
 				int index2 = propName.indexOf('}');
 				name = propName.substring(index1+1, index2);
+			}
+		}
+		return name;
+	}
+	
+	private String getExtensionPropertyKey(String propName) {
+		String name = null;
+		if(propName!=null) {
+			propName.trim();
+			if(isUriNamespaced(propName)) {
+				int index2 = propName.indexOf('}');
+				name = propName.substring(index2 + 1);
 			}
 		}
 		return name;
@@ -1583,41 +1628,51 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 	/**
 	 * Translate a Teiid ExtensionProperty namespace into the Designer equivalent.
 	 * @param teiidNamespace
+	 * @param propKey 
 	 * @return the designer MED namespace equivalent
 	 */
-	private String translateTeiidNSPrefixToDesignerNSPrefix(String teiidNamespace) {
-		String designerNS = teiidNamespace;
+	private Set<String> translateTeiidNSPrefixToDesignerNSPrefix(String teiidNamespace, String propKey) {
+		Set<String> designerNSList = new HashSet<String>();
+		
 		if(NS_TEIID_ODATA.equals(teiidNamespace)) {
-			designerNS = NS_DESIGNER_ODATA;
+			// Need to use the NS and Property Key/ID to determine which OData to use or SAP Gateway MED
+			ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+
+			Collection<ModelExtensionDefinition> meds = registry.getAllDefinitions();
+			for(ModelExtensionDefinition med : meds) {
+				if( med.supportsPropertyKey(propKey)) {
+					designerNSList.add(med.getNamespacePrefix());
+				}
+			}
+			//designerNSList.add(NS_DESIGNER_ODATA);
 		} else if(NS_TEIID_RELATIONAL.equals(teiidNamespace)) {
-			designerNS = NS_DESIGNER_RELATIONAL;
+			designerNSList.add(NS_DESIGNER_RELATIONAL);
 		} else if(NS_TEIID_WEBSERVICE.equals(teiidNamespace)) {
-			designerNS = NS_DESIGNER_WEBSERVICE;
+			designerNSList.add(NS_DESIGNER_WEBSERVICE);
 		} else if(NS_TEIID_SALESFORCE.equals(teiidNamespace)) {
-			designerNS = NS_DESIGNER_SALESFORCE;
+			designerNSList.add(NS_DESIGNER_SALESFORCE);
 		} else if(NS_TEIID_MONGO.equals(teiidNamespace)) {
-			designerNS = NS_DESIGNER_MONGO;
+			designerNSList.add(NS_DESIGNER_MONGO);
 		} else if(NS_TEIID_ACCUMULO.equals(teiidNamespace)) {
-			designerNS = NS_DESIGNER_ACCUMULO;
+			designerNSList.add(NS_DESIGNER_ACCUMULO);
 		} else if(NS_TEIID_EXCEL.equals(teiidNamespace)) {
-			designerNS = NS_DESIGNER_EXCEL;
+			designerNSList.add(NS_DESIGNER_EXCEL);
 		} else if(NS_TEIID_JPA.equals(teiidNamespace)) {
-			designerNS = NS_DESIGNER_JPA;
-		} else if(NS_TEIID_JPA.equals(teiidNamespace)) {
-			designerNS = NS_DESIGNER_JPA;
+			designerNSList.add(NS_DESIGNER_JPA);
 		} else if(NS_TEIID_ISPN.equals(teiidNamespace)) {
-			designerNS = NS_DESIGNER_INFINISPAN_HOTROD;
+			designerNSList.add(NS_DESIGNER_INFINISPAN_HOTROD);
 		}
-		return designerNS;
+		return designerNSList;
 	}
 
 	/**
 	 * Translate a Teiid ExtensionProperty namespace into the Designer equivalent.
 	 * @param teiidNsUri the teiid namespace uri
+	 * @param propKey 
 	 * @return the designer MED namespace equivalent
 	 */
-	private String translateTeiidNsUriToDesignerNSPrefix(String teiidNsUri) {
-		String designerNsPrefix = null;
+	private Set<String> translateTeiidNsUriToDesignerNSPrefix(String teiidNsUri, String propKey) {
+		Set<String> designerNsPrefixList = new HashSet<String>();
 
 		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
 
@@ -1627,12 +1682,14 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 			String designerMedNsPrefix = med.getNamespacePrefix();
 
 			if(!CoreStringUtil.isEmpty(designerMedNsUri) && designerMedNsUri.equals(teiidNsUri)) {
-				designerNsPrefix = designerMedNsPrefix;
-				break;
+				// Check if med contains property key
+				if( med.supportsPropertyKey(propKey)) {
+					designerNsPrefixList.add(designerMedNsPrefix);
+				}
 			}
 		}
 
-		return designerNsPrefix;
+		return designerNsPrefixList;
 	}
 	
 	/**
@@ -1658,5 +1715,77 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 		
 		return matTableReferences;
 	}
+
+	/* 
+	 * This method displays a translator selection dialog
+	 * User should select one of the available translator types to associate with the property key in the message
+	 * Note that multiple properties may result in this dialog being displayed mutliple times
+	 * 
+	 */
+    private String getTranslatorSelection(final String propertyKey,  final Set<String> translatorList) {
+    	generalResultStr = null;
+    	
+    	Runnable work = new Runnable() {
+	        @Override
+			public void run() {
+
+		        ElementListSelectionDialog dialog = 
+		        		new ElementListSelectionDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), new StringLabelProvider());
+		
+		        String firstTrans = translatorList.iterator().next();
+		        dialog.setElements(translatorList.toArray());
+		        dialog.setTitle(DdlImporterI18n.TRANSLATOR_SELECTION_REQUIRED_TITLE);
+		        dialog.setMessage(DdlImporterPlugin.i18n("translatorSelectionRequiredMsg", propertyKey)); //$NON-NLS-1$
+		        dialog.setBlockOnOpen(true);
+		        dialog.setInitialSelections(new Object[] {firstTrans});
+		
+		        int status = dialog.open();
+		
+		        // process dialog result:
+		        if (status == Window.OK) {
+		        	generalResultStr = (String)dialog.getResult()[0];
+		        }
+	        }
+    	};
+    	
+        Display display = (Display.getCurrent() == null ? Display.getDefault() : Display.getCurrent());
+        if (Thread.currentThread() != display.getThread()) {
+             display.syncExec(work);
+        } else {
+            work.run();
+        }
+    	
+    	return generalResultStr;
+    }
+
+    static final class StringLabelProvider implements ILabelProvider {
+        @Override
+		public Image getImage( Object element ) {
+            return null;
+        }
+
+        @Override
+		public String getText( Object element ) {
+            return (String)element;
+        }
+
+        @Override
+		public void addListener( ILabelProviderListener listener ) {
+        }
+
+        @Override
+		public void dispose() {
+        }
+
+        @Override
+		public boolean isLabelProperty( Object element,
+                                        String property ) {
+            return false;
+        }
+
+        @Override
+		public void removeListener( ILabelProviderListener listener ) {
+        }
+    }
 
 }

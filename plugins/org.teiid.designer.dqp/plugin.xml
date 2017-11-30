@@ -10,20 +10,6 @@
 <plugin>
 
    <extension
-         point="org.teiid.designer.extension.modelExtensionProvider">
-      <extensionDefinition
-            className="org.teiid.designer.runtime.extension.odata.ODataModelExtensionAssistant"
-            path="meds/odata.mxd">
-      </extensionDefinition>
-   </extension>
-   <extension
-         point="org.teiid.designer.extension.modelExtensionProvider">
-      <extensionDefinition
-            className="org.teiid.designer.runtime.extension.mongodb.MongoDBModelExtensionAssistant"
-            path="meds/mongodb.mxd">
-      </extensionDefinition>
-   </extension>
-   <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
             adaptableType="org.eclipse.wst.server.core.IServer"

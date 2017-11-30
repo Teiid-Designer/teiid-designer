@@ -37,7 +37,7 @@ public class DdlImporterPlugin extends Plugin {
      * @param key
      * @return The i18n template associated with the supplied key
      */
-    static String i18n( final String key ) {
+    public static String i18n( final String key ) {
         return UTIL.getString(key);
     }
 
@@ -48,7 +48,7 @@ public class DdlImporterPlugin extends Plugin {
      * @param parameters
      * @return The i18n template associated with the supplied key
      */
-    static String i18n( final String key, Object... parameters) {
+    public static String i18n( final String key, Object... parameters) {
         return UTIL.getString(key, parameters);
     }
 

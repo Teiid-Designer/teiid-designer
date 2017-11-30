@@ -385,8 +385,6 @@ public class NewMedDetailsPage extends AbstractWizardPage {
     private void validatePage() {
         MedStatus nsPrefixStatus = ModelExtensionDefinitionValidator.validateNamespacePrefix(getNamespacePrefix(),
                                                                                              getRegistry().getAllNamespacePrefixes());
-        MedStatus nsUriStatus = ModelExtensionDefinitionValidator.validateNamespaceUri(getNamespaceUri(),
-                                                                                       getRegistry().getAllNamespaceUris());
         MedStatus metaModelUriStatus = ModelExtensionDefinitionValidator.validateMetamodelUri(getMetamodelUri(),
                                                                                               getRegistry().getExtendableMetamodelUris());
         MedStatus definitionStatus = ModelExtensionDefinitionValidator.validateDescription(getDescription());
@@ -395,7 +393,6 @@ public class NewMedDetailsPage extends AbstractWizardPage {
 
         StringBuffer sb = new StringBuffer();
         addStatusMessage(sb, nsPrefixStatus);
-        addStatusMessage(sb, nsUriStatus);
         addStatusMessage(sb, metaModelUriStatus);
         addStatusMessage(sb, versionStatus);
         addStatusMessage(sb, definitionStatus);

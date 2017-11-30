@@ -60,7 +60,8 @@ public final class ModelExtensionRegistry {
     /**
      * Key is namespace URI, value is namespace prefix. Never <code>null</code>.
      */
-    private final Map<String, String> namespaces;
+//    private final Map<String, String> namespaces;
+    private final HashSet<String> namespacePrefixes;
 
     /**
      * Parser for the *.mxd file. Creates the model extension definition. Never <code>null</code>.
@@ -74,7 +75,8 @@ public final class ModelExtensionRegistry {
     public ModelExtensionRegistry( File medSchema ) throws IllegalStateException {
         this.definitions = new HashMap<String, ModelExtensionDefinition>();
         this.listeners = new CopyOnWriteArrayList<RegistryListener>();
-        this.namespaces = new HashMap<String, String>();
+//        this.namespaces = new HashMap<String, String>();
+        this.namespacePrefixes = new HashSet<String>();
 
         try {
             this.parser = new ModelExtensionDefinitionParser(medSchema);
@@ -121,10 +123,6 @@ public final class ModelExtensionRegistry {
 
         String namespaceUri = definition.getNamespaceUri();
 
-        // don't allow a namespace URI that has already been registered
-        if (!definition.isBuiltIn() && this.namespaces.containsKey(namespaceUri)) {
-        	ExtensionPlugin.Util.log(IStatus.WARNING, NLS.bind(Messages.namespaceUriAlreadyRegistered, namespaceUri));
-        }
 
         // Determine if the definition extends a valid Metamodel
         String metamodelUri = definition.getMetamodelUri();
@@ -135,7 +133,7 @@ public final class ModelExtensionRegistry {
 
         // add to registry
         this.definitions.put(namespacePrefix, definition);
-        this.namespaces.put(namespaceUri, namespacePrefix);
+        this.namespacePrefixes.add(namespacePrefix);
 
         // notify registry listeners
         fireEvent(RegistryEvent.createAddDefinitionEvent(definition));
@@ -155,7 +153,7 @@ public final class ModelExtensionRegistry {
         if (isNamespacePrefixRegistered(namespacePrefix)) {
             ModelExtensionDefinition removedMed = this.definitions.remove(namespacePrefix);
             if (removedMed != null) {
-                this.namespaces.remove(removedMed.getNamespaceUri());
+            	this.namespacePrefixes.remove(namespacePrefix);
 
                 // notify registry listeners
                 fireEvent(RegistryEvent.createRemoveDefinitionEvent(removedMed));
@@ -301,15 +299,9 @@ public final class ModelExtensionRegistry {
      * @return a collection of all registered model extension definition namespace prefixes (never <code>null</code>)
      */
     public Set<String> getAllNamespacePrefixes() {
-        return new HashSet<String>(namespaces.values());
+    	return namespacePrefixes;
     }
 
-    /**
-     * @return a collection of all registered model extension definition namespace URIs (never <code>null</code>)
-     */
-    public Set<String> getAllNamespaceUris() {
-        return this.namespaces.keySet();
-    }
 
     /**
      * @param namespacePrefix the namespace prefix whose model extension definition is being requested (cannot be <code>null</code>
@@ -411,14 +403,6 @@ public final class ModelExtensionRegistry {
         return this.definitions.containsKey(namespacePrefix);
     }
 
-    /**
-     * @param namespaceUri the namespace URI being checked (cannot be <code>null</code> or empty)
-     * @return <code>true</code> if there is a model extension definition with that namespace URI registered
-     */
-    public boolean isNamespaceUriRegistered( String namespaceUri ) {
-        CoreArgCheck.isNotEmpty(namespaceUri, "namespaceUri is empty"); //$NON-NLS-1$
-        return this.namespaces.containsKey(namespaceUri);
-    }
 
     /**
      * @param metamodelUri the metamodel URI being checked (cannot be <code>null</code> or empty)

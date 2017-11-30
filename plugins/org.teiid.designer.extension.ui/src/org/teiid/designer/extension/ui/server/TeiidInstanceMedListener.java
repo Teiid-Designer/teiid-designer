@@ -135,12 +135,10 @@ public class TeiidInstanceMedListener implements IExecutionConfigurationListener
         // Continue checks on parsable MED
         ModelExtensionDefinition medNSPrefixMatch = RegistryDeploymentValidator.getRegisteredMedWithNSPrefix(registry,
                                                                                                              med.getNamespacePrefix());
-        ModelExtensionDefinition medNSUriMatch = RegistryDeploymentValidator.getRegisteredMedWithNSUri(registry,
-                                                                                                               med.getNamespaceUri());
+//        ModelExtensionDefinition medNSUriMatch = RegistryDeploymentValidator.getRegisteredMedWithNSUri(registry,
+//                                                                                                               med.getNamespaceUri());
 
         boolean nsPrefixConflict = false;
-        boolean nsUriConflict = false;
-        boolean nsPrefixAndUriConflictSameMed = false;
         boolean nsPrefixConflictMedBuiltIn = false;
         boolean nsUriConflictMedBuiltIn = false;
 
@@ -148,15 +146,10 @@ public class TeiidInstanceMedListener implements IExecutionConfigurationListener
             nsPrefixConflict = true;
             nsPrefixConflictMedBuiltIn = medNSPrefixMatch.isBuiltIn();
         }
-        if (medNSUriMatch != null) {
-            nsUriConflict = true;
-            nsUriConflictMedBuiltIn = medNSUriMatch.isBuiltIn();
-        }
-        if (nsPrefixConflict && nsUriConflict && medNSPrefixMatch.equals(medNSUriMatch))
-            nsPrefixAndUriConflictSameMed = true;
+
 
         // No conflicts - add it to the registry
-        if (!nsPrefixConflict && !nsUriConflict) {
+        if (!nsPrefixConflict ) {
             // Add the selected Med
             internalRun(fileInput, false);
 
@@ -170,7 +163,7 @@ public class TeiidInstanceMedListener implements IExecutionConfigurationListener
             return;
             // If there is (1) just a NS Prefix Conflict or (2) NS Prefix AND URI, but they are same MED, prompt user
             // whether to update
-        } else if (nsPrefixConflict && (!nsUriConflict || (nsUriConflict && nsPrefixAndUriConflictSameMed))) {
+        } else {
             // Do not re-deploy the same MED
             if (med.equals(medNSPrefixMatch)) {
                 // Already registered so return
@@ -180,8 +173,6 @@ public class TeiidInstanceMedListener implements IExecutionConfigurationListener
                 internalRun(fileInput, true);
             }
             // If there is a NS URI Conflict, throw exception to that effect
-        } else if (nsUriConflict) {
-            throw new Exception(Messages.registerMedActionNamespacePrefixRegisteredDoUpdateMsg);
         }
     }
 

@@ -218,15 +218,6 @@
             path="infinispan.mxd">
       </extensionDefinition>
    </extension>
-   
-   <extension
-         point="org.teiid.designer.extension.modelExtensionProvider">
-      <extensionDefinition
-            className="org.teiid.designer.metamodels.relational.extension.InfinispanHotrodModelExtensionAssistant"
-            path="infinispan-hotrod.mxd">
-      </extensionDefinition>
-   </extension>
-   
 <!-- Designates valid extensible metamodel -->
    <extension
          point="org.teiid.designer.extension.extensibleMetamodelProvider">
@@ -247,13 +238,6 @@
       <extensionDefinition
             className="org.teiid.designer.metamodels.relational.extension.RestModelExtensionAssistant"
             path="rest.mxd">
-      </extensionDefinition>
-   </extension>
-   <extension
-         point="org.teiid.designer.extension.modelExtensionProvider">
-      <extensionDefinition
-            className="org.teiid.designer.metamodels.relational.extension.ExcelModelExtensionAssistant"
-            path="excel.mxd">
       </extensionDefinition>
    </extension>
 </plugin>

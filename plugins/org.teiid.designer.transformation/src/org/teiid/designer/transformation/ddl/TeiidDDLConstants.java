@@ -120,6 +120,7 @@ public interface TeiidDDLConstants {
 		public static final String REST_PRODUCES = "REST:PRODUCES"; //$NON-NLS-1$
 		public static final String CHARSET = "CHARSET"; //$NON-NLS-1$
 		public static final String REST_CHARSET = "REST:CHARSET"; //$NON-NLS-1$
+		public static final String REST = "REST"; //$NON-NLS-1$
 		public static final String REST_TEIID_SET_NAMESPACE = "SET NAMESPACE 'http://teiid.org/rest' AS REST;"; //$NON-NLS-1$
 		
 		public static final String TEIID_SF_PREFIX = "teiid_sf";  //$NON-NLS-1$
@@ -130,10 +131,16 @@ public interface TeiidDDLConstants {
 	    
 	    public static final String TEIID_INFINISPAN_HOTROD_PREFIX = "teiid_ispn"; //$NON-NLS-1$
 	    public static final String INFINISPAN_HOTROD_PREFIX = "infinispan-hotrod"; //$NON-NLS-1$
+	    
+	    public static final String TEIID_ODATA_PREFIX = "teiid_odata"; //$NON-NLS-1$
+	    public static final String ODATA_PREFIX = "odata"; //$NON-NLS-1$
+	    public static final String ODATA4_PREFIX = "odata4"; //$NON-NLS-1$
+	    public static final String SAP_GATEWAY_PREFIX = "sap-gateway"; //$NON-NLS-1$
 
 	    /*
 	     * Teiid's EXCEL extension properties
 	     */
+	    public static final String TEIID_UNDERSCORE = "teiid_"; //$NON-NLS-1$
 		public static final String TEIID_EXCEL_PREFIX = "teiid_excel";  //$NON-NLS-1$
 	    public static final String EXCEL_PREFIX = "excel";  //$NON-NLS-1$";  //$NON-NLS-1$
 	    public static final String EXCEL_CELL_NUMBER = "CELL_NUMBER";  //$NON-NLS-1$";  //$NON-NLS-1$  COLUMN ONLY
@@ -144,5 +151,21 @@ public interface TeiidDDLConstants {
 	    public static final String OBJECT_NS_PREFIX = "OBJECT_NS"; //$NON-NLS-1$
 	    public static final String TEIID_INFINISPAN_PREFIX = "infinispan"; //$NON-NLS-1$
 	    public static final String INFINISPAN_PRIMARY_TABLE = "primary_table"; //$NON-NLS-1$
+	    
+	    public static final String SET = "SET"; //$NON-NLS-1$
+	    public static final String NAMESPACE = "NAMESPACE"; //$NON-NLS-1$
+	    public static final String SF_URI = "{http://www.teiid.org/translator/salesforce/2012}"; //$NON-NLS-1$
+	    public static final String WS_URI = "{http://www.teiid.org/translator/ws/2012}"; //$NON-NLS-1$
+	    public static final String MONGO_URI = "{http://www.teiid.org/translator/mongodb/2013}"; //$NON-NLS-1$
+	    public static final String ODATA_URI = "{http://www.jboss.org/teiiddesigner/ext/odata/2012}"; //$NON-NLS-1$
+	    public static final String ACCUMULO_URI = "{http://www.teiid.org/translator/accumulo/2013}"; //$NON-NLS-1$
+	    public static final String EXCEL_URI = "{http://www.teiid.org/translator/excel/2014}"; //$NON-NLS-1$
+	    public static final String JPA_URI = "{http://www.teiid.org/translator/jpa/2014}"; //$NON-NLS-1$
+	    public static final String HBASE_URI = "{http://www.teiid.org/translator/hbase/2014}"; //$NON-NLS-1$
+	    public static final String SPATIAL_URI = "{http://www.teiid.org/translator/spatial/2015}"; //$NON-NLS-1$
+	    public static final String LDAP_URI = "{http://www.teiid.org/translator/ldap/2015}"; //$NON-NLS-1$
+	    public static final String PI_URI = "{http://www.teiid.org/translator/pi/2016}"; //$NON-NLS-1$
+	    public static final String COUCHBASE_URI = "{http://www.teiid.org/translator/couchbase/2017}"; //$NON-NLS-1$
+	    public static final String INFINISPAN_URI = "{http://www.teiid.org/translator/infinispan/2017}"; //$NON-NLS-1$
 
 }

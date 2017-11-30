@@ -48,7 +48,6 @@ import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.metamodels.relational.extension.InfinispanCacheModelExtensionAssistant;
 import org.teiid.designer.metamodels.relational.extension.InfinispanCacheModelExtensionConstants;
-import org.teiid.designer.metamodels.relational.extension.InfinispanHotrodModelExtensionAssistant;
 import org.teiid.designer.metamodels.relational.extension.InfinispanHotrodModelExtensionConstants;
 import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
 import org.teiid.designer.transformation.TransformationPlugin;
@@ -652,7 +651,9 @@ public class MaterializedModelManager implements ReverseEngConstants {
     	if( getJdgVersion() == JDG_VERSION.JDG_6_DOT_6 ) {
     		return InfinispanCacheModelExtensionAssistant.getInstance();
     	} else {
-	        return InfinispanHotrodModelExtensionAssistant.getInstance();
+	        final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+	        String NS = InfinispanHotrodModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+	        return (ModelObjectExtensionAssistant)registry.getModelExtensionAssistant(NS);
     	}
     }
     
