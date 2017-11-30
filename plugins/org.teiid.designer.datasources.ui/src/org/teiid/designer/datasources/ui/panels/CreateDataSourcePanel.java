@@ -127,7 +127,7 @@ public final class CreateDataSourcePanel extends Composite implements UiConstant
         namePanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         Label dsNameLabel = new Label(namePanel,SWT.NONE);
-        dsNameLabel.setText(Messages.createDataSourcePanel_name);
+        dsNameLabel.setText(Messages.createDataSourcePanel_jndiName);
         
         dataSourceNameText = new Text(namePanel, SWT.BORDER | SWT.SINGLE);
         dataSourceNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
