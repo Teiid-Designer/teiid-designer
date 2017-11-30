@@ -10,6 +10,7 @@ package org.teiid.designer.core.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -46,6 +47,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.teiid.core.designer.util.Base64;
+import org.teiid.core.designer.util.FileUtils;
 
 /**
  * Helper class to build the URL objects from the strings. Since as an
@@ -141,10 +143,10 @@ public class URLHelper {
 	 * @since 5.1
 	 */
 	public static File createFileFromUrlwithDigest(final URL url, final String fileNamePrefix,
-			final String fileNameSuffix) throws MalformedURLException, IOException {
+			final String fileNameSuffix, final String userName, final String password) throws MalformedURLException, IOException {
 
-		return createFileFromUrlInternalwithDigest(url, FileUrl.createTempFile(fileNamePrefix, fileNameSuffix), null,
-				null, true);
+		return createFileFromUrlInternalwithDigest(url, FileUrl.createTempFile(fileNamePrefix, fileNameSuffix), userName,
+				password, true);
 	}
 
 	public static File createFileFromUrl(final URL url, final String fileNamePrefix, final String fileNameSuffix,
@@ -235,13 +237,12 @@ public class URLHelper {
 		credsProvider.setCredentials(new AuthScope(target.getHostName(), target.getPort()),
 				new UsernamePasswordCredentials(userName, password));
 		CloseableHttpClient httpclient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();
+		String stringOutput = null;
 		try {
 
 			// Create AuthCache instance
 			AuthCache authCache = new BasicAuthCache();
-			// Generate DIGEST scheme object, initialize it and add it to the
-			// local
-			// auth cache
+			// Generate DIGEST scheme object, initialize it and add it to the local auth cache
 			DigestScheme digestAuth = new DigestScheme();
 			// Suppose we already know the realm name
 			// digestAuth.overrideParamter("realm", "some realm");
@@ -255,23 +256,12 @@ public class URLHelper {
 
 			HttpGet httpget = new HttpGet(url.toString());
 
-			System.out.println("Executing request " + httpget.getRequestLine() + " to target " + target);
 			for (int i = 0; i < 3; i++) {
 				CloseableHttpResponse response = httpclient.execute(httpget, localContext);
 				try {
-					System.out.println("----------------------------------------");
-					System.out.println(response.getStatusLine());
 					HttpEntity entity = response.getEntity();
-					InputStream instream = entity.getContent();
 					// Header contentCncoding = entity .getContentEncoding();
-					AuthState proxyAuthState = localContext.getProxyAuthState();
-					System.out.println("Proxy auth state: " + proxyAuthState.getState());
-					System.out.println("Proxy auth scheme: " + proxyAuthState.getAuthScheme());
-					System.out.println("Proxy auth credentials: " + proxyAuthState.getCredentials());
-					AuthState targetAuthState = localContext.getTargetAuthState();
-					System.out.println("Target auth state: " + targetAuthState.getState());
-					System.out.println("Target auth scheme: " + targetAuthState.getAuthScheme());
-					System.out.println("Target auth credentials: " + targetAuthState.getCredentials());
+					stringOutput = EntityUtils.toString(entity);
 					EntityUtils.consume(response.getEntity());
 				} finally {
 					response.close();
@@ -280,44 +270,14 @@ public class URLHelper {
 		} finally {
 			httpclient.close();
 		}
-		// URLConnection urlConn = null;
-		// InputStreamReader inStream = null;
-		// FileWriter fw = null;
-		// BufferedWriter bw = null;
-		// try {
-		// file.deleteOnExit();
-		// ((FileUrl) file).setOriginalUrlString(url.toString());
-		// fw = new FileWriter(file);
-		// bw = new BufferedWriter(fw);
-		// urlConn = url.openConnection();
-		// setCredentials(urlConn, userName, password);
-		// if (!verifyHostname && urlConn instanceof HttpsURLConnection)
-		// ((HttpsURLConnection) urlConn).setHostnameVerifier(new
-		// HostnameVerifier() {
-		// @Override
-		// public boolean verify(final String arg, final SSLSession session) {
-		// return true;
-		// }
-		// });
-		// inStream = new InputStreamReader(urlConn.getInputStream());
-		// int c;
-		// while ((c = inStream.read()) != -1) {
-		// bw.write(c);
-		// }
-		//
-		// } finally {
-		// if (inStream != null)
-		// inStream.close();
-		// if (bw != null)
-		// bw.close();
-		// }
-
+		
+		FileUtils.write(stringOutput.getBytes(), file);
+		
 		return file;
 	}
 
 	private HashMap<String, String> parseHeader(String headerString) {
-		// seperte out the part of the string which tells you which Auth scheme
-		// is it
+		// separate out the part of the string which tells you which Auth scheme
 		String headerStringWithoutScheme = headerString.substring(headerString.indexOf(" ") + 1).trim();
 		HashMap<String, String> values = new HashMap<String, String>();
 		String keyValueArray[] = headerStringWithoutScheme.split(",");
@@ -517,9 +477,7 @@ public class URLHelper {
 
 			// Create AuthCache instance
 			AuthCache authCache = new BasicAuthCache();
-			// Generate DIGEST scheme object, initialize it and add it to the
-			// local
-			// auth cache
+			// Generate DIGEST scheme object, initialize it and add it to the local auth cache
 			DigestScheme digestAuth = new DigestScheme();
 			authCache.put(target, digestAuth);
 
@@ -537,15 +495,10 @@ public class URLHelper {
 
 			CloseableHttpResponse response = httpclient.execute(httpget, localContext);
 			try {
-				System.out.println("----------------------------------------");
-				System.out.println(response.getStatusLine());
 				if (response.getStatusLine().getStatusCode()!=200){
 					resolved = false;
 					throw new Exception(response.getStatusLine().getReasonPhrase());
 				}
-				HttpEntity entity = response.getEntity();
-				AuthState proxyAuthState = localContext.getProxyAuthState();
-				AuthState targetAuthState = localContext.getTargetAuthState();
 				EntityUtils.consume(response.getEntity());
 			} finally {
 				response.close();
@@ -574,13 +527,12 @@ public class URLHelper {
 				new UsernamePasswordCredentials(userName, password));
 		CloseableHttpClient httpclient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).build();
 		CloseableHttpResponse response = null;
+		String bodyAsString = null;
 		try {
 
 			// Create AuthCache instance
 			AuthCache authCache = new BasicAuthCache();
-			// Generate DIGEST scheme object, initialize it and add it to the
-			// local
-			// auth cache
+			// Generate DIGEST scheme object, initialize it and add it to the local auth cache
 			DigestScheme digestAuth = new DigestScheme();
 			authCache.put(target, digestAuth);
 
@@ -601,15 +553,14 @@ public class URLHelper {
 				if (response.getStatusLine().getStatusCode()!=200){
 					throw new Exception(response.getStatusLine().getReasonPhrase());
 				}
-				HttpEntity entity = response.getEntity();
-				AuthState proxyAuthState = localContext.getProxyAuthState();
-				AuthState targetAuthState = localContext.getTargetAuthState();
+				bodyAsString = EntityUtils.toString(response.getEntity());
+			    EntityUtils.consume(response.getEntity());
 			} finally {
 				response.close();
 			}
 		} finally {
 			httpclient.close();
 		}
-		return response.getEntity().getContent();
+		return new ByteArrayInputStream( bodyAsString.getBytes() );
 	}
 }
