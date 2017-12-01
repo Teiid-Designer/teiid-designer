@@ -24,9 +24,9 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.importer.DdlImporterI18n;
-import org.teiid.designer.ddl.importer.node.AbstractImporter;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.util.RelationalTypeMappingImpl;
+import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalForeignKey;
 import org.teiid.designer.relational.model.RelationalModel;
@@ -44,6 +44,10 @@ import org.teiid.modeshape.sequencer.ddl.DdlConstants;
 import org.teiid.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.teiid.modeshape.sequencer.ddl.node.AstNode;
 
+/**
+ *
+ *
+ */
 public class TeiidStandardImporter  extends TeiidAbstractImporter {
 
 	class Info {
@@ -91,8 +95,20 @@ public class TeiidStandardImporter  extends TeiidAbstractImporter {
 	 * see <code>org.teiid.core.types.JDBCSQLTypeInfo.java</code> for details
 	 * FLOAT, DOUBLE, BIG_DECIMAL all show 20 as the default precision
 	 */
-	protected static final int DEFAULT_PRECISION = 0; 
+	protected static final int DEFAULT_PRECISION = 0;
+	
+	private Set<String> reservedWords;
 
+
+	/**
+	 * 
+	 */
+	public TeiidStandardImporter() {
+		super();
+        IQueryService service = ModelerCore.getTeiidQueryService();
+        reservedWords = service.getReservedWords();
+	}
+	
 	/**
 	 * Create new info object
 	 *
@@ -164,7 +180,12 @@ public class TeiidStandardImporter  extends TeiidAbstractImporter {
 	 */
 	protected <T extends RelationalReference> T find(Class<T> type, AstNode node, RelationalReference parent, Collection<RelationalReference> allModelRefs) throws EntityNotFoundException, CoreException {
 		String nodeName = node.getName();
-
+		
+		// check if reservered word, then double-quote
+		if( isReservedWord(nodeName) ) {
+			nodeName = StringConstants.DQUOTE + nodeName + StringConstants.DQUOTE;
+		}
+		
 		return find(type, nodeName, node, parent, allModelRefs);
 	}
 
@@ -745,5 +766,9 @@ public class TeiidStandardImporter  extends TeiidAbstractImporter {
 		}
 		return nullableStr;
 	}
+	
+    private boolean isReservedWord(String name) {
+        return this.reservedWords.contains(name.toUpperCase());
+    }
     
 }
