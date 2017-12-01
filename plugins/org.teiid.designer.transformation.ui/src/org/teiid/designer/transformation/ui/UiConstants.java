@@ -126,6 +126,9 @@ public interface UiConstants {
 		
 		String PREVIEW_DATA_ICON = PC.CVIEW16 + "previewData.gif"; //$NON-NLS-1$
 		
+		String COLLAPSE_ALL_ICON = PC.CVIEW16 + "collapseall.gif"; //$NON-NLS-1$
+		String EXPAND_ALL_ICON = PC.CVIEW16 + "expandall.gif"; //$NON-NLS-1$
+		
 		public static final String GENERATE_DATA_SERVICE = PC.CVIEW16 + "generate-data-service.png"; //$NON-NLS-1$
 	}
     

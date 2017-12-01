@@ -227,16 +227,14 @@ public class Messages extends org.teiid.designer.relational.ui.Messages {
     public static String CreatePojoAction_invalidDatatypeTitle;
     public static String CreatePojoAction_invalidDatatypeMessage;
     
-    public static String lastSaved;
     public static String undefined;
     public static String modelName;
     public static String location;
     public static String actions;
     public static String edit;
     public static String modelEditor;
-    public static String contents;
-    public static String advanced;
-    public static String additionalModelInformation;
+    public static String collapseAll;
+    public static String expandAll;
     
     static {
         NLS.initializeMessages("org.teiid.designer.transformation.ui.messages", Messages.class); //$NON-NLS-1$

@@ -24,9 +24,12 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
@@ -44,6 +47,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -51,22 +55,20 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.dialogs.FilteredTree;
+import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.EditorPart;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.StringConstants;
@@ -145,13 +147,16 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 
     private Hyperlink editDescriptionHL;
 
-    private Tree modelTree;
+    private SashForm hSplitter;
     private TreeViewer modelTreeViewer;
     private StyledTextEditor textViewerPanel;
     
     Button previewButton;
     
     Button generateDataServiceButton;
+    
+    IAction collapseAll;
+    IAction expandAll;
     
 	private TabItem propertiesTab;
     ModelObjectPropertiesPanel propertiesPanel;
@@ -161,7 +166,6 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     private INotifyChangedListener notificationHandler;
     
     ModelEditorHyperlinkManager hyperLinkActionManager;
-
 
     @Override
     public void init(IEditorSite site, IEditorInput input) {
@@ -182,6 +186,22 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
         }
         actionService = (ModelerActionService)org.teiid.designer.ui.UiPlugin.getDefault().getActionService(getSite().getPage());
         objectActionService = new ModelObjectActionService(actionService, this);
+        
+        this.expandAll = new Action(Messages.expandAll) {
+            @Override
+            public void run() {
+            	modelTreeViewer.expandAll();
+            }
+		};
+		this.expandAll.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(UiConstants.Images.EXPAND_ALL_ICON));
+		
+        this.collapseAll = new Action(Messages.collapseAll) {
+            @Override
+            public void run() {
+            	modelTreeViewer.collapseAll();
+            }
+		};
+		this.collapseAll.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(UiConstants.Images.COLLAPSE_ALL_ICON));
     }
 
     protected void createNotifyChangedListener(TreeViewer treeViewer) {
@@ -194,14 +214,14 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     public void createPartControl(Composite parent) {
     	
     	mainControl = parent;
-    	
-        String title = Messages.modelEditor;
+        String title =  Messages.modelEditor;
         this.setPartName(title);
+        this.setContentDescription(title);
 
         toolkit = new FormToolkit(parent.getDisplay());
         form = toolkit.createScrolledForm(parent);
         toolkit.decorateFormHeading(form.getForm());        
-        form.setText(title);
+
         GridLayoutFactory.fillDefaults().applyTo(form.getBody());
 
         hyperLinkActionManager = new ModelEditorHyperlinkManager(this);
@@ -212,16 +232,16 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     private void buildModelEditorPanel(boolean doLayout) {
         // insert sections
         contentsPanel = getToolkit().createComposite(form.getBody());
-        GridLayoutFactory.fillDefaults().numColumns(1).spacing(5, 0).applyTo(contentsPanel);
+        GridLayoutFactory.fillDefaults().numColumns(1).spacing(0, 0).applyTo(contentsPanel);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(contentsPanel);
         
         createOverviewSection(contentsPanel);
-        
-        
-//        createAdvancedSection(contentsPanel);
 
-        
-    	form.setText(Messages.modelEditor);
+        String desc = "MODEL >> " + SPACE + SPACE + 
+        		modelResource.getItemName() + TAB + SPACE + SPACE + 
+        		Messages.location + SPACE + 
+        		modelResource.getPath().removeLastSegments(1).toString();
+    	form.setText(desc); //Messages.modelEditor);
     	form.setImage(null);
     	
         if( doLayout ) {
@@ -229,55 +249,37 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
         }
     }
 
-    private void blueForeground(Control control) {
-        control.setForeground(control.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
-    }
-
     /**
      * @param parent
      * @param toolkit
      */
     private void createOverviewSection(Composite parent) {
-        Section section = getToolkit().createSection(parent, 
-        		ExpandableComposite.EXPANDED|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
-        String desc = Messages.modelName + SPACE + SPACE + 
-        		modelResource.getItemName() + TAB +
-        		Messages.location + SPACE + 
-        		modelResource.getPath().removeLastSegments(1).toString();
-        section.setText(desc);
-        section.setTitleBarForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         
-        section.setDescription(Messages.lastSaved + getDateAsString(iResource.getLocalTimeStamp()));
+        Composite twoColumnPanel = getToolkit().createComposite(parent);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).spacing(5, 5).applyTo(twoColumnPanel);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(twoColumnPanel);
 
-        blueForeground(section.getDescriptionControl());
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
+    	createVerticalToolbar(twoColumnPanel);
+    	
+        this.hSplitter = new SashForm(twoColumnPanel, SWT.HORIZONTAL);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(hSplitter);
         
-        Composite composite = getToolkit().createComposite(section);
-        GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 10).spacing(5, 10).applyTo(composite);
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
+    	createTreeViewerPanel(hSplitter);
+    	
+    	createTabbedPanel(hSplitter);
 
-        createModelContentsSection(composite);
+    	hSplitter.setWeights(new int[] {4, 5});
         
         resetDescription();
-        
-        getToolkit().paintBordersFor(composite);
-        section.setClient(composite);
     }
     
     @SuppressWarnings("unused")
-	private void createModelContentsSection(Composite parent) {
-    	
-        Section section = getToolkit().createSection(parent, ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
-        section.setText(Messages.contents);
-        GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(section);
+	private void createVerticalToolbar(Composite parent) {
+        Composite vertToolbarContainer = getToolkit().createComposite(parent);
+        GridLayoutFactory.fillDefaults().numColumns(1).margins(1, 1).applyTo(vertToolbarContainer);
+        GridDataFactory.fillDefaults().hint(40, -1).grab(false, true).applyTo(vertToolbarContainer);
         
-        // Now add a vertical toolbar to the left and a model contents tree on the right
-
-        Composite composite = getToolkit().createComposite(section);
-        GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).spacing(5, 5).applyTo(composite);
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
-
-        Composite vertToolbar = getToolkit().createComposite(composite);
+        Composite vertToolbar = getToolkit().createComposite(vertToolbarContainer);
         GridLayoutFactory.fillDefaults().numColumns(1).margins(2, 2).applyTo(vertToolbar);
         GridDataFactory.fillDefaults().hint(40, -1).grab(false, true).applyTo(vertToolbar);
         
@@ -306,6 +308,12 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 				}
 			});
         	previewButton.setToolTipText(org.teiid.designer.ui.common.actions.Messages.PREVIEW_DATA_TOOLTIP);
+        	
+    		Composite topSep = getToolkit().createCompositeSeparator(vertToolbar);
+    		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+    		layoutData.horizontalSpan = 1;
+    		layoutData.heightHint = 2;
+    		topSep.setLayoutData(layoutData);
         	
         	if( isRelational) {
 	        	Button addTableButton = getToolkit().createButton(vertToolbar, BLANK, SWT.PUSH);
@@ -392,7 +400,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
         	}
         	
     		Composite bottomSep = getToolkit().createCompositeSeparator(vertToolbar);
-    		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+    		layoutData = new GridData(GridData.FILL_HORIZONTAL);
     		layoutData.horizontalSpan = 1;
     		layoutData.heightHint = 2;
     		bottomSep.setLayoutData(layoutData);
@@ -422,11 +430,16 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 			});
         	generateDataServiceButton.setToolTipText(org.teiid.designer.ui.common.actions.Messages.GENERATE_DATA_SERVICE_TOOLTIP);
         }
-        
-        modelTree = new Tree(composite, SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.MULTI);
+    }
+    
+    private void createTreeViewerPanel(Composite parent) {
+        Composite mainContainer = getToolkit().createComposite(parent);
+        GridLayoutFactory.fillDefaults().numColumns(1).margins(1, 1).applyTo(mainContainer);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(mainContainer);
+    	
+    	FilteredTree fTree = createFilteredTree(mainContainer);
 
-        modelTreeViewer = new TreeViewer(modelTree);
-        GridDataFactory.fillDefaults().span(1,  1).hint(250, 320).minSize(SWT.DEFAULT, 60).grab(false, true).applyTo(modelTree);
+        modelTreeViewer = fTree.getViewer(); //new TreeViewer(modelTree);
         
         ITreeContentProvider contentProvider = new ModelOutlineContentProvider(getEditorInput());
         modelTreeViewer.setContentProvider(contentProvider);
@@ -444,9 +457,15 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
             @Override
 			public void menuAboutToShow( IMenuManager theMenuMgr ) {
             	objectActionService.contributeToContextMenu(menuMgr, modelTreeViewer.getSelection());
+            	
+            	// Add Collapse ALL and Expand ALL actions
+            	menuMgr.add(new Separator());
+            	menuMgr.add(collapseAll);
+            	menuMgr.add(expandAll);
+            	
             }
         });
-        modelTreeViewer.getTree().setMenu(menuMgr.createContextMenu(modelTree));
+        modelTreeViewer.getTree().setMenu(menuMgr.createContextMenu(modelTreeViewer.getTree()));
         
         
         modelTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -486,26 +505,27 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 		});
 
         createNotifyChangedListener(modelTreeViewer);
-        
-        createTabbedPanel(composite);
 
-        getToolkit().paintBordersFor(composite);
-        section.setClient(composite);
     }
     
-//    private Label createLabelAndTextField(Composite parent, String labelText, String textText) {
-//        Label theLabel = getToolkit().createLabel(parent, labelText);
-//        blueForeground(theLabel);
-//
-//        Label textLabel = getToolkit().createLabel(parent, textText);
-//        GridDataFactory.fillDefaults().grab(true, false).span(1, 1).applyTo(textLabel);
-//        blueForeground(textLabel);
-//        
-//        return textLabel;
-//    }
-    
+	private FilteredTree createFilteredTree(Composite parent) {
+		int style = SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
+		FilteredTree transfersTree = new FilteredTree(parent, style,
+				new PatternFilter(), true) {
+			@Override
+			protected TreeViewer doCreateTreeViewer(Composite parent, int style) {
+				return new TreeViewer(parent, style);
+			}
+		};
+		return transfersTree;
+	}
+
 	private void createTabbedPanel(Composite parent) {
-        TabFolder tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER);
+        Composite mainContainer = getToolkit().createComposite(parent);
+        GridLayoutFactory.fillDefaults().numColumns(1).margins(1, 1).applyTo(mainContainer);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(mainContainer);
+        
+        TabFolder tabFolder = new TabFolder(mainContainer, SWT.TOP | SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true,  true).applyTo(tabFolder);
 
         createActionsTab(tabFolder);
@@ -542,19 +562,19 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     private Composite createActionListPanel(Composite parent ) {
         Composite rightActionList = getToolkit().createComposite(parent);
         GridLayoutFactory.fillDefaults().numColumns(1).margins(2, 2).applyTo(rightActionList);
-        GridDataFactory.fillDefaults().hint(200, -1).grab(true, true).applyTo(rightActionList);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(rightActionList);
 
         hyperLinkActionManager.addPrimaryHyperLinkActions(rightActionList);
         
         if( isRelational && !isVirtual ) {
 
         	Label separator = getToolkit().createSeparator(rightActionList, SWT.HORIZONTAL);
-            GridDataFactory.fillDefaults().hint(200, 5).grab(true, false).applyTo(separator);
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(separator);
 	        hyperLinkActionManager.addConnectionHyperLinkActions(rightActionList);
         }
         
         Label separator = getToolkit().createSeparator(rightActionList, SWT.HORIZONTAL);
-        GridDataFactory.fillDefaults().hint(200, 5).grab(true, false).applyTo(separator);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(separator);
         hyperLinkActionManager.addGeneralHyperLinkActions(rightActionList);
         
         return rightActionList;
@@ -567,18 +587,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     	this.propertiesPanel = new ModelObjectPropertiesPanel(composite, false);
     	return composite;
     }
-    
-//    private void createAdvancedSection(Composite parent) {
-//        Section section = getToolkit().createSection(parent, ExpandableComposite.TWISTIE|ExpandableComposite.TITLE_BAR|Section.DESCRIPTION);
-//        section.setText(Messages.advanced);
-//        section.setDescription(Messages.additionalModelInformation);
-//        GridDataFactory.fillDefaults().grab(true, false).span(3, 1).applyTo(section);
-//        
-//        Composite composite = getToolkit().createComposite(section);
-//        GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).spacing(5, 5).applyTo(composite);
-//        GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
-//    }
-    
+
     private Composite createDescriptionPanel(Composite parent) {
         Composite composite = getToolkit().createComposite(parent);
         GridLayoutFactory.fillDefaults().numColumns(1).margins(5, 5).spacing(5, 5).applyTo(composite);
@@ -841,12 +850,13 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     }
 
 
-    public void notifyChanged(Notification theNotification) {
+    @SuppressWarnings("rawtypes")
+	public void notifyChanged(Notification theNotification) {
         
         if (theNotification instanceof SourcedNotification) {
             Object source = ((SourcedNotification)theNotification).getSource();
             if( source == null || (source != null && !source.equals(this))) {
-                Collection notifications = ((SourcedNotification)theNotification).getNotifications();
+				Collection notifications = ((SourcedNotification)theNotification).getNotifications();
                 Iterator iter = notifications.iterator();
                 Notification nextNotification = null;
                 
@@ -988,5 +998,4 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 	@Override
 	public void setSelection(ISelection selection) {
 	}
-
 }
