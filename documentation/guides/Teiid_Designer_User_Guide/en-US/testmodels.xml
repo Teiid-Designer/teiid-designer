@@ -114,8 +114,8 @@
 			   <xref linkend="servers-view" /> view)</para>
         </note>
 		
-		<para>After selecting the Preview Data action, Designer will insure that all source models are 
-			associated with connection profiles and that all required passwords are set.</para>
+		<para>After selecting the Preview Data action, Designer will insure that all source models have corresponding 
+			deployed data sources .</para>
 			
 		<para>If the model selected for preview is a source model and there is insufficient 
 			connection info for that model, the following dialog will be displayed and the action terminated.</para>	
@@ -136,6 +136,28 @@
 			<mediaobject>
 				<imageobject>
 					<imagedata fileref="images/screencaps/preview-missing-password-dialog.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		
+		<para>In order to preview, the Teiid Runtime requires deployed metadata representing your source and view metadata.
+			If all required data sources are deployed the Preview Data dialog will be displayed containing 2 tabs to view
+			the simple SQL Query to be executed as well as the VDB Xml Content that will be temporarily deployed in order
+			to execute the query. Clicking OK will execute the SQL query.
+		</para>
+		<figure>
+			<title>Preview Data:  SQL Query Tab</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/preview-data-dialog-sql-tab.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+				<figure>
+			<title>Preview Data:  VDB XML Content Tabb</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/preview-data-dialog-xml-tab.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
