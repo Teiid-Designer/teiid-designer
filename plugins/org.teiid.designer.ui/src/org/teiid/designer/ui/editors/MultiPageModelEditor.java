@@ -948,7 +948,7 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
                 event.widget = getTabFolder();
                 event.item = item;
                 event.type = SWT.Selection;
-                if( !tabFolderSelectionInProgress ) {
+                if( isTabActive(item) ) {
                 	try {
                 		getTabFolder().notifyListeners(SWT.Selection, event);
                 	} catch (SWTException e) {
@@ -965,6 +965,18 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
         if (index != -1) {
             setFocus(index);
         }
+    }
+    
+    boolean isTabActive(CTabItem item) {
+    	if( tabFolderSelectionInProgress ) return false;
+    	
+    	CTabFolder tabFolder = getTabFolder();
+    	
+    	if( tabFolder == null || tabFolder.isDisposed() ) return false;
+    	
+    	if( item == null || item.isDisposed() ) return false;
+    	
+    	return true;
     }
 
     /**

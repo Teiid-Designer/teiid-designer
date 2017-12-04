@@ -79,6 +79,8 @@ import org.teiid.designer.core.transaction.SourcedNotification;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.metamodels.core.Annotation;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
+import org.teiid.designer.metamodels.diagram.Diagram;
+import org.teiid.designer.metamodels.diagram.DiagramEntity;
 import org.teiid.designer.relational.ui.actions.CreateRelationalIndexAction;
 import org.teiid.designer.relational.ui.actions.CreateRelationalProcedureAction;
 import org.teiid.designer.relational.ui.actions.CreateRelationalTableAction;
@@ -112,7 +114,8 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, IResourceChangeListener, INotifyChangedListener, ISelectionProvider {
+public class ModelEditorMainPage extends EditorPart 
+	implements ModelEditorPage, IResourceChangeListener, INotifyChangedListener, ISelectionProvider {
 
 	private static final String SPACE = StringConstants.SPACE;
 	private static final String TAB = StringConstants.TAB;
@@ -509,7 +512,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
     }
     
 	private FilteredTree createFilteredTree(Composite parent) {
-		int style = SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
+		int style = SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
 		FilteredTree transfersTree = new FilteredTree(parent, style,
 				new PatternFilter(), true) {
 			@Override
@@ -890,13 +893,22 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
         // If we get here, we need to make sure the 
         
         switch( notification.getEventType() ) {
-//            case Notification.ADD: {
-//                
-//            } break;
-//            
-//            case Notification.ADD_MANY: {
-//                
-//            } break;
+            case Notification.ADD:
+            case Notification.ADD_MANY:
+            case Notification.REMOVE:
+            case Notification.REMOVE_MANY:{
+                EObject eObj = NotificationUtilities.getEObject(notification);
+                if( eObj != null && ! (eObj instanceof Diagram || eObj instanceof DiagramEntity) ) {
+	                Runnable work = new Runnable() {
+	                    @Override
+	        			public void run() {
+	    	                modelTreeViewer.refresh();
+	                    }
+	                };
+
+	                UiUtil.runInSwtThread(work, true);
+                }
+            } break;
             
             case Notification.SET: {
                 EObject eObj = NotificationUtilities.getEObject(notification);
@@ -959,27 +971,6 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
         return formatter.format(theDate);
     }
 
-    class EmptySelectionProvider implements ISelectionProvider {
-		@Override
-		public void addSelectionChangedListener(ISelectionChangedListener listener) {
-
-		}
-	
-		@Override
-		public ISelection getSelection() {
-			return new StructuredSelection(modelResource);
-		}
-	
-		@Override
-		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-		}
-	
-		@Override
-		public void setSelection(ISelection selection) {
-
-		}
-    }
-
 	@Override
 	public void addSelectionChangedListener(ISelectionChangedListener listener) {
 
@@ -987,7 +978,7 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 
 	@Override
 	public ISelection getSelection() {
-		return null;
+		return new StructuredSelection(new Object());
 	}
 
 	@Override
@@ -997,5 +988,6 @@ public class ModelEditorMainPage extends EditorPart implements ModelEditorPage, 
 
 	@Override
 	public void setSelection(ISelection selection) {
+		System.out.println(" MEMP >> Selection ="+  selection);
 	}
 }
