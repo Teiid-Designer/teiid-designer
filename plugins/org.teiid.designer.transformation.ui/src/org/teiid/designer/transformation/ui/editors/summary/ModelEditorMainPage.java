@@ -214,6 +214,12 @@ public class ModelEditorMainPage extends EditorPart
     }
     
     @Override
+    public void dispose() {
+    	ModelUtilities.removeNotifyChangedListener(notificationHandler);
+    	ModelUtilities.removeNotifyChangedListener(this);
+    }
+    
+    @Override
     public void createPartControl(Composite parent) {
     	
     	mainControl = parent;
