@@ -942,7 +942,13 @@ public final class XmiVdb extends BasicVdb {
             //
             VdbPlugin.singleton().setConversionInProgress(true);
 
-            DynamicVdb dynVdb = new DynamicVdb(destination);
+            DynamicVdb dynVdb = null;
+            
+            if( destination.exists() ) {
+            	dynVdb = new DynamicVdb();
+            } else {
+            	dynVdb = new DynamicVdb(destination);
+            }
 
             //
             // Populate the new vdb with the basic specification
@@ -969,7 +975,7 @@ public final class XmiVdb extends BasicVdb {
             	libString = libString + "deployement." + entry.getName() + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$
                 count++;
                 if( count < nEntries ) {
-                	libString = libString + StringConstants.COMMA + StringConstants.SPACE;
+                	libString = libString + StringConstants.SPACE;
                 }
 
             }
