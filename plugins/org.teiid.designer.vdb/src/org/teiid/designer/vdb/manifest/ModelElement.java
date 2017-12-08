@@ -174,8 +174,12 @@ public class ModelElement extends EntryElement {
         if( entry.getSchemaText() != null ) {
         	getMetadata().add(new MetadataElement(entry.getSchemaText(), entry.getMetadataType()));
         }
-        
-    	if( TEIID_INFINISPAN_HOTROD_DRIVER.equalsIgnoreCase(singleTranslatorName)) {
+        String overridedTranslator = null;
+        if(entry.getTranslatorOverride() != null) {
+            overridedTranslator = entry.getTranslatorOverride().getType();
+        }
+    	if( TEIID_INFINISPAN_HOTROD_DRIVER.equalsIgnoreCase(singleTranslatorName)
+    	    || TEIID_INFINISPAN_HOTROD_DRIVER.equalsIgnoreCase(overridedTranslator)) {
     		getMetadata().add(new MetadataElement(StringConstants.EMPTY_STRING, INDEX));
     		getMetadata().add(new MetadataElement(StringConstants.EMPTY_STRING, NATIVE));
     	}
