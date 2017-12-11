@@ -55,6 +55,16 @@ public interface Vdb extends VdbConstants {
      * The prefix used before the workspace identifier when creating a Preview VDB name.
      */
     public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
+    
+    /**
+     * The prefix used before the workspace identifier when creating a Preview VDB name.
+     */
+    public static final String DEPLOYMENT_DOT_PREFIX = "deployment."; //$NON-NLS-1$
+    
+    /**
+     * The prefix used before the workspace identifier when creating a Preview VDB name.
+     */
+    public static final String DOT_JAR_SUFFIX = ".jar"; //$NON-NLS-1$
 
 
     /**

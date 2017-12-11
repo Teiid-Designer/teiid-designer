@@ -972,7 +972,7 @@ public final class XmiVdb extends BasicVdb {
             int nEntries = getUdfJarEntries().size();
             int count = 0;
             for (VdbFileEntry entry : getUdfJarEntries()) {
-            	libString = libString + "deployement." + entry.getName() + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$
+            	libString = libString + DEPLOYMENT_DOT_PREFIX + entry.getName() + DOT_JAR_SUFFIX;
                 count++;
                 if( count < nEntries ) {
                 	libString = libString + StringConstants.SPACE;
