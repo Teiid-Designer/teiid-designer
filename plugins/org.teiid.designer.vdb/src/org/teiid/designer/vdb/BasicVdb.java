@@ -87,6 +87,9 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 		<xs:element name="property" type="property" minOccurs="0" maxOccurs="unbounded"/>
 	*/
 
+	/*
+	 * NONE, BY_VERSION, ANY
+	 */
 	private String connectionType;
 	// known properties
 	/*
@@ -407,7 +410,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	 */
 	@Override
 	public void setConnectionType(String newConnectionType) {
-        final String old = this.securityDomain;
+        final String old = this.connectionType;
 		if( StringUtilities.areDifferent(this.connectionType, newConnectionType)) {
 			this.connectionType = newConnectionType;
 			setModified(this, Event.CONNECTION_TYPE, old, newConnectionType);

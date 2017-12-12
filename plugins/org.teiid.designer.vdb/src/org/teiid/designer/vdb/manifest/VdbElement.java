@@ -200,6 +200,13 @@ public class VdbElement implements Serializable {
     public String getDescription() {
         return description;
     }
+    
+    /**
+     * @return description
+     */
+    public String getConnectionType() {
+        return connectionType;
+    }
 
     /**
      * @return entries

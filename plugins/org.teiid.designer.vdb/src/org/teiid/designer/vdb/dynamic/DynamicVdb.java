@@ -170,6 +170,7 @@ public class DynamicVdb extends BasicVdb {
                     reader.read(dynVdbFile);
 
                     vdb.setDescription(manifest.getDescription());
+                    vdb.setConnectionType(manifest.getConnectionType());
                     vdb.setVersion(manifest.getVersion());
                     vdb.setName(manifest.getName());
 

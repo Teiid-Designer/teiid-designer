@@ -239,6 +239,7 @@ public final class XmiVdb extends BasicVdb {
                             unmarshaller.setSchema(getManifestSchema());
                             final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(entryStream);
                             setDescription(manifest.getDescription());
+                            setConnectionType(manifest.getConnectionType());
                             vdbVersion[0] = manifest.getVersion();
                             vdb.setName(manifest.getName());
                             // VDB properties
@@ -286,8 +287,6 @@ public final class XmiVdb extends BasicVdb {
                                     // The stored timeout is in milliseconds. We
                                     // are converting to seconds for display in
                                     // Designer
-                                } else if (Xml.CONNECTION_TYPE.equals(name)) {
-                                	connType[0] = value;
                                 } else {
                                     setProperty(name, value);
                                 }
@@ -373,7 +372,6 @@ public final class XmiVdb extends BasicVdb {
         setGssPattern(gssPatt[0]);
         setPasswordPattern(pwdPatt[0]);
         setAuthenticationType(authType[0]);
-        setConnectionType(connType[0]);
         if( valDateTime[0] != null ) {
             SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", java.util.Locale.ENGLISH); //$NON-NLS-1$
             setValidationDateTime(format.parse(valDateTime[0])); //new Date(valDateTime[0]); //DateUtil.convertStringToDate(valDateTime[0]);
