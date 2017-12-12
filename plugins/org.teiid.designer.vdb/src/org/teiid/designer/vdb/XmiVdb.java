@@ -38,6 +38,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -945,6 +946,7 @@ public final class XmiVdb extends BasicVdb {
             DynamicVdb dynVdb = null;
             
             if( destination.exists() ) {
+            	destination.delete(true, new NullProgressMonitor());
             	dynVdb = new DynamicVdb();
             } else {
             	dynVdb = new DynamicVdb(destination);
