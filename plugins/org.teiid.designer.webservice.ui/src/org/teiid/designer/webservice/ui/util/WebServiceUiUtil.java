@@ -410,7 +410,7 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
             } else if (theObject instanceof IFile) {
                 result = ((IFile)theObject).getFullPath().toOSString();
             } else if (theObject instanceof FileUrl) {
-                result = ((FileUrl)theObject).getOriginalUrlString();
+                result = ((FileUrl)theObject).getPath();
             } else if (theObject instanceof File) {
                 result = theObject.toString();
             } else {
