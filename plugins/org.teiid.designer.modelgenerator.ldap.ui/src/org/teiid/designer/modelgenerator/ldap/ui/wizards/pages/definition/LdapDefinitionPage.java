@@ -484,7 +484,8 @@ public class LdapDefinitionPage extends WizardPage
         }
         // Check JNDI name
         
-
+        IStatus modelStatus = sourceModelPanel.getModelStatus();
+        
         if (sourceModelPanel.sourceModelExists()) {
             if (!sourceModelPanel.sourceModelHasConnectionProfile()) {
                 WizardUtil.setPageComplete(this, getString("statusExistingSourceModelHasNoProfile", importManager.getSourceModelName()), IMessageProvider.ERROR); //$NON-NLS-1$
@@ -493,9 +494,17 @@ public class LdapDefinitionPage extends WizardPage
                 WizardUtil.setPageComplete(this, getString("statusExistingSourceModelHasWrongProfile", importManager.getSourceModelName()), IMessageProvider.ERROR); //$NON-NLS-1$
                 return;
             }
+        } else if( modelStatus.getSeverity() == IStatus.ERROR ) {
+        	WizardUtil.setPageComplete(this, modelStatus.getMessage(), IMessageProvider.ERROR); //$NON-NLS-1$
+        	return;
         } else {
             WizardUtil.setPageComplete(this, getString("statusSourceModelDoesNotExistAndWillBeCreated", importManager.getSourceModelName()), IMessageProvider.INFORMATION); //$NON-NLS-1$
             return;
+        }
+        
+
+        if( modelStatus.getSeverity() == IStatus.ERROR ) {
+        	WizardUtil.setPageComplete(this, modelStatus.getMessage(), IMessageProvider.ERROR); //$NON-NLS-1$
         }
 
         WizardUtil.setPageComplete(this);

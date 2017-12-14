@@ -137,7 +137,7 @@ public class JDGProfilePropertyPage extends ProfileDetailsPropertyPage
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
-	            String jndiName = JndiUtil.addJavaPrefix(jndiText.getText());
+	            String jndiName = jndiText.getText();
 	            setProperty(IJBossDsProfileConstants.JNDI_PROP_ID, jndiName);
 			}
 		});
@@ -498,6 +498,7 @@ public class JDGProfilePropertyPage extends ProfileDetailsPropertyPage
             setErrorMessage(msg); //$NON-NLS-1$
             setPingButtonEnabled(false);
             setValid(false);
+            return;
         }
         
         if( remoteServerListRB.getSelection() && 

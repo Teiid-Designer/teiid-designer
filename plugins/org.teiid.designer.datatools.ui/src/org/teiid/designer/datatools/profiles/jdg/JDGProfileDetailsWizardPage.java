@@ -440,7 +440,7 @@ public class JDGProfileDetailsWizardPage extends ScrolledConnectionProfileDetail
 
         if (event.widget == jndiText) {
             Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-            String jndiName = JndiUtil.addJavaPrefix(jndiText.getText());
+            String jndiName = jndiText.getText();
             properties.setProperty(IJBossDsProfileConstants.JNDI_PROP_ID, jndiName);
         }
 

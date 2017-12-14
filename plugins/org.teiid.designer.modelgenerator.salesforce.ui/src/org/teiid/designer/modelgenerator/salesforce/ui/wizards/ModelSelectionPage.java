@@ -69,6 +69,7 @@ import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.util.JndiNameHelper;
 import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
@@ -110,6 +111,7 @@ public class ModelSelectionPage extends AbstractWizardPage
     
     private Text jndiNameField;
     private String jndiName;
+    private JndiNameHelper jndiNameValidator;
     private Button autoCreateDataSource;
 
     private IConnectionInfoHelper connectionInfoHelper;
@@ -117,6 +119,7 @@ public class ModelSelectionPage extends AbstractWizardPage
     public ModelSelectionPage( SalesforceImportWizardManager importManager ) {
         super(ModelSelectionPage.class.getSimpleName(), getString("title")); //$NON-NLS-1$
         this.importManager = importManager;
+        jndiNameValidator = new JndiNameHelper();
     }
 
     @Override
@@ -266,9 +269,11 @@ public class ModelSelectionPage extends AbstractWizardPage
     				if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
     					jndiName = jndiNameField.getText();
     					importManager.setJBossJndiNameName(jndiName);
+    					validateInput();
     				} else {
     					jndiName = ""; //$NON-NLS-1$
     					importManager.setJBossJndiNameName(null);
+    					validateInput();
     				}
     				
     			}
@@ -520,8 +525,8 @@ public class ModelSelectionPage extends AbstractWizardPage
 
     void setPageStatus() {
         // Validate the target relational model name and location
-        boolean targetValid = validateTargetModelNameAndLocation();
-        if (!targetValid) {
+        boolean isOk = validateInput();
+        if (!isOk) {
             return;
         }
 
@@ -544,7 +549,7 @@ public class ModelSelectionPage extends AbstractWizardPage
      * 
      * @return 'true' if the selection is valid, 'false' if not.
      */
-    private boolean validateTargetModelNameAndLocation() {
+    private boolean validateInput() {
         importManager.setCanFinish(updating = false);
         try {
             // Validate the target Model Name and location
@@ -598,6 +603,16 @@ public class ModelSelectionPage extends AbstractWizardPage
             if (!updating) {
                 importManager.setCanFinish(true);
             }
+            
+            
+            // Check JndiName
+            
+    		String jndiStatus = jndiNameValidator.checkValidName(importManager.getJBossJndiName());
+    		if( jndiStatus != null ) {
+                WizardUtil.setPageComplete(this, jndiStatus, IMessageProvider.ERROR);
+                return false;
+    		}
+            
             getContainer().updateButtons();
         } catch (final CoreException err) {
             UTIL.log(err);

@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -73,6 +74,8 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
     private final ModelWorkspaceManager modelWorkspaceManager = ModelWorkspaceManager.getModelWorkspaceManager();
 
     private boolean refreshing = false;
+    
+    private IStatus sourceStatus;
 
     /**
      * Create new instance
@@ -97,6 +100,8 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
 
         this.connectionInfoHelper = new ConnectionInfoHelper();
         this.jndiNameValidator = new JndiNameHelper();
+        String jndiStatus = jndiNameValidator.checkValidName(null);
+        this.sourceStatus = new Status(IStatus.ERROR, ModelGeneratorLdapUiConstants.PLUGIN_ID, jndiStatus);
 
         SOURCE_MODEL_INFO: {
             Group group = WidgetFactory.createGroup(parent, getString("sourceModelDefinition"), GridData.FILL_HORIZONTAL, 1, 3); //$NON-NLS-1$
@@ -200,11 +205,15 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
         					importManager.setJBossJndiNameName(jndiName);
         					msgLabel.setText(JNDI_MESSAGE);
         					msgLabel.setImage(null);
+        					sourceStatus = Status.OK_STATUS;
+        					notifyChanged();
         				} else {
         					msgLabel.setText(jndiStatus);
         					msgLabel.setImage(UiPlugin.getDefault().getImage(UiPlugin.Images.ERROR_ICON));
         					jndiName = name;
         					importManager.setJBossJndiNameName(name);
+        					sourceStatus = new Status(IStatus.ERROR, ModelGeneratorLdapUiConstants.PLUGIN_ID, jndiStatus);
+        					notifyChanged();
         				}
         			}
         		});
@@ -269,6 +278,10 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
         refreshUiFromManager();
 
         refreshing = false;
+    }
+    
+    public IStatus getModelStatus() {
+    	return this.sourceStatus;
     }
 
     /**
