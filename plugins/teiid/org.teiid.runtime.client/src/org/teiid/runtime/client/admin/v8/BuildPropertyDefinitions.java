@@ -69,7 +69,7 @@ public class BuildPropertyDefinitions extends ResultCallback{
     			List<ModelNode> allowed = node.get("allowed").asList();
     			ArrayList<String> list = new ArrayList<String>();
     			for(ModelNode m:allowed) {
-    				list.add(m.asString());
+    				list.add(m.asString().trim());
     			}
     			def.setAllowedValues(list);
     		}
