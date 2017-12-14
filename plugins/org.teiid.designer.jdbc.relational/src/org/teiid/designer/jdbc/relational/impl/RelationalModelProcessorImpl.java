@@ -1332,32 +1332,15 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 	    }
 	    
         final EObject datatype = findType(type, delegateNativeTypeName, columnSize, columnSize, numDecDigits, problems);
-        String teiidTypeName = null;
-        if (datatype != null) {
-            column.setType(datatype);
-            teiidTypeName = ModelerCore.getModelEditor().getName(datatype);
-        }
 
         // Set the searchability ...
-        final SearchabilityType searchability = SearchabilityType.SEARCHABLE_LITERAL; // = this.typeMapping != null && datatype != null ? this.typeMapping.getSearchabilityType(datatype) : SearchabilityType.UNSEARCHABLE_LITERAL;
+        final SearchabilityType searchability = SearchabilityType.SEARCHABLE_LITERAL;
         column.setSearchability(searchability);
 
-        // Set the length for character types
-        if (type == Types.CHAR) {
-            column.setLength(columnSize);
-            column.setPrecision(0);
-        } else {
-        	column.setLength(columnSize);
-        }
+        // Set the length and numeric info
+        column.setLength(columnSize);
+        column.setPrecision(columnSize);
         column.setScale(numDecDigits);
-        
-        if( teiidTypeName != null && columnSize > 0 ) {
-        	if(IDataTypeManagerService.DataTypeName.BIGDECIMAL.toString().equalsIgnoreCase(teiidTypeName) ||
-        		IDataTypeManagerService.DataTypeName.FLOAT.toString().equalsIgnoreCase(teiidTypeName) ||
-        		IDataTypeManagerService.DataTypeName.DECIMAL.toString().equalsIgnoreCase(teiidTypeName)) {
-        		column.setPrecision(columnSize);
-        	}
-        }
 
         // Set the nullability
         switch (nullable) {
