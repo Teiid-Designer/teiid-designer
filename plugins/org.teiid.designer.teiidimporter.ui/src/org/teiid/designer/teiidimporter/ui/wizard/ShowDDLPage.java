@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -20,26 +21,30 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ddl.importer.ui.DdlImportDifferencesPage;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
+import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
@@ -56,10 +61,11 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
 	private final String EMPTY = StringConstants.EMPTY_STRING;
 	private final int GROUP_HEIGHT_190 = 190;
 
-    private Text ddlContentsBox;
+    private StyledText ddlContentsBox;
     private Button exportDDLToFileSystemButton;
     private Button exportDDLToWorkspaceButton;
     private Button setAllTablesReadonlyCB;
+    private Font monospaceFont;
 		
 	private TeiidImportManager importManager;
 
@@ -77,6 +83,8 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
 	@Override
 	public void createControl(Composite parent) {
 		// Create page
+		monospaceFont(parent);
+		
 		final Composite mainPanel = new Composite(parent, SWT.NONE);
 
 		mainPanel.setLayout(new GridLayout(1, false));
@@ -107,9 +115,11 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
         groupGD.widthHint = 400;
         theGroup.setLayoutData(groupGD);
 
-        ddlContentsBox = WidgetFactory.createTextBox(theGroup);
+        ddlContentsBox = new StyledText(theGroup, SWT.READ_ONLY | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(ddlContentsBox);
         ddlContentsBox.setEditable(false);
-        ddlContentsBox.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        ddlContentsBox.setBackground(GlobalUiColorManager.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        ddlContentsBox.setFont(monospaceFont);
     }
 
     /**
@@ -229,7 +239,6 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
     		 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
     		 */
     		@Override
-    		@SuppressWarnings("unchecked")
     		public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
     			try {
     	            final IFile ddlFileToCreate = targetContainer.getFile(new Path(ddlFileName));
@@ -306,6 +315,8 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
     @Override
     public void setVisible( boolean visible ) {
         if (visible) {
+        	IStatus deployStatus = null;
+        	
         	// When this page is show, ensure that differences page is set incomplete.
         	IWizard wizard = getWizard();
         	IWizardPage differencesPage = wizard.getPage("DdlImportDifferencesPage"); //$NON-NLS-1$
@@ -323,7 +334,7 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
                 if(ddl==null) ddl=EMPTY;
                 this.ddlContentsBox.setText(ddl);
             } else {
-                IStatus deployStatus = importManager.deployDynamicVdb();
+                deployStatus = importManager.deployDynamicVdb();
                 if(deployStatus == null) {
                     ddlContentsBox.setText(Messages.ShowDDLPage_vdbDeploymentErrorMsg);  
                 } else if(!deployStatus.isOK()) {
@@ -343,7 +354,7 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
                 }
             }
             setButtonStates();
-            validatePage();
+            validatePage(deployStatus);
             getControl().setVisible(visible);
         } else {
             super.setVisible(visible);
@@ -353,24 +364,19 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
     /* 
      * Validate the page
      */
-	private boolean validatePage() {
+	private boolean validatePage(IStatus deployStatus) {
         // VDB deployment validation
-        if(!this.importManager.isVdbDeployed()) {
-            String errorMsg;
-            IStatus deployStatus = importManager.getVdbDeploymentStatus();
-            if(deployStatus!=null) {
-                errorMsg = deployStatus.getMessage();
-            } else {
-                errorMsg = Messages.ShowDDLPage_vdbDeploymentErrorMsg;
-            }
+        if(deployStatus != null && deployStatus.getSeverity() == IStatus.ERROR) {
+            String errorMsg = Messages.ShowDDLPage_errorDeployingTemporaryVdb_SeeMessageBelow;
             // Cannot proceed if VDB is not deployed
             setThisPageComplete(errorMsg, ERROR);
             return false;
-        }
-        String ddlStr = getDDL();
-        if(ddlStr==null || ddlStr.trim().equals(Messages.TeiidImportManager_getDdlErrorMsg)) {
-        	setThisPageComplete(Messages.TeiidImportManager_getDdlErrorMsg,WARNING);
-        	return false;
+        } else {
+        	String ddlStr = getDDL();
+	        if(ddlStr==null || ddlStr.trim().equals(Messages.TeiidImportManager_getDdlErrorMsg)) {
+	        	setThisPageComplete(Messages.TeiidImportManager_getDdlErrorMsg,WARNING);
+	        	return false;
+	        }
         }
 
         setThisPageComplete(EMPTY, NONE);
@@ -380,5 +386,23 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
 	private void setThisPageComplete(String message, int severity) {
 		WizardUtil.setPageComplete(this, message, severity);
 	}
+	
+    private Font monospaceFont(Composite composite) {
+        if (monospaceFont == null) {
+            monospaceFont = new Font(composite.getDisplay(), "Monospace", 12, SWT.NORMAL); //$NON-NLS-1$
+            composite.addDisposeListener(new DisposeListener() {
+
+                @Override
+                public void widgetDisposed(DisposeEvent e) {
+                    if (monospaceFont == null)
+                        return;
+
+                    monospaceFont.dispose();
+                }
+            });
+        }
+
+        return monospaceFont;
+    }
 
 }

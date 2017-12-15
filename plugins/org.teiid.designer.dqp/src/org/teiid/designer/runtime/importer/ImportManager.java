@@ -15,11 +15,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.common.xml.XmlUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
@@ -42,6 +44,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
     private static final String DYNAMIC_VDB_SUFFIX = "-vdb.xml";  //$NON-NLS-1$
     public static final String IMPORT_SRC_MODEL = "SrcModel";  //$NON-NLS-1$
     private static final String JNDI_PROPERTY_KEY = "jndi-name";  //$NON-NLS-1$
+    private static final String CR = StringConstants.CARRIAGE_RETURN;
     
     /**
      * The Teiid Instance being used for importers (may be <code>null</code>).
@@ -219,10 +222,38 @@ public final class ImportManager implements IExecutionConfigurationListener {
             if(isVDBActive) {
                 resultStatus = Status.OK_STATUS;
             } else {
-                resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbInactiveStateError, vdbName));
+            	StringBuilder sb = new StringBuilder();
+            	
+                try {
+                    deployedImportVdb = getImportServer().getVdb(vdbName);
+                    if( deployedImportVdb != null ) {
+                    	sb.append(Messages.ImportManagerVdbDeploymentErrors + CR + CR);
+    	        		
+    	        		for( String error : deployedImportVdb.getValidityErrors()) {
+    	        			sb.append(error).append(CR);
+    	        		}
+                    }
+                } catch (Exception ex) {
+                }
+                sb.append(CR).append(NLS.bind(Messages.ImportManagerVdbInactiveStateError, vdbName));
+                
+                resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, sb.toString());
             }
         } else {
-            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingNotCompleteError, timeoutSec));
+        	StringBuilder sb = new StringBuilder();
+        	sb.append(NLS.bind(Messages.ImportManagerVdbLoadingNotCompleteError, timeoutSec));
+            try {
+                deployedImportVdb = getImportServer().getVdb(vdbName);
+                if( deployedImportVdb != null ) {
+	        		sb.append(Messages.ImportManagerVdbDeploymentErrors + CR + CR);
+	        		
+	        		for( String error : deployedImportVdb.getValidityErrors()) {
+	        			sb.append(error).append(CR);
+	        		}
+                }
+            } catch (Exception ex) {
+            }
+            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, sb.toString());
         }
 
         return resultStatus;
@@ -335,10 +366,12 @@ public final class ImportManager implements IExecutionConfigurationListener {
     	int workIncrement = Math.round((float)workRemaining / increments);
     	
         long waitUntil = System.currentTimeMillis() + timeoutInSecs*1000;
+        
         // Timeout of zero or less means no timeout...
         if (timeoutInSecs < 1) {
             waitUntil = Long.MAX_VALUE;
         }
+        
         boolean first = true;
         do {
             // Pause 5 sec before subsequent attempts
@@ -359,11 +392,15 @@ public final class ImportManager implements IExecutionConfigurationListener {
             	throw new InterruptedException("The operation was cancelled"); //$NON-NLS-1$
             }
             
-            boolean isActive = getImportServer().isVdbActive(vdbName);
-            boolean isLoading = getImportServer().isVdbLoading(vdbName);
-            boolean hasFailed = getImportServer().hasVdbFailed(vdbName);
-            boolean hasValidityErrors = !getImportServer().getVdb(vdbName).getValidityErrors().isEmpty();
-            if(!isLoading || hasFailed || hasValidityErrors || isActive) return true;
+            ITeiidVdb vdb = getImportServer().getVdb(vdbName);
+            
+            // Check to see if VDB is actually registered in Designer's VDB cache, else it's still waiting for deployment
+            
+            if( vdb != null ) {
+            	if( !vdb.isLoading() || vdb.hasFailed() || vdb.isActive() || !vdb.getValidityErrors().isEmpty() ) {
+            		return true;
+            	}
+            }
         } while (System.currentTimeMillis() < waitUntil);
         return false;
     }

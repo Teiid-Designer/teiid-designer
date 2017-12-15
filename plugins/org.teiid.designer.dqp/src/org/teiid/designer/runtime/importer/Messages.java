@@ -26,6 +26,7 @@ public final class Messages extends NLS {
     public static String ImportManagerVdbInactiveStateError;
     public static String ImportManagerVdbLoadingNotCompleteError;
     public static String ImportManagerDynamicVdbTextCannotBeGeneratedError;
+    public static String ImportManagerVdbDeploymentErrors;
     public static String DependentObjectHelper_getRealEObjectFromProxyError;
     
     static {

@@ -153,6 +153,7 @@ public class Messages extends NLS {
     public static String ShowDDLPage_exportDDLDialogDefaultFileExt;
     public static String ShowDDLPage_exportDDLDialogExportErrorMsg;
     public static String ShowDDLPage_exportDDLDialogExportToWorkspaceErrorMsg;
+    public static String ShowDDLPage_errorDeployingTemporaryVdb_SeeMessageBelow;
     
     public static String dataSourceManager_createOk;
     public static String dataSourceManager_createInterruptedMsg;
