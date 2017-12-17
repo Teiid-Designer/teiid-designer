@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.TempSystemFile;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -476,5 +477,16 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
         //
         IProject project = getOutputLocation().getProject();
         project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
+    }
+    
+    protected void deleteTemporaryDynamicVdbFile() {
+    	// Clean up temporary VDB file
+	    DynamicVdb vdb = getDynamicVdb();
+	    if( vdb != null ) {
+	        TempSystemFile tmpFile = vdb.getSystemFile();
+	        if( tmpFile != null ) {
+	        	tmpFile.delete();
+	        }
+	    }
     }
 }

@@ -49,6 +49,7 @@ import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.TempSystemFile;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.VdbModelBuilder;
 import org.teiid.designer.core.util.VdbHelper;
@@ -57,6 +58,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.roles.DataRole;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.transformation.ddl.TeiidModelToDdlGenerator;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbFileEntry.FileEntryType;
@@ -944,8 +946,10 @@ public final class XmiVdb extends BasicVdb {
             DynamicVdb dynVdb = null;
             
             if( destination.exists() ) {
-            	destination.delete(true, new NullProgressMonitor());
-            	dynVdb = new DynamicVdb();
+            	// destination.delete(true, new NullProgressMonitor());
+            	// Then create a Temporary VDB file with the same name in temp dir
+            	TempSystemFile systemFile = new TempSystemFile(destination.getFullPath().removeFileExtension().lastSegment(), ITeiidVdb.DYNAMIC_VDB_SUFFIX);
+            	dynVdb = new DynamicVdb(systemFile);
             } else {
             	dynVdb = new DynamicVdb(destination);
             }
@@ -1119,6 +1123,8 @@ public final class XmiVdb extends BasicVdb {
             }
 
             dynVdb.setStatus(generateStatus);
+            
+            dynVdb.save();
             
             return dynVdb;
         } finally {

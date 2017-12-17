@@ -434,12 +434,8 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
     			try {
     				final IFile fileExists = workspaceLocation.getFile(new Path(fileName));
     				if( fileExists.exists() ) {
-    					boolean doWrite = false;
-    					if( !overwriteExistingFiles()) {
-    						// Shouldn't get here, but adding a check just in case.
-    						doWrite = MessageDialog.openQuestion(Display.getCurrent().getActiveShell(),
-    								"File Exists", "File exists, do you wish to overwrite?");  //$NON-NLS-1$  //$NON-NLS-2$
-    					}
+    					boolean doWrite = overwriteExistingFiles();
+
     					if( doWrite ) {
     						fileExists.delete(true, monitor);
     					} else {
@@ -454,6 +450,10 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
     	            
     	        	fileToCreate.create(istream, false, monitor);
     	        	workspaceLocation.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+    	        	
+    	        	// Clean up temporary VDB file
+                    deleteTemporaryDynamicVdbFile();
+    	        	
     			} catch (final Exception err) {
     				throw new InvocationTargetException(err);
     			} finally {
@@ -506,6 +506,9 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
                 out = new BufferedWriter(fw);
                 pw = new PrintWriter(out);
                 pw.write(xml);
+                
+	        	// Clean up temporary VDB file
+                deleteTemporaryDynamicVdbFile();
 
             } catch (Exception e) {
                 UiConstants.Util.log(IStatus.ERROR, e, "Error saving dynamic vdb to file system"); //$NON-NLS-1$

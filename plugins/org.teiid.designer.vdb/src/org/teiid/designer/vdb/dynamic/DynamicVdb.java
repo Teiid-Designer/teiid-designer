@@ -40,6 +40,7 @@ import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.TempSystemFile;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.ModelBuildUtil;
@@ -92,12 +93,22 @@ import org.w3c.dom.Document;
 public class DynamicVdb extends BasicVdb {
 
     private Map<String, DynamicModel> models;
+    //private TempSystemFile systemFile;
 
     /**
      * Default constructor
      */
     public DynamicVdb() {
         super();
+    }
+    
+    /**
+     * Provides a means to use a temporary -vdb.xml file for vdb export. The Write method
+     * is responsible for overwriting a workspace vdb.xml or a file system vdb.xml
+     * Default constructor
+     */
+    public DynamicVdb(TempSystemFile systemFile) {
+        super(systemFile);
     }
 
 	/**
@@ -371,7 +382,12 @@ public class DynamicVdb extends BasicVdb {
      */
 	public void write(Writer destination) throws Exception {
 	    if( destination == null ) {
-	        File destFile = getSourceFile().getFullPath().toFile();
+	        File destFile = null;
+	        if( getSystemFile() != null ) {
+	        	destFile = getSystemFile().getTempFile();
+	        } else {
+	        	destFile = getSourceFile().getFullPath().toFile();
+	        }
 	        destination = new FileWriter(destFile);
 	    }
 

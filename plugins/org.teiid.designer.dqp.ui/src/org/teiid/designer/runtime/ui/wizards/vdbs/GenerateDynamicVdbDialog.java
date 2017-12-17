@@ -674,5 +674,14 @@ public class GenerateDynamicVdbDialog extends ScrollableTitleAreaDialog implemen
 		return control;
 	}
     
+    @Override
+	protected void cancelPressed() {
+
+		super.cancelPressed();
+		// Need to clean up temporary VDB.xml
+		
+		this.vdbManager.deleteTemporaryDynamicVdbFile();
+	}
+
     
 }

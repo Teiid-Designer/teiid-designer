@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.TempSystemFile;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.KeyInValueHashMap;
 import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
@@ -121,12 +122,23 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	private final CopyOnWriteArrayList<PropertyChangeListener> listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
 	
 	private IStatus currentStatus;
+	
+    private TempSystemFile systemFile;
 
 	/**
 	 * Default constructor
 	 */
 	protected BasicVdb() {
 	    super();
+	}
+	
+	
+	/**
+	 * @param systemFile
+	 */
+	protected BasicVdb(TempSystemFile systemFile) {
+	    super();
+	    this.systemFile = systemFile;
 	}
 
 	/**
@@ -859,5 +871,14 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
             return (V) xmiVdbConvert(destination, options);
 
         throw new UnsupportedOperationException();
+    }
+    
+    /**
+     * This simple method provides access for the vdb generator manager to obtain the temporary -vdb.xml output file so it can be deleted at the end 
+     * of processing, including after a cancel() operation
+     * @return
+     */
+    public TempSystemFile getSystemFile() {
+    	return this.systemFile;
     }
 }
