@@ -278,11 +278,14 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
             handleEnd(connection, _stmt);
             monitor.done();
         }
-        try {
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+
+    	if( _closeCon ) {
+    		try {
+    			connection.close();
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    		}
+    	}
         return Status.OK_STATUS;
     }
     
