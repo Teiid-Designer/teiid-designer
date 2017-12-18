@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.util.NLS;
+import org.teiid.core.designer.util.TempInputStream;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
@@ -177,12 +178,22 @@ public final class ExtensionDefinitionsManager implements ExtensionConstants {
         deleteExistingMed(file.getAbsolutePath());
 
         // Construct Name using namespace and version
-        InputStream stream = medWriter.writeAsStream(med);
+        TempInputStream stream = medWriter.writeAsStream(med);
         try {
-            writeFile(stream, file);
+            writeFile(stream.getRealInputStream(), file);
         } catch (IOException e) {
             Util.log(IStatus.ERROR, NLS.bind(Messages.errorUserDefinitionNotSaved, file.getAbsolutePath()));
             return null;
+        } finally {
+            if (stream != null) {
+                try {
+                	stream.getRealInputStream().close();
+                	stream.deleteTempFile();
+                } catch (IOException e) {
+                    Util.log(IStatus.ERROR, NLS.bind(Messages.errorUserDefinitionNotSaved, file.getAbsolutePath()));
+                    return null;
+                }
+            }
         }
 
         return file;

@@ -25,6 +25,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.TempInputStream;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.Translation;
@@ -51,9 +52,10 @@ public class ModelExtensionDefinitionWriter {
      * @return the stream where the definition was written (never <code>null</code>)
      * @throws IllegalStateException if the definition file is <code>null</code> or if there is a problem creating the stream
      */
-    public InputStream writeAsStream( ModelExtensionDefinition med ) throws IllegalStateException {
+    public TempInputStream writeAsStream( ModelExtensionDefinition med ) throws IllegalStateException {
         InputStream inputStream = null;
-
+        TempInputStream tempInputStream = null;
+        
         try {
             // Create a temp file for the new mxd
             File tempFile = File.createTempFile("MxdTemp", ExtensionConstants.DOT_MED_EXTENSION); //$NON-NLS-1$
@@ -61,6 +63,7 @@ public class ModelExtensionDefinitionWriter {
             StreamResult streamResult = new StreamResult(tempOutputStream);
             transform(med, streamResult);
             inputStream = new FileInputStream(tempFile);
+            tempInputStream = new TempInputStream(inputStream,  tempFile);
         } catch (Exception e) {
             IllegalStateException error = null;
 
@@ -73,7 +76,7 @@ public class ModelExtensionDefinitionWriter {
             throw error;
         }
 
-        return inputStream;
+        return tempInputStream;
     }
 
     /**

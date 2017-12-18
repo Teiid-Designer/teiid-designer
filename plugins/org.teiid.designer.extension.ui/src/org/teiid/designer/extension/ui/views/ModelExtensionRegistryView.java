@@ -69,6 +69,7 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.ViewPart;
+import org.teiid.core.designer.util.TempInputStream;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.extension.ExtensionConstants;
@@ -681,7 +682,7 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
         if (mxdFile.exists())
             return mxdFile;
 
-        InputStream medInputStream = null;
+        TempInputStream medInputStream = null;
         try {
             createDirectories(mxdFilePath, project);
 
@@ -691,7 +692,7 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
 
             NullProgressMonitor monitor = new NullProgressMonitor();
             // Create the resource and set it to read-only
-            mxdFile.create(medInputStream, false, monitor);
+            mxdFile.create(medInputStream.getRealInputStream(), false, monitor);
             ResourceAttributes attributes = mxdFile.getResourceAttributes();
             attributes.setReadOnly(true);
             mxdFile.setResourceAttributes(attributes);
@@ -703,7 +704,8 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
         } finally {
             if (medInputStream != null) {
                 try {
-                    medInputStream.close();
+                	medInputStream.getRealInputStream().close();
+                    medInputStream.deleteTempFile();
                 } catch (IOException e) {
                     throw e;
                 }

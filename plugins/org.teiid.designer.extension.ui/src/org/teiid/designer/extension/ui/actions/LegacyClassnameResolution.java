@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMarkerResolution;
+import org.teiid.core.designer.util.TempInputStream;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.extension.ExtensionPlugin;
@@ -196,6 +197,7 @@ public class LegacyClassnameResolution implements IMarkerResolution {
      * @param medFile the supplied MED File
      */
     private void fixMedFile( IFile medFile ) {
+    	TempInputStream inputStream = null;
         try {
             ModelExtensionDefinition med = parse(medFile.getContents());
             if(med!=null) {
@@ -204,15 +206,19 @@ public class LegacyClassnameResolution implements IMarkerResolution {
 
                 // Re-write the Med File
                 final ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
-                final InputStream medInputStream = medWriter.writeAsStream(med);
-                medFile.setContents(medInputStream, false, false, new NullProgressMonitor());
+                inputStream = medWriter.writeAsStream(med);
+                medFile.setContents(inputStream.getRealInputStream(), false, false, new NullProgressMonitor());
 
                 // Delete Error Markers and Refresh
                 medFile.deleteMarkers(null, true, IResource.DEPTH_INFINITE);
                 medFile.getParent().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+                
+                inputStream.getRealInputStream().close();
             }
         } catch (Exception e) {
             UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.fixMedFileClassnamesFailedMsg, medFile.getName()));
+        } finally {
+        	inputStream.deleteTempFile();
         }
     }
 

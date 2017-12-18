@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.teiid.core.designer.util.TempInputStream;
 import org.teiid.designer.extension.Constants;
 import org.teiid.designer.extension.Factory;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -35,7 +36,7 @@ public class ModelExtensionDefinitionWriterTest implements Constants {
     private ModelExtensionDefinitionWriter writer;
     private ModelExtensionDefinitionParser parser;
 
-    private InputStream write( ModelExtensionDefinition med ) throws Exception {
+    private TempInputStream write( ModelExtensionDefinition med ) throws Exception {
         return writer.writeAsStream(med);
     }
 
@@ -251,13 +252,15 @@ public class ModelExtensionDefinitionWriterTest implements Constants {
      */
     private ModelExtensionDefinition roundTrip( ModelExtensionDefinition med ) throws Exception {
         // Write the incoming MED to a temp file
-        InputStream stream = write(med);
+        TempInputStream stream = write(med);
         File outFile = new File(TEMP_MED_FILE_NAME);
-        writeToFile(stream, outFile);
+        writeToFile(stream.getRealInputStream(), outFile);
 
         // Now read the temp file back in, creating a new Med
         ModelExtensionDefinition resultMed = parse(TEMP_MED_FILE_NAME, this.parser);
         outFile.delete();
+        stream.getRealInputStream().close();
+        stream.deleteTempFile();
         return resultMed;
     }
 

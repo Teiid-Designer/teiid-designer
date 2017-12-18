@@ -32,6 +32,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.ide.IDE;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.TempInputStream;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -98,6 +99,8 @@ public final class NewMedWizard extends AbstractWizard
             @Override
             @SuppressWarnings("unchecked")
 			public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+            	TempInputStream medInputStream = null;
+            	
                 try {
                     // Get Folder Location and Name of the file to create
                     final IContainer folderLoc = NewMedWizard.this.newMedMainPage.getFolderLocation();
@@ -137,9 +140,9 @@ public final class NewMedWizard extends AbstractWizard
                         }
                     }
 
-                    final InputStream medInputStream = medWriter.writeAsStream(med);
+                    medInputStream = medWriter.writeAsStream(med);
 
-                    createdMedFile.create(medInputStream, false, monitor);
+                    createdMedFile.create(medInputStream.getRealInputStream(), false, monitor);
                     folderLoc.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 
                     // open editor - if checkbox is selected
@@ -147,9 +150,12 @@ public final class NewMedWizard extends AbstractWizard
                         IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
                         IDE.openEditor(page, createdMedFile);
                     }
+                    
+                    medInputStream.getRealInputStream().close();
                 } catch (final Exception err) {
                     throw new InvocationTargetException(err);
                 } finally {
+                	medInputStream.deleteTempFile();
                     monitor.done();
                 }
             }
