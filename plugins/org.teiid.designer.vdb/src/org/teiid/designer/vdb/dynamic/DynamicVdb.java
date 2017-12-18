@@ -386,7 +386,7 @@ public class DynamicVdb extends BasicVdb {
 	        if( getSystemFile() != null ) {
 	        	destFile = getSystemFile().getTempFile();
 	        } else {
-	        	destFile = getSourceFile().getFullPath().toFile();
+	        	destFile = getSourceFile().getRawLocation().toFile();
 	        }
 	        destination = new FileWriter(destFile);
 	    }
