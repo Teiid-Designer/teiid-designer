@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
@@ -18,10 +19,14 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,8 +50,8 @@ import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
+import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
-import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
@@ -77,7 +82,12 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
     private Button setUpdatableCB;
     private Button filterRedundantUCsCB;
     private Button createConnProfileCB;
-    private StyledTextEditor vdbTextEditor;
+    private StyledText vdbTextEditor;
+    private Font monospaceFont;
+    private Button allowEditXmlButton;
+    private Button resetButton;
+    
+    private boolean ignoreEvents = false;
 
     /**
      * SelectedTranslatorAndTargetPage Constructor
@@ -90,6 +100,9 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
 
     @Override
     public void createControl( Composite theParent ) {
+		// Create page
+		monospaceFont(theParent);
+		
         final Composite basePanel = new Composite(theParent, SWT.NONE);
         basePanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         basePanel.setLayout(new GridLayout(1, false));
@@ -161,14 +174,25 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
     
     @Override
     public void setVisible( boolean visible ) {
+    	ignoreEvents = true;
+    	
         if (visible) {
+
             
             // Set source model location
             if( importManager.getTargetModelLocation() != null ) {
             	this.targetModelContainerText.setText(this.importManager.getTargetModelLocation().makeRelative().toString());
             }
             
-            vdbTextEditor.setText(importManager.getDynamicVdbString());
+            if( importManager.getVdbXmlEditMode() ) {
+            	vdbTextEditor.setText(importManager.getUserDefinedVdbXml());
+            	allowEditXmlButton.setSelection(true);
+            } else {
+                vdbTextEditor.setText(importManager.getDynamicVdbString());
+            }
+            
+            setXmlEditiable(importManager.getVdbXmlEditMode());
+
             timeoutText.setText(Integer.toString(getTimeoutPrefSecs()));
             
             validatePage();
@@ -176,6 +200,8 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         } else {
             super.setVisible(visible);
         }
+        
+        ignoreEvents = false;
     }
     
     /*
@@ -319,6 +345,42 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         });
         timeoutLabel.setToolTipText(Messages.SelectTargetPage_TimeoutTooltip);
         timeoutText.setToolTipText(Messages.SelectTargetPage_TimeoutTooltip);
+        
+        allowEditXmlButton = new Button(vdbPanel, SWT.CHECK);
+        allowEditXmlButton.setText("Edit XML");
+        allowEditXmlButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				setXmlEditiable(allowEditXmlButton.getSelection());
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+        
+        resetButton = new Button(vdbPanel, SWT.PUSH);
+        resetButton.setText("Reset");
+        GridDataFactory.fillDefaults().align(GridData.END, GridData.CENTER).applyTo(resetButton);
+        resetButton.setEnabled(false);
+        resetButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean result = MessageDialog.openConfirm(getShell(), "Disabling VDB XML Editing", "The XML text editor will be disabled and the contents of the XML will be reset to the original XML generated your data source" +
+						"\n\n Click OK to continue or Cancel");
+				
+				if( result ) {
+					allowEditXmlButton.setSelection(false);
+					setXmlEditiable(allowEditXmlButton.getSelection());
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
                 
         // Dynamic VDB content
         Group vdbContentGroup = WidgetFactory.createGroup(vdbPanel, Messages.SelectTargetPage_dynamic_vdb_text, SWT.NONE);
@@ -336,18 +398,49 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         pgd.grabExcessHorizontalSpace = true;
         innerPanel.setLayoutData(pgd);
         
-        vdbTextEditor = new StyledTextEditor(innerPanel, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
+        vdbTextEditor = new StyledText(innerPanel, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
         GridData gdt = new GridData(GridData.FILL_BOTH);
         gdt.widthHint = 400;
         gdt.heightHint = 400;
         vdbTextEditor.setLayoutData(gdt);
         vdbTextEditor.setEditable(false);
-        vdbTextEditor.setAllowFind(false);
-        vdbTextEditor.getTextWidget().setWordWrap(false);
-        vdbTextEditor.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-        vdbTextEditor.getTextWidget().setToolTipText(Messages.SelectTargetPage_dynamic_vdb_tooltip);
+        vdbTextEditor.setToolTipText(Messages.SelectTargetPage_dynamic_vdb_tooltip);
+        vdbTextEditor.setFont(monospaceFont);
+        
+        vdbTextEditor.addModifyListener( new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				if( ignoreEvents ) return;
+				
+				if( vdbTextEditor.getEditable()) {
+					importManager.setUserDefinedVdbXml(vdbTextEditor.getText());
+				}
+				
+				validatePage();
+			}
+		});
         
         return vdbPanel;
+    }
+    
+    
+    private void setXmlEditiable(boolean canEdit) {
+    	 vdbTextEditor.setEditable(canEdit);
+    	 importManager.setVdbXmlEditMode(canEdit);
+
+ 		if( canEdit ) {
+			vdbTextEditor.setBackground(GlobalUiColorManager.getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+		} else {
+			vdbTextEditor.setBackground(GlobalUiColorManager.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		}
+ 		
+		resetButton.setEnabled(canEdit);
+		if( !canEdit ) {
+            //IStatus status = vdbManager.getStatus();
+			vdbTextEditor.setText(importManager.getDynamicVdbString());
+		}
+		resetButton.setEnabled(canEdit);
     }
     
     /**
@@ -647,5 +740,23 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
             return doSelect;
         }
     };
+    
+    private Font monospaceFont(Composite composite) {
+        if (monospaceFont == null) {
+            monospaceFont = new Font(composite.getDisplay(), "Monospace", 12, SWT.NORMAL); //$NON-NLS-1$
+            composite.addDisposeListener(new DisposeListener() {
+
+                @Override
+                public void widgetDisposed(DisposeEvent e) {
+                    if (monospaceFont == null)
+                        return;
+
+                    monospaceFont.dispose();
+                }
+            });
+        }
+
+        return monospaceFont;
+    }
        
 }

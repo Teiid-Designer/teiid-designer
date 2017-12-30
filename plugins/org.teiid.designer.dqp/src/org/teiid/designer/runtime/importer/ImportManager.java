@@ -46,6 +46,8 @@ public final class ImportManager implements IExecutionConfigurationListener {
     private static final String JNDI_PROPERTY_KEY = "jndi-name";  //$NON-NLS-1$
     private static final String CR = StringConstants.CARRIAGE_RETURN;
     
+    public static final String TEIID_INFINISPAN_HOTROD_DRIVER = "infinispan-hotrod"; //$NON-NLS-1$
+    
     /**
      * The Teiid Instance being used for importers (may be <code>null</code>).
      */
@@ -136,13 +138,9 @@ public final class ImportManager implements IExecutionConfigurationListener {
      * @return status of the deployment
      */
     public IStatus deployDynamicVdb(String vdbName, String sourceName, String translatorName, Map<String,String> modelPropertyMap, IProgressMonitor monitor) {
-    	// Work remaining for progress monitor
-    	int workRemaining = 100;
+
     	
         IStatus resultStatus = Status.OK_STATUS;
-        
-        // Deployment name for vdb must end in '-vdb.xml'
-        String deploymentName = vdbName+DYNAMIC_VDB_SUFFIX; 
 
         // Deploy the desired source
         String importSourceModel = vdbName+IMPORT_SRC_MODEL; 
@@ -162,7 +160,6 @@ public final class ImportManager implements IExecutionConfigurationListener {
         }
         
         monitor.worked(10);
-        workRemaining -= 10;
         
         String sourceJndiName = dataSource.getPropertyValue(JNDI_PROPERTY_KEY);
         if(CoreStringUtil.isEmpty(sourceJndiName)) {
@@ -171,92 +168,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
         // Get Dynamic VDB string
         String dynamicVdbString = createDynamicVdb(vdbName,1,translatorName,importSourceModel,sourceJndiName,modelPropertyMap);
 
-        // If an import VDB with the supplied name exists, undeploy it first
-        ITeiidVdb deployedImportVdb;
-        try {
-            deployedImportVdb = getImportServer().getVdb(vdbName);
-            if( deployedImportVdb != null ) {
-                getImportServer().undeployDynamicVdb(deployedImportVdb.getName());
-            }
-        } catch (Exception ex) {
-            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerUndeployVdbError, vdbName));
-            return resultStatus;
-        }
-        monitor.worked(10);
-        workRemaining -= 10;
-        
-        // Deploy the Dynamic VDB
-        try {
-            getImportServer().deployDynamicVdb(deploymentName,new ByteArrayInputStream(dynamicVdbString.getBytes("UTF-8"))); //$NON-NLS-1$
-        } catch (Exception ex) {
-            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerDeployVdbError, vdbName));
-            return resultStatus;
-        }
-        monitor.worked(10);
-        workRemaining -= 10;
-
-        // Wait until vdb is done loading, up to timeout sec
-        int timeoutSec = DqpPlugin.getInstance().getPreferences().getInt(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
-
-        boolean finishedLoading = false;
-        try {
-            finishedLoading = waitForVDBLoad(vdbName,timeoutSec,monitor,workRemaining);
-        } catch (InterruptedException ie) {
-            resultStatus = new Status(IStatus.CANCEL, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingInterruptedError, vdbName));
-            return resultStatus;
-        } catch (Exception ex) {
-            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingError, vdbName));
-            return resultStatus;
-        }
-        
-        // If the VDB finished loading, check Active state
-        if(finishedLoading) {
-            boolean isVDBActive;
-            try {
-                isVDBActive = getImportServer().isVdbActive(vdbName);
-            } catch (Exception ex) {
-                resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbGetStateError, vdbName));
-                return resultStatus;
-            }
-            // VDB Active = success
-            if(isVDBActive) {
-                resultStatus = Status.OK_STATUS;
-            } else {
-            	StringBuilder sb = new StringBuilder();
-            	
-                try {
-                    deployedImportVdb = getImportServer().getVdb(vdbName);
-                    if( deployedImportVdb != null ) {
-                    	sb.append(Messages.ImportManagerVdbDeploymentErrors + CR + CR);
-    	        		
-    	        		for( String error : deployedImportVdb.getValidityErrors()) {
-    	        			sb.append(error).append(CR);
-    	        		}
-                    }
-                } catch (Exception ex) {
-                }
-                sb.append(CR).append(NLS.bind(Messages.ImportManagerVdbInactiveStateError, vdbName));
-                
-                resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, sb.toString());
-            }
-        } else {
-        	StringBuilder sb = new StringBuilder();
-        	sb.append(NLS.bind(Messages.ImportManagerVdbLoadingNotCompleteError, timeoutSec));
-            try {
-                deployedImportVdb = getImportServer().getVdb(vdbName);
-                if( deployedImportVdb != null ) {
-	        		sb.append(Messages.ImportManagerVdbDeploymentErrors + CR + CR);
-	        		
-	        		for( String error : deployedImportVdb.getValidityErrors()) {
-	        			sb.append(error).append(CR);
-	        		}
-                }
-            } catch (Exception ex) {
-            }
-            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, sb.toString());
-        }
-
-        return resultStatus;
+        return deployDynamicVdb(vdbName, dynamicVdbString, resultStatus, monitor);
     }
     
     public String createDynamicVdbString(String vdbName, String sourceName, String translatorName, Map<String,String> modelPropertyMap) {
@@ -316,7 +228,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
      * @param deployedVdb the vdb
      * @return the vdb deployment name
      */
-    private String getVdbDeploymentName(ITeiidVdb deployedVdb) { 
+    protected String getVdbDeploymentName(ITeiidVdb deployedVdb) { 
         String fullVdbName = deployedVdb.getPropertyValue("deployment-name"); //$NON-NLS-1$
         return fullVdbName;
     }
@@ -347,6 +259,11 @@ public final class ImportManager implements IExecutionConfigurationListener {
             sb.append("\n\t\t<property name=\""+propName+"\" value=\""+propValue+"\" />"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         sb.append("\n\t\t<source name=\""+datasourceName+"\" translator-name=\""+translatorName+"\" connection-jndi-name=\""+datasourceJndiName+"\" />"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        
+        if( TEIID_INFINISPAN_HOTROD_DRIVER.equalsIgnoreCase(translatorName) ) {
+        	 sb.append("\n\t\t<metadata type=\"NATIVE\"/>");
+        }
+        
         sb.append("\n\t</model>"); //$NON-NLS-1$
         sb.append("\n</vdb>"); //$NON-NLS-1$
         return sb.toString();
@@ -529,6 +446,106 @@ public final class ImportManager implements IExecutionConfigurationListener {
      */
     public void deployDynamicVdb(String deploymentName, InputStream inStream) throws Exception {
         getImportServer().deployDynamicVdb(deploymentName, inStream);
+    }
+    
+    public IStatus deployDynamicVdb(String vdbName, String dynamicVdbString, IStatus inputStatus, IProgressMonitor monitor) {
+    	IStatus resultStatus = inputStatus;
+
+        // Deployment name for vdb must end in '-vdb.xml'
+        String deploymentName = vdbName+DYNAMIC_VDB_SUFFIX; 
+        
+    	if( resultStatus == null ) {
+    		resultStatus = Status.OK_STATUS;
+    	}
+    	
+    	int workRemaining = 100;
+    	
+        // If an import VDB with the supplied name exists, undeploy it first
+        ITeiidVdb deployedImportVdb;
+        try {
+            deployedImportVdb = getImportServer().getVdb(vdbName);
+            if( deployedImportVdb != null ) {
+                getImportServer().undeployDynamicVdb(deployedImportVdb.getName());
+            }
+        } catch (Exception ex) {
+            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerUndeployVdbError, vdbName));
+            return resultStatus;
+        }
+        monitor.worked(10);
+        workRemaining -= 10;
+        
+        // Deploy the Dynamic VDB
+        try {
+            getImportServer().deployDynamicVdb(deploymentName,new ByteArrayInputStream(dynamicVdbString.getBytes("UTF-8"))); //$NON-NLS-1$
+        } catch (Exception ex) {
+            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerDeployVdbError, vdbName));
+            return resultStatus;
+        }
+        monitor.worked(10);
+        workRemaining -= 10;
+
+        // Wait until vdb is done loading, up to timeout sec
+        int timeoutSec = DqpPlugin.getInstance().getPreferences().getInt(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
+
+        boolean finishedLoading = false;
+        try {
+            finishedLoading = waitForVDBLoad(vdbName,timeoutSec,monitor,workRemaining);
+        } catch (InterruptedException ie) {
+            resultStatus = new Status(IStatus.CANCEL, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingInterruptedError, vdbName));
+            return resultStatus;
+        } catch (Exception ex) {
+            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingError, vdbName));
+            return resultStatus;
+        }
+        
+        // If the VDB finished loading, check Active state
+        if(finishedLoading) {
+            boolean isVDBActive;
+            try {
+                isVDBActive = getImportServer().isVdbActive(vdbName);
+            } catch (Exception ex) {
+                resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbGetStateError, vdbName));
+                return resultStatus;
+            }
+            // VDB Active = success
+            if(isVDBActive) {
+                resultStatus = Status.OK_STATUS;
+            } else {
+            	StringBuilder sb = new StringBuilder();
+            	
+                try {
+                    deployedImportVdb = getImportServer().getVdb(vdbName);
+                    if( deployedImportVdb != null ) {
+                    	sb.append(Messages.ImportManagerVdbDeploymentErrors + CR + CR);
+    	        		
+    	        		for( String error : deployedImportVdb.getValidityErrors()) {
+    	        			sb.append(error).append(CR);
+    	        		}
+                    }
+                } catch (Exception ex) {
+                }
+                sb.append(CR).append(NLS.bind(Messages.ImportManagerVdbInactiveStateError, vdbName));
+                
+                resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, sb.toString());
+            }
+        } else {
+        	StringBuilder sb = new StringBuilder();
+        	sb.append(NLS.bind(Messages.ImportManagerVdbLoadingNotCompleteError, timeoutSec));
+            try {
+                deployedImportVdb = getImportServer().getVdb(vdbName);
+                if( deployedImportVdb != null ) {
+	        		sb.append(Messages.ImportManagerVdbDeploymentErrors + CR + CR);
+	        		
+	        		for( String error : deployedImportVdb.getValidityErrors()) {
+	        			sb.append(error).append(CR);
+	        		}
+                }
+            } catch (Exception ex) {
+            }
+            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, sb.toString());
+        }
+
+        return resultStatus;
     }
     
     /**

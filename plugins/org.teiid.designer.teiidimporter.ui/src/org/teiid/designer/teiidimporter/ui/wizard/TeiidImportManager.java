@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -36,6 +37,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.translators.TranslatorOverride;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
@@ -85,7 +87,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     private Properties dataSourceProps = null;
     private Map<String,String> optionalImportProps = new HashMap<String,String>();
     private boolean createConnectionProfile = true;
-    private boolean filterRedundantUniqueConstraints = true;
+    //private boolean filterRedundantUniqueConstraints = true;
     private TranslatorOverride translatorOverride;
     
     IStatus vdbDeploymentStatus = null;
@@ -95,6 +97,9 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     private String uniqueImportVdbName;
     private boolean redeploy = false;
     private Properties ddlImportOptions = new Properties();
+    
+    private String userDefinedVdbXml;
+    private boolean vdbXmlEditMode = false;
 
     
     /**
@@ -279,7 +284,12 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
                     		message = NLS.bind(Messages.TeiidImportManager_deployVdbMsg, getTimeoutPrefSecs());
                     	}
                         monitor.beginTask(message, 100); 
-                        vdbDeploymentStatus = getServerImportManager().deployDynamicVdb(getCurrentImportVdbName(),dataSourceName,translatorName,optionalImportPropMap,monitor); 
+                        
+                        if( getVdbXmlEditMode() && StringUtilities.isNotEmpty(getUserDefinedVdbXml())) {
+                        	vdbDeploymentStatus = getServerImportManager().deployDynamicVdb(getCurrentImportVdbName(), getUserDefinedVdbXml(), null, monitor);
+                        } else {
+                        	vdbDeploymentStatus = getServerImportManager().deployDynamicVdb(getCurrentImportVdbName(),dataSourceName,translatorName,optionalImportPropMap,monitor);
+                        }
                     } catch (Throwable e) {
                         throw new InvocationTargetException(e);
                     } finally {
@@ -967,6 +977,23 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
 	 */
 	public void setDdlImportOptions(Properties ddlImportOptions) {
 		this.ddlImportOptions = ddlImportOptions;
+	}
+
+	public String getUserDefinedVdbXml() {
+		return userDefinedVdbXml;
+	}
+
+	public void setUserDefinedVdbXml(String userDefinedVdbXml) {
+		setRedeploy(true);
+		this.userDefinedVdbXml = userDefinedVdbXml;
+	}
+	
+	public void setVdbXmlEditMode(boolean value) {
+		this.vdbXmlEditMode = value;
+	}
+	
+	public boolean getVdbXmlEditMode() {
+		return this.vdbXmlEditMode;
 	}
     
 }
