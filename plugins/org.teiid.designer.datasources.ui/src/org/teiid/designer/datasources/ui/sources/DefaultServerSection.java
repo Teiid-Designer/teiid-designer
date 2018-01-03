@@ -130,7 +130,9 @@ public class DefaultServerSection implements IManagedLoading {
                     setDefaultTeiidInstanceStatusIcon(connected);
                     setDefaultTeiidVersionText(ModelerCore.getTeiidServerVersion());
                     updateServerActionBar(connected);
-                    sourcesSection.refresh();
+                    if( connected ) {
+                    	sourcesSection.refresh();
+                    }
                 }
             }, true);
         }
