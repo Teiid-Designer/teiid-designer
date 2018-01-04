@@ -98,7 +98,7 @@ public class DataSourceCache implements AdminConstants {
 			
 			String dsName = AdminUtil.removeJavaPrefix(jndiName);
 			
-            TeiidDataSource tds = new TeiidDataSource(dsName, poolName, "<unknown>"); //$NON-NLS-1$			
+            TeiidDataSource tds = new TeiidDataSource(dsName, jndiName, poolName, "<unknown>"); //$NON-NLS-1$			
 
             // Transfer properties to the ITeiidDataSource
 			tds.getProperties().putAll(dsProperties);

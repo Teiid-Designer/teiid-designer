@@ -10,7 +10,8 @@ import org.teiid.designer.runtime.spi.ITeiidDataSource;
 public class TeiidDataSource implements Comparable<TeiidDataSource>, ITeiidDataSource {
 
     private final String displayName;
-    private final String dataSourceName;
+    private final String jndiName;
+    private final String poolName;
     private final String dataSourceType;
     private String connectionProfileName;
     private final Properties properties;
@@ -19,19 +20,22 @@ public class TeiidDataSource implements Comparable<TeiidDataSource>, ITeiidDataS
 
     public TeiidDataSource( String displayName,
                             String jndiName,
+                            String poolName,
                             String dataSourceType ) {
-        this(displayName, jndiName, dataSourceType, new Properties());
+        this(displayName, jndiName, poolName, dataSourceType, new Properties());
     }
 
     public TeiidDataSource( String displayName,
                             String jndiName,
+                            String poolName,
                             String dataSourceType,
                             Properties properties) {
         ArgCheck.isNotEmpty(jndiName, "dataSourceName"); //$NON-NLS-1$
         ArgCheck.isNotEmpty(dataSourceType, "dataSourceType"); //$NON-NLS-1$
-
+        
         this.displayName = displayName;
-        this.dataSourceName = jndiName;
+        this.jndiName = jndiName;
+        this.poolName = poolName;
         this.dataSourceType = dataSourceType;
         this.properties = properties;
     }
@@ -74,7 +78,12 @@ public class TeiidDataSource implements Comparable<TeiidDataSource>, ITeiidDataS
 
     @Override
     public String getName() {
-        return this.dataSourceName;
+        return this.jndiName;
+    }
+    
+    @Override
+    public String getPoolName() {
+        return this.poolName;
     }
 
     /**
@@ -147,6 +156,10 @@ public class TeiidDataSource implements Comparable<TeiidDataSource>, ITeiidDataS
         if (!getType().equalsIgnoreCase("<unknown>")) { //$NON-NLS-1$
             sb.append("\nType: \t\t" + getType()); //$NON-NLS-1$
         }
+        
+        sb.append("\n\tName: \t\t" + displayName);
+        sb.append("\n\tJNDI Name: \t" + jndiName);
+        sb.append("\n\tProps: \t\t" + properties);
 
         return sb.toString();
     }

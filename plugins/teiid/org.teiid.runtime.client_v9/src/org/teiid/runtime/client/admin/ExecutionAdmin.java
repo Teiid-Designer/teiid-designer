@@ -156,7 +156,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     	
     	// get data source
     	ITeiidDataSource existingTDS = this.connectionManager.getDataSource(jndiName);
-    	ITeiidDataSource copyTDS = new TeiidDataSource(existingTDS.getDisplayName(), jndiName, existingTDS.getType());
+    	ITeiidDataSource copyTDS = new TeiidDataSource(existingTDS.getDisplayName(), jndiName, existingTDS.getPoolName(), existingTDS.getType());
     	this.connectionManager.deleteDataSource(jndiName);
     	
         refreshDataSources();
@@ -248,6 +248,9 @@ public class ExecutionAdmin implements IExecutionAdmin {
         }
         
         boolean isJdbc = "connector-jdbc".equals(dataSourceType);
+        if( !isJdbc ) {
+        	isJdbc = this.connectionManager.isJdbcDataSource(jndiName);
+        }
 
         // For JDBC types, find the matching installed driver.  This is done currently by matching
         // the profile driver classname to the installed driver classname

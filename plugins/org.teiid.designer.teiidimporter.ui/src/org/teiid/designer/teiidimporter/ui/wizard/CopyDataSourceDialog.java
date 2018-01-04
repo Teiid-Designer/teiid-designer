@@ -9,6 +9,7 @@ package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -24,10 +25,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
+import org.teiid.designer.ui.util.JndiNameHelper;
 
 /**
  *  CopyDataSourceDialog
@@ -38,7 +39,7 @@ public class CopyDataSourceDialog extends TitleAreaDialog implements Listener, U
     private Text dataSourceNameText;
     private String newSourceName;
     private Collection<String> existingSourceNames = new ArrayList<String>();
-    private StringNameValidator nameValidator;
+    private JndiNameHelper nameValidator;
 
     /**
      * CreateDataSourceDialog constructor
@@ -48,7 +49,7 @@ public class CopyDataSourceDialog extends TitleAreaDialog implements Listener, U
     public CopyDataSourceDialog(Shell shell, ITeiidImportServer teiidImportServer) {
         super(shell);
         initExistingDataSourceNames(teiidImportServer);
-        this.nameValidator = new StringNameValidator(new char[] {'_','-'});
+        this.nameValidator = new JndiNameHelper();
     }
         
     /**
@@ -186,8 +187,11 @@ public class CopyDataSourceDialog extends TitleAreaDialog implements Listener, U
         }
         
         // Check for invalid chars
-        if(!this.nameValidator.isValidName(newSourceName)) {
-            return new Status(IStatus.ERROR, PLUGIN_ID, Messages.errorNameInvalid);
+        String status = nameValidator.checkValidName(newSourceName);
+        
+        // Check if null or empty
+        if(status != null ) {
+            return new Status(IStatus.ERROR, PLUGIN_ID, status);
         }
         
         return new Status(IStatus.OK, PLUGIN_ID, Messages.copyDataSourceDialogOk);        

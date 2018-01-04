@@ -129,4 +129,10 @@ public class FailedTeiidDataSource implements ITeiidDataSource {
 
 	}
 
+	@Override
+	public String getPoolName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

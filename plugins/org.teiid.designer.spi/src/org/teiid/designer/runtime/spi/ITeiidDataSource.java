@@ -35,6 +35,11 @@ public interface ITeiidDataSource {
      * @return real name of data source, maybe different from display name
      */
     String getName();
+    
+    /**
+     * @return pool name of data source, maybe different from display name
+     */
+    String getPoolName();
 
     /**
      * Returns the data source type name

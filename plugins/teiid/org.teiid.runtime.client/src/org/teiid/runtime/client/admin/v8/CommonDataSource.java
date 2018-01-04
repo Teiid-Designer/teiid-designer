@@ -23,7 +23,7 @@ public class CommonDataSource extends AdminUtil implements ITeiidDataSource {
 	public CommonDataSource(ITeiidDataSource tds, DataSourceType type, String resAdapterID) {
 		super();
 		this.jndiName = tds.getPropertyValue("jndi-name");
-		this.poolName = tds.getName();
+		this.poolName = tds.getPoolName();
 		this.type = type;
 		this.resAdapterID = resAdapterID;
 		this.tds = tds;

@@ -58,10 +58,12 @@ public class Messages extends NLS {
     public static String dataSourcePanel_deleteButtonText;
     public static String dataSourcePanel_editButtonText;
     public static String dataSourcePanel_copyButtonText;
+    public static String dataSourcePanel_refreshButtonText;
     public static String dataSourcePanel_newButtonTooltip;
     public static String dataSourcePanel_deleteButtonTooltip;
     public static String dataSourcePanel_editButtonTooltip;
     public static String dataSourcePanel_copyButtonTooltip;
+    public static String dataSourcePanel_refreshButtonTooltip;
     public static String dataSourcePanel_nameColText;
     public static String dataSourcePanel_jndiNameColText;
     public static String dataSourcePanel_typeColText;

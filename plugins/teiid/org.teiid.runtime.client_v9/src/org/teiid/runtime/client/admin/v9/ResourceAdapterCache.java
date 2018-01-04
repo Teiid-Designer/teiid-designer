@@ -103,7 +103,7 @@ public class ResourceAdapterCache implements AdminConstants {
 			
 			String dsName = AdminUtil.removeJavaPrefix(jndiName);
 			
-            TeiidDataSource tds = new TeiidDataSource(dsName, jndiName, "<unknown>"); //$NON-NLS-1$
+            TeiidDataSource tds = new TeiidDataSource(dsName, jndiName, poolName, "<unknown>"); //$NON-NLS-1$
 
             // Transfer properties to the ITeiidDataSource
 			tds.getProperties().putAll(dsProperties);
@@ -194,7 +194,7 @@ public class ResourceAdapterCache implements AdminConstants {
 		String raID = cds.getResourceAdapterID();
 		
 		this.manager.cliCall(REMOVE, new String[] { SUBSYSTEM, RESOURCE_ADAPTERS, RESOURCE_ADAPTER, raID,
-				CONNECTION_DEFINITIONS, cds.getDisplayName() }, null,
+				CONNECTION_DEFINITIONS, cds.getPoolName() }, null,
 				new ResultCallback());
 		
 		// Remove the resource adapter via ID

@@ -24,7 +24,7 @@ public class ModelConnectionMatcher {
             if (name.equalsIgnoreCase("DefaultDS") || name.equalsIgnoreCase("JmsXA")) { //$NON-NLS-1$ //$NON-NLS-2$
                 continue;
             }
-            TeiidDataSource tds = new TeiidDataSource(name, name, "<unknown>"); //$NON-NLS-1$
+            TeiidDataSource tds = new TeiidDataSource(name, name, null, "<unknown>"); //$NON-NLS-1$
             
             if (name.startsWith(PREVIEW_PREFIX)) {
                 UUID workspaceUuid = WorkspaceUUIDService.getInstance().getUUID();

@@ -50,6 +50,7 @@ import org.teiid.designer.teiidimporter.ui.wizard.CreateDataSourceDialog;
 import org.teiid.designer.teiidimporter.ui.wizard.ITeiidImportServer;
 import org.teiid.designer.teiidimporter.ui.wizard.TeiidImportManager;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
+import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
@@ -67,7 +68,7 @@ public final class DataSourcePanel extends Composite implements UiConstants {
     private DataSourceManager dataSourceManager;
     private List<DataSourceItem> dataSourceObjList = new ArrayList<DataSourceItem>();
     private int visibleTableRows = 4;
-    private final int GROUP_HEIGHT_160 = 120;
+    private final int GROUP_HEIGHT_160 = 150;
     
     private List<DataSourcePanelListener> listeners = new ArrayList<DataSourcePanelListener>();
 
@@ -75,6 +76,7 @@ public final class DataSourcePanel extends Composite implements UiConstants {
     private Button deleteSourceButton;
     private Button editSourceButton;
     private Button copySourceButton;
+    private Button refreshButton;
     
     /**
      * DataSourcePanel constructor
@@ -98,7 +100,7 @@ public final class DataSourcePanel extends Composite implements UiConstants {
         // Create the Buttons panel
         createButtonsPanel(this);
         
-        this.dataSourcesViewer = new TableViewerBuilder(this, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
+        this.dataSourcesViewer = new TableViewerBuilder(this, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
         ColumnViewerToolTipSupport.enableFor(this.dataSourcesViewer.getTableViewer());
         this.dataSourcesViewer.setContentProvider(new IStructuredContentProvider() {
             /**
@@ -201,7 +203,7 @@ public final class DataSourcePanel extends Composite implements UiConstants {
         Composite panel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
         panel.setLayout(new GridLayout(1, false));
         GridData groupGD = new GridData();
-        groupGD.heightHint=GROUP_HEIGHT_160;
+        //groupGD.heightHint= GROUP_HEIGHT_160;
         panel.setLayoutData(groupGD);
         
         newSourceButton = new Button(panel, SWT.PUSH);
@@ -260,6 +262,20 @@ public final class DataSourcePanel extends Composite implements UiConstants {
             
         });
         
+        refreshButton = new Button(panel, SWT.PUSH);
+        refreshButton.setText(Messages.dataSourcePanel_refreshButtonText);
+        refreshButton.setToolTipText(Messages.dataSourcePanel_refreshButtonTooltip);
+        refreshButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        refreshButton.setEnabled(true);
+        refreshButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+            	refreshDataSourceList();
+                refresh();
+            }
+            
+        });
     }
 
     /**

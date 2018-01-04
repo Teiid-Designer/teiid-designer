@@ -73,7 +73,7 @@ public class ConnectionManager {
             if (name.equalsIgnoreCase("DefaultDS") || name.equalsIgnoreCase("JmsXA")) { //$NON-NLS-1$ //$NON-NLS-2$
                 continue;
             }
-            TeiidDataSource tds = new TeiidDataSource(name, name, "<unknown>"); //$NON-NLS-1$
+            TeiidDataSource tds = new TeiidDataSource(name, name, null, "<unknown>"); //$NON-NLS-1$
             
             if (name.startsWith(PREVIEW_PREFIX)) {
                 UUID workspaceUuid = WorkspaceUUIDService.getInstance().getUUID();
@@ -210,5 +210,22 @@ public class ConnectionManager {
     	}
     	
     	return this.dataSourceCache.getTemplatePropertyDefns(templateName);
+    }
+    
+    public boolean isJdbcDataSource(String jndiOrPoolName) {
+    	CommonDataSource cds = this.dataSourceCache.getPoolNameMap().get(jndiOrPoolName);
+    	if( cds != null ) return true;
+    	
+    	cds = this.dataSourceCache.getJndiNameMap().get(jndiOrPoolName);
+    	return cds != null;
+    }
+    
+    
+    public boolean isResourceAdapterDataSource(String jndiOrPoolName) {
+    	CommonDataSource cds = this.resourceAdapterCache.getPoolNameMap().get(jndiOrPoolName);
+    	if( cds != null ) return true;
+    	
+    	cds = this.resourceAdapterCache.getJndiNameMap().get(jndiOrPoolName);
+    	return cds != null;
     }
 }
