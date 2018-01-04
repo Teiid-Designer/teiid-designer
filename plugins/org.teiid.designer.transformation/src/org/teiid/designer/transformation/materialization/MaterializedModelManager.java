@@ -621,7 +621,7 @@ public class MaterializedModelManager implements ReverseEngConstants {
         }
 
         try {
-        	getExtensionAssistant().applyMedIfNecessary(modelFile);
+        	getExtensionAssistant().saveModelExtensionDefinition(resrc);
         	
         	// TODO:  JDG Use-Case >> Add translator properties some point
         	// <property name="SupportsDirectQueryProcedure" value="true"/>
