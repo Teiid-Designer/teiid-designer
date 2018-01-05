@@ -1239,6 +1239,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     					prefix = ODATA_PREFIX;
     				} else if( SAP_GATEWAY_PREFIX.equalsIgnoreCase(ns) ) {
     					prefix = ODATA_PREFIX;
+    				} else if (INFINISPAN_HOTROD_PREFIX.equalsIgnoreCase(ns)) {
+    					prefix = TEIID_INFINISPAN_HOTROD_PREFIX;
     				}
     				String teiidPrefix = TEIID_UNDERSCORE + prefix;
     			
