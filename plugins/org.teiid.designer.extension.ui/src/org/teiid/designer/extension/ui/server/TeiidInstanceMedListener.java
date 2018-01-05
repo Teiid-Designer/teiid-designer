@@ -204,19 +204,26 @@ public class TeiidInstanceMedListener implements IExecutionConfigurationListener
                 // Create temp file to store convertor's resulting xml
                 File outputFile = File.createTempFile(this.getClass().getSimpleName(),
                                                       StringConstants.DOT + StringConstants.XML);
+                
                 outputFile.deleteOnExit();
-
+                
                 // Output stream for convertor
                 output = new FileOutputStream(outputFile);
+                System.out.println("   TeiidInstanceMedListener.analyseTranslators(" + translator.getName() + ")  coverter.convert()");
                 boolean conversion = convertor.convert(translator, output);
+                if( !conversion ) System.out.println("          >>>> Success = " + conversion);
                 if (!conversion)
                     continue;
 
                 deploy(outputFile);
             } catch (Exception ex) {
-                addStatus(IStatus.ERROR,
-                          NLS.bind(Messages.errorOccurredAnalysingTranslators, translator.getName(), ex.getLocalizedMessage()),
-                          ex);
+            	if(ex.getMessage().contains("did not parse successfully and cannot be added")) {
+            		continue;
+            	} else {
+	                addStatus(IStatus.ERROR,
+	                          NLS.bind(Messages.errorOccurredAnalysingTranslators, translator.getName(), ex.getLocalizedMessage()),
+	                          ex);
+            	}
             } finally {
                 if (output != null) {
                     try {

@@ -1391,6 +1391,11 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.NULL_ON_NULL);
 			setBooleanProperty(NULL_ON_NULL_PROP, value, false, options);
 
+			// check new sequence value
+			if( !isVirtual ) {
+				value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.SEQUENCE);
+				options.add(SEQUENCE, value, null);
+			}
 			
 			/*
 			    NONDETERMINISTIC

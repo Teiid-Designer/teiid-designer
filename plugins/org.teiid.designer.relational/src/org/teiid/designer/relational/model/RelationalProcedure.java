@@ -69,6 +69,7 @@ public class RelationalProcedure extends RelationalReference {
     private String javaMethod;
     private String udfJarPath;
     private String functionCategory;
+    private String sequence;
     boolean nativeQueryProcedure;
     
     PROCEDURE_TYPE procedureType;
@@ -356,6 +357,23 @@ public class RelationalProcedure extends RelationalReference {
     }
     
     /**
+     * @return function category
+     */
+    public String getSequence() {
+        return sequence;
+    }
+    
+    /**
+     * @param category sets user defined function category. may be null
+     */
+    public void setSequence( String sequence ) {
+    	if( StringUtilities.areDifferent(this.sequence, sequence) ) {
+	        this.sequence = sequence;
+    		 handleInfoChanged();
+    	}
+    }
+    
+    /**
      * @return nativeQuery may be null
      */
     public String getNativeQuery() {
@@ -557,6 +575,10 @@ public class RelationalProcedure extends RelationalReference {
 		
 		if( this.isFunction() ) {
 			if( this.functionCategory != null ) {
+				getExtensionProperties().put(SEQUENCE, this.sequence );
+			} else getExtensionProperties().remove(SEQUENCE);
+			
+			if( this.functionCategory != null ) {
 				getExtensionProperties().put(FUNCTION_CATEGORY, this.functionCategory );
 			} else getExtensionProperties().remove(FUNCTION_CATEGORY);
 			
@@ -617,6 +639,7 @@ public class RelationalProcedure extends RelationalReference {
 			getExtensionProperties().remove(USES_DISTINCT_ROWS);
 			getExtensionProperties().remove(DECOMPOSABLE);
 			getExtensionProperties().remove(ALLOWS_DISTINCT);
+			getExtensionProperties().remove(SEQUENCE);
 		}
 	} 
     

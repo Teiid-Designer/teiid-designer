@@ -72,6 +72,7 @@ public interface RelationalModelExtensionConstants {
     }
     
     interface PropertyKeysNoPrefix {
+    	String SEQUENCE = "sequence"; //$NON-NLS-1$
         String JAVA_CLASS = "java-class"; //$NON-NLS-1$
         String JAVA_METHOD = "java-method"; //$NON-NLS-1$
         String FUNCTION_CATEGORY = "function-category"; //$NON-NLS-1$

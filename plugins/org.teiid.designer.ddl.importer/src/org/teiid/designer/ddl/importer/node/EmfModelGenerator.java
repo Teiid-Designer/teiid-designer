@@ -1245,6 +1245,11 @@ public class EmfModelGenerator {
 				boolean isDecomposable = relationalProcedure.isDecomposable();
 				setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.DECOMPOSABLE,String.valueOf(isDecomposable));
 			}
+			
+			String sequence = relationalProcedure.getSequence();
+			if(!CoreStringUtil.isEmpty(sequence)) {
+				setPropertyValue(relationalExtensionAssistant,eObject,RelationalConstants.PROCEDURE_EXT_PROPERTIES.SEQUENCE,sequence);
+			}
 
 		}
 		

@@ -43,9 +43,11 @@ public class TeiidPropertyDefinitionConvertor implements MxdConstants {
                 metaclassType.setName(TargetObjectMappings.COLUMN.getDesignerClass());
             else if (TargetObjectMappings.PROCEDUREPARAMETER.getTeiidClass().equalsIgnoreCase(name))
             	metaclassType.setName(TargetObjectMappings.PROCEDUREPARAMETER.getDesignerClass());
-            else
+            else if( name.equalsIgnoreCase("org.teiid.metadata.FunctionMethod") ) {
+            	return null;
+            } else {
                 throw new IllegalStateException("Unsupported MetaclassType " + name); //$NON-NLS-1$
-
+            }
             metaclassTypeMap.put(name, metaclassType);
         }
 
@@ -68,6 +70,11 @@ public class TeiidPropertyDefinitionConvertor implements MxdConstants {
 
             for (String appClass : appClasses) {
                 MetaclassType metaclassType = getMetaclassType(appClass);
+                // type may be NULL if FunctionMethod, so need to just continue
+                if( metaclassType == null ) {
+                	continue;
+                }
+                
                 PropertyType propertyType = factory.createPropertyType();
                 metaclassType.getProperty().add(propertyType);
 

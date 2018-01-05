@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="relational" namespaceUri="http://www.teiid.org/ext/relational/2012" version="7" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
+<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="relational" namespaceUri="http://www.teiid.org/ext/relational/2012" version="8" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
     <p:description>Relational metamodel extension properties</p:description>
     <p:modelType>PHYSICAL</p:modelType>
     <p:modelType>VIRTUAL</p:modelType>
@@ -56,6 +56,10 @@
             <p:description locale="en_US">The project-relative path where the UDF jar is located</p:description>
             <p:display locale="en">UDF Jar Path</p:display>
         </p:property>
+        <property name="sequence" type="string" required="false" advanced="false" masked="false">
+        <p:description locale="en_US">Define a source function that represents a sequence</p:description>
+            <display locale="en">Function Sequence</display>
+        </property>
     </p:extendedMetaclass>
     <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.BaseTableImpl">
         <p:property advanced="false" index="true" masked="false" name="native-query" required="false" type="string">

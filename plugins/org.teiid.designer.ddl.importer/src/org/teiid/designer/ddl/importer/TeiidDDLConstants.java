@@ -13,6 +13,7 @@ package org.teiid.designer.ddl.importer;
  */
 @SuppressWarnings("javadoc")
 public interface TeiidDDLConstants {
+		public static final String SEQUENCE = "sequence";//$NON-NLS-1$
 		public static final String JAVA_METHOD = "JAVA_METHOD";//$NON-NLS-1$
 		public static final String JAVA_CLASS = "JAVA_CLASS";//$NON-NLS-1$
 		public static final String DETERMINISM = "DETERMINISM";//$NON-NLS-1$

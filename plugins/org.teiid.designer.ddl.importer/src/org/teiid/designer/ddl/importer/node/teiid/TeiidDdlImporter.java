@@ -1189,6 +1189,10 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 						procedure.setJavaMethodName(optionValueStr);
 						procedure.setFunction(true);
 						nodeIter.remove();
+					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.SEQUENCE)) {
+						procedure.setSequence(optionValueStr);
+						procedure.setFunction(true);
+						nodeIter.remove();
 					}
 				}
 			}

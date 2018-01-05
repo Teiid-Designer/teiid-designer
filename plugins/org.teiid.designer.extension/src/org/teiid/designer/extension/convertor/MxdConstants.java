@@ -110,7 +110,12 @@ public interface MxdConstants extends StringConstants {
     	/**
         *
         */
-    	PROCEDUREPARAMETER;
+    	PROCEDUREPARAMETER,
+    	
+    	/**
+        *
+        */
+    	FUNCTIONMETHOD;
 
         private final String className;
 

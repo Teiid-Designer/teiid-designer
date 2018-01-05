@@ -68,7 +68,8 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         ON_VDB_START_SCRIPT(getPropertyId("ON_VDB_START_SCRIPT")), //$NON-NLS-1$
         ON_VDB_DROP_SCRIPT(getPropertyId("ON_VDB_DROP_SCRIPT")), //$NON-NLS-1$
         MATVIEW_ONERROR_ACTION(getPropertyId("MATVIEW_ONERROR_ACTION")), //$NON-NLS-1$
-        MATVIEW_TTL(getPropertyId("MATVIEW_TTL")); //$NON-NLS-1$
+        MATVIEW_TTL(getPropertyId("MATVIEW_TTL")), //$NON-NLS-1$
+    	SEQUENCE(getPropertyId("sequence")); //$NON-NLS-1$
         
 
         public static boolean same(final PropertyName propName,
@@ -225,6 +226,14 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
                 removeProperty(modelObject, PropertyName.USES_DISTINCT_ROWS.toString());
                 removeProperty(modelObject, PropertyName.DECOMPOSABLE.toString());
                 removeProperty(modelObject, PropertyName.ALLOWS_DISTINCT.toString());
+                
+                
+                // FunctionMethod.class maps to a Procedure with function == TRUE and adds the "sequence" property
+                if(  (modelObject instanceof Procedure ) ) {
+                	if( !isPhysical || !isFunction ) {
+                		removeProperty(modelObject, PropertyName.SEQUENCE.toString());
+                	}
+                }
 
                 // EObject should not have these property definitions
                 return null;
@@ -307,6 +316,10 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
     		super.setPropertyValue(modelObject, propId, newValue);
     	} else if( !isVirtual && PropertyName.same(PropertyName.NATIVE_TYPE, propId)) {
     		super.setPropertyValue(modelObject, propId, newValue);
+    	} else if( !isVirtual && PropertyName.same(PropertyName.SEQUENCE, propId)) {
+    		super.setPropertyValue(modelObject, propId, newValue);
+    	} else {
+    		super.setPropertyValue(modelObject, propId, newValue);
     	}
 
         // if setting aggregate to false remove these properties
@@ -317,6 +330,8 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
             removeProperty(modelObject, PropertyName.ALLOWS_DISTINCT.toString());
             removeProperty(modelObject, PropertyName.DECOMPOSABLE.toString());
         }
+        
+        
     }
 
     /**

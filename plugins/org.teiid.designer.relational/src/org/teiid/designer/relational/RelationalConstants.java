@@ -171,6 +171,7 @@ public interface RelationalConstants {
         public static final String JAVA_METHOD = "relational:java-method"; //$NON-NLS-1$
         public static final String UDF_JAR_PATH = "relational:udfJarPath"; //$NON-NLS-1$
         public static final String FUNCTION_CATEGORY = "relational:function-category"; //$NON-NLS-1$
+        public static final String SEQUENCE = "relational:sequence"; //$NON-NLS-1$
     }
     
     class TEIID_PROCEDURE_NAMES {
