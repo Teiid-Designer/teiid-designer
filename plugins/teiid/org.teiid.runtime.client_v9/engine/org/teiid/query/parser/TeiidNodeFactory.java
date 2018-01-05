@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.AlterProcedure;
 import org.teiid.query.sql.lang.AlterTrigger;
@@ -133,7 +134,18 @@ public class TeiidNodeFactory {
     }
 
     private static boolean isTeiid9Version(ITeiidServerVersion teiidVersion) {
-    	return teiidVersion.getMajor().equals(ITeiidServerVersion.NINE);
+        /*
+         * NOTE that this method was changed to allow support for Teiid server versions beyond 9.x
+         * 
+         * Note also that specific parser updates for changes beyond 9.0 have not yet been applied. This just
+         * allows users to connect to and use newer versions of Teiid
+         * 
+         * TODO:  update for Teiid parsing logic beyond 9.x
+         */
+    	
+    	return teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_9_0);
+    	
+    	//return teiidVersion.getMajor().equals(ITeiidServerVersion.NINE);
     }
 
     /**

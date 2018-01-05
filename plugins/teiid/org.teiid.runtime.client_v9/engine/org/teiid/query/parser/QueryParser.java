@@ -69,6 +69,10 @@ public class QueryParser implements IQueryParser {
 	    TeiidParser teiidParser = null;
 	    switch (major) {
 	        case 9:
+	        case 10:
+	        case 11:
+	        case 12:
+	        case 13:
 	            teiidParser = new Teiid9Parser(sql);
 	            teiidParser.setVersion(teiidVersion);
 	            break;
