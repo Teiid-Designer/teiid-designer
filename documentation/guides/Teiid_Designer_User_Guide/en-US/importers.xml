@@ -304,9 +304,8 @@
 						<para><emphasis role="bold">Step 5</emphasis> - On the next page 
 						define your target relational model that you wish to create or 
 						update. Either enter a new unique name, or select an existing 
-						source model. At this point you can click on the <emphasis>Show 
-						Dynamic VDB Content...</emphasis> button to display the vdb.xml 
-						that will be temporarily deployed to Teiid in order to return the 
+						source model. At this point you can click on the <emphasis>Advanced</emphasis> tab to view
+						or edit the temporary vdb.xml contents that will be deployed to Teiid in order to return the 
 						requested database schema/DDL. Click <emphasis role="bold">
 						NEXT&gt;</emphasis> to continue.</para>
 						<figure>
