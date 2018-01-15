@@ -115,11 +115,11 @@ public class ${className}{
         return (Element)node;
     }
 
-    protected Map<String, String> getJSONInputs( StreamingOutput is, String charset ) {
+    protected Map<String, String> getJSONInputs( InputStream is, String charset ) {
     	Map<String, String> parameters = getParameterMap();
     	 
     	try {
-            String jsonString = convertStreamToString(is, charset);
+            String jsonString = convertInputStreamToString(is, charset);
 
             // Do this to validate the JSON string. If we don't blow up, then we are good.
             new JSONObject(jsonString);
@@ -128,6 +128,37 @@ public class ${className}{
             throw new WebApplicationException(e, Response.Status.BAD_REQUEST);
         }
         return parameters;
+    }
+    
+    public String convertInputStreamToString( InputStream is, String charset) {
+        /*
+         * To convert the InputStream to String we use the
+         * Reader.read(char[] buffer) method. 
+         */
+    	
+    	if (is != null) {
+    	
+    	   ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    	   try {
+	    	    int nRead;
+	    	    byte[] data = new byte[1024];
+	    	    while ((nRead = is.read(data, 0, data.length)) != -1) {
+	    	        buffer.write(data, 0, nRead);
+	    	    }
+	    	 
+	    	    buffer.flush();
+	    	    byte[] byteArray = buffer.toByteArray();
+	    	         
+	    	    return new String(byteArray, charset);
+	    	    
+    	   }catch(Exception ioe){
+    		   throw new WebApplicationException(ioe, Response.Status.INTERNAL_SERVER_ERROR);	
+           }
+    	    
+    	}
+    	    
+    	return ""; //$NON-NLS-1$
+    	
     }
 
     public String convertStreamToString( StreamingOutput is, String charset) {
@@ -141,7 +172,7 @@ public class ${className}{
             try {
             	
             	is.write(output);
-            	String string = new String(output.toByteArray(), charset);
+            	//String string = new String(output.toByteArray(), charset);
                 
             }catch(Exception ioe){
             	throw new WebApplicationException(ioe, Response.Status.INTERNAL_SERVER_ERROR);	
