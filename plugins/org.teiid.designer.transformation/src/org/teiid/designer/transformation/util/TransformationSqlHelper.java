@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metadata.runtime.ColumnRecordImpl;
 import org.teiid.designer.core.metadata.runtime.TableRecordImpl;
@@ -2720,7 +2721,18 @@ public class TransformationSqlHelper implements ISQLConstants {
             // Get the list of References
             IReferenceCollectorVisitor referenceCollectorVisitor = getQueryService().getReferenceCollectorVisitor();
             List<IReference> refs = referenceCollectorVisitor.findReferences(command);
-            refCount = refs.size();
+            
+            boolean allOK = true;
+            for( IReference ref : refs ) {
+            	if( !ref.toString().equals(StringConstants.QUESTION_MARK) ) {
+            		allOK = false;
+            		break;
+            	}
+            }
+            if( !allOK ) {
+                refCount = refs.size();
+            }
+
         }
 
         return refCount;

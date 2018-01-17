@@ -352,6 +352,9 @@ public class TransformationValidator implements QueryValidator {
         
         if (commandValidationResult.isParsable() && transformType != UNKNOWN_TRNS) {
             ICommand command = commandValidationResult.getCommand();
+            
+            // Validate references before resolving
+            Collection<IStatus> statusList = validateReferences(command, null);
 
             // resolve command
             commandValidationResult = resolveCommand(command, transformType);
@@ -522,8 +525,6 @@ public class TransformationValidator implements QueryValidator {
                 // If no report items - validation is successful
                 // Check sources (target can't be a source)
                 statusList = validateSources(command, statusList);
-                // validate references
-                statusList = validateReferences(command, statusList);
 
             } else {
                 statusList = createStatusList(report);

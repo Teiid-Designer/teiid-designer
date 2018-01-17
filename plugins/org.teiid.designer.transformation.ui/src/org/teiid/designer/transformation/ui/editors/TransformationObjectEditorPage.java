@@ -2958,10 +2958,9 @@ public class TransformationObjectEditorPage
             boolean targetAndSQLOutNamesOK = statusArray[1];
             boolean targetAndSQLOutTypesOK = statusArray[2];
             // Check the command for References
-            int refCount = TransformationSqlHelper.getReferenceCount(currentMappingRoot, cmdType);
 
             // If all checks are OK, the SQL is Fully Reconciled and NO References
-            if (targetAndSQLOutSizesOK && targetAndSQLOutNamesOK && targetAndSQLOutTypesOK && refCount == 0) {
+            if (targetAndSQLOutSizesOK && targetAndSQLOutNamesOK && targetAndSQLOutTypesOK) {
                 getSqlEditorPanelWrapper().setMessage(sqlTypeMsg + SPACE + IS_VALID_AND_RECONCILABLE);
                 getSqlEditorPanelWrapper().showMessageArea(false);
                 // If any check is not OK, refine the message further
@@ -2985,11 +2984,7 @@ public class TransformationObjectEditorPage
                 } else if (!targetAndSQLOutTypesOK) {
                     buff.append("\n" + QUERY_TYPE_MISMATCH_MSG); //$NON-NLS-1$
                 }
-                // Add Message if there are references
-                if (refCount > 0) {
-                    buff.append("\n" + COMMAND_HAS_REFERENCES_MSG); //$NON-NLS-1$
-                    buff.append("\n" + NUMBER_REFERENCES_MSG + refCount); //$NON-NLS-1$
-                }
+
                 getSqlEditorPanelWrapper().setMessage(buff.toString());
                 getSqlEditorPanelWrapper().showMessageArea(true);
             }
