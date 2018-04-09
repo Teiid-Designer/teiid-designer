@@ -6,7 +6,9 @@ Bundle-Version: 11.1.2.qualifier
 Vendor: %pluginProvider
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
-Export-Package: com.sforce.soap.partner;x-friends:="org.teiid.designer.modelgenerator.salesforce.test"
+Export-Package: com.sforce.soap.partner,
+ com.sforce.soap.partner.fault,
+ com.sforce.soap.partner.sobject
 Bundle-ClassPath: .,
  lib/salesforce-api.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
