@@ -1332,6 +1332,10 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 	    }
 	    
         final EObject datatype = findType(type, delegateNativeTypeName, columnSize, columnSize, numDecDigits, problems);
+        
+        if( datatype != null ) {
+        	column.setType(datatype);
+        }
 
         // Set the searchability ...
         final SearchabilityType searchability = SearchabilityType.SEARCHABLE_LITERAL;
