@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.vdb;singleton:=true
-Bundle-Version: 11.1.2.qualifier
+Bundle-Version: 11.1.3.qualifier
 Bundle-Activator: org.teiid.designer.vdb.VdbPlugin
 Bundle-Vendor: %pluginProvider
 Require-Bundle: org.eclipse.emf.ecore;bundle-version="[2.11.1,3.0.0)",
