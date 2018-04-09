@@ -165,7 +165,7 @@ public class SelectDataSourcePage extends AbstractWizardPage
     private void createDataSourcesGroup(Composite parent) {
         Group dataSourcesGroup = WidgetFactory.createGroup(parent, Messages.selectDataSourcePage_dataSourceGroupText, SWT.NONE); 
         dataSourcesGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-        ((GridData)dataSourcesGroup.getLayoutData()).heightHint = 180;
+        ((GridData)dataSourcesGroup.getLayoutData()).heightHint = 220;
         
         int visibleRows = 5;
         this.dataSourcePanel = new DataSourcePanel(dataSourcesGroup, visibleRows, importManager);

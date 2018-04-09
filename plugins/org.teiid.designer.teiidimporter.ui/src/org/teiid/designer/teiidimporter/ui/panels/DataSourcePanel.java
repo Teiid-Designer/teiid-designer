@@ -203,7 +203,7 @@ public final class DataSourcePanel extends Composite implements UiConstants {
         Composite panel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
         panel.setLayout(new GridLayout(1, false));
         GridData groupGD = new GridData();
-        //groupGD.heightHint= GROUP_HEIGHT_160;
+        groupGD.heightHint= 220;
         panel.setLayoutData(groupGD);
         
         newSourceButton = new Button(panel, SWT.PUSH);
