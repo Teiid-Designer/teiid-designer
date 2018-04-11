@@ -70,16 +70,6 @@ public class TestModelUtil extends TestCase {
         assertEquals("abc", ModelUtil.getFileExtension(f)); //$NON-NLS-1$
     }
 
-    public void testGetFileExtensionForFileWithNoExtension() {
-        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "testFileWithNoExtension"); //$NON-NLS-1$
-        assertEquals("", ModelUtil.getFileExtension(f)); //$NON-NLS-1$
-    }
-
-    public void testGetFileExtensionForFileWithNoExtension2() {
-        final File f = SmartTestDesignerSuite.getTestDataFile(getClass(), "testFileWithNoExtension."); //$NON-NLS-1$
-        assertEquals("", ModelUtil.getFileExtension(f)); //$NON-NLS-1$
-    }
-
     public void testGetRelativePath() {
         IPath s = new Path("/a/b/c/x.xsd");//$NON-NLS-1$
         IPath b = new Path("/a/b");//$NON-NLS-1$
