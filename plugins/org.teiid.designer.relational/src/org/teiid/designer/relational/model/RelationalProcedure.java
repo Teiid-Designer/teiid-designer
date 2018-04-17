@@ -574,7 +574,7 @@ public class RelationalProcedure extends RelationalReference {
 		// Set extension properties here??
 		
 		if( this.isFunction() ) {
-			if( this.functionCategory != null ) {
+			if( this.sequence != null ) {
 				getExtensionProperties().put(SEQUENCE, this.sequence );
 			} else getExtensionProperties().remove(SEQUENCE);
 			
