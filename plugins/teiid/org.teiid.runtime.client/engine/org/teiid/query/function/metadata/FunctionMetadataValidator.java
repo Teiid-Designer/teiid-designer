@@ -68,10 +68,11 @@ public class FunctionMetadataValidator {
 	}
 
 	public static final void validateFunctionMethods(ITeiidServerVersion teiidVersion, Collection<FunctionMethod> methods, ValidatorReport report, Map<String, Datatype> runtimeTypeMap) {
-        if (runtimeTypeMap == null && teiidVersion != null && teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0)) {
-            runtimeTypeMap = SystemMetadata.getInstance(teiidVersion).getRuntimeTypeMap();
-        }
 	    if(methods != null) {
+	        if (runtimeTypeMap == null && teiidVersion != null && teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0)) {
+	            runtimeTypeMap = SystemMetadata.getInstance(teiidVersion).getRuntimeTypeMap();
+	        }
+	        
 	    	for (FunctionMethod method : methods) {
 	    		validateFunctionMethod(teiidVersion, method, report, runtimeTypeMap);
 	    	}

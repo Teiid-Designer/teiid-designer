@@ -448,6 +448,8 @@ TOKEN_MGR_DECLS :
      * given token in the sql sequence
      */
     void calculateOffset(Token t) {
+        if( t == null ) return;
+        
         Token preToken = null;
         if (! preTokens.isEmpty())
             preToken = preTokens.getLast();

@@ -334,4 +334,20 @@ public class TestQuery9Parser extends AbstractTestQueryParser {
                      + "/* Comment 4 */";
         helpTest(sql, sql, null);
     }
+    
+    @Test
+    public void testWindowsReturn() {
+    	String sql = "SELECT \r\n 'A' as x";
+    	String expectedSql = "SELECT 'A' AS x";
+    	
+    	helpTest(sql, expectedSql, null);
+    }
+    
+    @Test
+    public void testTabs() {
+    	String sql = "SELECT \t\t 'A' as x";
+    	String expectedSql = "SELECT 'A' AS x";
+    	
+    	helpTest(sql, expectedSql, null);
+    }
 }
