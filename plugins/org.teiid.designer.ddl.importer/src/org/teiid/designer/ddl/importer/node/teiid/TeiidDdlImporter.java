@@ -628,11 +628,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 				if( child.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_RESULT_FLAG) != null ) {
 					Object value = child.getProperty(TeiidDdlLexicon.CreateProcedure.PARAMETER_RESULT_FLAG);
 					if( value instanceof Boolean && ((Boolean)value) ) {
-						RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
-						procedure.setResultSet(result);
-						initialize(result, procedureNode, "resultSet"); //$NON-NLS-1$
-						
-						createColumn(child,result);
+						createProcedureParameter(child, procedure);
 					} else {
 						createProcedureParameter(child, procedure);
 					}
