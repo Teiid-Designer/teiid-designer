@@ -143,6 +143,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 	 * variable needed to hold the value of the translator selection dialog on the UI thread
 	 */
 	protected String generalResultStr = null;
+	protected String selectedNs = null;
 	
 	private Map<AstNode, RelationalTable> deferredMatViewReferences = new HashMap<AstNode, RelationalTable>();
 
@@ -1515,9 +1516,15 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 				return designerNs+':'+propName;
 			}
 
+			// if user already selected a namespace, then don't ask them again
+			if( selectedNs != null && designerNsList.contains(selectedNs) ) {
+				return selectedNs+':'+propName;
+			}
 			// Ask the user to select one of the possible translators
 			String designerNs = getTranslatorSelection(propName, designerNsList);
-
+			
+			selectedNs = designerNs;
+			
 			return designerNs+':'+propName;
 		}
 		return namespacedPropName;
