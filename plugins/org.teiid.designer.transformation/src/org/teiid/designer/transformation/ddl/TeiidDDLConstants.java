@@ -155,18 +155,18 @@ public interface TeiidDDLConstants {
 	    
 	    public static final String SET = "SET"; //$NON-NLS-1$
 	    public static final String NAMESPACE = "NAMESPACE"; //$NON-NLS-1$
-	    public static final String SF_URI = "{http://www.teiid.org/translator/salesforce/2012}"; //$NON-NLS-1$
-	    public static final String WS_URI = "{http://www.teiid.org/translator/ws/2012}"; //$NON-NLS-1$
-	    public static final String MONGO_URI = "{http://www.teiid.org/translator/mongodb/2013}"; //$NON-NLS-1$
-	    public static final String ODATA_URI = "{http://www.jboss.org/teiiddesigner/ext/odata/2012}"; //$NON-NLS-1$
-	    public static final String ACCUMULO_URI = "{http://www.teiid.org/translator/accumulo/2013}"; //$NON-NLS-1$
-	    public static final String EXCEL_URI = "{http://www.teiid.org/translator/excel/2014}"; //$NON-NLS-1$
-	    public static final String JPA_URI = "{http://www.teiid.org/translator/jpa/2014}"; //$NON-NLS-1$
-	    public static final String HBASE_URI = "{http://www.teiid.org/translator/hbase/2014}"; //$NON-NLS-1$
-	    public static final String SPATIAL_URI = "{http://www.teiid.org/translator/spatial/2015}"; //$NON-NLS-1$
-	    public static final String LDAP_URI = "{http://www.teiid.org/translator/ldap/2015}"; //$NON-NLS-1$
-	    public static final String PI_URI = "{http://www.teiid.org/translator/pi/2016}"; //$NON-NLS-1$
-	    public static final String COUCHBASE_URI = "{http://www.teiid.org/translator/couchbase/2017}"; //$NON-NLS-1$
-	    public static final String INFINISPAN_URI = "{http://www.teiid.org/translator/infinispan/2017}"; //$NON-NLS-1$
+	    public static final String SF_URI = "http://www.teiid.org/translator/salesforce/2012"; //$NON-NLS-1$
+	    public static final String WS_URI = "http://www.teiid.org/translator/ws/2012"; //$NON-NLS-1$
+	    public static final String MONGO_URI = "http://www.teiid.org/translator/mongodb/2013"; //$NON-NLS-1$
+	    public static final String ODATA_URI = "http://www.jboss.org/teiiddesigner/ext/odata/2012"; //$NON-NLS-1$
+	    public static final String ACCUMULO_URI = "http://www.teiid.org/translator/accumulo/2013"; //$NON-NLS-1$
+	    public static final String EXCEL_URI = "http://www.teiid.org/translator/excel/2014"; //$NON-NLS-1$
+	    public static final String JPA_URI = "http://www.teiid.org/translator/jpa/2014"; //$NON-NLS-1$
+	    public static final String HBASE_URI = "http://www.teiid.org/translator/hbase/2014"; //$NON-NLS-1$
+	    public static final String SPATIAL_URI = "http://www.teiid.org/translator/spatial/2015"; //$NON-NLS-1$
+	    public static final String LDAP_URI = "http://www.teiid.org/translator/ldap/2015"; //$NON-NLS-1$
+	    public static final String PI_URI = "http://www.teiid.org/translator/pi/2016"; //$NON-NLS-1$
+	    public static final String COUCHBASE_URI = "http://www.teiid.org/translator/couchbase/2017"; //$NON-NLS-1$
+	    public static final String INFINISPAN_URI = "http://www.teiid.org/translator/infinispan/2017"; //$NON-NLS-1$
 
 }
