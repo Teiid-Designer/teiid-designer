@@ -11,7 +11,7 @@
     <artifactId>org.teiid.runtime.client_v9</artifactId>
     <packaging>eclipse-plugin</packaging>
     <name>teiid runtime client V9</name>
-	<version>11.1.3-SNAPSHOT</version>
+	<version>11.2.0-SNAPSHOT</version>
     <description>Teiid SQL runtime client</description>
     <properties>
         <jbossas-version>9.0.2.Final</jbossas-version>
