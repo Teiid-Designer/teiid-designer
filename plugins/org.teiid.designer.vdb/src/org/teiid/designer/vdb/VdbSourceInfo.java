@@ -89,10 +89,14 @@ public class VdbSourceInfo {
 		//
 		// Avoid duplicate sources named differently but
 		// with the same jndi and translator properties
+		// Note that with loopback connector, the JNDI name MAY BE NULL
 		//
 		for (VdbSource source : getSources()) {
-		    if (source.getJndiName().equals(jndiName) && source.getTranslatorName().equals(translatorName))
-		        return false;
+			if( StringUtilities.areDifferent(source.getJndiName(), jndiName) ||
+				StringUtilities.areDifferent(source.getTranslatorName(), translatorName) ) {
+				continue;
+			}
+		    return false;
 		}
 		
 		VdbSource vdbSource = new VdbSource(getVdb(), name, jndiName, translatorName);
