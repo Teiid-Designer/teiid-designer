@@ -56,7 +56,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.help.IContextComputer;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.CellEditorActionHandler;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
@@ -220,14 +219,7 @@ public class ModelObjectPropertiesPanel implements UiConstants, INotifyChangedLi
 			 */
 			@Deprecated
 			private Object getFirstContext(Object helpContext, HelpEvent e) {
-				Object[] contexts;
-				if (helpContext instanceof IContextComputer) {
-				    // get local contexts
-					contexts= ((IContextComputer)helpContext)
-				            .getLocalContexts(e);
-				} else {
-					contexts= (Object[])helpContext;
-				}
+				Object[] contexts = (Object[])helpContext;
 
 				if (contexts.length > 0)
 					return contexts[0];
