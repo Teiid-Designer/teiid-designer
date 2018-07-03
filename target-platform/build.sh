@@ -73,7 +73,7 @@ echo "Local Repository: $LOCAL_REPO"
 
 #
 # Maven command
-#
+#  -Denforcer.skip=true"
 MVN="mvn clean verify"
 
 #
