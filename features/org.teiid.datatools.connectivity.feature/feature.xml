@@ -32,6 +32,66 @@
       %license
    </license>
 
+   <includes
+         id="org.eclipse.datatools.enablement.hsqldb.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.apache.derby.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.ibm.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.ingres.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.jdbc.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.jdt.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.msft.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.mysql.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.oda.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.oracle.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.postgresql.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.sap.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.sqlite.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.sybase.feature"
+         version="1.14.0"/>
+
+   <includes
+         id="org.eclipse.datatools.enablement.feature"
+         version="1.14.0"/>
+
    <requires>
       <import plugin="org.eclipse.datatools.sqltools.parsers.sql" version="1.0.2" match="compatible"/>
       <import plugin="org.eclipse.datatools.modelbase.dbdefinition"/>
