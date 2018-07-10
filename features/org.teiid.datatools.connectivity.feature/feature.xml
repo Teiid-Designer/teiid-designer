@@ -32,66 +32,6 @@
       %license
    </license>
 
-   <includes
-         id="org.eclipse.datatools.enablement.hsqldb.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.apache.derby.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.ibm.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.ingres.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.jdbc.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.jdt.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.msft.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.mysql.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.oda.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.oracle.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.postgresql.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.sap.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.sqlite.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.sybase.feature"
-         version="1.14.1"/>
-
-   <includes
-         id="org.eclipse.datatools.enablement.feature"
-         version="1.14.1"/>
-
    <requires>
       <import plugin="org.eclipse.datatools.sqltools.parsers.sql" version="1.0.2" match="compatible"/>
       <import plugin="org.eclipse.datatools.modelbase.dbdefinition"/>
@@ -131,6 +71,19 @@
       <import plugin="org.eclipse.core.resources" version="3.9.1" match="compatible"/>
       <import plugin="org.eclipse.wst.server.core" version="1.6.0" match="compatible"/>
       <import plugin="org.teiid.datatools.connectivity.ui" version="11.0.0" match="compatible"/>
+	  <import feature="org.eclipse.datatools.enablement.hsqldb.feature" version="1.14.1" match="greaterOrEqual"/>
+	  <import feature="org.eclipse.datatools.enablement.apache.derby.feature" version="1.14.1" match="greaterOrEqual"/>
+	  <import feature="org.eclipse.datatools.enablement.ingres.feature" version="1.14.1" match="greaterOrEqual"/>
+	  <import feature="org.eclipse.datatools.enablement.jdbc.feature" version="1.14.1" match="greaterOrEqual"/>
+	  <import feature="org.eclipse.datatools.enablement.jdt.feature" version="1.14.1" match="greaterOrEqual"/>
+	  <import feature="org.eclipse.datatools.enablement.msft.feature" version="1.14.1" match="greaterOrEqual"/>
+	  <import feature="org.eclipse.datatools.enablement.mysql.feature" version="1.14.1" match="greaterOrEqual"/>
+	  <import feature="org.eclipse.datatools.enablement.oda.feature" version="1.14.1" match="greaterOrEqual"/>
+	  <import feature="org.eclipse.datatools.enablement.oracle.feature" version="1.14.1" match="greaterOrEqual"/>
+	  <import feature="org.eclipse.datatools.enablement.postgresql.feature" version="1.14.1" match="greaterOrEqual"/>
+	  <import feature="org.eclipse.datatools.enablement.sap.feature" version="1.14.1" match="greaterOrEqual"/>
+	  <import feature="org.eclipse.datatools.enablement.sqlite.feature" version="1.14.1" match="greaterOrEqual"/>
+ 	  <import feature="org.eclipse.datatools.enablement.sybase.feature" version="1.14.1" match="greaterOrEqual"/>
    </requires>
 
    <plugin

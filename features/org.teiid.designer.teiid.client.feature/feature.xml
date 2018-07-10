@@ -21,7 +21,7 @@
 
    <includes
          id="org.teiid.datatools.connectivity.feature"
-         version="1.14.1"/>
+         version="0.0.0"/>
 
    <requires>
       <import plugin="org.jboss.tools.locus.sf.saxon" version="9.5.1" match="compatible"/>
@@ -34,8 +34,7 @@
       <import plugin="org.jboss.ide.eclipse.as.management.core" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.datatools.connectivity" version="1.4.1" match="compatible"/>
       <import plugin="org.eclipse.datatools.connectivity.ui" version="1.4.1" match="compatible"/>
-      <import plugin="org.teiid.datatools.connectivity" version="11.0.0" match="compatible"/>
-      <import plugin="org.teiid.datatools.connectivity.ui" version="11.0.0" match="compatible"/>
+      <import plugin="org.teiid.datatools.connectivity" version="11.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
