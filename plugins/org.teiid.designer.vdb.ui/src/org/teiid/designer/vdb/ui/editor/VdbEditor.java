@@ -187,6 +187,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String CONFIRM_SYNCHRONIZE_MESSAGE = i18n("confirmSynchronizeMessage"); //$NON-NLS-1$
     static final String CONFIRM_SYNCHRONIZE_ALL_MESSAGE = i18n("confirmSynchronizeAllMessage"); //$NON-NLS-1$
     static final String CONFIRM_REMOVE_MESSAGE = i18n("confirmRemoveMessage"); //$NON-NLS-1$
+    static final String CONFIRM_REMOVE_UDF_MESSAGE = i18n("confirmRemoveUDFMessageWithWarning"); //$NON-NLS-1$
+    static final String CONFIRM_REMOVE_SCHEMA_MESSAGE = i18n("confirmRemoveSchemaMessageWithWarning"); //$NON-NLS-1$
     static final String CONFIRM_REMOVE_IMPORTED_BY_MESSAGE = i18n("confirmRemoveImportedByMessage"); //$NON-NLS-1$
     static final String CONFIRM_OVERWRITE_USERFILE_MESSAGE = i18n("confirmOverwriteUserFileMessage"); //$NON-NLS-1$
     static final String CONFIRM_OVERWRITE_UDFJAR_MESSAGE = i18n("confirmOverwriteUdfJarMessage"); //$NON-NLS-1$
@@ -933,7 +935,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
              */
             @Override
             public void selected( IStructuredSelection selection ) {
-                if (!ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE)) return;
+                if (!ConfirmationDialog.confirm(CONFIRM_REMOVE_SCHEMA_MESSAGE)) return;
                 final Set<VdbEntry> entries = new HashSet<VdbEntry>();
                 final Set<VdbEntry> importedBy = new HashSet<VdbEntry>();
                 for (final Object element : selection.toList()) {
@@ -1177,7 +1179,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
              */
             @Override
             public void selected( IStructuredSelection selection ) {
-                if (!ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE)) return;
+                if (!ConfirmationDialog.confirm(CONFIRM_REMOVE_UDF_MESSAGE)) return;
                 final Set<VdbEntry> entries = new HashSet<VdbEntry>();
                 final Set<VdbEntry> importedBy = new HashSet<VdbEntry>();
                 for (final Object element : selection.toList()) {
