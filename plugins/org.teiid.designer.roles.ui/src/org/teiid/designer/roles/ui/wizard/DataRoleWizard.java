@@ -118,16 +118,8 @@ public class DataRoleWizard extends AbstractWizard {
     
     private DataRolesModelTreeProvider treeProvider;
 
-    private String dataRoleName;
-    private String description;
     private Set<String> mappedRoleNames;
-    private boolean allowSystemTables;
-    private boolean allowSystemRead;
-    private boolean allowSystemExecute;
-    
-    private boolean anyAuthentication;
-    private boolean allowCreateTempTables;
-    private boolean grantAll;
+    private DataRoleProperties props;
 
     String roleNameTextEntry;
     
@@ -135,34 +127,41 @@ public class DataRoleWizard extends AbstractWizard {
     private Set<String> otherDataRoleNames;
     
     private boolean disableGrantAll = false;
+    private boolean grantNoneAsDefault;
 
     /**
      * @since 4.0
      */
-    public DataRoleWizard(Container tempContainer, DataRole existingDataRole, AllowedLanguages allowedLanguages, Set<String> otherDataRoleNames) {
+    public DataRoleWizard(Container tempContainer, 
+    		DataRole existingDataRole, 
+    		AllowedLanguages allowedLanguages, 
+    		Set<String> otherDataRoleNames, 
+    		boolean grantNoneAsDefault) {
         super(RolesUiPlugin.getInstance(), TITLE, IMAGE);
+        this.props = new DataRoleProperties();
         this.tempContainer = tempContainer;
         this.allowedLanguages = allowedLanguages;
         this.otherDataRoleNames = otherDataRoleNames;
         this.existingDataRole = existingDataRole;
+        this.grantNoneAsDefault = grantNoneAsDefault;
         
         if (existingDataRole == null) {
-            this.dataRoleName = StringUtilities.getUniqueName(GENERATED_DEFAULT_NAME, otherDataRoleNames, true, true, 1000);
+        	props.setDataRoleName(StringUtilities.getUniqueName(GENERATED_DEFAULT_NAME, otherDataRoleNames, true, true, 1000));
             this.isEdit = false;
-            this.allowSystemTables = true;
-            this.anyAuthentication = false;
-            this.allowCreateTempTables = false;
-            this.grantAll = false;
+            props.setAllowSystemTables(true);
+            props.setAnyAuthentication(false);
+            props.setAllowCreateTempTables(false);
+            props.setGrantAll(false);
             this.mappedRoleNames = new HashSet<String>();
-            this.editedDataRole = new DataRole(this.dataRoleName);
+            this.editedDataRole = new DataRole(props.getDataRoleName());
         } else {
             this.editedDataRole = this.existingDataRole.clone();
-            this.dataRoleName = editedDataRole.getName();
-            this.description = editedDataRole.getDescription();
-            this.allowCreateTempTables = editedDataRole.isAllowCreateTempTables();
-            this.anyAuthentication = editedDataRole.isAnyAuthenticated();
-            this.grantAll = editedDataRole.isGrantAll();
-            this.allowSystemTables = editedDataRole.getPermission(SYS_ADMIN_TABLE_TARGET) != null;
+            props.setDataRoleName(editedDataRole.getName());
+            props.setDescription(editedDataRole.getDescription());
+            props.setAllowCreateTempTables(editedDataRole.isAllowCreateTempTables());
+            props.setAnyAuthentication(editedDataRole.isAnyAuthenticated());
+            props.setGrantAll(editedDataRole.isGrantAll());
+            props.setAllowSystemTables(editedDataRole.getPermission(SYS_ADMIN_TABLE_TARGET) != null);
             this.isEdit = true;
             this.setWindowTitle(EDIT_TITLE);
             this.mappedRoleNames = new HashSet<String>(editedDataRole.getRoleNames());
@@ -202,7 +201,7 @@ public class DataRoleWizard extends AbstractWizard {
     Composite createPageControl( final Composite parent ) {
         // Tree Content Provider
 
-        treeProvider = new DataRolesModelTreeProvider();
+        treeProvider = new DataRolesModelTreeProvider(grantNoneAsDefault);
 
         // ===========>>>> Create page composite
         final Composite mainPanel = new Composite(parent, SWT.NONE);
@@ -212,12 +211,12 @@ public class DataRoleWizard extends AbstractWizard {
         // Add widgets to page
         WidgetFactory.createLabel(mainPanel, Messages.name);
 
-        this.dataRoleNameText = WidgetFactory.createTextField(mainPanel, GridData.FILL_HORIZONTAL, 1, this.dataRoleName);
+        this.dataRoleNameText = WidgetFactory.createTextField(mainPanel, GridData.FILL_HORIZONTAL, 1, this.props.getDataRoleName());
 
         this.dataRoleNameText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText( ModifyEvent e ) {
-                dataRoleName = dataRoleNameText.getText();
+                props.setDataRoleName(dataRoleNameText.getText());
                 validateInputs();
             }
         });
@@ -261,8 +260,8 @@ public class DataRoleWizard extends AbstractWizard {
         descriptionTextEditor = new StyledTextEditor(descPanel, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 60).minSize(SWT.DEFAULT, 30).applyTo(descriptionTextEditor.getTextWidget());
 
-        if( this.description != null ) {
-        	descriptionTextEditor.setText(this.description);
+        if( this.props.getDescription() != null ) {
+        	descriptionTextEditor.setText(this.props.getDescription());
         } else {
         	descriptionTextEditor.setText(""); //$NON-NLS-1$
         }
@@ -270,7 +269,7 @@ public class DataRoleWizard extends AbstractWizard {
 
             @Override
             public void documentChanged( DocumentEvent event ) {
-                description = descriptionTextEditor.getText();
+            	props.setDescription(descriptionTextEditor.getText());
                 handleDescriptionChanged();
             }
 
@@ -314,7 +313,7 @@ public class DataRoleWizard extends AbstractWizard {
         	crudTabItem = new CTabItem(tabFolder, SWT.NONE);
         	crudTabItem.setText(Messages.model);
 	        
-			crudPanel = new CrudPanel(tabFolder, this);
+			crudPanel = new CrudPanel(tabFolder, this, this.props, treeProvider);
 
 	        crudTabItem.setControl(crudPanel.getPrimaryPanel());
         }
@@ -357,13 +356,13 @@ public class DataRoleWizard extends AbstractWizard {
     	roleNamesTabItem.setToolTipText(Messages.mappedRoleNamesTabDescription);
         Composite roleNamespanel = WidgetFactory.createPanel(mainTabFolder, 0, GridData.FILL_HORIZONTAL, 2);
 		anyAuthenticatedCheckBox = WidgetFactory.createCheckBox(roleNamespanel,
-						getString("anyAuthenticatedCheckbox.label"), 0, 1, anyAuthentication); //$NON-NLS-1$
+						getString("anyAuthenticatedCheckbox.label"), 0, 1, props.isAnyAuthentication()); //$NON-NLS-1$
 		anyAuthenticatedCheckBox.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent event) {
-				anyAuthentication = anyAuthenticatedCheckBox.getSelection();
+				props.setAnyAuthentication(anyAuthenticatedCheckBox.getSelection());
 				if (mappedRolesPanel != null) {
-					mappedRolesPanel.setEnabled(!anyAuthentication);
+					mappedRolesPanel.setEnabled(!props.isAnyAuthentication());
 				}
 			}
 		});
@@ -435,7 +434,7 @@ public class DataRoleWizard extends AbstractWizard {
         mappedRolesPanel.getButton(Widgets.EDIT_BUTTON).setEnabled(false);
         mappedRolesPanel.getButton(Widgets.REMOVE_BUTTON).setEnabled(false);
 
-        mappedRolesPanel.setEnabled(!anyAuthentication);
+        mappedRolesPanel.setEnabled(!props.isAnyAuthentication());
         roleNamesTabItem.setControl(roleNamespanel);
     }
     
@@ -447,15 +446,15 @@ public class DataRoleWizard extends AbstractWizard {
     	GridLayoutFactory.swtDefaults().numColumns(1).applyTo(miscOptionsGroup);
     	GridDataFactory.swtDefaults().span(3,  1).applyTo(miscOptionsGroup);
         allowCreateTempTablesCheckBox = WidgetFactory.createCheckBox(miscOptionsGroup,
-                                                                     getString("allowCreateTempTablesCheckBox.label"), GridData.FILL_HORIZONTAL, 1, anyAuthentication); //$NON-NLS-1$
+                                                                     getString("allowCreateTempTablesCheckBox.label"), GridData.FILL_HORIZONTAL, 1, this.props.isAnyAuthentication()); //$NON-NLS-1$
         allowCreateTempTablesCheckBox.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
-                allowCreateTempTables = allowCreateTempTablesCheckBox.getSelection();
+                props.setAllowCreateTempTables(allowCreateTempTablesCheckBox.getSelection());
             }
         });
         
-        grantAllCheckBox = WidgetFactory.createCheckBox( miscOptionsGroup, getString("grantAllCheckBox.label"), GridData.FILL_HORIZONTAL, 1, grantAll); //$NON-NLS-1$
+        grantAllCheckBox = WidgetFactory.createCheckBox( miscOptionsGroup, getString("grantAllCheckBox.label"), GridData.FILL_HORIZONTAL, 1, this.props.isGrantAll()); //$NON-NLS-1$
    	 	if( disableGrantAll ) {
    	   	 	grantAllCheckBox.setEnabled(false);
    	   	 	grantAllCheckBox.setText(getString("grantAllCheckBox.label") + StringConstants.SPACE + getString("grantAllCheckBoxDisabled.tooltip") );	//$NON-NLS-1$ //$NON-NLS-2$
@@ -463,29 +462,27 @@ public class DataRoleWizard extends AbstractWizard {
 	        grantAllCheckBox.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(final SelectionEvent event) {
-					grantAll = grantAllCheckBox.getSelection();
+					props.setGrantAll(grantAllCheckBox.getSelection());
 				}
 			});
     	}
 
-        
         final Group sysTablesGroup = WidgetFactory.createGroup(miscOptionsGroup,
                 getString("systemTablesAccess.label"), GridData.FILL_HORIZONTAL, 2, 2); //$NON-NLS-1$
 
 		// ===========>>>>
 		allowSystemTablesCheckBox = WidgetFactory.createCheckBox(sysTablesGroup,
-						getString("systemTablesCheckbox.label"), 0, 2, allowSystemTables); //$NON-NLS-1$
+						getString("systemTablesCheckbox.label"), 0, 2, this.props.isAllowSystemTables()); //$NON-NLS-1$
 		allowSystemTablesCheckBox.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(final SelectionEvent event) {
-						allowSystemTables = allowSystemTablesCheckBox
-								.getSelection();
-						readSysCB.setEnabled(allowSystemTables);
-						executeSysCB.setEnabled(allowSystemTables);
+						props.setAllowSystemTables(allowSystemTablesCheckBox.getSelection());
+						readSysCB.setEnabled(props.isAllowSystemTables());
+						executeSysCB.setEnabled(props.isAllowSystemTables());
 						// If turned ON (checked) then auto-select READ
-						if (allowSystemTables) {
+						if (props.isAllowSystemTables()) {
 							readSysCB.setSelection(true);
-							allowSystemRead = true;
+							props.setAllowSystemTables(true);
 						}
 					}
 				});
@@ -497,14 +494,13 @@ public class DataRoleWizard extends AbstractWizard {
 		readSysCB.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent event) {
-				allowSystemRead = readSysCB.getSelection();
-				if (!allowSystemRead && !allowSystemExecute) {
-					allowSystemTables = false;
+				props.setAllowSystemRead(readSysCB.getSelection());
+				if (!props.isAllowSystemRead() && !props.isAllowSystemExecute()) {
 					allowSystemTablesCheckBox.setSelection(false);
-					allowSystemTables = false;
+					props.setAllowSystemTables(false);
 				} else {
 					allowSystemTablesCheckBox.setSelection(true);
-					allowSystemTables = true;
+					props.setAllowSystemTables(true);
 				}
 			}
 		});
@@ -512,14 +508,13 @@ public class DataRoleWizard extends AbstractWizard {
 		executeSysCB.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent event) {
-				allowSystemExecute = executeSysCB.getSelection();
-				if (!allowSystemRead && !allowSystemExecute) {
-					allowSystemTables = false;
+				props.setAllowSystemExecute(executeSysCB.getSelection());
+				if (!props.isAllowSystemRead() && !props.isAllowSystemExecute()) {
 					allowSystemTablesCheckBox.setSelection(false);
-					allowSystemTables = false;
+					props.setAllowSystemTables(false);
 				} else {
 					allowSystemTablesCheckBox.setSelection(true);
-					allowSystemTables = true;
+					props.setAllowSystemTables(true);
 				}
 			}
 		});
@@ -534,10 +529,10 @@ public class DataRoleWizard extends AbstractWizard {
     }
 
     private void loadExistingPermissions() {
-        this.dataRoleName = this.existingDataRole.getName();
-        this.anyAuthentication = this.existingDataRole.isAnyAuthenticated();
-        this.allowCreateTempTables = this.existingDataRole.isAllowCreateTempTables();
-        this.grantAll = this.existingDataRole.isGrantAll();
+        this.props.setDataRoleName(this.existingDataRole.getName());
+        this.props.setAnyAuthentication(this.existingDataRole.isAnyAuthenticated());
+        this.props.setAllowCreateTempTables(this.existingDataRole.isAllowCreateTempTables());
+        this.props.setGrantAll(this.existingDataRole.isGrantAll());
         this.dataRoleNameText.setText(this.existingDataRole.getName());
         this.mappedRolesPanel.addItems(this.existingDataRole.getRoleNames().toArray());
         this.descriptionTextEditor.setText(this.existingDataRole.getDescription());
@@ -550,33 +545,33 @@ public class DataRoleWizard extends AbstractWizard {
         for (Permission perm : existingDataRole.getPermissions()) {
             if (perm.getTargetName().equalsIgnoreCase(SYS_ADMIN_TABLE_TARGET) ||
     				perm.getTargetName().equalsIgnoreCase(SYS_TABLE_TARGET)) { // This is for backward compatability
-                allowSystemTables = true;
-                allowSystemTablesCheckBox.setSelection(allowSystemTables);
+                props.setAllowSystemTables(true);
+                allowSystemTablesCheckBox.setSelection(props.isAllowSystemTables());
                 
                 foundSystemPermission = true;
 
-                allowSystemRead = perm.getCRUDValue(Type.READ).booleanValue();
-                readSysCB.setSelection(allowSystemRead);
-                allowSystemExecute = perm.getCRUDValue(Type.EXECUTE).booleanValue();
-                executeSysCB.setSelection(allowSystemExecute);
+                props.setAllowSystemRead(perm.getCRUDValue(Type.READ).booleanValue());
+                readSysCB.setSelection(props.isAllowSystemRead());
+                props.setAllowSystemExecute(perm.getCRUDValue(Type.EXECUTE).booleanValue());
+                executeSysCB.setSelection(props.isAllowSystemExecute());
                 
-                readSysCB.setEnabled(allowSystemTables);
-                executeSysCB.setEnabled(allowSystemTables);
+                readSysCB.setEnabled(props.isAllowSystemTables());
+                executeSysCB.setEnabled(props.isAllowSystemTables());
             }
         }
         
         if( !foundSystemPermission ) {
         	// Need to set system check-box to unchecked
         	// read and execute check boxes to unchecked and disabled
-        	allowSystemTables = false;
+        	props.setAllowSystemTables(false);
         	allowSystemTablesCheckBox.setSelection(false);
-            readSysCB.setEnabled(allowSystemTables);
-            executeSysCB.setEnabled(allowSystemTables);
+            readSysCB.setEnabled(props.isAllowSystemTables());
+            executeSysCB.setEnabled(props.isAllowSystemTables());
         }
 
-        this.anyAuthenticatedCheckBox.setSelection(this.anyAuthentication);
-        this.allowCreateTempTablesCheckBox.setSelection(this.allowCreateTempTables);
-        this.mappedRolesPanel.setEnabled(!anyAuthentication);
+        this.anyAuthenticatedCheckBox.setSelection(this.props.isAnyAuthentication());
+        this.allowCreateTempTablesCheckBox.setSelection(this.props.isAllowCreateTempTables());
+        this.mappedRolesPanel.setEnabled(!this.props.isAnyAuthentication());
         if( !disableGrantAll ) {
         	this.grantAllCheckBox.setEnabled(true);
         }
@@ -610,7 +605,7 @@ public class DataRoleWizard extends AbstractWizard {
     }
     
     private void handleMappedRoleNameChanged() {
-        if (!anyAuthentication && !mappedRoleNames.isEmpty()) {
+        if (!this.props.isAnyAuthentication() && !mappedRoleNames.isEmpty()) {
             // DO NOTHING dataRole.setRoleNames(mappedRoleNames);
         } else {
             mappedRoleNames.clear();
@@ -623,26 +618,26 @@ public class DataRoleWizard extends AbstractWizard {
 
     
     public DataRole getFinalDataRole() {
-    	editedDataRole.setName(this.dataRoleName);
-    	editedDataRole.setAnyAuthenticated(this.anyAuthentication);
-    	editedDataRole.setAllowCreateTempTables(this.allowCreateTempTables);
-    	editedDataRole.setGrantAll(this.grantAll);
-    	editedDataRole.setDescription(this.description);
+    	editedDataRole.setName(this.props.getDataRoleName());
+    	editedDataRole.setAnyAuthenticated(this.props.isAnyAuthentication());
+    	editedDataRole.setAllowCreateTempTables(this.props.isAllowCreateTempTables());
+    	editedDataRole.setGrantAll(this.props.isGrantAll());
+    	editedDataRole.setDescription(this.props.getDescription());
     	editedDataRole.setPermissions(this.treeProvider.getPermissions());
     	
     	Permission systemPerm = editedDataRole.getPermission(SYS_ADMIN_TABLE_TARGET);
-        if (allowSystemTables ) {
+        if (this.props.isAllowSystemTables()) {
         	if( systemPerm == null ) {
         		editedDataRole.addPermission(new Permission(SYS_ADMIN_TABLE_TARGET,
-        				false, allowSystemRead, false, 
-        				false, allowSystemExecute, false));
+        				false, this.props.isAllowSystemRead(), false, 
+        				false, this.props.isAllowSystemExecute(), false));
         	}
         } else {
         	if( systemPerm != null ) {
         		editedDataRole.removePermission(systemPerm);
         	}
         }
-        if (!this.anyAuthentication && !mappedRoleNames.isEmpty()) {
+        if (!this.props.isAnyAuthentication() && !mappedRoleNames.isEmpty()) {
         	editedDataRole.setRoleNames(mappedRoleNames);
         } else {
         	editedDataRole.getRoleNames().clear();
@@ -665,15 +660,16 @@ public class DataRoleWizard extends AbstractWizard {
 
     public void validateInputs() {
         // Check that name != null
-        if (this.dataRoleName == null || this.dataRoleName.length() == 0) {
+    	String dataRoleName = this.props.getDataRoleName();
+        if (dataRoleName == null || dataRoleName.length() == 0) {
             wizardPage.setErrorMessage(getString("nullNameMessage")); //$NON-NLS-1$
             wizardPage.setPageComplete(false);
             return;
         }
 
         // Check if data role already exists
-        if( otherDataRoleNames.contains(this.dataRoleName)) {
-            wizardPage.setErrorMessage(NLS.bind(Messages.dataRoleExists_0_Message, this.dataRoleName));
+        if( otherDataRoleNames.contains(dataRoleName)) {
+            wizardPage.setErrorMessage(NLS.bind(Messages.dataRoleExists_0_Message, dataRoleName));
             wizardPage.setPageComplete(false);
             return;
         }

@@ -58,6 +58,8 @@ public class Messages  extends NLS {
 	public static String vdbEditor_advanced_tab_label;
 	public static String vdbEditor_advanced_tab_tooltip;
     public static String vdbEditor_loadingErrMessage;
+    public static String dataRolesPanel_confirm_default_role_access_title;
+    public static String dataRolesPanel_confirm_default_role_access_message;
     
     static {
         NLS.initializeMessages("org.teiid.designer.vdb.ui.messages", Messages.class); //$NON-NLS-1$

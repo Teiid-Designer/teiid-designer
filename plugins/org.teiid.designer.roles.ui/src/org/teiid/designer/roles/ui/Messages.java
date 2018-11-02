@@ -110,6 +110,10 @@ public class Messages  extends NLS {
 	public static String noColumnSelected;
 	public static String permissionsTabHelpText;
 	public static String dataRoleExists_0_Message;
+	public static String crudPanelClearAllPermissionsText;
+	public static String crudPanelClearAllPermissionsTooltip;
+	public static String crudPanelClearPermissionsWarning;
+	public static String crudPanelClearPermissionsTitle;
 	
     static {
         NLS.initializeMessages("org.teiid.designer.roles.ui.messages", Messages.class); //$NON-NLS-1$

@@ -94,12 +94,14 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
     private PermissionHandler handler;
 
     private Resource[] resources;
+    private boolean grantNoneAsDefault;
     
     ModelFilterMatcher modelFilterMatcher = new ModelFilterMatcher();
 
-    public DataRolesModelTreeProvider( ) {
+    public DataRolesModelTreeProvider(boolean grantNoneAsDefault) {
         super();
         handler = new PermissionHandler(this);
+        this.grantNoneAsDefault = grantNoneAsDefault;
     }
 
     @Override
@@ -110,6 +112,10 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
     @Override
     public void dispose() {
         // NO OP
+    }
+    
+    public void setGrantNoneAsDefault(boolean grantNoneAsDefault) {
+    	this.grantNoneAsDefault = grantNoneAsDefault;
     }
 
     /*
@@ -481,9 +487,13 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 
         for (Resource res : resources) {
             String resPath = getTargetName(res);
-            Permission perm = new Permission(resPath, false, true, false, false, false, false);
+            Permission perm = new Permission(resPath, false, !grantNoneAsDefault, false, false, false, false);
             perm.setPrimary(true);
             handler.addPermission(res, perm);
+        }
+        
+        if( grantNoneAsDefault ) {
+        	grantNoneAsDefault = false;
         }
     }
 

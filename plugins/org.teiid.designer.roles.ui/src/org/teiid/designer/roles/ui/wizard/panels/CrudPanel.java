@@ -10,6 +10,7 @@ package org.teiid.designer.roles.ui.wizard.panels;
 import static org.teiid.designer.ui.PluginConstants.Prefs.General.AUTO_WILL_TOGGLE_WITH_CHILDREN;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -39,7 +40,9 @@ import org.teiid.designer.roles.Permission;
 import org.teiid.designer.roles.ui.Messages;
 import org.teiid.designer.roles.ui.RolesUiConstants;
 import org.teiid.designer.roles.ui.RolesUiPlugin;
+import org.teiid.designer.roles.ui.wizard.DataRoleProperties;
 import org.teiid.designer.roles.ui.wizard.DataRoleWizard;
+import org.teiid.designer.roles.ui.wizard.DataRolesModelTreeProvider;
 import org.teiid.designer.roles.ui.wizard.dialogs.ColumnMaskingDialog;
 import org.teiid.designer.roles.ui.wizard.dialogs.RowBasedSecurityDialog;
 import org.teiid.designer.ui.UiPlugin;
@@ -60,15 +63,19 @@ public class CrudPanel extends DataRolePanel {
 
     Combo modelTypeCombo;
     Button clearFilterButton;
+    Button clearPermissionsButton;
     
 	private TreeViewer treeViewer;
+	private DataRoleProperties props;
+	private DataRolesModelTreeProvider treeProvider;
 	
 	/**
      * @param parent
      * @param wizard
      */
-    public CrudPanel(Composite parent, DataRoleWizard wizard) {
+    public CrudPanel(Composite parent, DataRoleWizard wizard, DataRoleProperties props, DataRolesModelTreeProvider treeProvider) {
     	super(parent, wizard);
+    	this.props = props;
     }
 
 	/* (non-Javadoc)
@@ -262,7 +269,7 @@ public class CrudPanel extends DataRolePanel {
     private void createModelFilterGroup(Composite parent) {
     	Composite filterGroup = WidgetFactory.createGroup(parent, SWT.BORDER);
     	GridDataFactory.fillDefaults().grab(true, false).applyTo(filterGroup);
-    	GridLayoutFactory.fillDefaults().numColumns(4).margins(3, 3).spacing(3, 3).applyTo(filterGroup);
+    	GridLayoutFactory.fillDefaults().numColumns(5).margins(3, 3).spacing(3, 3).applyTo(filterGroup);
     	
     	// Filter Label
     	Label tempLabel = new Label(filterGroup, SWT.NONE);
@@ -289,8 +296,8 @@ public class CrudPanel extends DataRolePanel {
     	// Model Types = ALL, VIEW and SOURCE
     	modelTypeCombo = new Combo(filterGroup,  SWT.NONE);
     	modelTypeCombo.setItems(new String[] {ALL, SOURCE, VIEW, WEB, XMLDOC} );
-    	modelTypeCombo.select(0);
-    	GridDataFactory.fillDefaults().grab(false, false).hint(90, 10).applyTo(modelTypeCombo);
+    	modelTypeCombo.select(1);
+    	GridDataFactory.fillDefaults().grab(false, false).hint(120, 10).applyTo(modelTypeCombo);
     	
     	modelTypeCombo.addSelectionListener(new SelectionListener() {
 			
@@ -316,6 +323,36 @@ public class CrudPanel extends DataRolePanel {
 			public void widgetSelected(SelectionEvent e) {
 				modelTypeCombo.select(0);
 				text.setText(StringConstants.EMPTY_STRING);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+    	
+    	// Clear Filter Button
+    	// Set filter text to "", type to ALL
+    	clearPermissionsButton = WidgetFactory.createButton(filterGroup, SWT.PUSH);
+    	clearPermissionsButton.setText(Messages.crudPanelClearAllPermissionsText);
+    	clearPermissionsButton.setToolTipText(Messages.crudPanelClearAllPermissionsTooltip);  //$NON-NLS-1$
+    	clearPermissionsButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO:  BML
+				// 1) Throw up Confirm dialog with a warning that this can't be UNDONE
+            	boolean result = MessageDialog.openQuestion(getShell(), Messages.crudPanelClearPermissionsTitle, Messages.crudPanelClearPermissionsWarning );
+            	
+            	if( result ) {
+					// 2) Set Grant ALL = FALSE
+            		props.setGrantAll(false);
+            		
+            		getTreeProvider().setGrantNoneAsDefault(true);
+            		getTreeProvider().getPermissions().clear();
+					// 3) clear permissions/set all to FALSE
+            		
+            		treeViewer.refresh();
+            	}
 			}
 			
 			@Override
