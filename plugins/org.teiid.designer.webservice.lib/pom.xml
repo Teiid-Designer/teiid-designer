@@ -158,11 +158,6 @@
 									<version>${version.jettison}</version>
 								</artifactItem>
 								<artifactItem>
-									<groupId>org.apache.abdera</groupId>
-									<artifactId>json</artifactId>
-									<version>${version.json}</version>
-								</artifactItem>
-								<artifactItem>
 									<groupId>javax.annotation</groupId>
 									<artifactId>jsr250-api</artifactId>
 									<version>${version.jsr250-api}</version>
