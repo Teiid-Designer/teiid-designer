@@ -645,6 +645,8 @@ public final class OverviewEditorPage extends MedEditorPage {
     private void validateNamespaceUri() {
     	if(getMed().isBuiltIn() || getMed().isImported()) {
     		this.namespaceUriError.setStatus(ValidationStatus.OK_STATUS);
+    	} else {
+    		this.namespaceUriError.setStatus(ModelExtensionDefinitionValidator.validateNamespaceUri(getMed().getNamespaceUri(), null));
     	}
 
         updateMessage(this.namespaceUriError);

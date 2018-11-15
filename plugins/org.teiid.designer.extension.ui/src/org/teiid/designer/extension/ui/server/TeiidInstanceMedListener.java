@@ -209,7 +209,7 @@ public class TeiidInstanceMedListener implements IExecutionConfigurationListener
                 
                 // Output stream for convertor
                 output = new FileOutputStream(outputFile);
-                System.out.println("   TeiidInstanceMedListener.analyseTranslators(" + translator.getName() + ")  coverter.convert()");
+                
                 boolean conversion = convertor.convert(translator, output);
                 if( !conversion ) System.out.println("          >>>> Success = " + conversion);
                 if (!conversion)
