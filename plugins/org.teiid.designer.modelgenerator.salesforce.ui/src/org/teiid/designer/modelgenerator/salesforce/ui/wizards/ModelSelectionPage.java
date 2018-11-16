@@ -56,7 +56,6 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.DataSourceConnectionHelper;
-import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.modelgenerator.salesforce.SalesforceImportWizardManager;
@@ -113,8 +112,6 @@ public class ModelSelectionPage extends AbstractWizardPage
     private String jndiName;
     private JndiNameHelper jndiNameValidator;
     private Button autoCreateDataSource;
-
-    private IConnectionInfoHelper connectionInfoHelper;
 
     public ModelSelectionPage( SalesforceImportWizardManager importManager ) {
         super(ModelSelectionPage.class.getSimpleName(), getString("title")); //$NON-NLS-1$
@@ -269,11 +266,11 @@ public class ModelSelectionPage extends AbstractWizardPage
     				if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
     					jndiName = jndiNameField.getText();
     					importManager.setJBossJndiNameName(jndiName);
-    					validateInput();
+    					setPageStatus();
     				} else {
     					jndiName = ""; //$NON-NLS-1$
     					importManager.setJBossJndiNameName(null);
-    					validateInput();
+    					setPageStatus();
     				}
     				
     			}
@@ -464,10 +461,6 @@ public class ModelSelectionPage extends AbstractWizardPage
     private static String getString( String theKey ) {
         return UTIL.getString(new StringBuffer().append(PREFIX).append(theKey).toString());
     }
-    
-    private String getString(String theKey, Object... properties) {
-    	return UTIL.getString(new StringBuffer().append(PREFIX).append(theKey).toString(), properties); //$NON-NLS-1$
-    }
 
     /**
      * Handler for Workspace Target Relational Model Browse button.
@@ -492,6 +485,7 @@ public class ModelSelectionPage extends AbstractWizardPage
             // this.updateCheckBox.setSelection(true);
             // updateCheckBoxSelected(); // to get handler activated
         }
+        setPageStatus();
     }
 
     /**
@@ -519,8 +513,8 @@ public class ModelSelectionPage extends AbstractWizardPage
         // Update the controls with the target location selection
         if (location != null) {
             this.textFieldTargetModelLocation.setText(location.getFullPath().makeRelative().toString());
-            setPageStatus();
         }
+        setPageStatus();
     }
 
     void setPageStatus() {
@@ -550,7 +544,7 @@ public class ModelSelectionPage extends AbstractWizardPage
      * @return 'true' if the selection is valid, 'false' if not.
      */
     private boolean validateInput() {
-        importManager.setCanFinish(updating = false);
+        importManager.setCanFinish(updating == false);
         try {
             // Validate the target Model Name and location
             targetModelLocation = validateFileAndFolder(this.textFieldTargetModelName,
@@ -610,10 +604,11 @@ public class ModelSelectionPage extends AbstractWizardPage
     		String jndiStatus = jndiNameValidator.checkValidName(importManager.getJBossJndiName());
     		if( jndiStatus != null ) {
                 WizardUtil.setPageComplete(this, jndiStatus, IMessageProvider.ERROR);
+                getContainer().updateButtons();
                 return false;
     		}
             
-            getContainer().updateButtons();
+            
         } catch (final CoreException err) {
             UTIL.log(err);
             WizardUtil.setPageComplete(this, err.getLocalizedMessage(), IMessageProvider.ERROR);
@@ -755,6 +750,7 @@ public class ModelSelectionPage extends AbstractWizardPage
 
     @Override
     public boolean canFlipToNextPage() {
+    	// If updating, then the NEXT > button should be enabled
         return super.canFlipToNextPage() && updating;
     }
     

@@ -88,7 +88,8 @@ public class SalesforceToRelationalImportWizard extends AbstractWizard
         this.importManager = new SalesforceImportWizardManager();
         this.selection = currentSelection;
 
-        List selectedResources = IDE.computeSelectedResources(currentSelection);
+        @SuppressWarnings("rawtypes")
+		List selectedResources = IDE.computeSelectedResources(currentSelection);
         if (!selectedResources.isEmpty()) {
             this.selection = new StructuredSelection(selectedResources);
         }
@@ -196,7 +197,9 @@ public class SalesforceToRelationalImportWizard extends AbstractWizard
     @Override
     public boolean canFinish() {
         boolean result = super.canFinish();
-        result = importManager.canFinish();
+        if( result ) {
+        	result = importManager.canFinish();
+        }
         return result;
     }
 }
