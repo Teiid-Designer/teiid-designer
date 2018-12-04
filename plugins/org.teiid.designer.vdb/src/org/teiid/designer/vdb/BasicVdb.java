@@ -91,7 +91,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	/*
 	 * NONE, BY_VERSION, ANY
 	 */
-	private String connectionType = VdbConstants.ConnectionTypes.NONE;
+	private String connectionType = VdbConstants.ConnectionTypes.BY_VERSION;
 	// known properties
 	/*
 		<property name="preview" value="false"/>

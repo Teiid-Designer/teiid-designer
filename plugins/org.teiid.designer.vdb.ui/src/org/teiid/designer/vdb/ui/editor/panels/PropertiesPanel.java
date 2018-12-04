@@ -63,7 +63,6 @@ public class PropertiesPanel {
 	Button removeLanguageButton;
 	
 	/*
-	 
     	NONE- disallow new connections.
     	BY_VERSION- the default setting. Allow connections only if the version is specified or if this is the earliest BY_VERSION vdb and there are no vdbs marked as ANY.
     	ANY- allow connections with or without a version specified.
@@ -138,10 +137,10 @@ public class PropertiesPanel {
         String type = vdb.getConnectionType();
         if( VdbConstants.ConnectionTypes.ANY.equalsIgnoreCase(type) ) {
         	connectionType.select(2);
-        } else if( VdbConstants.ConnectionTypes.BY_VERSION.equalsIgnoreCase(type) ) {
-        	connectionType.select(1);
-        } else {
-            connectionType.select(0);
+        } else if( VdbConstants.ConnectionTypes.NONE.equalsIgnoreCase(type) ) {
+        	connectionType.select(0);
+        } else { //BY_VERSION which is default
+            connectionType.select(1);
         }
 
         this.connectionType.addModifyListener(new ModifyListener() {
