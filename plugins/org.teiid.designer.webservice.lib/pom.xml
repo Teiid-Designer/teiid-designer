@@ -321,4 +321,11 @@
 			</snapshots>
 		</repository>
 	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20141113</version>
+		</dependency>
+	</dependencies>
 </project>
