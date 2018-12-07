@@ -269,6 +269,11 @@
 									<version>${version.json4s-core}</version>
 								</artifactItem>
 								<artifactItem>
+									<groupId>org.json</groupId>
+									<artifactId>json</artifactId>
+									<version>${version.json}</version>
+								</artifactItem>
+								<artifactItem>
 									<groupId>com.thoughtworks.paranamer</groupId>
 									<artifactId>paranamer</artifactId>
 									<version>${version.paranamer}</version>
@@ -321,11 +326,4 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	<dependencies>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20141113</version>
-		</dependency>
-	</dependencies>
 </project>
