@@ -25,7 +25,7 @@
 		<version.javassist>3.16.1-GA</version.javassist>
 		<version.jcip-annotations>1.0</version.jcip-annotations>
 		<version.jettison>1.2</version.jettison>
-		<version.json>1.0</version.json>
+		<version.json>20140107</version.json>
 		<version.jsr250-api>1.0</version.jsr250-api>
 		<version.jsr311>1.1.1</version.jsr311>
 		<version.resteasy>2.3.5.Final</version.resteasy>
