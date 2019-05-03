@@ -76,6 +76,10 @@ public interface IWSProfileConstants extends ICredentialsCommon {
       */
      String WSDL_URI_PROP_ID = "wsdlURI"; //$NON-NLS-1$
      
+  	 String IS_PROXY_KEY = "isProxy"; //$NON-NLS-1$
+ 	 String PROXY_SERVER_HOST_KEY = "proxyServerHost"; //$NON-NLS-1$
+ 	 String PROXY_SERVER_PORT_KEY = "proxyServerPort"; //$NON-NLS-1$
+     
      /**
       * Properties used for REST WS Request header info
       */

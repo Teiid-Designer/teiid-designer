@@ -26,14 +26,19 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.internal.ui.ConnectivityUIPlugin;
 import org.eclipse.datatools.connectivity.internal.ui.dialogs.ExceptionHandler;
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -48,7 +53,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.model.Parameter;
+import org.teiid.designer.core.util.URLHelper;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.dialogs.ScrolledConnectionProfileDetailsPage;
 import org.teiid.designer.ui.common.ICredentialsCommon;
@@ -69,15 +76,24 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
     Text urlPreviewText;
     private Label urlLabel;
     private Text urlText;
+	private Button isProxyButton;
+	private Label hostLabel;
+	private Text hostText;
+	private Label portLabel;
+	private Text portText;
     private Label responseTypeLabel;
     private CredentialsComposite credentialsComposite;
     private Combo responseTypeCombo; 
     private Map<String, Parameter> parameterMap = new LinkedHashMap<String, Parameter>();
 
+	private TabItem credentialsTab;
+    private TabItem proxyCredentialsTab;
 	private TabItem parametersTab;
     private TabItem headerPropertiesTab;
     ParameterPanel parameterPanel;
     HeaderPropertiesPanel headerPanel;
+    
+    private boolean handlingProxyChange = false;
 
     /**
      * @param wizardPageName
@@ -168,12 +184,83 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 
         responseTypeCombo.setVisibleItemCount(2);
         
-        credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER, "rest"); //$NON-NLS-1$
+		isProxyButton = new Button(scrolled, SWT.CHECK);
+		isProxyButton.setText(UTIL.getString("WSProfileDetailsWizardPage.IsProxy"));
+		isProxyButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleProxyChange();
+				handleURLChange();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		GridDataFactory.fillDefaults().grab(true,  false).span(2,  1).applyTo(isProxyButton);
+        
+        TabFolder credentialsTabFolder = new TabFolder(scrolled, SWT.TOP | SWT.BORDER);
+        credentialsTabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+        
+        Composite credentialsPanel = WidgetFactory.createPanel(credentialsTabFolder);
+		this.credentialsTab = new TabItem(credentialsTabFolder, SWT.FILL | SWT.BORDER);
+		this.credentialsTab.setControl(credentialsPanel);
+		this.credentialsTab.setText("Security"); //$NON-NLS-1$
+		
+        credentialsComposite = new CredentialsComposite(credentialsPanel, SWT.NONE, "rest"); //$NON-NLS-1$
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         credentialsComposite.setLayoutData(gd);
         this.profileProperties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
         
+        
+        Composite proxyCredentialsPanel = WidgetFactory.createPanel(credentialsTabFolder);
+		this.proxyCredentialsTab = new TabItem(credentialsTabFolder, SWT.FILL | SWT.BORDER);
+		this.proxyCredentialsTab.setControl(proxyCredentialsPanel);
+		this.proxyCredentialsTab.setText("Proxy Settings"); //$NON-NLS-1$
+        
+		{
+			Composite proxyPanel = new Composite(proxyCredentialsPanel, SWT.NONE); //$NON-NLS-1$
+	        gd = new GridData(GridData.FILL_HORIZONTAL);
+	        gd.horizontalSpan = 2;
+	        proxyPanel.setLayoutData(gd);
+			GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(proxyPanel);
+
+			hostLabel = new Label(proxyPanel, SWT.NONE);
+			hostLabel.setText(UTIL.getString("WSProfileDetailsWizardPage.Host")); //$NON-NLS-1$
+			hostLabel.setToolTipText(UTIL.getString("WSProfileDetailsWizardPage.Host")); //$NON-NLS-1$
+			GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(hostLabel);
+
+			hostText = new Text(proxyPanel, SWT.SINGLE | SWT.BORDER);
+			hostText.setToolTipText(UTIL.getString("WSProfileDetailsWizardPage.Host")); //$NON-NLS-1$
+			hostText.setEnabled(false);
+			hostText.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					handleProxyChange();
+				}
+			});
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(hostText);
+
+			portLabel = new Label(proxyPanel, SWT.NONE);
+			portLabel.setText(UTIL.getString("WSProfileDetailsWizardPage.Port")); //$NON-NLS-1$
+			portLabel.setToolTipText(UTIL.getString("WSProfileDetailsWizardPage.Port")); //$NON-NLS-1$
+			GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(portLabel);
+
+			portText = new Text(proxyPanel, SWT.SINGLE | SWT.BORDER );
+			portText.setToolTipText(UTIL.getString("WSProfileDetailsWizardPage.Port")); //$NON-NLS-1$
+			portText.setEnabled(false);
+			portText.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					handleProxyChange();
+				}
+			});
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(portText);
+		}
         // Check properties and load any existing parameters into parametersMap
         loadParameters(profileProperties);
         
@@ -194,14 +281,14 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
         
 		Composite parameterPanel = WidgetFactory.createPanel(tabFolder);
-		this.parametersTab = new TabItem(tabFolder, SWT.FILL);
+		this.parametersTab = new TabItem(tabFolder, SWT.FILL | SWT.BORDER);
 		this.parametersTab.setControl(parameterPanel);
 		this.parametersTab.setText(UTIL.getString("ParametersPanel_groupTitle")); //$NON-NLS-1$
 		this.parameterPanel = new ParameterPanel(this, parameterPanel, parameterMap, 6);
 		this.urlPreviewText.setText(updateUrlPreview().toString());
 		
 		Composite headerPropertiesPanel = WidgetFactory.createPanel(tabFolder);
-		this.headerPropertiesTab = new TabItem(tabFolder, SWT.FILL);
+		this.headerPropertiesTab = new TabItem(tabFolder, SWT.FILL | SWT.BORDER);
 		this.headerPropertiesTab.setControl(headerPropertiesPanel);
 		this.headerPropertiesTab.setText(UTIL.getString("HeaderPropertiesPanel_groupTitle")); //$NON-NLS-1$
         this.headerPanel = new HeaderPropertiesPanel(this, headerPropertiesPanel, parameterMap, 6);
@@ -351,6 +438,7 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
                     urlStr = urlStr.trim();
                 }
                 setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, urlStr);
+                handleURLChange();
             }
         });
 
@@ -385,6 +473,55 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
                         credentialsComposite.getPassword());
             }
         });
+    }
+    
+    private void handleURLChange() {
+    	// When URL changes, check the isProxy value
+    	// ifProxy, then parse the URL and populate the HOST/PORT values if not blank and valid
+    	
+    	if( isProxyButton.getSelection() ) {
+	    	URL url = null;
+	    	
+	    	try {
+	    		url = URLHelper.buildURL(this.urlText.getText());
+	    		
+	    		handlingProxyChange = true;
+	    		if( StringUtilities.isNotEmpty(url.getHost()) ) {
+	    			hostText.setText(url.getHost());
+	    			setProperty(IWSProfileConstants.PROXY_SERVER_HOST_KEY, hostText.getText());
+	    		}
+	    		if( url.getPort() > 0 ) {
+	    			portText.setText(Integer.toString(url.getPort()));
+	    			setProperty(IWSProfileConstants.PROXY_SERVER_PORT_KEY, portText.getText());
+	    		}
+
+
+	    	} catch( MalformedURLException mex) {
+	    		
+	    	} finally {
+	    		handlingProxyChange = false;
+	    		updateState();
+	    	}
+    	}
+    }
+    
+    private void handleProxyChange() {
+    	if( ! handlingProxyChange) {
+    		handlingProxyChange = true;
+			if (!isProxyButton.getSelection()) {
+				hostText.setEnabled(false);
+				portText.setEnabled(false);
+			} else {
+				hostText.setEnabled(true);
+				portText.setEnabled(true);
+			}
+	
+			setProperty(IWSProfileConstants.IS_PROXY_KEY, Boolean.toString(isProxyButton.getSelection()));
+			setProperty(IWSProfileConstants.PROXY_SERVER_HOST_KEY, hostText.getText());
+			setProperty(IWSProfileConstants.PROXY_SERVER_PORT_KEY, portText.getText());
+			handlingProxyChange = false;
+			updateState();
+    	}
     }
 
     private void setProperty(String propertyId, String value) {
@@ -464,11 +601,30 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
                 
         }
         
+        String finalMessage = UTIL.getString("Click.Next.or.Finish");
+        boolean isWarning = false;
+        // Check proxy properties
+		boolean isProxy = profileProperties.get(IWSProfileConstants.IS_PROXY_KEY) != null;
+		if( isProxy ) {
+	        if(  StringUtilities.isEmpty(profileProperties.getProperty(IWSProfileConstants.PROXY_SERVER_HOST_KEY)) ) {
+	        	finalMessage = "Warning: Proxy URLs must require a valid HOST defined" + finalMessage; //$NON-NLS-1$
+	        	isWarning = true;
+	        } else if(  StringUtilities.isEmpty(profileProperties.getProperty(IWSProfileConstants.PROXY_SERVER_PORT_KEY)) ) {
+	        	finalMessage = "Warning: Proxy URL may need a valid PORT defined" + finalMessage; //$NON-NLS-1$
+	        	isWarning = true;
+	        } 
+		}
+
+        
         setPingButtonEnabled(true);
         
         setErrorMessage(null);
         setPageComplete(true);
-        setMessage(UTIL.getString("Click.Next.or.Finish")); //$NON-NLS-1$
+        if( isWarning ) {
+        	setMessage(finalMessage, IMessageProvider.WARNING);
+        } else {
+        	setMessage(finalMessage); //$NON-NLS-1$
+        }
 
     }
     
@@ -515,6 +671,16 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 			}
 
 		}
+		if( complete
+				&& null != properties.get(IWSProfileConstants.IS_PROXY_KEY) ) {
+			if( StringUtilities.isEmpty(properties.get(IWSProfileConstants.PROXY_SERVER_HOST_KEY).toString())) {
+				complete = false;
+			}
+//			if( StringUtilities.isEmpty(properties.get(IWSProfileConstants.PROXY_SERVER_PORT_KEY).toString())) {
+//				complete = false;
+//			}
+			
+		}
 		return complete;
 	}
 	
@@ -524,8 +690,9 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
      * @see org.eclipse.datatools.connectivity.internal.ui.wizards.BaseWizardPage#getSummaryData()
      */
     @Override
-    public List getSummaryData() {
-        List result = super.getSummaryData();
+    public List<String[]> getSummaryData() {
+        @SuppressWarnings("unchecked")
+		List<String[]> result = super.getSummaryData();
         result.add(new String[] {UTIL.getString("Common.URL.Label"), urlText.getText()}); //$NON-NLS-1$
         result.add(new String[] {
                 UTIL.getString("Common.Username.Label"), credentialsComposite.getUserName() }); //$NON-NLS-1$
@@ -651,9 +818,6 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 
                 }
             }
-
         }
-
     }
-
 }

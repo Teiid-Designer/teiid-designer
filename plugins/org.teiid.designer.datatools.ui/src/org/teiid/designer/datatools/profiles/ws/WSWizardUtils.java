@@ -21,7 +21,7 @@ import org.apache.commons.httpclient.auth.AuthPolicy;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
-import org.teiid.datatools.connectivity.model.Parameter;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.util.URLHelper;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.ui.common.ICredentialsCommon;
@@ -74,12 +74,24 @@ public class WSWizardUtils {
             String securityType = null;
             
         	boolean secure = (userName != null && !userName.isEmpty());
-
+        	String isProxyValue = connProperties.getProperty(IWSProfileConstants.IS_PROXY_KEY);
+        	boolean isProxy = (isProxyValue != null && Boolean.parseBoolean(isProxyValue) );
+        	
+			String proxyHost = connProperties.getProperty(IWSProfileConstants.PROXY_SERVER_HOST_KEY);
+            String proxyPortStr = connProperties.getProperty(IWSProfileConstants.PROXY_SERVER_PORT_KEY);
+            int proxyPort = -1;
+            try {
+            	proxyPort = Integer.parseInt(proxyPortStr);	
+            } catch(NumberFormatException ex) { 
+            	
+            }
+            
 			HttpClient client = new HttpClient();
 			if (secure){
+				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(userName, password);
 				securityType = (String) connProperties.get(ICredentialsCommon.SECURITY_TYPE_ID);
 				client.getState().setCredentials(new AuthScope(uri.getHost(), uri.getPort()),
-						new UsernamePasswordCredentials(userName, password));
+						credentials);
 				List<String> authPrefs = new ArrayList<String>(1);
 				if (securityType.equals(ICredentialsCommon.SecurityType.HTTPBasic.toString())) {
 					authPrefs.add(AuthPolicy.BASIC);
@@ -87,6 +99,17 @@ public class WSWizardUtils {
 					authPrefs.add(AuthPolicy.DIGEST);
 				}
 				client.getParams().setParameter(AuthPolicy.AUTH_SCHEME_PRIORITY, authPrefs);
+				if (isProxy) {
+					if( !StringUtilities.isBlank(proxyHost) && proxyPort > 0 ) {
+						AuthScope proxyAuthScope = new AuthScope(proxyHost, proxyPort);
+						client.getState().setProxyCredentials(proxyAuthScope, credentials);
+					}
+				}
+			} else {
+				if (isProxy && !StringUtilities.isBlank(proxyHost) && proxyPort > 0 ) {
+					AuthScope proxyAuthScope = new AuthScope(proxyHost, proxyPort);
+					client.getState().setProxyCredentials(proxyAuthScope, null);
+				}
 			}
 
 			if (connProperties.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY) != null) {

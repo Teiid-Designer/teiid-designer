@@ -7,6 +7,8 @@
 */
 package org.teiid.designer.datatools.profiles.ws;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -23,6 +25,7 @@ import org.eclipse.help.IContextProvider;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -64,6 +67,7 @@ import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.core.translators.SimpleProperty;
+import org.teiid.designer.core.util.URLHelper;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
@@ -79,16 +83,23 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	
 	private ContextProviderDelegate contextProviderDelegate = new ContextProviderDelegate(
 			DatatoolsUiPlugin.getDefault().getBundle().getSymbolicName());
+	
 	private Composite scrolled;
 	private Label urlLabel;
 	private Text urlText;
 	private Label urlPreviewLabel;
 	Text urlPreviewText;
+	private Button isProxyButton;
+	private Label hostLabel;
+	private Text hostText;
+	private Label portLabel;
+	private Text portText;
 	private CredentialsComposite credentialsComposite;
 	private Map<String, Parameter> parameterMap = new LinkedHashMap<String, Parameter>();
 	private Label responseTypeLabel;
-    private Combo responseTypeCombo; 
-	
+    private Combo responseTypeCombo;
+	private TabItem credentialsTab;
+    private TabItem proxyCredentialsTab;
 	private TabItem parametersTab;
     private TabItem headerPropertiesTab;
     ParameterPanel parameterPanel;
@@ -97,6 +108,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	
 	private Properties extraProperties;
 
+    private boolean handlingProxyChange = false;
 	
 	public PropertyPage() {
         super();
@@ -156,12 +168,8 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         
         Label spacerLabel = new Label(scrolled, SWT.NONE);
         spacerLabel.setVisible(false);
-        GridDataFactory.swtDefaults().grab(false, false).applyTo(spacerLabel);
-
-        credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER, "rest");  //$NON-NLS-1$
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        credentialsComposite.setLayoutData(gd);
-
+        GridDataFactory.swtDefaults().grab(false, false).span(2, 1).applyTo(spacerLabel);
+        
         responseTypeLabel = new Label(scrolled, SWT.NONE);
         responseTypeLabel.setText(UTIL.getString("Common.ResponseType.Label")); //$NON-NLS-1$
         responseTypeLabel.setToolTipText(UTIL.getString("Common.ResponseType.ToolTip")); //$NON-NLS-1$
@@ -193,7 +201,86 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 			}
 		});
 
+        spacerLabel = new Label(scrolled, SWT.NONE);
+        spacerLabel.setVisible(false);
+        GridDataFactory.swtDefaults().grab(false, false).span(1, 1).applyTo(spacerLabel);
+        
         responseTypeCombo.setVisibleItemCount(2);
+        
+		isProxyButton = new Button(scrolled, SWT.CHECK);
+		isProxyButton.setText(UTIL.getString("WSProfileDetailsWizardPage.IsProxy"));
+		isProxyButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleProxyChange();
+				handleURLChange();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+		GridDataFactory.fillDefaults().grab(true,  false).span(1,  1).applyTo(isProxyButton);
+        
+        TabFolder credentialsTabFolder = new TabFolder(scrolled, SWT.TOP | SWT.BORDER);
+        credentialsTabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+        
+        Composite credentialsPanel = WidgetFactory.createPanel(credentialsTabFolder);
+		this.credentialsTab = new TabItem(credentialsTabFolder, SWT.FILL);
+		this.credentialsTab.setControl(credentialsPanel);
+		this.credentialsTab.setText("Security"); //$NON-NLS-1$
+
+        credentialsComposite = new CredentialsComposite(credentialsPanel, SWT.NONE, "rest"); //$NON-NLS-1$
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
+        credentialsComposite.setLayoutData(gd);
+        
+        Composite proxyCredentialsPanel = WidgetFactory.createPanel(credentialsTabFolder);
+		this.proxyCredentialsTab = new TabItem(credentialsTabFolder, SWT.FILL);
+		this.proxyCredentialsTab.setControl(proxyCredentialsPanel);
+		this.proxyCredentialsTab.setText("Proxy Settings"); //$NON-NLS-1$
+		{
+			Composite proxyPanel = new Composite(proxyCredentialsPanel, SWT.NONE); //$NON-NLS-1$
+	        gd = new GridData(GridData.FILL_HORIZONTAL);
+	        gd.horizontalSpan = 2;
+	        proxyPanel.setLayoutData(gd);
+			GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(proxyPanel);
+
+			hostLabel = new Label(proxyPanel, SWT.NONE);
+			hostLabel.setText(UTIL.getString("WSProfileDetailsWizardPage.Host")); //$NON-NLS-1$
+			hostLabel.setToolTipText(UTIL.getString("WSProfileDetailsWizardPage.Host")); //$NON-NLS-1$
+			GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(hostLabel);
+
+			hostText = new Text(proxyPanel, SWT.SINGLE | SWT.BORDER);
+			hostText.setToolTipText(UTIL.getString("WSProfileDetailsWizardPage.Host")); //$NON-NLS-1$
+			hostText.setEnabled(false);
+			hostText.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					handleProxyChange();
+				}
+			});
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(hostText);
+
+			portLabel = new Label(proxyPanel, SWT.NONE);
+			portLabel.setText(UTIL.getString("WSProfileDetailsWizardPage.Port")); //$NON-NLS-1$
+			portLabel.setToolTipText(UTIL.getString("WSProfileDetailsWizardPage.Port")); //$NON-NLS-1$
+			GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(portLabel);
+
+			portText = new Text(proxyPanel, SWT.SINGLE | SWT.BORDER );
+			portText.setToolTipText(UTIL.getString("WSProfileDetailsWizardPage.Port")); //$NON-NLS-1$
+			portText.setEnabled(false);
+			portText.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					handleProxyChange();
+				}
+			});
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(portText);
+		}
         
         urlPreviewLabel = new Label(scrolled, SWT.NONE);
         urlPreviewLabel.setText(UTIL.getString("WSProfileDetailsWizardPage.urlPreviewLabel")); //$NON-NLS-1$
@@ -252,6 +339,54 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
     	}
 		this.extraProperties = extraProperties;
 	}
+	
+    private void handleURLChange() {
+    	// When URL changes, check the isProxy value
+    	// ifProxy, then parse the URL and populate the HOST/PORT values if not blank and valid
+    	
+    	if( isProxyButton.getSelection() ) {
+	    	URL url = null;
+	    	
+	    	try {
+	    		url = URLHelper.buildURL(this.urlText.getText());
+	    		
+	    		handlingProxyChange = true;
+	    		if( StringUtilities.isNotEmpty(url.getHost()) ) {
+	    			hostText.setText(url.getHost());
+	    		}
+	    		if( url.getPort() > 0 ) {
+	    			portText.setText(Integer.toString(url.getPort()));
+	    		}
+
+
+	    	} catch( MalformedURLException mex) {
+	    		
+	    	} finally {
+	    		handlingProxyChange = false;
+	    	}
+    	}
+    }
+    
+	
+    private void handleProxyChange() {
+    	if( ! handlingProxyChange) {
+    		handlingProxyChange = true;
+			if (!isProxyButton.getSelection()) {
+				hostText.setText(StringConstants.EMPTY_STRING);
+				hostText.setEnabled(false);
+				portText.setText(StringConstants.EMPTY_STRING);
+				portText.setEnabled(false);
+			} else {
+				hostText.setEnabled(true);
+				portText.setEnabled(true);
+			}
+	
+			this.extraProperties.put(IWSProfileConstants.IS_PROXY_KEY, Boolean.toString(isProxyButton.getSelection()));
+			this.extraProperties.put(IWSProfileConstants.PROXY_SERVER_HOST_KEY, hostText.getText());
+			this.extraProperties.put(IWSProfileConstants.PROXY_SERVER_PORT_KEY, portText.getText());
+			handlingProxyChange = false;
+    	}
+    }
 	
 	 void handleResponseTypeChanged(String type) {
 		 this.extraProperties.put(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY, type);
@@ -329,7 +464,14 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
      * 
      */
     private void addlisteners() {
-    	
+        urlText.addListener(SWT.Modify, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                handleURLChange();
+                validate();
+            }
+        });
+        
     	 Listener listener = new Listener() {
 
              @Override
@@ -338,7 +480,6 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
              }
          };
     	
-        urlText.addListener(SWT.Modify, listener);
         credentialsComposite.addSecurityOptionListener(SWT.Modify, listener);
         credentialsComposite.addUserNameListener(SWT.Modify, listener);
         credentialsComposite.addPasswordListener(SWT.Modify, listener);
@@ -408,6 +549,18 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         	}
         }
         
+        if( props.getProperty(IWSProfileConstants.IS_PROXY_KEY) != null) {
+        	isProxyButton.setSelection(true);
+        }
+        
+        if(  StringUtilities.isNotEmpty(props.getProperty(IWSProfileConstants.PROXY_SERVER_HOST_KEY)) ) {
+        	hostText.setText(props.getProperty(IWSProfileConstants.PROXY_SERVER_HOST_KEY));
+        }
+        
+        if(  StringUtilities.isNotEmpty(props.getProperty(IWSProfileConstants.PROXY_SERVER_PORT_KEY)) ) {
+        	portText.setText(props.getProperty(IWSProfileConstants.PROXY_SERVER_PORT_KEY));
+        }
+        
     }
     
     /*
@@ -449,6 +602,17 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         	result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, credentialsComposite.getPassword());
         }
         result.setProperty(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY, responseTypeCombo.getText());
+        
+        result.setProperty(IWSProfileConstants.IS_PROXY_KEY, isProxyButton.getText());
+        
+        if( StringUtilities.isNotEmpty(hostText.getText()) ) {
+        	result.setProperty(IWSProfileConstants.PROXY_SERVER_HOST_KEY, hostText.getText());
+        }
+        
+        if( StringUtilities.isNotEmpty(portText.getText()) ) {
+        	result.setProperty(IWSProfileConstants.PROXY_SERVER_PORT_KEY, portText.getText());
+        }
+        
         
         Properties extraProps = getExtraProperties();
         for( Object key : extraProps.keySet() ) {
