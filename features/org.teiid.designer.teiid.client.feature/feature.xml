@@ -2,7 +2,7 @@
 <feature
       id="org.teiid.designer.teiid.client.feature"
       label="Teiid Runtime Clients"
-      version="11.2.1.qualifier"
+      version="11.2.2.qualifier"
       provider-name="%providerName"
       license-feature="org.jboss.tools.foundation.license.feature"
       license-feature-version="0.0.0">
