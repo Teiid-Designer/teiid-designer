@@ -607,10 +607,10 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 		boolean isProxy = profileProperties.get(IWSProfileConstants.IS_PROXY_KEY) != null;
 		if( isProxy ) {
 	        if(  StringUtilities.isEmpty(profileProperties.getProperty(IWSProfileConstants.PROXY_SERVER_HOST_KEY)) ) {
-	        	finalMessage = "Warning: Proxy URLs must require a valid HOST defined" + finalMessage; //$NON-NLS-1$
+	        	finalMessage = "Warning: Proxy URLs may require a valid HOST defined" + finalMessage; //$NON-NLS-1$
 	        	isWarning = true;
 	        } else if(  StringUtilities.isEmpty(profileProperties.getProperty(IWSProfileConstants.PROXY_SERVER_PORT_KEY)) ) {
-	        	finalMessage = "Warning: Proxy URL may need a valid PORT defined" + finalMessage; //$NON-NLS-1$
+	        	finalMessage = "Warning: Proxy URL may require a valid PORT defined" + finalMessage; //$NON-NLS-1$
 	        	isWarning = true;
 	        } 
 		}
@@ -671,15 +671,15 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 			}
 
 		}
-		if( complete
-				&& null != properties.get(IWSProfileConstants.IS_PROXY_KEY) ) {
-			if( StringUtilities.isEmpty(properties.get(IWSProfileConstants.PROXY_SERVER_HOST_KEY).toString())) {
-				complete = false;
-			}
-//			if( StringUtilities.isEmpty(properties.get(IWSProfileConstants.PROXY_SERVER_PORT_KEY).toString())) {
-//				complete = false;
-//			}
+		if( complete && null != properties.get(IWSProfileConstants.IS_PROXY_KEY)) {
+			Object host = properties.get(IWSProfileConstants.PROXY_SERVER_HOST_KEY);
+			Object port = properties.get(IWSProfileConstants.PROXY_SERVER_PORT_KEY);
 			
+			complete = (host == null || StringUtilities.isEmpty(host.toString()));
+			
+			if( complete ) {
+				complete = (port == null || StringUtilities.isEmpty(port.toString()));
+			}
 		}
 		return complete;
 	}
