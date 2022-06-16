@@ -18,7 +18,7 @@
         <version.org.jboss.jboss-dmr>1.1.1.Final</version.org.jboss.jboss-dmr>
 
 	    <!-- WildFly AS based dependencies -->
-		<version.org.wildfly.core>1.0.2.Final</version.org.wildfly.core>
+		<version.org.wildfly.core>17.0.0.Final</version.org.wildfly.core>
 		<version.org.wildfly.security>1.1.2.Final</version.org.wildfly.security>
         <version.org.jboss.modules.jboss-modules>1.3.0.Final</version.org.jboss.modules.jboss-modules>
         <version.org.jboss.jboss-vfs>3.2.9.Final</version.org.jboss.jboss-vfs>
