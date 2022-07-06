@@ -28,7 +28,7 @@
         <version.org.jboss.marshalling.jboss-marshalling-river>1.4.10.Final</version.org.jboss.marshalling.jboss-marshalling-river>
         <version.org.jboss.jboss-remoting>4.0.9.Final</version.org.jboss.jboss-remoting>
         <version.org.jboss.jboss-sasl>1.0.5.Final</version.org.jboss.jboss-sasl>
-        <version.org.jboss.netty>4.0.26.Final</version.org.jboss.netty>
+        <version.org.jboss.netty>4.1.42.Final</version.org.jboss.netty>
         <version.org.jboss.xnio-api>3.3.1.Final</version.org.jboss.xnio-api>
         <version.org.jboss.xnio-nio>3.3.1.Final</version.org.jboss.xnio-nio>
         <version.json-simple>1.1</version.json-simple>
