@@ -28,7 +28,7 @@
         <version.org.jboss.xnio-api>3.0.9.GA</version.org.jboss.xnio-api>
         <version.org.jboss.xnio-nio>3.0.9.GA</version.org.jboss.xnio-nio>
         <version.json-simple>1.1</version.json-simple>
-        <version.org.jgroups>3.2.10.Final</version.org.jgroups>
+        <version.org.jgroups>3.2.16.Final</version.org.jgroups>
         <version.connector-api>1.5</version.connector-api>
         <version.jta>1.1</version.jta>
         <version.nux>1.6</version.nux>
