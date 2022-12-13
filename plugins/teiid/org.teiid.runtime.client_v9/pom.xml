@@ -32,7 +32,7 @@
         <version.org.jboss.xnio-api>3.3.1.Final</version.org.jboss.xnio-api>
         <version.org.jboss.xnio-nio>3.3.1.Final</version.org.jboss.xnio-nio>
         <version.json-simple>1.1</version.json-simple>
-        <version.org.jgroups>3.6.4.Final</version.org.jgroups>
+        <version.org.jgroups>3.6.10.Final</version.org.jgroups>
         <version.connector-api>1.0.0.Final</version.connector-api>
         <version.jta>1.1</version.jta>
         <version.nux>1.6</version.nux>
